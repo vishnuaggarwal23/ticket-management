@@ -1,0 +1,248 @@
+# =============================================================================
+# ticket-management — project .gitignore
+# Stack: Java 21, Spring Boot 3, React, Node.js, Docker, PostgreSQL / PgVector
+# Tools: IntelliJ IDEA, Cursor, SpecStory, graphify, macOS
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# OS — macOS (and common Windows noise)
+# -----------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.directory
+.Trash-*
+
+# -----------------------------------------------------------------------------
+# Secrets, credentials, local env (never commit)
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.pem
+*.p12
+*.jks
+*.keystore
+*.key
+!*.pub
+secrets/
+credentials/
+**/application-local.yml
+**/application-local.yaml
+**/application-local.properties
+**/application-*.local.yml
+**/application-*.local.yaml
+**/application-*.local.properties
+
+# -----------------------------------------------------------------------------
+# Java / Spring Boot (Maven & Gradle)
+# Keep the Maven/Gradle wrapper scripts + properties in git; do not ignore them.
+# -----------------------------------------------------------------------------
+target/
+build/
+out/
+bin/
+.gradle/
+.mvn/timing.properties
+
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+!**/gradle-wrapper.jar
+!**/maven-wrapper.jar
+hs_err_pid*
+replay_pid*
+*.orig
+
+# Spring Boot DevTools / local runtime
+spring-boot-devtools.properties
+.restart/
+.springBeans
+.factorypath
+
+# -----------------------------------------------------------------------------
+# Node.js / React
+# -----------------------------------------------------------------------------
+node_modules/
+jspm_packages/
+bower_components/
+.npm
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+.pnpm-store/
+
+dist/
+.next/
+.nuxt/
+.out/
+.vercel/
+.netlify/
+*.tsbuildinfo
+.turbo/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# Logs & coverage
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+coverage/
+.nyc_output/
+*.lcov
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Test / tooling caches
+.jest/
+.vitest/
+cypress/videos/
+cypress/screenshots/
+playwright-report/
+test-results/
+
+# -----------------------------------------------------------------------------
+# Docker — local runtime & volumes (keep Dockerfiles / compose in repo)
+# -----------------------------------------------------------------------------
+docker-compose.override.yml
+docker-compose.*.local.yml
+.docker/
+**/docker-data/
+**/docker/volumes/
+
+# -----------------------------------------------------------------------------
+# PostgreSQL / PgVector — local data & dumps
+# -----------------------------------------------------------------------------
+**/pgdata/
+**/postgres-data/
+**/postgresql-data/
+**/.pgdata/
+*.dump
+*.sql.gz
+*.backup
+pg_dump*
+
+# -----------------------------------------------------------------------------
+# IntelliJ IDEA / JetBrains
+# -----------------------------------------------------------------------------
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+atlassian-ide-plugin.xml
+*.hprof
+.fleet/
+
+# -----------------------------------------------------------------------------
+# VS Code / other editors (personal)
+# -----------------------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.c9/
+*.launch
+.history/
+.ionide/
+
+# -----------------------------------------------------------------------------
+# Cursor — allow shared rules; ignore other local Cursor state
+# -----------------------------------------------------------------------------
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# -----------------------------------------------------------------------------
+# SpecStory — session / tool-local (not useful to other clones)
+# -----------------------------------------------------------------------------
+.specstory/
+.cursorindexingignore
+
+# -----------------------------------------------------------------------------
+# graphify — regenerable knowledge graph + machine-local paths
+# -----------------------------------------------------------------------------
+graphify-out/
+.graphify/
+
+# -----------------------------------------------------------------------------
+# Local / developer / scratch / agent tool state (not shared)
+# -----------------------------------------------------------------------------
+*.local
+*.local.*
+local/
+.local/
+scratch/
+tmp/
+temp/
+.tmp/
+.temp/
+.private/
+private/
+personal/
+.user/
+user-data/
+.cache/
+*.bak
+*.tmp
+*.temp
+*.stackdump
+
+# Archives / packages produced locally (prefer CI artifacts)
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# AI / agent tool caches at repo root
+.agent-transcripts/
+.claude/
+.codex/
+.continue/
+.aider*
+.copilot/
+.windsurf/
+.gemini/
+.anthropic/
+
+# Python sidecars (graphify / local scripts)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.Python
