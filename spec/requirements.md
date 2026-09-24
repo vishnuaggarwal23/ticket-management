@@ -116,7 +116,7 @@ Support Tickets → Create Knowledge Documents → Chunk → Generate Embeddings
 | FR-08 | Ticket data is persisted in a database and survives application restart |
 | FR-09 | Backend validates input |
 | FR-10 | UI displays meaningful errors |
-| FR-11 | Backend enforces the stated status state machine; valid transitions succeed |
+| FR-11 | Backend enforces the defined status state machine and allows valid status transitions |
 | FR-12 | Backend rejects invalid status transitions |
 | FR-13 | Ticket text (description, comments, resolution notes) is converted into embeddings and stored in a vector store, with stated metadata |
 | FR-14 | Embeddings are re-ingested/refreshed when a ticket is updated or closed |
@@ -167,7 +167,7 @@ The solution is complete when:
 - [ ] The response cites the specific ticket ID(s) used to generate it
 - [ ] Out-of-scope / no-match questions return an honest “no relevant tickets found” response, not a fabricated answer
 - [ ] Chunking strategy and embedding model choice are documented and justified in `architecture.md`
-- [ ] Re-ingestion happens when a ticket is updated — embeddings do not go stale
+- [ ] Re-ingestion happens when a ticket is updated or closed — embeddings do not go stale
 - [ ] Retrieval parameters (top-K, similarity threshold) are configurable, not hardcoded
 - [ ] No secrets are committed
 - [ ] At least one meaningful AI mistake — in code or in a RAG answer — was caught and documented during development
@@ -188,6 +188,8 @@ Resolve only after confirmation in later specs:
 8. Role of H2 vs PostgreSQL in local/dev/prod/test.
 9. Frontend framework choice within “React/Next.js or equivalent”.
 10. Whether “resolution notes” is a distinct field or derived from comments/status content.
+11. How is a status transition initiated from the UI/API?
+12. Are only the explicitly shown transitions allowed, or are skipped transitions such as `OPEN` → `RESOLVED` allowed?
 
 ---
 
@@ -196,3 +198,4 @@ Resolve only after confirmation in later specs:
 | Date | Note |
 |------|------|
 | 2026-09-24 | Seed requirements restated only from `docs/Assessments.pdf`. |
+| 2026-09-24 | FR-11 clarified; acceptance re-ingestion aligned with RAG text; status-transition open questions added. |

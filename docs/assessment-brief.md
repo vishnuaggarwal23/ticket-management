@@ -127,7 +127,7 @@ Build using:
 **Support Ticket Management System** with:
 
 - Conventional ticket CRUD, comments, search, status filter, persistence, backend validation, meaningful UI errors
-- Backend-enforced ticket **status state machine**
+- Backend-enforced ticket **status state machine** that allows valid status transitions and rejects invalid ones
 - Natural-language Q&A over ticket history via RAG, **grounded strictly in real ticket data**, with citations and honest no-match behavior
 
 Detailed functional requirements and acceptance criteria: see [`spec/requirements.md`](../spec/requirements.md).
@@ -154,6 +154,8 @@ The following are **not** fully defined in the assessment PDF and are **not** in
 - Auth, roles, multi-tenancy, attachments, notifications
 - Mandatory choice of embedding model or vector store product (examples only)
 - Whether H2 is for tests only or also runtime
+- How a status transition is initiated from the UI/API
+- Whether only the explicitly shown transitions are allowed, or skipped transitions such as `OPEN` → `RESOLVED` are allowed
 
 Resolve these later in dedicated specs—after confirmation—not by silent assumption.
 
@@ -164,3 +166,4 @@ Resolve these later in dedicated specs—after confirmation—not by silent assu
 | Date | Note |
 |------|------|
 | 2026-09-24 | Initial faithful restatement from `docs/Assessments.pdf` (option C with `spec/requirements.md`). |
+| 2026-09-24 | State-machine summary clarified; status-transition gaps aligned with `spec/requirements.md`. |
