@@ -189,9 +189,11 @@ atlassian-ide-plugin.xml
 !.cursor/rules/**
 
 # -----------------------------------------------------------------------------
-# SpecStory — session / tool-local (not useful to other clones)
+# SpecStory — ignore tool-local state; allow committing history/
 # -----------------------------------------------------------------------------
-.specstory/
+.specstory/*
+!.specstory/history/
+!.specstory/history/**
 .cursorindexingignore
 
 # -----------------------------------------------------------------------------
