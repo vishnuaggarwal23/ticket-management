@@ -1,0 +1,31 @@
+---
+description: Java 21 / Spring Boot 3 coding guidelines
+alwaysApply: true
+---
+
+# Java Spring Boot guidelines
+
+Stack: **Java 21**, **Spring Boot 3**, Spring Data JPA, validation, PostgreSQL (H2 only for tests if needed). Prefer Spring AI for embeddings/RAG when implementing AI features.
+
+## Structure
+
+- Package by feature or clear layers: `api` (controllers/DTOs), `domain`, `service`, `persistence`, `config`, `ai`/`rag`.
+- Controllers stay thin; business rules and **ticket state machine** live in services/domain—not in controllers or the UI.
+- Prefer constructor injection; avoid field injection.
+- Use records for immutable DTOs where practical; entities stay JPA-managed.
+
+## Practices
+
+- Validate inputs with Bean Validation (`@Valid`, constraints) on request DTOs; reject invalid data at the API boundary.
+- Map domain errors to consistent HTTP responses via `@ControllerAdvice` (no stack traces to clients).
+- Transactions on service methods that mutate state; keep them short.
+- No secrets in code or commits; use env / Spring config with `.env.example` only.
+- Prefer `Optional` at service boundaries sparingly; do not return `null` from public APIs.
+- Use meaningful names; avoid abbreviations that obscure ticket/RAG domain terms.
+- Log with correlation-friendly messages; never log PII/secrets.
+
+## Do not
+
+- Do not start from “build the complete application”—implement only what the current agreed spec/plan covers.
+- Do not bypass the status state machine in repositories or ad-hoc SQL updates.
+- Do not hardcode RAG top-K / similarity thresholds—use configuration properties.

@@ -1,0 +1,30 @@
+
+# API standards
+
+## Conventions
+
+- Base path: `/api/...` (e.g. tickets under `/api/tickets`, AI under `/api/ai`).
+- JSON request/response; `Content-Type: application/json`.
+- Resource-oriented URLs; plural nouns (`/api/tickets`, `/api/tickets/{id}/comments`).
+- Use proper verbs: GET list/detail, POST create, PUT/PATCH update (pick one update style in `spec/api-contract.md` and stick to it).
+- Stable error body: e.g. `{ "timestamp", "status", "error", "message", "path", "details?" }`—document in the API contract spec.
+- Validation failures → **400** with field-level `details`; not found → **404**; conflict/illegal state (invalid transition) → **409** (or **400** if contract says so—confirm in spec); server faults → **500** without leaking internals.
+
+## Ticket APIs (expected capabilities)
+
+Support create, list, get, update (title, description, priority, assignee), comments, keyword search, status filter—exact shapes live in `spec/api-contract.md`.
+
+## AI API (assessment)
+
+```http
+POST /api/ai/ask
+{ "question": "What caused previous payment failures?" }
+```
+
+Response must include a grounded answer **and** cited ticket ID(s), or an explicit **no relevant tickets found** outcome. No autonomous side effects (no creating tickets/notifications from this call).
+
+## Versioning & docs
+
+- Prefer additive changes; breaking changes require a new spec revision.
+- Document contracts in `spec/`; keep OpenAPI optional but aligned when added.
+- Never commit secrets; auth (if added later) via standard Spring Security—confirm before introducing.

@@ -1,0 +1,33 @@
+---
+description: Testing guidelines (CRUD + state machine + RAG)
+alwaysApply: true
+---
+
+# Testing guidelines
+
+Tests prove **acceptance criteria** from `spec/`. Prefer Given/When/Then naming that mirrors the spec.
+
+## Layers
+
+| Layer | Use for | Tools (starter) |
+|-------|---------|-----------------|
+| Unit | Domain/state machine, pure services | JUnit 5, AssertJ, Mockito |
+| Slice / Web | Controllers, validation, error JSON | `@WebMvcTest`, MockMvc |
+| Integration | Persistence, full request path, state transitions | `@SpringBootTest`, Testcontainers (PostgreSQL/PgVector) or H2 where justified |
+| RAG / AI | Retrieval grounding, citations, no-match behavior | Contract/integration tests with fixtures; deterministic stubs for LLM when possible |
+
+## Mandatory coverage themes
+
+- **Ticket CRUD**: create, list, get, update fields, comments, search, status filter.
+- **State machine**: every valid transition; every invalid transition rejected (e.g. `CLOSED→OPEN`).
+- **Validation & errors**: bad input → 4xx + meaningful body the UI can show.
+- **Persistence**: data survives restart (integration).
+- **RAG**: grounded answer cites ticket IDs; no-match returns honest empty/no-relevant response—not fabricated content.
+- **Re-ingestion**: updating/closing a ticket refreshes embeddings (behavior covered by test or verified checklist until implemented).
+
+## Hygiene
+
+- One logical behavior per test; name tests after the requirement.
+- No flaky sleeps; use Awaitility only when async is real.
+- Do not hit real paid LLM APIs in CI by default—stub or use local test doubles unless the user explicitly approves otherwise.
+- After code changes, run the smallest relevant test set; say what was not run.

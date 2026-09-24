@@ -1,0 +1,32 @@
+
+# Documentation skills
+
+## Where things live
+
+| Artefact | Location |
+|----------|----------|
+| Specs (source of truth) | `spec/` |
+| Human docs / notes | `docs/` |
+| Prompt / session history | `.specstory/history/` (+ index `docs/prompt-history.md`) |
+| Steering rules | `.cursor/rules/` (mirrors under `rules/` for hygiene) |
+| Slash / review prompts | `.cursor/commands/` and `commands/` |
+| Documentation skill | `skills/documentation/` |
+
+## Spec set (create before implementation)
+
+Maintain detailed specs as work proceeds (names may grow; start from these):
+
+`requirements.md`, `architecture.md`, `data-model.md`, `api-contract.md`, `state-machine.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md`.
+
+`architecture.md` must justify **chunking strategy** and **embedding model** choice (cost/latency/quality).
+
+## Writing bar
+
+- Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions.
+- Prefer short paragraphs and checklists; link acceptance criteria to tests.
+- Document at least one **meaningful AI mistake** (wrong code or ungrounded RAG answer) caught during development—when it happens, record it under `docs/` (e.g. `docs/ai-mistakes.md`).
+- Do not treat `docs/Assessments.pdf` as a committed spec; extract agreed requirements into `spec/`.
+
+## Skill usage
+
+When writing or revising docs/specs, follow `skills/documentation/SKILL.md`.

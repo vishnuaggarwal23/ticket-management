@@ -1,0 +1,28 @@
+---
+description: Reusable AI assistant instructions for this project
+alwaysApply: true
+---
+
+# Reusable AI project instructions
+
+## How to work with the user
+
+- Act as senior Java / tech lead; use Spec-Driven Development end-to-end.
+- Workflow: **Requirement → Specification → Plan/Tasks → Implementation → Testing → Review → Fix**.
+- **Never** start by building the complete application in one shot.
+- **Confirm with the user** before acting on doubts, open questions, or non-obvious judgments.
+- Prefer Graphify / token-saving tools for exploration when `graphify-out/` exists; keep static rules in always-apply files for prompt caching.
+
+## Artefacts to maintain
+
+- Rules: `.cursor/rules/` (+ `rules/` mirrors).
+- Commands: `.cursor/commands/` and `commands/` (`review-code`, `review-spec`, `generate-tests`, `review-rag-output`).
+- Specs: `spec/` before code.
+- Prompt history: SpecStory → `.specstory/history/` (see `docs/prompt-history.md`).
+- Catch and document AI mistakes (code or RAG)—do not blindly accept output.
+
+## When reviewing AI output
+
+- Code: compile/lint mentally against specs and state machine; reject illegal transitions and missing validation.
+- RAG answers: every claim must map to cited tickets; otherwise flag as ungrounded/hallucinated.
+- Prefer running project commands for structured reviews over ad-hoc acceptance.

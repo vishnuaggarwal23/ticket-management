@@ -182,11 +182,13 @@ atlassian-ide-plugin.xml
 .ionide/
 
 # -----------------------------------------------------------------------------
-# Cursor — allow shared rules; ignore other local Cursor state
+# Cursor — allow shared rules + commands; ignore other local Cursor state
 # -----------------------------------------------------------------------------
 .cursor/*
 !.cursor/rules/
 !.cursor/rules/**
+!.cursor/commands/
+!.cursor/commands/**
 
 # -----------------------------------------------------------------------------
 # SpecStory — ignore tool-local state; allow committing history/
