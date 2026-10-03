@@ -1,11 +1,7 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 → 1.1.0 (MINOR: approved backend package layout)
-- Modified principles:
-  - VII. No Premature Decisions — removed "package structures" from the
-    unresolved list; layout is now an approved convention
-- Added sections: none
-- Removed sections: none
+- Version change: 1.1.0 → 1.1.1 (PATCH: architecture spec section refs after 2026-10-04 expansion)
+- Modified: Approved Technology Conventions table — backend packages cite `spec/architecture.md` §9 (was §6)
 - Follow-up TODOs:
   - Spec Kit default feature path is `specs/[###-feature]/`; assessment
     artefacts already live under `spec/`. Do not silently merge these trees.
@@ -161,7 +157,7 @@ assessment PDF mandates every specific technology or version.
 | Integration tests | Testcontainers with PostgreSQL |
 | Local infrastructure | Docker Compose |
 | CI | None initially |
-| Backend packages | Layered tree under one application root: `api`, `domain`, `service`, `persistence`, `rag`, `config` (`rules/java-springboot.md`, `spec/architecture.md` §6). Not a PDF mandate. Exact Java root name is not frozen. |
+| Backend packages | Layered tree under one application root: `api`, `domain`, `service`, `persistence`, `rag`, `config` (`rules/java-springboot.md`, `spec/architecture.md` §9). Not a PDF mandate. Exact Java root name is not frozen. |
 
 The PDF names Java 21, Spring Boot, Spring AI, PostgreSQL/H2, an embedding
 model, a vector store (examples include PGVector or Chroma), REST, and
@@ -179,8 +175,10 @@ as work proceeds: `requirements.md`, `architecture.md`, `data-model.md`,
 `test-strategy.md`.
 
 Existing `spec/requirements.md` and `spec/architecture.md` are the current
-requirement and architecture drafts. They MUST NOT be discarded or silently
-replaced by a parallel Spec Kit tree.
+requirement and architecture drafts. `architecture.md` records system design
+(modules, APIs, RAG, vector store) and PDF-mandated chunking/embedding
+**justification**; numeric tuning belongs in `rag-ingestion.md` when agreed.
+They MUST NOT be discarded or silently replaced by a parallel Spec Kit tree.
 
 Spec Kit's installed scripts and templates use `specs/[###-feature-name]/`
 (`spec.md`, `plan.md`, `tasks.md`). That layout MUST NOT be treated as a
@@ -223,4 +221,4 @@ agreed specification.
 **Ratification:** First project-specific constitution, replacing the Spec Kit
 placeholder scaffold.
 
-**Version**: 1.1.0 | **Ratified**: 2026-10-03 | **Last Amended**: 2026-10-03
+**Version**: 1.1.1 | **Ratified**: 2026-10-03 | **Last Amended**: 2026-10-04

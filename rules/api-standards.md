@@ -4,7 +4,7 @@ Cursor attaches this file via [`.cursor/rules/api-standards.mdc`](../.cursor/rul
 
 JSON REST APIs for tickets and grounded Q&A. **Resource field catalogs, required payload fields, and ask answer/citation property names** still live in `spec/api-contract.md` and `spec/rag-api-contract.md` once those files exist and are agreed. Those specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
 
-Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`.
+Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: `spec/architecture.md` §10–11.
 
 ## Assessment vs project conventions vs open decisions
 

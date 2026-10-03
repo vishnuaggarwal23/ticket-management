@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-rag-output.md`](../.cursor/commands/review-rag-output.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Ask JSON **inside** `data` follows `spec/rag-api-contract.md` when that spec exists — do not invent field names here.
+Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: `spec/architecture.md` §15–16. Ask JSON **inside** `data` follows `spec/rag-api-contract.md` when that spec exists — do not invent field names here.
 
 **Pass only if all three hold:**
 

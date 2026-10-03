@@ -6,10 +6,11 @@ Backend coding standards for the support ticket management application.
 
 | Topic | Where |
 |-------|--------|
-| HTTP paths, envelopes, list params | `rules/api-standards.md` |
+| Business/functional modules, layering map | `spec/architecture.md` §4, §8–9 |
+| HTTP paths, envelopes, list params | `rules/api-standards.md`; API map `spec/architecture.md` §11 |
 | Ticket/comment **field** catalogs | `spec/api-contract.md`, `spec/data-model.md` |
 | Tests | `rules/testing.md`, `commands/generate-tests.md` |
-| RAG | `rules/rag-vector-store.md`, `spec/rag-ingestion.md` |
+| RAG | `rules/rag-vector-store.md`, `spec/architecture.md` §14–16, `spec/rag-ingestion.md` |
 | UI | `rules/frontend.md` |
 
 ## Assessment vs project conventions
@@ -45,7 +46,7 @@ Do not add MapStruct, Lombok, QueryDSL, or extra web stacks unless a spec agrees
 
 One root package under `src/main/java` (do not invent a second Spring Boot application). Pick one root (e.g. `com.example.tickets`) and use it consistently — **do not** commit a second package root.
 
-Layout is **by layer**, matching `spec/architecture.md`:
+Layout is **by layer**, matching `spec/architecture.md` §9:
 
 ```
 {root}/

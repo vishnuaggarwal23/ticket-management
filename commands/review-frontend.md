@@ -14,6 +14,7 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 - `rules/frontend.md`
 - `spec/requirements.md` — **AC-CORE-01…11** for UI-facing acceptance; **§10** for open UI/API shape (**OQ/DEC**)
 - `rules/api-standards.md` (paths, envelopes, PATCH, pagination, 409)
+- `spec/architecture.md` §12 (UI surfaces) when reviewing screen/API wiring
 - `spec/ui-flow.md`, `spec/api-contract.md`, `spec/rag-api-contract.md` if they exist
 - Assessment PDF only as background for **capabilities** (not stack)
 

@@ -12,7 +12,7 @@
 | Spec file | Status in repo | Role relative to this document |
 |-----------|----------------|--------------------------------|
 | `requirements.md` | Present (this file) | PDF + acceptance hub |
-| `architecture.md` | Present (draft) | Chunking + embedding justification (**PDF**); system design |
+| `architecture.md` | Present (draft) | System design (modules, ticket shape, APIs, communication, RAG, vector DB); chunking + embedding justification (**PDF**, §16); reviewer map in `rules/documentation.md` |
 | `data-model.md` | Missing | Resolves OQ-01, OQ-02, OQ-03, OQ-10, OQ-13, OQ-14 |
 | `api-contract.md` | Missing | Resolves OQ-04; ticket REST (**Open** in PDF) |
 | `state-machine.md` | Missing | Resolves OQ-11, OQ-12, OQ-13 |
@@ -1310,3 +1310,4 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | Expanded structure: business / functional / implementation sections; feature catalogue; examples; traceability IDs; PDF inconsistency note. |
 | 2026-10-04 | Added flows (A–E), per-feature AC (`AC-FEAT-*`), core AC expansion (`AC-CORE-*`), example corpus §4.3, FR→AC traceability. |
 | 2026-10-04 | Clarity pass: §0 navigation, §2.4–2.7 precedence/enums/anti-patterns, §5 deduped, §8.7 demo script, §10 OQ/DEC/handoff, §12 glossary, §13 scope boundary. |
+| 2026-10-04 | Child-spec table: `architecture.md` role aligned with expanded system-design spec and `rules/documentation.md` reviewer map. |

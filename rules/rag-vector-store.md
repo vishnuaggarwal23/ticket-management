@@ -6,11 +6,12 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 
 | Read first | Purpose |
 |------------|---------|
+| `spec/architecture.md` | RAG pipeline (§15), vector DB (§14), knowledge/chunking/embedding **justification** (§16); business RAG modules (§4, §8) |
 | `rules/api-standards.md` | Ask HTTP path, envelopes, 200 no-match vs 400 validation |
 | `rules/java-springboot.md` | `rag/` package, `@ConfigurationProperties`, no magic numbers in Java |
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
 | `commands/review-rag-output.md` | Manual grounding review of ask answers |
-| `spec/rag-ingestion.md` | **Numeric** chunking, models, K, threshold (when agreed) |
+| `spec/rag-ingestion.md` | **Numeric** chunking, models, K, threshold, ingest timing (when agreed) |
 | `spec/rag-api-contract.md` | Field names inside ask `data` |
 | `spec/evaluation-strategy.md` | Probabilistic retrieval quality (PDF learning goal) |
 
@@ -121,7 +122,7 @@ Tickets → knowledge documents → chunk → embeddings → PgVector
 
 This is **retrieve then generate** once. Do not add agents, multi-step tool orchestration, graph RAG, hybrid search, or reranking unless a later **agreed spec** says so.
 
-Pick the chunking row from **PDF guidance slots** in `spec/rag-ingestion.md` before implementing split logic.
+Pick the chunking row from **PDF guidance slots** in `spec/rag-ingestion.md` before implementing split logic. **Why** (ticket-shaped text, paragraph vs fixed vs semantic) belongs in `spec/architecture.md` §16; **numbers** belong in `spec/rag-ingestion.md`.
 
 ## Ingestion and storage
 

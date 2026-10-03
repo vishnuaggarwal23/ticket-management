@@ -2409,28 +2409,328 @@ do all
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Applying optional polish to five files: api-standards, testing, rag-vector-store, frontend, and review-frontend. Then committing the rules and commands changes, along with any other uncommitted work.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/testing.md</summary>
 
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
 
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
 
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Applying optional edits across rules/ and commands/. Updating api-standards.md and adding AC-CORE details to testing.md.
+
+Adding a DEC-01 note to rag-vector-store.md. Updating frontend.md requirements §8.7. Adding OQ/DEC and AC-CORE to review-frontend.md. Skipping ai-project-instructions.mdc to stay within the five-file scope.
+
+Placing the acceptance-traceability section in testing.md before the Do not section. Adding DEC-01 and §11.1 references to rag-vector-store.md after the re-ingest bullet. Preparing to stage, diff, and commit all changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/testing.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/rules/ai-project-instructions.mdc</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants all optional polish items completed. AI project instructions remain out of scope. A brief note about requirements hub acceptance criteria, operational quality, and design elements may be added.
+
+I will skip ai-project-instructions.mdc to stay within the rules/ and commands/ scope. All modified files in those directories will be committed.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat rules/ commands/</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat rules/ commands/
+```
+
+```
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   commands/generate-tests.md
+	modified:   commands/review-code.md
+	modified:   commands/review-frontend.md
+	modified:   commands/review-rag-output.md
+	modified:   commands/review-spec.md
+	modified:   rules/api-standards.md
+	modified:   rules/documentation.md
+	modified:   rules/frontend.md
+	modified:   rules/rag-vector-store.md
+	modified:   rules/testing.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+ commands/generate-tests.md    |  5 +++--
+ commands/review-code.md       |  4 ++--
+ commands/review-frontend.md   |  5 +++--
+ commands/review-rag-output.md |  6 ++++--
+ commands/review-spec.md       | 15 ++++++++++-----
+ rules/api-standards.md        |  2 +-
+ rules/documentation.md        | 20 +++++++++++++++++++-
+ rules/frontend.md             |  3 ++-
+ rules/rag-vector-store.md     |  2 +-
+ rules/testing.md              |  5 +++++
+ 10 files changed, 50 insertions(+), 17 deletions(-)
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Committing all 10 files with a clear message.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add rules/ commands/ &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Align rules and commands with expanded spec/requirements.md.
+
+Link review, test, and API steering to AC-CORE/AC-FEAT, OQ/DEC, §4.3 corpus, and DEC-01 re-ingest note so implementation stays spec-driven.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add rules/ commands/ && git commit -m "$(cat <<'EOF'
+Align rules and commands with expanded spec/requirements.md.
+
+Link review, test, and API steering to AC-CORE/AC-FEAT, OQ/DEC, §4.3 corpus, and DEC-01 re-ingest note so implementation stays spec-driven.
+EOF
+)" && git status
+```
+
+```
+[main b8826c8] Align rules and commands with expanded spec/requirements.md.
+ 10 files changed, 50 insertions(+), 17 deletions(-)
+On branch main
+Your branch is ahead of 'origin/main' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Preparing a summary.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Done — optional cross-links applied and everything under `rules/` and `commands/` committed.
+
+### Optional polish (5 files)
+
+| File | Change |
+|------|--------|
+| `rules/api-standards.md` | OQ/DEC §10 pointer on open questions |
+| `rules/testing.md` | **Acceptance traceability** → AC-CORE/AC-FEAT + `generate-tests` |
+| `rules/rag-vector-store.md` | **DEC-01** / §11.1 note on re-ingest on close |
+| `rules/frontend.md` | Read-first: `requirements.md` §8 / §8.7; open items → §10 |
+| `commands/review-frontend.md` | Inputs + checklist → §10, **AC-CORE-01…11** |
+
+### Commit
+
+- **`b8826c8`** — *Align rules and commands with expanded spec/requirements.md.* (10 files)
+- **`main`** is **2 commits ahead** of `origin/main` (`16af610` requirements + `b8826c8` rules/commands)
+- SpecStory history file left **untracked**
+
+`.cursor` pointer files unchanged (bodies live in `rules/` / `commands/`). Say if you want an explicit push.
+
+---
+
+_**User**_
+
+commit all the files
+
+---
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Committing all files, including untracked ones and any uncommitted changes.
+
+Checking git status first.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -2 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -2 --oneline
+```
+
+```
+On branch main
+Your branch is ahead of 'origin/main' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+b8826c8 Align rules and commands with expanded spec/requirements.md.
+16af610 Expand spec/requirements.md from Assessments.pdf for SDD traceability.
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Only one untracked file remains: the specstory history. I will add and commit it now.
+
+The commit message will reference prompt history.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add -A &amp;&amp; git status &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+chore: add SpecStory history for requirements specification work.
+
+Records the session that expanded spec/requirements.md and aligned rules/commands.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add -A && git status && git commit -m "$(cat <<'EOF'
+chore: add SpecStory history for requirements specification work.
+
+Records the session that expanded spec/requirements.md and aligned rules/commands.
+EOF
+)" && git status
+```
+
+```
+On branch main
+Your branch is ahead of 'origin/main' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md
+
+[main 91ccb48] chore: add SpecStory history for requirements specification work.
+ 1 file changed, 2436 insertions(+)
+ create mode 100644 .specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md
+On branch main
+Your branch is ahead of 'origin/main' by 3 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The working tree is clean. There are no changes to commit.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+All changes are committed; the working tree is clean.
+
+| Commit | Summary |
+|--------|---------|
+| `16af610` | Expanded `spec/requirements.md` |
+| `b8826c8` | Aligned `rules/` and `commands/` |
+| `91ccb48` | Added `.specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md` |
+
+**Branch:** `main` is **3 commits ahead** of `origin/main` (not pushed). Say if you want a push with explicit approval.

@@ -30,7 +30,7 @@ Before judging content, **name every file** you used and its role. If a file is 
 | Role | Typical path | Use in this review |
 |------|----------------|-------------------|
 | Requirements | `spec/requirements.md` | PDF scope; **AC-CORE** / **FEAT**; **OQ** / **DEC** (§10); handoff map (§10.3); §8.7 demo script |
-| Architecture | `spec/architecture.md` | layering, RAG placement, chunking *discussion* (not numeric locks unless agreed) |
+| Architecture | `spec/architecture.md` | Business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks only if agreed in `rag-ingestion.md` |
 | Data model | `spec/data-model.md` | fields, ids, enums |
 | API contract | `spec/api-contract.md` | ticket HTTP payloads beyond `rules/api-standards.md` envelopes |
 | State machine | `spec/state-machine.md` | legal/illegal transitions |
@@ -82,6 +82,22 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities; no **DEC-*** closed in code but still **Open** in requirements
 - [ ] `architecture.md` ↔ `rag-ingestion.md` / `rag-api-contract.md` — no conflicting pipeline or API story
 - [ ] `ui-flow.md` ↔ API/RAG contracts — UI does not require impossible API shapes
+
+### When `spec/architecture.md` is in scope (expanded checklist)
+
+Use `rules/documentation.md` section map for headings. Mark **N/A** for sections not yet written.
+
+- [ ] **PDF vs Convention vs Open** labels used; conventions (PgVector, `/api/v1`, Boot 3, React+Vite+TS) not presented as PDF mandates
+- [ ] **Business modules** (§4) trace to `requirements.md` FEAT catalogue without inventing capabilities
+- [ ] **Ticket structure** (§5) stays conceptual — no smuggled field catalogs that belong in `data-model.md`
+- [ ] **Functional modules** (§8) map to **technical** packages (§9) consistently with `rules/java-springboot.md`
+- [ ] **Communication** (§10): synchronous REST only unless an agreed spec adds async; ask no-match vs error envelope matches `rules/api-standards.md`
+- [ ] **API architecture** (§11) aligns with `rules/api-standards.md` (`POST /api/ai/ask`, PATCH tickets, envelopes)
+- [ ] **Vector DB** (§14): PgVector as **Convention**; relational DB remains SoR; rebuild-from-tickets story present
+- [ ] **RAG** (§15–16): ingest sources (description, comments, resolution notes); re-ingest on update/close per PDF with **DEC-01** noted if close-only is unresolved
+- [ ] **Chunking** (§16): strategy **justified** for ticket text; numeric size/overlap deferred to `rag-ingestion.md` unless explicitly agreed
+- [ ] **Embedding** (§16): local vs cloud tradeoffs documented; same model at ingest/query; model id not invented without `rag-ingestion.md`
+- [ ] **Open questions** (§21) align with `requirements.md` §10 OQ/DEC — no decisions closed only in architecture
 
 ---
 
@@ -184,6 +200,7 @@ If unsure whether something is a convention or a hallucination, mark **needs use
 - [ ] Every acceptance criterion maps to a test theme in `rules/testing.md` and, where present, to **`AC-CORE-*`** or **`AC-FEAT-*`** in `spec/requirements.md`
 - [ ] Positive **and** negative / empty outcomes for implemented capabilities
 - [ ] RAG: sources, metadata, re-ingest, grounding, citations, no-match; configurable K/threshold **without** numeric defaults unless agreed
+- [ ] When `architecture.md` is primary: §16 chunking + embedding justification present for **AC-CORE-19** / FEAT-20
 - [ ] No “build the complete application” scope
 
 ---

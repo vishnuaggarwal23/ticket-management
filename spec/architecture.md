@@ -1,77 +1,278 @@
 # Architecture
 
-> **Status:** draft — design for implementation; defers contracts and field-level detail to sibling specs.  
-> **Source of truth for requirements:** [`requirements.md`](requirements.md) (PDF-derived only).  
+> **Status:** draft — design for implementation; field-level contracts live in sibling specs.  
+> **Requirements hub:** [`requirements.md`](requirements.md) (PDF-derived acceptance and FEAT catalogue).  
+> **Assessment source:** `docs/Assessments.pdf` (via [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Audience:** implementers, reviewers, assessors.
+
+**Label legend** (same as `requirements.md`)
+
+| Label | Meaning |
+|-------|---------|
+| **PDF** | Required or named in the assessment PDF. |
+| **Convention** | Project choice in `rules/*` or this spec; not a PDF mandate. |
+| **Open** | Underspecified; resolve in a child spec after confirmation. |
+| **Example** | Illustrative only (e.g. `TKT-1001`). |
+
+This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, and components. It **does not** replace [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`rag-api-contract.md`](rag-api-contract.md), [`ui-flow.md`](ui-flow.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
 
 ---
 
-## 1. Problem / context
+## Table of contents
 
-The system is an **AI-powered support ticket management** application: conventional ticket operations (CRUD, comments, search, status filter, persistence, validation) plus a **RAG-based** natural-language Q&A capability over ticket history. Ticket logic is **deterministic** (especially the status state machine); the assistant path is **probabilistic** and must be **grounded** in retrieved ticket data with citations and honest no-match responses.
+1. [Problem and context](#1-problem-and-context)  
+2. [Scope and non-goals](#2-scope-and-non-goals)  
+3. [Architectural principles](#3-architectural-principles)  
+4. [Business architecture](#4-business-architecture)  
+5. [Ticket structure (conceptual)](#5-ticket-structure-conceptual)  
+6. [System context](#6-system-context)  
+7. [Technology structure](#7-technology-structure)  
+8. [Functional modules and components](#8-functional-modules-and-components)  
+9. [Technical components and layering](#9-technical-components-and-layering)  
+10. [Communication architecture](#10-communication-architecture)  
+11. [API architecture](#11-api-architecture)  
+12. [Frontend architecture](#12-frontend-architecture)  
+13. [Data and persistence](#13-data-and-persistence)  
+14. [Vector database architecture](#14-vector-database-architecture)  
+15. [RAG architecture](#15-rag-architecture)  
+16. [Knowledge, chunking, and embeddings](#16-knowledge-chunking-and-embeddings)  
+17. [Status state machine (placement)](#17-status-state-machine-placement)  
+18. [Configuration](#18-configuration)  
+19. [Errors and cross-cutting concerns](#19-errors-and-cross-cutting-concerns)  
+20. [Security and deployment](#20-security-and-deployment)  
+21. [Open questions and decisions](#21-open-questions-and-decisions)  
+22. [Related specifications](#22-related-specifications)  
+23. [Acceptance mapping](#23-acceptance-mapping)  
 
-This document describes **how** the named technology stack is arranged, how data and requests flow, and where cross-cutting concerns live. It does **not** replace [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), or [`rag-api-contract.md`](rag-api-contract.md)—those specs will nail shapes and acceptance-level detail.
+---
+
+## 1. Problem and context
+
+The system is an **AI-powered support ticket management** application (**PDF**): conventional ticket operations (create, list, detail, update core fields, comments, keyword search, status filter, persistence, validation) plus **RAG-based** natural-language Q&A over ticket history.
+
+Two engineering regimes coexist:
+
+| Regime | Examples | Proof style |
+|--------|----------|-------------|
+| **Deterministic** | CRUD, validation, status state machine | Repeatable tests; exact outcomes |
+| **Probabilistic** | Similarity ranking, answer phrasing | Retrieval eval + grounding review; not one golden LLM string |
+
+The assistant is **retrieve-then-generate** only (**PDF**): grounded answers with **ticket ID citations**, or an **honest no-match**—not an autonomous agent.
 
 ---
 
 ## 2. Scope and non-goals
 
-### In scope (architecture must support)
+### 2.1 In scope (architecture must support)
 
-| Area | Requirement summary (see FR/NFR in `requirements.md`) |
-|------|--------------------------------------------------------|
-| Tickets | Create, list, detail, update fields, comments, keyword search, status filter, DB persistence |
-| Validation & errors | Backend validation; stable API errors; UI shows meaningful messages |
-| State machine | Backend-enforced transitions; invalid transitions rejected |
-| RAG | Ingest description, comments, resolution notes + metadata; vector store; re-ingest on update/close |
-| Ask API | `POST /api/ai/ask` — single retrieve → generate; citations or explicit no-match |
-| Configuration | Configurable top-K and similarity threshold (not hardcoded) |
-| Documentation | Chunking strategy and embedding tradeoffs documented here; final embedding model in `rag-ingestion.md` (NFR-07) |
+| Area | Requirement summary | Requirements trace |
+|------|---------------------|-------------------|
+| Tickets | CRUD, comments, keyword search, status filter, DB persistence | FEAT-01…08, FR-01…08 |
+| Validation and errors | Backend validation; meaningful UI errors | FEAT-09…10, FR-09…10 |
+| State machine | Backend-enforced transitions; invalid rejected | FEAT-11, FR-11…12 |
+| RAG ingest | Description, comments, resolution notes → knowledge → chunk → embed → vector store | FEAT-12…14, FR-13…14 |
+| RAG ask | `POST /api/ai/ask`; citations or no-match | FEAT-15…18, FR-15…18 |
+| Retrieval tuning | Configurable top-K and similarity threshold | FEAT-19, FR-18 |
+| Documentation | Chunking and embedding **justified** here (**PDF** NFR-07) | FEAT-20, AC-CORE-19 |
 
-### Non-goals
+### 2.2 Non-goals
 
-- **Autonomous agent** behavior from the ask endpoint (no ticket creation, notifications, or tool chaining from `/api/ai/ask`).
-- **Authentication / authorization** — not stated in the assessment PDF; do not assume unless later agreed (see open questions).
-- Multi-tenancy, attachments, email/notification subsystems, workflow beyond the defined status machine — not in scope unless added to requirements later.
+- **Autonomous agent** from the ask endpoint: no ticket creation, notifications, or tool chaining (**PDF** §2.2).
+- **Authentication / authorization** — not in the PDF (**Open** → OQ-06, DEC-12).
+- Multi-tenancy, attachments, email/Slack, workflow beyond the defined status machine — unless added to agreed requirements later.
 
 ---
 
 ## 3. Architectural principles
 
-1. **Spec-driven** — code follows `spec/`; ambiguous product behavior is confirmed before implementation.
-2. **Thin edges, rich domain** — HTTP adapters validate and map; ticket rules and the state machine live in domain/services, not in controllers or the UI.
-3. **Single persistence truth for tickets** — relational DB is the system of record; the vector store is a **derived index** for search/RAG, refreshed when tickets change.
-4. **Grounded AI** — generation uses only retrieved ticket context for support Q&A; no silent fallback to general world knowledge.
-5. **Keep it simple** — one deployable backend (monolith) and one frontend app talking over REST; avoid microservices and extra moving parts unless requirements change.
+1. **Spec-driven** — behaviour follows agreed `spec/`; ambiguous product rules are confirmed before code (see `requirements.md` §10).
+2. **Thin edges, rich domain** — HTTP adapters validate and map; ticket rules and the state machine live in **domain/services**, not controllers or the UI (**PDF**).
+3. **Single persistence truth for tickets** — PostgreSQL is the **system of record**; the vector index is a **derived** search/RAG index, refreshed when tickets change (**PDF** freshness).
+4. **Grounded AI** — generation for support Q&A uses **retrieved ticket context only**; no silent fallback to general world knowledge (**PDF**).
+5. **Monolith, simple topology** — one deployable Spring Boot backend and one React SPA over REST (**Convention**); avoid microservices unless requirements change.
+6. **PDF vs convention** — document both; do not present project envelopes or `/api/v1` as PDF mandates (`rules/api-standards.md`).
 
 ---
 
-## 4. System context
+## 4. Business architecture
+
+Business architecture describes **who** uses the system, **what** business capabilities exist, and how they group—without prescribing HTTP paths or Java packages.
+
+### 4.1 Actors
+
+| Actor | Role | Primary capabilities |
+|-------|------|----------------------|
+| **Support agent** | Day-to-day ticket work | Create/update tickets, comment, search, filter, transition status |
+| **Support lead / researcher** | Historical insight | Same as agent plus **Ask** over ticket corpus |
+| **Operator / engineer** | Run and configure | Deploy app, configure DB and RAG parameters (no secrets in repo) |
+| **Assessor / reviewer** | Process evidence | Spec set, tests, grounding review, documented AI mistakes (**PDF** process) |
+
+No role-based access control is required by the PDF (**Open**).
+
+### 4.2 Business capabilities (capability map)
+
+Capabilities align with `requirements.md` §4 feature catalogue:
+
+```mermaid
+flowchart TB
+  subgraph ticket_ops [Ticket operations PDF]
+    C[Create and persist tickets]
+    L[List and view detail]
+    U[Update metadata and assignee]
+    CM[Add comments timeline]
+    S[Keyword search]
+    F[Filter by status]
+    SM[Lifecycle status transitions]
+  end
+
+  subgraph knowledge [Knowledge and AI PDF]
+    IN[Ingest ticket narrative to index]
+    RF[Refresh index on change]
+    ASK[Natural language ask]
+    GR[Grounded answers with citations]
+    NM[Honest no-match]
+  end
+
+  subgraph quality [Quality and process PDF]
+    VAL[Validate inputs]
+    ERR[Meaningful errors to users]
+    TST[State machine integration tests]
+    DOC[Document chunking and embedding]
+  end
+
+  C --> IN
+  U --> RF
+  CM --> RF
+  SM --> RF
+  IN --> ASK
+  RF --> ASK
+  ASK --> GR
+  ASK --> NM
+  SM --> VAL
+  C --> VAL
+  VAL --> ERR
+```
+
+### 4.3 Business modules (logical)
+
+Business modules are **cohesive responsibility areas** for planning and traceability. They may map to one or more technical components (§9).
+
+| Business module | Purpose | Key behaviours | Features |
+|-----------------|---------|----------------|----------|
+| **Ticket registry** | Authoritative record of support work | Create, read, update fields, list | FEAT-01…04, 08 |
+| **Collaboration timeline** | Threaded agent notes on a ticket | Add and view comments | FEAT-05 |
+| **Work discovery** | Find tickets in a queue | Keyword search, status filter | FEAT-06…07 |
+| **Lifecycle governance** | Legal status progression | Allow T1–T5; reject X1–X3 | FEAT-11 |
+| **Knowledge indexing** | Make ticket text searchable for AI | Build docs, chunk, embed, metadata | FEAT-12…13 |
+| **Index freshness** | Avoid stale answers | Re-ingest on update/close (**PDF** p.5; **DEC-01** for close-only) | FEAT-14 |
+| **Assisted research** | Q&A over history | Ask API, retrieval, generation, citations | FEAT-15…18 |
+| **Operational quality** | Trust and assessability | Validation, errors, configurable retrieval, docs | FEAT-09…10, 19…23 |
+
+**Business rule integrity** (from `requirements.md` §3.2):
+
+- Status changes follow the published lifecycle; illegal moves are **refused** by the backend.
+- The assistant does **not** invent ticket facts when retrieval does not support an answer.
+- Operational knowledge in the vector index must **not go stale** when tickets change (**PDF**); execution timing is **Open** → `rag-ingestion.md`.
+
+---
+
+## 5. Ticket structure (conceptual)
+
+Field catalogs, enums, and Liquibase tables belong in **`data-model.md`**. This section defines the **architectural shape** of a ticket for design discussions.
+
+### 5.1 Ticket aggregate (logical)
+
+A **ticket** is the primary aggregate root for support work (**PDF**). Conceptually it comprises:
+
+| Part | Description | PDF / Open |
+|------|-------------|------------|
+| **Identity** | Stable id used in UI, API, and RAG citations | **Open** (OQ-01, **Example** `TKT-1001`) |
+| **Core metadata** | Title, description, priority, assignee | **PDF** (update list) |
+| **Lifecycle** | Status enum and transition history | **PDF** state machine |
+| **Timeline** | Ordered comments (agent notes) | **PDF** |
+| **Resolution narrative** | Text capturing how the issue was resolved | **PDF** ingestion source; field shape **Open** (OQ-10) |
+| **Taxonomy** | Category (for metadata and filters) | **PDF** metadata key; source **Open** (OQ-03) |
+| **Audit** | Created/updated timestamps | **Convention** for sorting (`rules/api-standards.md`) |
+
+```mermaid
+erDiagram
+  TICKET ||--o{ COMMENT : has
+  TICKET {
+    string id
+    string title
+    string description
+    string priority
+    string assignee
+    string status
+    string category
+    string resolutionNotes
+    instant createdAt
+    instant updatedAt
+  }
+  COMMENT {
+    string id
+    string body
+    instant createdAt
+  }
+```
+
+*Diagram is conceptual; column names and optionality are **Open** until `data-model.md` is agreed.*
+
+### 5.2 Status lifecycle (summary)
+
+Canonical states (**PDF**): `OPEN` | `IN_PROGRESS` | `RESOLVED` | `CLOSED` | `CANCELLED`.
+
+Allowed edges (**PDF**): T1–T5 in `requirements.md` §4.2 FEAT-11. Forbidden reopen examples: `CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`.
+
+Full matrix, skipped hops (**DEC-02**), and transition API shape (**DEC-06**) → [`state-machine.md`](state-machine.md).
+
+### 5.3 Text sources for RAG (ticket → knowledge)
+
+Only these ticket-owned texts feed the knowledge pipeline (**PDF** FR-13):
+
+| Source | When included | Notes |
+|--------|---------------|-------|
+| Description | Always when present | Primary problem statement |
+| Comments | Each comment body | Timeline context |
+| Resolution notes | When field exists / populated | **Open** shape (OQ-10) |
+
+Title and metadata (`status`, `priority`, `assignee`, `category`) are attached as **chunk metadata** for filtering and citation display, not necessarily embedded as standalone documents unless `rag-ingestion.md` agrees.
+
+### 5.4 Ticket operations vs derived index
+
+| Store | Role | Mutability |
+|-------|------|------------|
+| **PostgreSQL ticket rows** | System of record | Updated only via ticket services + validation + state machine |
+| **Vector chunks** | Derived search index | Rebuilt/refreshed by ingestion; rebuildable from PostgreSQL if lost |
+
+---
+
+## 6. System context
 
 ```mermaid
 flowchart LR
   subgraph clients [Clients]
-    UI[Web UI]
+    UI[Web UI React SPA]
   end
 
-  subgraph backend [Spring Boot application]
+  subgraph backend [Spring Boot monolith]
     API[REST API layer]
-    TM[Ticket domain and services]
+    TM[Ticket application services]
     SM[Status state machine]
-    RAG[RAG ingestion and ask]
+    RAG[RAG ingest and ask]
   end
 
   subgraph data [Data stores]
-    PG[(PostgreSQL)]
-    VS[(Vector store)]
+    PG[(PostgreSQL tickets and comments)]
+    VS[(PgVector embeddings)]
   end
 
-  subgraph external [External - optional]
-    LLM[Chat / completion model]
+  subgraph external [External configurable]
+    LLM[Chat completion model]
     EMB[Embedding model]
   end
 
-  UI -->|JSON /api/*| API
+  UI -->|HTTPS JSON| API
   API --> TM
   API --> RAG
   TM --> SM
@@ -84,319 +285,628 @@ flowchart LR
 
 **Runtime roles**
 
-- **Web UI** — ticket screens, search/filter, status actions, AI ask panel; calls backend REST only.
-- **Spring Boot app** — hosts ticket APIs, enforces validation and state machine, runs ingestion hooks and `POST /api/ai/ask`.
-- **PostgreSQL** — durable ticket entities (and related rows such as comments).
-- **Vector store** — embeddings and metadata for similarity search (see §8).
-- **Embedding / chat models** — invoked via **Spring AI**; provider and hosting are configurable (see §9).
+- **Web UI** — ticket screens, search/filter, status actions, AI ask panel; talks only to backend REST (**PDF** implied).
+- **Spring Boot application** — ticket APIs, validation, state machine, ingestion hooks, `POST /api/ai/ask` (**PDF**).
+- **PostgreSQL** — durable relational data (**PDF**).
+- **PgVector** — embeddings and metadata in the same DB instance (**Convention**; PDF examples PGVector or Chroma).
+- **Embedding and chat models** — via **Spring AI** (**PDF**); provider **Convention**: Ollama initially via config.
 
 ---
 
-## 5. Technology stack
+## 7. Technology structure
 
-| Layer | Choice (from assessment + project steering) | Notes |
-|-------|-----------------------------------------------|--------|
-| Language / runtime | **Java 21** | Assessment names Java 21 |
-| Backend framework | **Spring Boot 3** | **Project convention** (PDF names Spring Boot, not a major version) |
-| Build | **Maven Wrapper** (`./mvnw`) | **Project convention** — do not rely on a machine-local Maven |
-| AI integration | **Spring AI** | Assessment names Spring AI; embeddings, vector store, chat |
-| Ticket persistence | **PostgreSQL** + **Liquibase** | PDF names PostgreSQL/H2; **this project** uses PostgreSQL and Liquibase |
-| Vector search | **PgVector** (same Postgres instance) | **Project selection** (PDF examples: PGVector or Chroma) — §8 |
-| Initial model host | **Ollama** (via Spring AI config) | **Project convention**; model **name** still open (`rag-ingestion.md`) |
-| Tests | JUnit 5; PostgreSQL **Testcontainers** | **Project convention** — see [`test-strategy.md`](test-strategy.md) and `rules/testing.md` |
-| API style | **REST**, JSON | Assessment: REST; `/api/ai/ask` is the only path the PDF names |
-| Frontend | **React + Vite + TypeScript** | **Project convention** (PDF: React/Next **or equivalent**) — `rules/frontend.md` |
-| Tooling | Cursor / Copilot / Kiro, SpecStory, `rules/` / `commands/` | Process, not runtime |
+### 7.1 Stack summary
 
-**Not mandated by the PDF:** Docker, Kubernetes, message brokers, or a RAG microservice. **Docker Compose** is this project’s approved **local infrastructure** convenience.
+| Layer | Choice | Label |
+|-------|--------|-------|
+| Language | Java 21 | **PDF** |
+| Backend | Spring Boot 3 | **Convention** (PDF names Spring Boot, not major version) |
+| Build | Maven Wrapper (`./mvnw`) | **Convention** |
+| AI | Spring AI (embed, vector store, chat) | **PDF** |
+| Ticket DB | PostgreSQL + Liquibase | **Convention** (PDF allows PostgreSQL/H2) |
+| Vector search | PgVector extension, same instance | **Convention** (PDF examples PGVector/Chroma) |
+| Models (initial) | Ollama via Spring AI properties | **Convention**; model **ids** **Open** → `rag-ingestion.md` |
+| API | REST, JSON | **PDF** |
+| Frontend | React + Vite + TypeScript | **Convention** (PDF: React/Next or equivalent) |
+| Tests | JUnit 5, Mockito, PostgreSQL Testcontainers | **Convention** (`rules/testing.md`) |
+
+### 7.2 Deployment topology (logical)
+
+```text
+┌─────────────────┐     ┌──────────────────────────────┐
+│  Static SPA     │     │  Spring Boot JVM (monolith)   │
+│  (Vite build)   │────▶│  api / service / domain /     │
+│  dev: Vite proxy│     │  persistence / rag / config   │
+└─────────────────┘     └───────────┬──────────────────┘
+                                    │
+                    ┌───────────────┴───────────────┐
+                    ▼                               ▼
+            ┌───────────────┐               ┌───────────────┐
+            │ PostgreSQL    │               │ Ollama (dev)  │
+            │ + pgvector    │               │ or cloud APIs │
+            └───────────────┘               └───────────────┘
+```
+
+**Convention:** Docker Compose may run PostgreSQL (+ optional Ollama) locally; not mandated by PDF.
+
+### 7.3 Technology dependencies (allowed direction)
+
+```text
+Frontend  →  REST  →  api  →  service  →  domain
+                              ↓           ↓
+                         persistence   rag  →  Spring AI  →  models
+                              ↓           ↓
+                         PostgreSQL   PgVector (same DB)
+```
+
+No message broker, no separate RAG microservice, no BFF unless a future spec adds one.
 
 ---
 
-## 6. Logical structure (backend)
+## 8. Functional modules and components
 
-Keep HTTP adapters thin and persistence separate from ticket/RAG rules (`rules/java-springboot.md`). The following package tree is an **agreed project convention** (not a PDF mandate). Exact Java root name (`com.…`) is not frozen; there is one application root under `src/main/java`. Detail: `rules/java-springboot.md`.
+**Functional modules** are implementable slices of behaviour (often map 1:1 to application services). **Components** are the main parts inside each module.
 
-```
-api/           Controllers, request/response DTOs, @ControllerAdvice
-domain/        Ticket status enum, state machine, domain exceptions (no Spring Web, no JPA)
-service/       Transactional application services; mapping DTO ↔ domain/entity
-persistence/   JPA entities, Spring Data repositories
-rag/           Knowledge documents, chunk/embed ports, retrieval, ask orchestration
-config/        Spring configuration, RAG properties, Spring AI beans
-```
-
-**Responsibility boundaries**
+### 8.1 Ticket management module
 
 | Component | Responsibility |
 |-----------|----------------|
-| Controllers | HTTP mapping, `@Valid`, status codes; no business rules |
-| Ticket service | Transactions, CRUD, comments, search/filter queries, **delegate status changes to state machine** |
-| State machine | Pure rules: allowed transitions; reject illegal moves with a domain-level error (HTTP mapping in `api-contract.md`) |
-| RAG ingestion | On relevant ticket changes: build documents → chunk → embed → upsert/delete in vector store |
-| Ask service | Embed question → similarity search → filter by threshold → prompt LLM with context only → map to response DTO |
-| `@ControllerAdvice` | Map validation, not-found, illegal transition, and generic failures to client-safe errors (exact JSON in `api-contract.md`) |
+| **Ticket command handler** | Create ticket, update allowed fields |
+| **Ticket query handler** | Get by id, paginated list |
+| **Comment handler** | Append comment to ticket |
+| **State transition coordinator** | Invoke state machine on status change requests |
+| **Validation adapter** | Enforce Bean Validation + domain rules at boundary |
 
-**Synchronization between DB and vector index**
+**Triggers RAG:** successful updates and comments enqueue or run **ingestion** (§15.4; timing **Open**).
 
-After a successful ticket **update** or transition to **closed** (and any other events agreed in `rag-ingestion.md`), the application **re-ingests** that ticket’s knowledge so embeddings do not go stale (FR-14). The exact execution model (inline, after-commit, asynchronous, etc.) is **not** decided here; it will be defined in [`rag-ingestion.md`](rag-ingestion.md).
+### 8.2 Discovery module
 
----
+| Component | Responsibility |
+|-----------|----------------|
+| **Keyword search** | SQL/JPQL (or agreed) search over searchable fields (**Open** OQ-14) |
+| **Status filter** | Restrict list by `status` query param (**Convention** `rules/api-standards.md`) |
 
-## 7. Frontend architecture
+Distinct from **vector similarity search** (RAG only).
 
-The UI is a **React + Vite + TypeScript** app (project convention) that consumes the backend REST API (no BFF). Screens and interaction detail belong in [`ui-flow.md`](ui-flow.md); this section only lists surfaces implied by the assessment.
+### 8.3 RAG module
 
-**Functional surfaces** (mapped to requirements; detail in `ui-flow.md`):
+| Component | Responsibility |
+|-----------|----------------|
+| **Knowledge document builder** | Assemble ticket text + metadata into ingestible documents |
+| **Chunking service** | Split documents per agreed strategy (§16) |
+| **Embedding port** | Call Spring AI embedding model |
+| **Vector index writer** | Upsert/delete chunks in PgVector |
+| **Ingestion orchestrator** | Run pipeline on create/update/close triggers |
+| **Retrieval service** | Embed question, top-K, threshold filter |
+| **Ask orchestrator** | Build prompt, call chat model, map citations / no-match |
+| **RAG configuration** | top-K, threshold, chunk limits via properties |
 
-| Surface | Backend dependency |
-|---------|-------------------|
-| Ticket list | List + status filter + keyword search query params (exact contract in `api-contract.md`) |
-| Ticket detail | Get by id; show fields, comments, status |
-| Create / edit ticket | Create and update endpoints with validation errors surfaced field-by-field |
-| Comments | Add comment endpoint |
-| Status actions | Endpoint(s) for valid transitions only—UI should not encode illegal transitions as primary enforcement |
-| AI assistant | `POST /api/ai/ask` with question; display answer, cited ticket id(s), or no-match message |
+### 8.4 Cross-cutting functional components
 
-**Error display**
-
-- Show user-visible messages from the API (FR-10). Exact error JSON is **not** frozen here — follow `api-contract.md` once agreed (`rules/api-standards.md`, `rules/frontend.md`).
-- For illegal status transitions, show the **server** message. The UI may guide valid actions; it is not the enforcer.
-
-**Configuration**
-
-- Frontend reads **API base URL** from Vite env (for example `import.meta.env.VITE_*`). Do not hardcode machine-specific hosts.
-- No secrets in the frontend bundle; LLM keys stay server-side only.
-
----
-
-## 8. Data and persistence architecture
-
-### 8.1 Relational model (system of record)
-
-- **Tickets** and **comments** (and any other entities agreed in `data-model.md`) live in **PostgreSQL** via Spring Data JPA.
-- **FR-08:** data survives application restart—all durable state is in the database, not in-memory.
-- Identifiers, required fields, and resolution-notes shape are **not** fully defined in the PDF—`data-model.md` will specify them; architecture assumes a stable **`ticketId`** usable in citations and vector metadata.
-
-### 8.2 Vector store (derived index)
-
-**Purpose:** similarity search over ticket text for RAG retrieval.
-
-**Project-selected store:** **PgVector** — PostgreSQL with the **pgvector** extension in the **same database instance** as ticket tables (separate table(s) for chunks/embeddings). Schema for tickets **and** vectors is versioned with **Liquibase**.
-
-**Rationale:** one operational datastore and Spring AI PgVector support. The assessment PDF allows PGVector **or** Chroma; this project chose PgVector (`rules/rag-vector-store.md`).
-
-**Stored per chunk (minimum, from requirements):** metadata `ticketId`, `status`, `priority`, `assignee`, `category`, plus embedding vector and text (or reference) for prompt context.
-
-**Lifecycle**
-
-- Refresh derived vectors when a ticket is **updated or closed** so stale chunks are not left as the only index (FR-14).
-- **How** to refresh (synchronous vs async; delete-and-replace vs versioned history) is specified in [`rag-ingestion.md`](rag-ingestion.md), not here.
-- Vector data may be **rebuilt from PostgreSQL** if the index is lost (tickets remain authoritative).
-
-### 8.3 Test and runtime databases
-
-**Runtime:** PostgreSQL (with PgVector). **Backend integration tests:** PostgreSQL via **Testcontainers**, with Liquibase applied (`rules/testing.md`). H2 is not the default. Details belong in [`test-strategy.md`](test-strategy.md).
+| Component | Responsibility |
+|-----------|----------------|
+| **API error mapper** | `@ControllerAdvice` → stable error envelope (**Convention**) |
+| **Transaction boundaries** | Ticket mutations atomic; ingestion may be after-commit (**Open**) |
 
 ---
 
-## 9. RAG architecture
+## 9. Technical components and layering
 
-### 9.1 End-to-end pipeline (assessment)
+Technical layout follows **`rules/java-springboot.md`** (**Convention**).
+
+### 9.1 Package structure
 
 ```
+{root}/
+  Application.java
+  api/            Controllers, request/response DTOs, @ControllerAdvice
+  domain/         Ticket status enum, state machine, domain exceptions
+  service/        Transactional application services
+  persistence/    JPA entities, Spring Data repositories
+  rag/            Knowledge build, chunk/embed, retrieval, ask
+  config/         Spring configuration, RAG @ConfigurationProperties, Spring AI beans
+```
+
+### 9.2 Layer responsibilities
+
+| Layer | Responsibility |
+|-------|----------------|
+| **api** | HTTP mapping, `@Valid`, status codes; **no** business rules |
+| **domain** | State machine, illegal transition errors; **no** Spring Web/JPA |
+| **service** | Use cases, transactions, orchestrate repos + domain + RAG hooks |
+| **persistence** | Load/save; **no** bypass of state machine for status |
+| **rag** | Ingest and ask; **no** ticket side effects on ask path |
+| **config** | Beans and property binding only |
+
+### 9.3 Mapping: business module → technical homes
+
+| Business module (§4.3) | Primary packages |
+|------------------------|------------------|
+| Ticket registry | `service`, `persistence`, `api` |
+| Collaboration timeline | `service`, `persistence`, `api` |
+| Work discovery | `service`, `persistence`, `api` |
+| Lifecycle governance | `domain`, `service` |
+| Knowledge indexing / freshness | `rag`, `service` (hooks) |
+| Assisted research | `rag`, `api` (`AiAskController` or equivalent) |
+
+---
+
+## 10. Communication architecture
+
+### 10.1 Style
+
+| Aspect | Choice |
+|--------|--------|
+| Integration pattern | **Synchronous request/response** over HTTP |
+| Payload format | **JSON** (`application/json`) |
+| Client | React SPA → backend REST only (**Convention**: no BFF) |
+| Real-time | **None** required (no WebSocket/SSE in PDF) |
+| Inter-service | **N/A** (monolith) |
+
+### 10.2 Communication flows
+
+**Ticket mutation flow**
+
+```mermaid
+sequenceDiagram
+  participant UI as Frontend
+  participant API as REST controller
+  participant SVC as Ticket service
+  participant DOM as State machine
+  participant DB as PostgreSQL
+  participant RAG as Ingestion hook
+
+  UI->>API: PATCH /api/v1/tickets/{id}
+  API->>SVC: validated command
+  SVC->>DOM: validate status if changed
+  DOM-->>SVC: ok or domain error
+  SVC->>DB: persist
+  SVC->>RAG: schedule/re-run ingest
+  API-->>UI: 200 success envelope or 409 ILLEGAL_TRANSITION
+```
+
+**Ask flow** — see `requirements.md` Flow B; matches §15.6.
+
+### 10.3 Error propagation to UI
+
+- API returns **error envelope** for failures (**Convention**); UI displays `error.message` and field `details` (**PDF** meaningful errors).
+- Ask **no-match** is HTTP **200** with honest message inside success `data` (**Convention** `rules/api-standards.md`) — not an error envelope.
+
+### 10.4 CORS and local dev
+
+**Convention:** allow Vite dev origin for `/api/**`; not an assessment requirement.
+
+### 10.5 What is not communicated
+
+- Internal prompts, chunk text, embedding vectors, model names, and retrieval scores are **not** exposed on public APIs (**Convention**).
+- No agent-to-agent or async event bus between ticket and RAG modules in the baseline design.
+
+---
+
+## 11. API architecture
+
+### 11.1 API surfaces
+
+| Surface | Purpose | PDF / Convention |
+|---------|---------|------------------|
+| **Ticket REST** | CRUD, comments, search, filter, status via PATCH | Capabilities **PDF**; paths **Convention** `/api/v1/tickets` |
+| **Ask REST** | Natural-language Q&A | **`POST /api/ai/ask`** **PDF**; alias **`POST /api/v1/ai/ask`** **Convention** |
+
+Detailed paths, bodies, and field catalogs → [`api-contract.md`](api-contract.md), [`rag-api-contract.md`](rag-api-contract.md). Envelopes and status codes → `rules/api-standards.md`.
+
+### 11.2 Ticket API capability map
+
+| Capability | Method and path (Convention) | Assessment capability |
+|------------|------------------------------|------------------------|
+| Create | `POST /api/v1/tickets` | Create ticket |
+| List + search + filter | `GET /api/v1/tickets?page&size&sort&q&status` | List, keyword search, status filter |
+| Detail | `GET /api/v1/tickets/{id}` | View details (comments embedded) |
+| Update fields / status | `PATCH /api/v1/tickets/{id}` | Update title, description, priority, assignee; status transitions |
+| Add comment | `POST /api/v1/tickets/{id}/comments` | Add comments |
+
+**DELETE** and **PUT** are not used unless a future spec adds them (**Convention**).
+
+### 11.3 Ask API
+
+**Request (**PDF**):**
+
+```json
+{
+  "question": "What caused previous payment failures?"
+}
+```
+
+**Behaviour:**
+
+- Valid question → retrieve → generate → **200** + success envelope + answer and cited ticket ids (**PDF** outcomes).
+- No relevant retrieval → **200** + honest no-match in `data` (**PDF**); do **not** call LLM on empty context (§15.5).
+- Invalid/missing question → **400** `VALIDATION_ERROR` (**Convention**).
+- **No** side effects (create ticket, notify) (**PDF**).
+
+Response field names inside `data` → **Open** (OQ-05, `rag-api-contract.md`).
+
+### 11.4 Versioning
+
+- Ticket APIs: URI version **`/api/v1`** (**Convention**).
+- Ask: keep **`/api/ai/ask`** for assessment compatibility; mirror under v1 (**Convention**).
+
+### 11.5 Success and error envelopes
+
+All ticket endpoints use shared **`{ "data": ... }`** and list **`meta`** pagination (**Convention**). Errors use **`{ "error": { status, code, message, details, timestamp, path } }`**.
+
+Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not PDF-mandated status).
+
+---
+
+## 12. Frontend architecture
+
+**Convention:** React + Vite + TypeScript (`rules/frontend.md`). Screens → [`ui-flow.md`](ui-flow.md).
+
+### 12.1 UI functional areas
+
+| Area | APIs used |
+|------|-----------|
+| Ticket list | `GET /api/v1/tickets` with `q`, `status`, pagination |
+| Ticket detail | `GET /api/v1/tickets/{id}` |
+| Create / edit | `POST` / `PATCH` |
+| Comments | `POST .../comments` |
+| Status actions | `PATCH` with `status` (valid targets only; server enforces) |
+| AI assistant | `POST /api/v1/ai/ask` (or PDF path) |
+
+### 12.2 Client structure (logical)
+
+| Module | Role |
+|--------|------|
+| **API client** | Base URL from `import.meta.env`; typed fetch wrappers |
+| **Ticket pages** | List, detail, forms |
+| **Ask panel** | Question input, answer, citation list, no-match state |
+| **Error display** | Map API error envelope to user-visible messages |
+
+No secrets in the frontend bundle; LLM credentials stay server-side (**PDF** NFR-06).
+
+---
+
+## 13. Data and persistence
+
+### 13.1 Relational system of record
+
+- **Tickets** and **comments** in **PostgreSQL** via Spring Data JPA (**PDF**).
+- Schema changes via **Liquibase** (**Convention**); Hibernate `ddl-auto` validate/none.
+- **FR-08 / AC-CORE-09:** data survives restart.
+
+Identifiers, required fields, resolution notes → **`data-model.md`** (**Open**).
+
+### 13.2 Synchronization with vector index
+
+After successful ticket **update**, **comment add**, or **close** (per agreed **DEC-01**), run **re-ingestion** for that ticket so ask retrieval sees current text and metadata (**PDF** FR-14).
+
+Execution model (inline, `@TransactionalEventListener`, async job) → **`rag-ingestion.md`** (**Open**).
+
+### 13.3 Testing datastores
+
+**Convention:** integration tests use PostgreSQL Testcontainers with Liquibase; not H2-by-default (`rules/testing.md`).
+
+---
+
+## 14. Vector database architecture
+
+### 14.1 Product choice
+
+**Convention:** **PgVector** on the **same PostgreSQL instance** as ticket tables (`rules/rag-vector-store.md`). PDF lists PGVector or Chroma as examples—not a mandated product.
+
+**Rationale (architecture):**
+
+- One operational database to backup and migrate.
+- Spring AI PgVector store support aligns with Spring Boot monolith.
+- Ticket authority remains relational; vectors are disposable and rebuildable.
+
+### 14.2 Logical contents
+
+Each **indexed unit** is a **chunk** of ticket knowledge with:
+
+| Element | Description |
+|---------|-------------|
+| **Embedding vector** | Fixed dimension per chosen model (**Open** → `rag-ingestion.md`) |
+| **Chunk text** | Text segment passed to LLM at ask time (or reconstructable reference) |
+| **Metadata** | **PDF** keys: `ticketId`, `status`, `priority`, `assignee`, `category` |
+| **Technical keys** | Chunk id, optional ingest version — **Open** in `data-model.md` / `rag-ingestion.md` |
+
+### 14.3 Operations
+
+| Operation | When |
+|-----------|------|
+| **Insert / upsert** | After ingestion pipeline for a ticket |
+| **Delete / replace** | On re-ingest: remove stale chunks for that ticket (**Open** strategy: delete-all-for-ticket vs versioned) |
+| **Similarity search** | On each ask: query embedding nearest neighbours with top-K |
+| **Rebuild** | Optional admin/repair: re-run ingestion for all tickets from PostgreSQL |
+
+### 14.4 Index and distance metric
+
+Vector index type (IVFFlat, HNSW, etc.) and distance metric (cosine vs inner product) → **Open**; must align with **similarity threshold** semantics in `rag-ingestion.md`.
+
+### 14.5 Schema ownership
+
+Vector tables and `pgvector` extension are versioned in **Liquibase** alongside ticket tables (**Convention**). Physical table names → `data-model.md` when agreed.
+
+### 14.6 Consistency model
+
+| Property | Guarantee |
+|----------|-----------|
+| Ticket read-your-writes | Relational DB transactional |
+| Search index | **Eventually consistent** with ticket DB if ingestion is async (**Open**); must converge after re-ingest |
+| Ask after update | Acceptance expects retrieval can reflect new text (**AC-CORE-20**) |
+
+---
+
+## 15. RAG architecture
+
+### 15.1 Pipeline overview (**PDF**)
+
+```text
 Tickets → knowledge documents → chunk → embeddings → vector store
-    → user question → similarity search → relevant ticket context
-    → LLM + context → grounded answer + ticket sources
+  → user question → similarity search → relevant ticket context
+  → LLM + context only → grounded answer + ticket sources
 ```
 
-This is a **single** retrieve-then-generate path—no agent loop, no side effects.
+Single **retrieve-then-generate** path—no agent loop.
 
-### 9.2 Knowledge document construction
+```mermaid
+flowchart LR
+  subgraph ingest [Ingestion path]
+    T[Ticket row] --> KD[Knowledge document builder]
+    KD --> CH[Chunker]
+    CH --> EM[Embedding model]
+    EM --> VS[(PgVector)]
+  end
 
-**Sources (FR-13):** ticket **description**, **comments**, **resolution notes**.
+  subgraph ask [Ask path]
+    Q[Question] --> QE[Query embedding]
+    QE --> SS[Similarity search top-K threshold]
+    VS --> SS
+    SS -->|hits| PR[Prompt assembler]
+    SS -->|no hits| NM[No-match response]
+    PR --> LLM[Chat model]
+    LLM --> AN[Answer plus citations]
+  end
+```
 
-**Builder behavior (to detail in `rag-ingestion.md`):**
+### 15.2 Boundaries and guardrails
 
-- Assemble human-readable text per ticket with clear section labels (e.g. title, description, each comment, resolution) so the LLM can attribute content.
-- Attach metadata listed in requirements for filtering and citation display.
-- On **update** or **close**, rebuild documents for that ticket and refresh the vector index.
+| Rule | Source |
+|------|--------|
+| Ingest description, comments, resolution notes | **PDF** |
+| Metadata on chunks | **PDF** |
+| Re-ingest on update/close | **PDF** p.5; confirm close-only (**DEC-01**) |
+| Configurable top-K and threshold | **PDF** |
+| No LLM call when no chunk passes threshold | **Convention** + grounding |
+| No tools / side effects on ask | **PDF** |
+| Do not expose prompts or vectors on API | **Convention** |
 
-**Open:** whether each comment is a separate sub-document vs one composite document per ticket—affects chunk boundaries; default recommendation is **one composite document per ticket per ingest version**, then chunk (§9.3).
+### 15.3 Knowledge document construction
 
-### 9.3 Chunking strategy (justification for NFR-07; sizes not frozen)
+**Builder** (in `rag/`):
 
-The assessment requires **documenting and justifying** a chunking approach for ticket data. It does **not** name an algorithm. Engineering rules leave sizes, overlap, and algorithm to [`rag-ingestion.md`](rag-ingestion.md).
+1. Load ticket + comments (+ resolution) from PostgreSQL.
+2. Format human-readable sections (title, description, labeled comments, resolution).
+3. Attach metadata snapshot at ingest time (`status`, `priority`, etc.).
+4. Pass text to chunker.
 
-**Proposed default (agree in `rag-ingestion.md` before implementation):** paragraph-based splitting with a configurable maximum size.
+**Open:** one composite document per ticket per ingest vs multiple documents → default recommendation: **one composite document per ticket per ingest version**, then chunk (§16).
 
-| Strategy | Fit for ticket data | Status |
-|----------|---------------------|--------|
-| **Paragraph-based** | Comments and descriptions are naturally paragraph- or message-sized | **Proposed primary** |
-| Fixed-size only | Can split mid-sentence across unrelated comments | Secondary split only if a paragraph exceeds max size |
-| Semantic splitting | Higher cost/complexity; marginal gain for short tickets | Not required for initial delivery unless evaluation shows poor retrieval |
+### 15.4 Ingestion triggers
 
-**Proposed mechanics** (parameter names/values in `rag-ingestion.md`, not hardcoded in Java):
+| Event | Ingest? | Notes |
+|-------|---------|-------|
+| Ticket created | Yes (**PDF** implied by pipeline) | Initial index |
+| Field update | Yes (**PDF** updated) | |
+| Comment added | Yes (ticket updated) | |
+| Status → closed | Yes per p.5 (**DEC-01** vs p.6 wording) | Metadata must show `CLOSED` |
 
-1. Split knowledge text on paragraph boundaries (blank lines) and on **comment boundaries**.
-2. If a block exceeds max-chars (or a token proxy), split on sentence boundaries until under the limit.
-3. Optionally merge tiny adjacent blocks up to a min-chars threshold.
+Hook placement: ticket **service** after successful commit; exact mechanism → `rag-ingestion.md`.
 
-**Why this is a reasonable default:** ticket text is structured and short-to-medium; paragraph/comment boundaries match how people read threads; it avoids a semantic chunker while still meeting NFR-07.
+### 15.5 Retrieval
 
-### 9.4 Embedding provider (tradeoffs; model selection deferred)
+1. Embed **question** (same model as ingest).
+2. Vector **similarity search** with **top-K** (config).
+3. Drop hits below **similarity threshold** (config).
+4. If none remain → return **no relevant tickets** without LLM (**PDF** grounding).
+5. Else pass chunks + ticket ids into prompt.
 
-Spring AI should target a **swappable**, **configuration-driven** embedding provider (no hardcoded model in application code).
+**Optional** metadata pre-filter (e.g. high-priority only) is **not** PDF-required; needed for some illustrative questions (**Example** in requirements §4.3) — **Open** for product phase 2.
+
+### 15.6 Generation
+
+- Spring AI **chat client** with system instructions: answer only from excerpts; cite ticket ids; admit insufficiency.
+- Map to response DTO per `rag-api-contract.md`.
+- Review grounding with `commands/review-rag-output.md` (**PDF** process).
+
+### 15.7 RAG testing and evaluation
+
+- **Deterministic:** contract tests for validation, no-match shape, cited ids exist in DB.
+- **Probabilistic:** `evaluation-strategy.md` + sample questions from PDF/requirements §4.3 — not single golden answer strings.
+
+---
+
+## 16. Knowledge, chunking, and embeddings
+
+This section satisfies **PDF** acceptance **AC-CORE-19** / **FEAT-20**: documented **justification** for chunking and embedding choices. Numeric parameters and model ids → **`rag-ingestion.md`** when agreed.
+
+### 16.1 Knowledge representation
+
+| Concept | Definition |
+|---------|------------|
+| **Knowledge document** | Intermediate text assembly for one ticket at one ingest point (**PDF** glossary) |
+| **Chunk** | Embedding unit derived from that document |
+| **Embedding** | Dense vector stored in PgVector |
+
+Knowledge is **derived**; authoritative text always remains in PostgreSQL.
+
+### 16.2 Chunking strategy (justified default)
+
+The PDF requires documenting approach; it does **not** mandate an algorithm.
+
+**Proposed primary strategy (**Convention** pending `rag-ingestion.md` agreement): **paragraph and comment-boundary splitting**, with secondary sentence splits for oversized blocks.
+
+| Strategy | Fit for ticket data | Role |
+|----------|---------------------|------|
+| **Paragraph / comment boundaries** | Descriptions and comments are naturally block-sized | **Primary** |
+| **Fixed-size** | Caps very long blocks | **Secondary** when block exceeds max chars |
+| **Semantic chunking** | Long essays | **Not required** initially; cost/complexity vs short tickets |
+
+**Proposed mechanics:**
+
+1. Split knowledge text on blank lines and **between comments** (preserve comment attribution in text).
+2. If a block exceeds configurable **max-chars** (token proxy), split on sentence boundaries.
+3. Optionally merge tiny adjacent blocks up to **min-chars** to avoid noise embeddings.
+
+**Why this fits ticket data:** support threads are short-to-medium, structured as message sequences; boundary-aware splitting improves retrieval of “one comment” facts without semantic chunker infrastructure; meets **NFR-07** narrative.
+
+**Alternatives rejected for v1 default:**
+
+- **Fixed-size only** — risks splitting mid-comment and mixing unrelated sentences.
+- **Semantic-only** — higher cost; marginal benefit until eval shows retrieval gaps.
+
+### 16.3 Embedding model (tradeoffs)
+
+Integration via **Spring AI**; provider swappable in config.
 
 | Option | Cost | Latency | Quality | CI / secrets |
 |--------|------|---------|---------|--------------|
-| **Local** (e.g. via Ollama) | No per-token cloud cost | Depends on hardware | Adequate for many ticket texts; vector dimension fixed per model | No API keys; fits NFR-06 |
-| **Cloud** (hosted embedding API) | Per-token | Usually low and stable | Often strong general retrieval | Requires API key via env |
+| **Local** (e.g. Ollama) | No per-token cloud bill | Hardware-dependent | Adequate for many ticket texts | No API keys (**PDF** NFR-06 friendly) |
+| **Cloud** hosted API | Per-token | Often stable low | Strong general retrieval | Keys via env only |
 
-**Architecture constraint:** the embedding model used at **ingest** and **query** time must be the **same** (or the index must be fully re-built when the model changes).
+**Architecture constraints:**
 
-**Final embedding model** — including defaults for local dev and demo — is **selected and justified in [`rag-ingestion.md`](rag-ingestion.md)**. **Ollama** is the initial **provider** (project convention), not a frozen model id. This section documents tradeoffs only (NFR-07).
+- **Same embedding model** at ingest and query (or full reindex on change).
+- Vector **dimension** fixed per model — schema must match (**Open**).
+- **Initial provider:** Ollama (**Convention**); **model id** not fixed here.
 
-### 9.5 Retrieval
+**Final model selection and dimension** → `rag-ingestion.md` with pointer back to this justification.
 
-1. Embed the user **question** with the same embedding model.
-2. **Similarity search** in the vector store with **top-K** (configurable).
-3. Apply **similarity threshold** (configurable)—discard hits below threshold.
-4. If **no chunks** pass the threshold → **no relevant tickets found** response (FR-17); **do not** call the LLM with empty context to hallucinate.
-5. Otherwise, pass top chunks (and metadata ticket ids) into the **prompt** as the only factual context.
+### 16.4 Configuration slots (names illustrative)
 
-**Configuration (FR-18):** e.g. `rag.retrieval.top-k`, `rag.retrieval.similarity-threshold` in `application.yml` / environment—no magic numbers in Java.
+```yaml
+rag:
+  retrieval:
+    top-k: # Open numeric — FR-18
+    similarity-threshold: # Open numeric — FR-18
+  chunking:
+    max-chars: # Open — rag-ingestion.md
+    min-chars: # Open
+spring.ai:
+  # embedding and chat model ids — Open
+```
 
-**Optional metadata filters** (e.g. “high priority only”) are **not** required by the PDF; if added later, filter in retrieval layer using stored metadata—open question for question types like “which high-priority tickets…”.
-
-### 9.6 Generation and grounding
-
-- Use Spring AI **chat client** with a system prompt that instructs: answer **only** from provided ticket excerpts; cite ticket ids; if context is insufficient, say so.
-- **Response mapping** (exact JSON in `rag-api-contract.md`): natural language answer + list of cited `ticketId`(s), or explicit no-match flag/message.
-- **No tools** bound to the chat call for this endpoint (no create ticket, no notifications).
-
-### 9.7 RAG testing
-
-RAG test layers, fixtures, and CI policy (e.g. stubbed models) are defined in [`test-strategy.md`](test-strategy.md).
+Use `@ConfigurationProperties` — no magic numbers in Java (**PDF** intent for top-K/threshold).
 
 ---
 
-## 10. Status state machine (architectural placement)
+## 17. Status state machine (placement)
 
-States and transitions are defined in [`state-machine.md`](state-machine.md) (to be written) and summarized in `requirements.md`:
+States and transitions: [`state-machine.md`](state-machine.md) + `requirements.md` FEAT-11.
 
-- `OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`
-- `OPEN` → `CANCELLED`
-- `IN_PROGRESS` → `CANCELLED`
-- All other transitions (e.g. `CLOSED` → `OPEN`) **rejected**
+**Enforcement architecture:**
 
-**Enforcement**
+- State machine module in **`domain`** — pure rules.
+- Invoked only from **ticket application services** on status change.
+- Repositories do not expose unguarded status updates.
+- Illegal transition → domain error → **409** `ILLEGAL_TRANSITION` (**Convention**).
 
-- The state machine is a **domain module** invoked only through ticket application services.
-- Repositories must **not** expose arbitrary `status` updates that bypass rules.
-- Illegal transition → **domain-level error**; HTTP status code and error body are defined in [`api-contract.md`](api-contract.md).
-
-**Open questions** (not decided here): whether skipped steps like `OPEN` → `RESOLVED` are allowed; how the UI/API initiates a transition (dedicated endpoint vs patch status field)—see §15.
-
-**Tests:** state-machine integration tests are an explicit acceptance item (NFR-09).
+**Open:** skipped hops (**DEC-02**); transition API (**DEC-06**); initial status on create (**DEC-07**).
 
 ---
 
-## 11. API and integration architecture
+## 18. Configuration
 
-- **Ticket resources:** capabilities from the assessment (create, list, get, update fields, comments, search, status filter). **Paths are not named in the PDF.** Project convention (not a PDF mandate): `/api/v1/tickets` and nested comments, PATCH updates, shared success/error envelopes — see `rules/api-standards.md`. Field catalogs remain in [`api-contract.md`](api-contract.md).
-- **AI:** `POST /api/ai/ask` — request body `{ "question": "..." }` per assessment (also `POST /api/v1/ai/ask`). Business fields inside the success `data` object wait on [`rag-api-contract.md`](rag-api-contract.md).
-- **JSON** unless a later spec says otherwise.
-- **CORS** for the local Vite origin during development is an implementation detail, not an assessment requirement.
-
-**Versioning:** none required by the PDF. **Project convention:** URI version `/api/v1` for ticket APIs; keep the assessment ask path. Breaking changes need `/api/v2` (`rules/api-standards.md`).
-
----
-
-## 12. Configuration architecture
-
-Configuration is **externalized** (environment variables and/or `application.yml` profiles). No secrets in git—`.env.example` lists names only (NFR-06).
+Externalized configuration (**PDF** NFR-06: no secrets in git).
 
 | Area | Examples | Notes |
 |------|----------|--------|
-| Data source | JDBC URL, credentials | PostgreSQL default |
-| Spring AI | Base URLs, API keys, model identifiers | Server-side only; embedding model per `rag-ingestion.md` |
-| RAG retrieval | `top-k`, similarity threshold | FR-18 |
-| RAG chunking | max/min chunk size | §9.3 |
-| Frontend | API base URL | Vite `import.meta.env` (names only in committed examples) |
+| Data source | JDBC URL, credentials | PostgreSQL |
+| Spring AI | Base URLs, API keys, model ids | Server-side only |
+| RAG retrieval | top-K, similarity threshold | **PDF** FR-18 |
+| RAG chunking | max/min chunk size | §16.2 |
+| Frontend | `VITE_*` API base URL | Names only in committed examples |
 
-Use typed `@ConfigurationProperties` for RAG settings to keep retrieval tuning out of business logic.
-
----
-
-## 13. Error handling and API errors
-
-Align with `rules/api-standards.md`. **Do not** treat the following codes or body fields as finalized — `api-contract.md` decides them.
-
-| Situation | Guidance |
-|-----------|----------|
-| Validation failures | Client error; useful field-level messages when practical |
-| Ticket not found | Distinct from validation (typically not-found) |
-| Illegal status transition | Client-usable message; HTTP status **open** (not locked to 409 vs 400 here) |
-| Unexpected server fault | Generic message; **no** stack trace, SQL, or secrets |
-
-**Logging:** correlation-friendly messages; do not log secrets or unnecessary PII.
-
-**UI:** show user-safe API messages (FR-10); exact keys once the contract exists.
+Profiles: `application.yml` + env; `.env.example` lists variable **names** only.
 
 ---
 
-## 14. Security and deployment (minimal)
+## 19. Errors and cross-cutting concerns
 
-- **Auth:** not in assessment requirements—architecture neither requires nor forbids Spring Security; if added later, it wraps `/api/**` consistently (open question).
-- **Secrets:** LLM and DB credentials via environment only.
-- **Deployment shape:** one JVM process + PostgreSQL (+ optional Ollama on dev host); frontend static build served separately or via dev server—no prescribed cloud topology.
+Align with `rules/api-standards.md` (**Convention**).
 
----
+| Situation | HTTP (Convention) | UI |
+|-----------|-------------------|-----|
+| Validation | 400 `VALIDATION_ERROR` | Field messages |
+| Not found | 404 `NOT_FOUND` | Clear message |
+| Illegal transition | 409 `ILLEGAL_TRANSITION` | Server message (**PDF**) |
+| Server fault | 500 generic | No stack trace |
+| Ask no-match | 200 success `data` | Honest message (**PDF**) |
 
-## 15. Open questions / queries for later review
-
-Carried from `requirements.md` and architecture-level gaps—**do not implement ambiguous behavior until resolved:**
-
-1. **Ticket id format** — e.g. `TKT-1001` vs numeric UUID (PDF example only).
-2. **Full field catalog** — required fields, enums for priority, `category` population.
-3. **Resolution notes** — distinct column vs derived from comments/status.
-4. **REST contract** — paths, PATCH vs PUT, search/filter query parameters (`api-contract.md`).
-5. **`POST /api/ai/ask` response schema** — citations structure, no-match representation (`rag-api-contract.md`).
-6. **Authentication / roles** — absent from PDF.
-7. **Frontend stack** — **resolved as project convention:** React + Vite + TypeScript (`rules/frontend.md`). Screens still belong in `ui-flow.md`.
-8. **Status transition API** — how clients request a transition.
-9. **Skipped transitions** — e.g. `OPEN` → `RESOLVED` allowed or not.
-10. **Re-ingestion execution** — inline, after-commit, async, failure handling (`rag-ingestion.md`).
-11. **LLM for generation** — local vs cloud default for demo (embedding model in `rag-ingestion.md`).
-12. **Metadata-filtered retrieval** — needed for questions about priority/category without extra keyword search?
+**Logging:** correlation-friendly; no secrets or full prompts by default.
 
 ---
 
-## 16. Related specifications (planned)
+## 20. Security and deployment
+
+- **Auth:** not required by PDF — architecture neither mandates nor forbids Spring Security (**Open** DEC-12).
+- **Secrets:** DB and model credentials via environment only (**PDF**).
+- **Deployment:** one JVM + PostgreSQL; optional Ollama on dev host; static SPA or Vite dev server.
+
+---
+
+## 21. Open questions and decisions
+
+Do not implement ambiguous behaviour until resolved in specs + `requirements.md` §10.
+
+| ID | Topic | Owning spec |
+|----|-------|-------------|
+| OQ-01 / DEC-04 | Ticket id format | `data-model.md` |
+| OQ-02, OQ-03, OQ-10 / DEC-03, DEC-05, DEC-13 | Fields, category, resolution notes | `data-model.md` |
+| OQ-04 / DEC-14 | REST details | `api-contract.md` |
+| OQ-05 / DEC-11 | Ask response schema | `rag-api-contract.md` |
+| OQ-06 / DEC-12 | Authentication | This file if in scope |
+| OQ-07 / DEC-09 | Store + embedding product | `rag-ingestion.md` + this file |
+| OQ-08 / DEC-10 | DB roles in test vs prod | `test-strategy.md` |
+| OQ-11, OQ-12 / DEC-02, DEC-06, DEC-07 | Transitions API and skipped hops | `state-machine.md`, `api-contract.md` |
+| OQ-14 / DEC-08 | Keyword search scope | `api-contract.md` |
+| OQ-15 / DEC-01 | Re-ingest on close only | `rag-ingestion.md` |
+| — | Ingest sync vs async | `rag-ingestion.md` |
+| — | Metadata-filtered retrieval | Future spec / eval |
+
+---
+
+## 22. Related specifications
 
 | Spec | Contents |
 |------|----------|
-| [`data-model.md`](data-model.md) | Entities, fields, relationships |
-| [`api-contract.md`](api-contract.md) | Ticket and comment REST contracts, error examples |
-| [`state-machine.md`](state-machine.md) | States, transitions, error semantics |
-| [`rag-ingestion.md`](rag-ingestion.md) | Document builder, chunk parameters, embedding model choice, re-ingest triggers and execution model |
-| [`rag-api-contract.md`](rag-api-contract.md) | Ask request/response, no-match |
-| [`ui-flow.md`](ui-flow.md) | Screens and user journeys |
-| [`test-strategy.md`](test-strategy.md) | Layered tests tied to acceptance criteria |
-| [`evaluation-strategy.md`](evaluation-strategy.md) | RAG quality checks, review-rag-output usage |
+| [`requirements.md`](requirements.md) | PDF traceability, FEAT/AC, flows, OQ/DEC |
+| [`data-model.md`](data-model.md) | Entities, fields, Liquibase |
+| [`api-contract.md`](api-contract.md) | Ticket/comment REST contracts |
+| [`state-machine.md`](state-machine.md) | Transitions, errors |
+| [`rag-ingestion.md`](rag-ingestion.md) | Chunk numbers, models, re-ingest execution |
+| [`rag-api-contract.md`](rag-api-contract.md) | Ask `data` fields, no-match |
+| [`ui-flow.md`](ui-flow.md) | Screens and journeys |
+| [`test-strategy.md`](test-strategy.md) | Layered tests |
+| [`evaluation-strategy.md`](evaluation-strategy.md) | Retrieval quality |
+| `rules/api-standards.md` | Envelopes, paths (**Convention**) |
+| `rules/rag-vector-store.md` | RAG guardrails (**Convention**) |
+| `rules/java-springboot.md` | Packages and layering (**Convention**) |
 
 ---
 
-## 17. Acceptance criteria mapping (architecture-relevant)
+## 23. Acceptance mapping
 
-Architecture supports verification of these themes from `requirements.md`:
+Architecture supports verification of:
 
-- [ ] Persistent tickets in PostgreSQL; vector index derivable from ticket text
-- [ ] State machine enforced in domain layer; integration tests
-- [ ] RAG pipeline matches assessment diagram; re-ingest on update/close
-- [ ] Configurable top-K and similarity threshold
-- [ ] Chunking strategy and embedding tradeoffs documented in **this file** (NFR-07)
-- [ ] Grounded ask flow with citations or honest no-match; no agent side effects
+- [ ] **AC-CORE-09** — PostgreSQL system of record; vectors rebuildable from tickets
+- [ ] **AC-CORE-12…14** — State machine in domain; integration tests
+- [ ] **AC-CORE-15** — Embeddings with PDF metadata in vector store
+- [ ] **AC-CORE-16…18** — Grounded ask, citations, honest no-match; no agent side effects
+- [ ] **AC-CORE-19** — Chunking and embedding justification in **this document**
+- [ ] **AC-CORE-20** — Re-ingestion after ticket text changes (per **DEC-01**)
+- [ ] **AC-CORE-21** — Configurable top-K and threshold
 
 ---
 
@@ -404,7 +914,8 @@ Architecture supports verification of these themes from `requirements.md`:
 
 | Date | Note |
 |------|------|
-| 2026-09-24 | Initial architecture draft from `requirements.md`, `docs/assessment-brief.md`, and project `rules/` / `.cursor/rules/`. |
-| 2026-09-24 | Review corrections: PgVector chosen; re-ingest execution deferred to `rag-ingestion.md`; illegal transition HTTP deferred to `api-contract.md`; embedding model selection deferred; testing and DB migrations out of scope here. |
-| 2026-10-03 | Aligned with approved engineering rules: PDF vs project stack; Maven Wrapper, Liquibase, Ollama-as-provider, React+Vite+TS, Testcontainers; ticket URL and error JSON not mandated; chunking marked proposed pending `rag-ingestion.md`. |
-| 2026-10-03 | Backend package tree (`api` / `domain` / `service` / `persistence` / `rag` / `config`) recorded as an agreed project convention, matching `rules/java-springboot.md`. |
+| 2026-09-24 | Initial architecture draft from `requirements.md`, `docs/assessment-brief.md`, and project `rules/`. |
+| 2026-09-24 | Review corrections: PgVector chosen; re-ingest execution deferred; HTTP details deferred to api-contract. |
+| 2026-10-03 | Aligned with engineering rules: PDF vs project stack; Maven Wrapper, Liquibase, Ollama-as-provider, React+Vite+TS, Testcontainers. |
+| 2026-10-03 | Backend package tree recorded as agreed convention (`rules/java-springboot.md`). |
+| 2026-10-04 | Major expansion: business vs functional modules, ticket conceptual structure, tech and communication architecture, API map, vector DB and RAG depth, knowledge/chunking/embedding justification; synced with `requirements.md` (2026-10-04). |

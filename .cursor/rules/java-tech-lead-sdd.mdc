@@ -31,7 +31,7 @@ Do **not** start by asking (or answering) “Build the complete application.”
 Create and maintain as needed:
 
 - `spec/requirements.md`
-- `spec/architecture.md` (includes chunking + embedding model justification)
+- `spec/architecture.md` (system design: business/functional modules, ticket shape, APIs, RAG, PgVector; chunking + embedding justification in §16 — section map in `rules/documentation.md`)
 - `spec/data-model.md`
 - `spec/api-contract.md`
 - `spec/state-machine.md`

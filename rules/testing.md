@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/testing.mdc`](../.cursor/rules/testing.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Tests prove **acceptance criteria** from `spec/`. Backend coding standards live in `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths live in `rules/api-standards.md`. Resource field catalogs live in `spec/api-contract.md` / `spec/rag-api-contract.md` once agreed. RAG **retrieval quality** is judged per `spec/evaluation-strategy.md` + `commands/review-rag-output.md`, not golden strings here.
+Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: `spec/architecture.md` §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Resource field catalogs: `spec/api-contract.md` / `spec/rag-api-contract.md` once agreed. RAG **retrieval quality** is judged per `spec/evaluation-strategy.md` + `commands/review-rag-output.md`, not golden strings here.
 
 | Command | Use |
 |---------|-----|

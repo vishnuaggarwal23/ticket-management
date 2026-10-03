@@ -76,7 +76,7 @@ spec/
 └── test-strategy.md
 ```
 
-`architecture.md` is later called out specifically for documenting and justifying **chunking strategy** and **embedding model choice**.
+`architecture.md` is later called out specifically for documenting and justifying **chunking strategy** and **embedding model choice**, and (in this repo) also holds the **system design**: business capabilities, ticket/RAG structure, technology layout, APIs, and vector-store role. Numeric chunking and model ids remain in `rag-ingestion.md` when agreed.
 
 ---
 
@@ -167,3 +167,4 @@ Resolve these later in dedicated specs—after confirmation—not by silent assu
 |------|------|
 | 2026-09-24 | Initial faithful restatement from `docs/Assessments.pdf` (option C with `spec/requirements.md`). |
 | 2026-09-24 | State-machine summary clarified; status-transition gaps aligned with `spec/requirements.md`. |
+| 2026-10-04 | `architecture.md` scope note aligned with expanded `spec/architecture.md` and `rag-ingestion.md` split. |

@@ -17,7 +17,7 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 ## Inputs
 
 - Diff / named paths
-- Agreed specs under `spec/` (do not invent missing contracts)
+- Agreed specs under `spec/` (do not invent missing contracts); layout reference: `spec/architecture.md` §8–9 when present
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements
@@ -75,7 +75,9 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 
 ## 2. Code structure (layering and design)
 
+- [ ] Matches agreed **functional → technical** map in `spec/architecture.md` §8–9 when that spec exists (ticket ops in `service`/`persistence`, ask in `rag/`, state machine in `domain`)
 - [ ] Single Spring Boot app; packages by layer: `api`, `domain`, `service`, `persistence`, `rag`, `config` (`rules/java-springboot.md`)
+- [ ] Ticket mutations trigger RAG ingest via **service** hook/port after successful write — not from controller or repository directly (`spec/architecture.md` §10.2, §15.4)
 - [ ] Controllers thin: HTTP → `@Valid` DTO → one service call → envelope; no `@Transactional` on controllers; no transition tables in controllers
 - [ ] Domain has no Spring Web/JPA; status is an **enum**, not `String`
 - [ ] Services own use cases and transactions; depend on repository **interfaces**

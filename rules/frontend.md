@@ -9,6 +9,7 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows 
 | Read first | Purpose |
 |------------|---------|
 | `spec/requirements.md` | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7** until `ui-flow.md` is agreed |
+| `spec/architecture.md` | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
 | `spec/ui-flow.md` | Screens and navigation (when agreed) |
 | `spec/rag-api-contract.md` | Citation / no-match fields inside ask `data` |

@@ -20,7 +20,7 @@ alwaysApply: true
 | Rules (source of truth) | `rules/*.md` |
 | Rules (Cursor pointers) | `.cursor/rules/*.mdc` — do not duplicate bodies |
 | Commands | `commands/*.md`; `.cursor/commands/*.md` pointers only |
-| Specs before code | `spec/` — see `rules/documentation.md` for the full list |
+| Specs before code | `spec/` — see `rules/documentation.md` for the full list and `architecture.md` section map |
 | Prompt history | SpecStory → `.specstory/history/`; index `docs/prompt-history.md` |
 | AI mistakes (PDF) | `docs/ai-mistakes.md` when at least one meaningful mistake is caught |
 | RAG eval approach | `spec/evaluation-strategy.md` (retrieval quality — not unit golden strings) |
