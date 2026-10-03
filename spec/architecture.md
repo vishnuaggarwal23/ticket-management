@@ -114,15 +114,15 @@ flowchart LR
 
 ## 6. Logical structure (backend)
 
-Keep HTTP adapters thin and persistence separate from ticket/RAG rules (`rules/java-springboot.md`). The following package names are an **example**, not a mandated layout:
+Keep HTTP adapters thin and persistence separate from ticket/RAG rules (`rules/java-springboot.md`). The following package tree is an **agreed project convention** (not a PDF mandate). Exact Java root name (`com.…`) is not frozen; there is one application root under `src/main/java`. Detail: `rules/java-springboot.md`.
 
 ```
-api/          Controllers, request/response DTOs, validation annotations
-domain/       Ticket aggregate concepts, status enum, state machine rules
-service/      Application services: ticket lifecycle, comments, search/filter orchestration
-persistence/  JPA entities, repositories
-ai/ or rag/   Knowledge document builder, chunking, embedding writer, retrieval, ask orchestration
-config/       Spring configuration, RAG properties, Spring AI beans
+api/           Controllers, request/response DTOs, @ControllerAdvice
+domain/        Ticket status enum, state machine, domain exceptions (no Spring Web, no JPA)
+service/       Transactional application services; mapping DTO ↔ domain/entity
+persistence/   JPA entities, Spring Data repositories
+rag/           Knowledge documents, chunk/embed ports, retrieval, ask orchestration
+config/        Spring configuration, RAG properties, Spring AI beans
 ```
 
 **Responsibility boundaries**
@@ -407,3 +407,4 @@ Architecture supports verification of these themes from `requirements.md`:
 | 2026-09-24 | Initial architecture draft from `requirements.md`, `docs/assessment-brief.md`, and project `rules/` / `.cursor/rules/`. |
 | 2026-09-24 | Review corrections: PgVector chosen; re-ingest execution deferred to `rag-ingestion.md`; illegal transition HTTP deferred to `api-contract.md`; embedding model selection deferred; testing and DB migrations out of scope here. |
 | 2026-10-03 | Aligned with approved engineering rules: PDF vs project stack; Maven Wrapper, Liquibase, Ollama-as-provider, React+Vite+TS, Testcontainers; ticket URL and error JSON not mandated; chunking marked proposed pending `rag-ingestion.md`. |
+| 2026-10-03 | Backend package tree (`api` / `domain` / `service` / `persistence` / `rag` / `config`) recorded as an agreed project convention, matching `rules/java-springboot.md`. |

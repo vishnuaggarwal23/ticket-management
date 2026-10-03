@@ -1,25 +1,14 @@
 <!--
 Sync Impact Report
-- Version change: placeholder [CONSTITUTION_VERSION] → 1.0.0
+- Version change: 1.0.0 → 1.1.0 (MINOR: approved backend package layout)
 - Modified principles:
-  - [PRINCIPLE_1_NAME] → I. Spec-Driven Assessment Workflow
-  - [PRINCIPLE_2_NAME] → II. Assessment Authority
-  - [PRINCIPLE_3_NAME] → III. Clear Responsibilities and Simple Design
-  - [PRINCIPLE_4_NAME] → IV. Deterministic Quality and Honest Testing
-  - [PRINCIPLE_5_NAME] → V. Grounded RAG Integrity
-- Added principles:
-  - VI. AI-Assisted Development Governance
-  - VII. No Premature Decisions
-- Added sections:
-  - Approved Technology Conventions (project conventions, not PDF mandates)
-  - Specification Organization and Standards
-- Removed sections: none (placeholder sections replaced)
+  - VII. No Premature Decisions — removed "package structures" from the
+    unresolved list; layout is now an approved convention
+- Added sections: none
+- Removed sections: none
 - Follow-up TODOs:
   - Spec Kit default feature path is `specs/[###-feature]/`; assessment
     artefacts already live under `spec/`. Do not silently merge these trees.
-  - `resolve-template.sh constitution-template --json` was not executed in
-    this pass (shell classification blocked). Scaffold used:
-    `.specify/templates/constitution-template.md` (matches memory placeholder).
 -->
 
 # AI-Powered Support Ticket Management System Constitution
@@ -143,7 +132,6 @@ code) unless already explicitly approved in the repository:
 
 - exact dependency versions (including Spring Boot patch, Spring AI, PostgreSQL,
   PgVector, embedding model)
-- package structures
 - API paths, payloads, error JSON, or ask-response schemas beyond what the PDF
   names
 - authentication or authorization
@@ -173,6 +161,7 @@ assessment PDF mandates every specific technology or version.
 | Integration tests | Testcontainers with PostgreSQL |
 | Local infrastructure | Docker Compose |
 | CI | None initially |
+| Backend packages | Layered tree under one application root: `api`, `domain`, `service`, `persistence`, `rag`, `config` (`rules/java-springboot.md`, `spec/architecture.md` §6). Not a PDF mandate. Exact Java root name is not frozen. |
 
 The PDF names Java 21, Spring Boot, Spring AI, PostgreSQL/H2, an embedding
 model, a vector store (examples include PGVector or Chroma), REST, and
@@ -234,4 +223,4 @@ agreed specification.
 **Ratification:** First project-specific constitution, replacing the Spec Kit
 placeholder scaffold.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-03 | **Last Amended**: 2026-10-03
+**Version**: 1.1.0 | **Ratified**: 2026-10-03 | **Last Amended**: 2026-10-03
