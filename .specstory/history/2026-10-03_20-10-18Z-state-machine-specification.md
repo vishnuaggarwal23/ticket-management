@@ -1188,16 +1188,1508 @@ commit and push
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Committing and pushing.
+
+Running git status, diff, and log to review changes before committing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -5 --oneline</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -5 --oneline
+```
+
+````
++NODE architecture.md [src=spec/architecture.md loc=L1 community=Requirements Spec]
++NODE data-model.md [src=spec/data-model.md loc=L1 community=Requirements Spec]
++NODE Review RAG Output Command [src=commands/review-rag-output.md loc=None community=Requirements Spec]
++NODE 1. What the assessment actually specifies [src=.spe
++… (output truncated)
++```
+ </details></tool-use>
+ 
+ _**Agent (auto-smart)**_
+ 
+ <tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+-<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **0** directories</summary>
++<summary>Tool use: **glob_file_search** • Searched codebase "" • **6** results in **1** directory</summary>
+ 
+-No results found
++Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (6 files)
++
++| File |
++|------|
++| `rules/documentation.md` |
++| `rules/api-standards.md` |
++| `rules/java-springboot.md` |
++| `rules/rag-vector-store.md` |
++| `rules/frontend.md` |
++| `rules/testing.md` |
+ </details></tool-use>
+ 
+ _**Agent (auto-smart)**_
+ 
+ <tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+-<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **0** directories</summary>
++<summary>Tool use: **glob_file_search** • Searched codebase "" • **10** results in **1** directory</summary>
++
++Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (10 files)
++
++| File |
++|------|
++| `.cursor/commands/review-spec.md` |
++| `.cursor/commands/review-code.md` |
++| `commands/review-frontend.md` |
++| `.cursor/commands/generate-tests.md` |
++| `commands/review-spec.md` |
++| `.cursor/commands/review-frontend.md` |
++| `commands/review-rag-output.md` |
++| `.cursor/commands/review-rag-output.md` |
++| `commands/generate-tests.md` |
++| `commands/review-code.md` |
++</details></tool-use>
++
++_**Agent (auto-smart)**_
++
++<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
++<summ
+… (output truncated)
+````
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Reading the output file to check the current status and review the changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/agent-tools/400a042b-7898-47cc-9996-84f9e851b893.txt</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Staged files and unstaged modifications are present.
+
+Unstaged changes include specstory assessment review, commands, rules, data-model, and requirements. I will stage these and commit before pushing.
+
+I will avoid adding auto-generated specstory diffs. Only the rule, command, and spec changes should be committed.
+
+I will stage spec/state-machine.md, spec/requirements.md, spec/data-model.md, rules, and commands. I am checking whether the state machine spec needs re-staging. I will also add the specstory files, since they are part of the work.
+
+The massive specstory assessment review will be excluded to avoid committing unrelated bloat. Only the core spec, rules, commands, and the already-staged specstory state machine file will be added. I will check git status to confirm whether the state machine spec has both staged and unstaged changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status --short &amp;&amp; git diff spec/state-machine.md | head -30</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status --short && git diff spec/state-machine.md | head -30
+```
+
+```
+ M .specstory/history/2026-10-03_20-00-04Z-assessment-spec-completeness-review.md
+AM .specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md
+ M commands/generate-tests.md
+ M commands/review-code.md
+ M commands/review-rag-output.md
+ M commands/review-spec.md
+ M rules/api-standards.md
+ M rules/documentation.md
+ M rules/java-springboot.md
+ M rules/testing.md
+ M spec/data-model.md
+ M spec/requirements.md
+A  spec/state-machine.md
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+state-machine.md appears fully staged. AM on specstory indicates added content with modifications.
+
+Checking whether DEC-02 edits to state-machine.md are present in the staged version.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "spec/state-machine.md",
+  "pattern": "confirmed 2026-10-04"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "confirmed 2026-10-04",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "./spec/state-machine.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff --cached spec/state-machine.md | tail -20</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff --cached spec/state-machine.md | tail -20
+```
+
+```
++Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](requirements.md).
++
++---
++
++## 10. Open questions and decisions
++
++| ID | Topic | Status | Owner spec |
++|----|-------|--------|------------|
++| **DEC-02** | Skipped hops / extra edges | **Open** — implement **option (A)** only (confirmed 2026-10-04; may revisit later) | This file |
++| **DEC-06** | Dedicated transition API vs PATCH | **Open** — interim PATCH §6.1 | `api-contract.md`, `ui-flow.md` |
++| **DEC-07** | Initial `OPEN` on create | **Agreed** | [`data-model.md`](data-model.md) §5.1 |
++
++---
++
++## 11. Revision history
++
++| Date | Note |
++|------|------|
++| 2026-10-04 | Initial spec: PDF T1–T5 / X1–X3, full invalid matrix under DEC-02 default (A), API/domain placement, AC-SM-*. |
++| 2026-10-04 | **DEC-02:** user confirmed interim **(A)** — only T1–T5; decision remains Open in requirements §10.2. |
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The state-machine is fully staged with DEC-02 updates.
+
+Committing only the state-machine work files. The large assessment-spec-completeness-review.md diff is excluded to avoid session bloat.
+
+Staging the state-machine specification, rules, commands, and data-model files. Preparing to commit and push. The architecture.md change appears to have been reverted.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add spec/state-machine.md spec/requirements.md spec/data-model.md rules/ commands/ .specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Add state-machine spec and align rules/commands with transition matrix.
+
+Documents PDF T1–T5/X1–X3 edges, full invalid matrix under interim DEC-02 (A), and updates governance docs to point at spec/state-machine.md.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add spec/state-machine.md spec/requirements.md spec/data-model.md rules/ commands/ .specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md && git commit -m "$(cat <<'EOF'
+Add state-machine spec and align rules/commands with transition matrix.
+
+Documents PDF T1–T5/X1–X3 edges, full invalid matrix under interim DEC-02 (A), and updates governance docs to point at spec/state-machine.md.
+EOF
+)" && git status
+```
+
+```
+[main 02bef7f] Add state-machine spec and align rules/commands with transition matrix.
+ 12 files changed, 1523 insertions(+), 44 deletions(-)
+ create mode 100644 .specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md
+ create mode 100644 spec/state-machine.md
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-03_20-00-04Z-assessment-spec-completeness-review.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Pushing to origin as requested.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git push</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git push
+```
+
+```
+To github-personal:vishnuaggarwal23/ticket-management.git
+   e9472ca..02bef7f  main -> main
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Commit and push completed. An unstaged specstory file remains.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+**Committed** `02bef7f` on `main` and **pushed** to `origin/main`.
+
+**Included (12 files):** `spec/state-machine.md`, updates to `spec/requirements.md` and `spec/data-model.md`, `rules/*` and `commands/*` sync, plus SpecStory `2026-10-03_20-10-18Z-state-machine-specification.md`.
+
+**Left unstaged:** `.specstory/history/2026-10-03_20-00-04Z-assessment-spec-completeness-review.md` (large unrelated session append). Say if you want that in a separate commit or reverted.
+
+---
+
+_**User**_
+
+add api-contract.md under @spec/ 
+refer to 
+- @Assessments.pdf 
+- existing files under @spec 
+
+cover in detailed manner:
+- All the APIs request and response payload structure
+- Include all the postive and negative scnearios
+- Common Response Structure
+- Common Error Response Structure
+- Follow REST conventions and protocols
+
+
+step 2 - modify files under @spec @rules @commands as required. 
+
+
+---
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Creating api-contract.md under @spec/ with detailed API contract documentation covering request and response payloads, positive and negative scenarios, common response structures, error response structures, and REST conventions. Files under @spec, @rules, and @commands will be updated accordingly.
+
+Graphifying the codebase first. Payload details will be nested inside data objects per api-constandards.md. Existing documents provide the reference framework: data-model.md for DTOs, architecture.md for API maps, state-machine.md for status transitions, and requirements.md for feature and API requirements.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Creating `spec/api-contract.md` from the assessment and existing specs. Gathering API requirements, DTOs, and envelope conventions.
+
+
+
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify query &#34;REST API tickets comments PATCH ask endpoints payloads&#34;</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify query "REST API tickets comments PATCH ask endpoints payloads"
+```
+
+```
+Rejected: An error occured while classifying this action. Please review manually.
 ```
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
 
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "spec/requirements.md",
+  "pattern": "api|endpoint|POST|GET|PATCH"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "api|endpoint|POST|GET|PATCH",
+  "topFiles": [
+    {
+      "matchCount": 50,
+      "uri": "spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 51
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing data-model validation, architecture API map, state-machine, and requirements to gather API contract details.
+
+Drafting the full api-contract.md now. The ask API will include its complete request payload and a response shape pointing to the open rag-api-contract. Tickets and comments will also be fully documented.
+
+The ask API will include a boundary section referencing the open rag-api-contract, while defining a minimum contract for testing question validation, a 200 envelope, and citedTicketIds placeholders. DEC-14 will be resolved by officially documenting the ticket REST surface convention paths in the api-contract. Next, I will read architecture §11 and data-model §16.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing data-model section 16 validation rules.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "spec/requirements.md",
+  "pattern": "DEC-14|OQ-04"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "DEC-14|OQ-04",
+  "topFiles": [
+    {
+      "matchCount": 4,
+      "uri": "spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 4
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing the data-model validation section to understand API contract requirements.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "contextAfter": 80,
+  "glob": "spec/data-model.md",
+  "pattern": "^## 16"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "^## 16",
+  "topFiles": [
+    {
+      "matchCount": 81,
+      "uri": "spec/data-model.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+I will create a comprehensive api-contract.md file.
+
+Key API contract decisions are being documented. PATCH status on tickets will follow the interim API shape. Conventions paths will be drafted as agreed. Comment POST responses will return 201 with a CommentResponse body. PATCH request bodies will use raw JSON fields without a data wrapper. Success responses will wrap the payload in data.
+
+List endpoints will return TicketSummaryResponse arrays rather than full ticket details. The Ask endpoint will define a minimal interim response containing an answer and citedTicketIds. Every endpoint will include separate tables for positive and negative scenarios. Malformed JSON requests will return BAD_REQUEST. Empty PATCH bodies will return 400 with a validation error.
+
+Assignee email validation will enforce a maximum length of 320 characters. Comments on non-existent tickets will return 404. Requests to create a ticket with a status field will be rejected with a 400 validation error.
+
+State-machine.md §6.1 will be updated to cite api-contract.md for the interim PATCH shape. Requirements DEC-06 and DEC-14 will be revised. Rules/api-standards will reference the new contract. Documentation.md interim map and commands will be updated. Invalid assignee emails will return 400. Implementation begins.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Creating `spec/api-contract.md` and syncing related governance files.
+
+
+
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Updating state-machine.md section 6.1 to reference the new api-contract.md.
+
+Updating requirements, documentation, rules, and commands. Updating data-model §10 and api-standards to reference the new contract.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Checking requirements §13 for duplicate api-contract lines.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "spec/requirements.md",
+  "pattern": "api-contract"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "api-contract",
+  "topFiles": [
+    {
+      "matchCount": 24,
+      "uri": "./spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 24
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Removing a duplicate line and merging it into one linked line.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Documentation.md, Java Spring Boot, testing, commands, data model, architecture, and frontend files will be updated.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2**</summary>
+The string to replace was not found in the file.
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Fixing the Java Spring Boot line for the API contract.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/java-springboot.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "rules/frontend.md",
+  "pattern": "api-contract"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "api-contract",
+  "topFiles": [
+    {
+      "matchCount": 3,
+      "uri": "./rules/frontend.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 3
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/generate-tests.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Updating spec, test generation, code review, and documentation files. Revising architecture.
+
+Fixing generate-tests by removing api-contract from the stop table or updating inputs. Updating review-spec readiness lines and cross-spec checks for api-contract.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/generate-tests.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "commands/review-code.md",
+  "pattern": "api-contract"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "api-contract",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/generate-tests.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "rules/testing.md",
+  "pattern": "api-contract"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "api-contract",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": "rules/testing.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 2
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Updating rules/testing.md and review-code to reference the new api-contract file.
+
+Adding a review-code checklist item. Updating frontend.md to reference api-contract for ticket types. Revising the architecture document's §11 pointer and state-machine cross-reference.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/testing.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-code.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/testing.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Updating the review-code DEC list. Interim items include DEC-14 and DEC-06.
+
+Adding an api-contract checklist. Updating the frontend read-first table and testing revision history. Fixing an internal reference in api-contract.md that incorrectly points to §6.3 instead of §5.1. Briefly updating architecture.md revision.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-code.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-code.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-code.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-code.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/testing.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Adding an architecture revision line to the API contract document.
+
+Added state-machine revision for the api-contract link. Fixed duplicate DEC-11 entries in the review-code DEC list. Simplified the list to DEC-01, 02, 09-12, 15 and DEC-11 for rag. Added java-springboot revision if missing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "contextAfter": 8,
+  "glob": "rules/frontend.md",
+  "pattern": "Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "Revision history",
+  "topFiles": [
+    {
+      "matchCount": 9,
+      "uri": "./rules/frontend.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Adding a frontend revision line and a java-springboot revision for the api-contract.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/java-springboot.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Drafting the API contract specification now. It will detail all request and response payloads, positive and negative scenarios, common response structures, error formats, and REST conventions. The plan also includes updating the related spec, rules, and command files.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+## Added [`spec/api-contract.md`](spec/api-contract.md) (draft)
+
+**Cross-cutting (§2)**  
+- REST transport, `/api/v1`, flat JSON **requests** vs `{ "data" }` **responses**  
+- **Common success** envelope (single resource, list + `meta`, 201 + `Location`)  
+- **Common error** envelope and status → `error.code` table  
+- Shared enums and `TKT-{n}` ids  
+
+**Payload models (§3)**  
+- `TicketSummary`, `TicketDetail`, `Comment`, create/PATCH/comment/ask write shapes (aligned with [`data-model.md`](spec/data-model.md))  
+
+**Endpoints with positive + negative tables**  
+| Section | Endpoints |
+|---------|-----------|
+| §4 | `POST/GET/PATCH /api/v1/tickets`, list `page`/`size`/`sort`/`q`/`status` |
+| §5 | `POST /api/v1/tickets/{id}/comments` → **201** + `Comment` in `data` |
+| §6 | `POST /api/ai/ask` + `/api/v1/ai/ask` (request **PDF**; interim `answer` + `citedTicketIds`) |
+
+**Also:** REST summary (§7), **AC-API-01…07** (§8), **DEC-06**/**DEC-14** interim (§9).
+
+Envelopes remain normative in [`rules/api-standards.md`](rules/api-standards.md); this spec adds paths, bodies, and scenarios.
+
+---
+
+## Step 2 — synced governance
+
+Updated **`spec/`** (`requirements`, `data-model`, `state-machine`, `architecture`), **`rules/`** (`api-standards`, `documentation`, `java-springboot`, `testing`, `frontend`), and **`commands/`** (`review-spec`, `review-code`, `generate-tests`).
+
+**Still open:** **DEC-11** — full ask `data` wording → `rag-api-contract.md` (interim fields in §6 of api-contract).
+
+If you want this committed and pushed, say so.
+
+---
+
+_**User**_
+
+@spec/api-contract.md add more information in detailed, examples, add uris. 
+
+---
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Expanding spec/api-contract.md with more detail, examples, and URIs.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Expanding api-contract.md with detailed descriptions, examples, and URIs.
+
+Adding a URI catalog and base URL table. Full HTTP examples with headers will cover each endpoint. Error scenarios and cURL commands will be included. Query string variations and lifecycle URI sequences will be added. A cross-reference fix will be applied.
+
+A new worked examples section will contain end-to-end curl and HTTP sequences. Each endpoint will include URI templates, full request lines, headers, and response bodies. Negative scenarios will feature complete error JSON examples. The entire file may be rewritten rather than patched.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Expanding `spec/api-contract.md` with a URI catalog, full HTTP examples (headers, bodies), and detailed positive/negative scenarios.
+
+
+
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Sections 4, 5, and 6 will be expanded with full HTTP examples and cURL. A workflow section will also be added.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Updating the documentation.md reviewer map for api-contract to include the new sections.
+
+Fixing internal references in the api-contract rules.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Expanding the API contract specification with detailed descriptions, concrete examples, and URI references.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Expanded [`spec/api-contract.md`](spec/api-contract.md) with more detail, examples, and URIs. Summary of what was added:
+
+### URI & transport (§2.8–§2.10)
+- **Base URL** conventions (`localhost:8080`, `VITE_API_BASE_URL`)
+- **URI catalog** — all 7 operations with method + path
+- **Absolute URI examples** and a list of **forbidden** paths (PUT, DELETE, `/search`, `/transition`, etc.)
+- **Standard headers** for requests/responses
+- **Copy-paste error examples** (validation, 404, 409, malformed JSON)
+
+### Per-endpoint depth (§4–§6)
+Each operation now has:
+- Summary table (**URI**, idempotency, auth)
+- **Full raw HTTP** request/response blocks (status line + headers + JSON)
+- **cURL** examples where useful
+- Extra **negative** bodies (e.g. `status` on create, invalid `sort`, blank comment, missing `question`)
+
+### Lifecycle & demo (§7)
+- **Happy-path PATCH sequence** (OPEN → CLOSED)
+- **8-step demo table** (create → ask → illegal reopen) tied to requirements Flow A/B/C
+
+### Section renumbering
+- REST summary → **§8**, AC-API → **§9**, decisions → **§10**, revision → **§11**
+
+[`rules/documentation.md`](rules/documentation.md) reviewer map updated for the new sections.
+
+Want this committed (and pushed)?
+
+---
+
+_**User**_
+
+commit and push
+
+---
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Proceeding to commit and push.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline
+```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   spec/api-contract.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-03_20-00-04Z-assessment-spec-completeness-review.md
+	modified:   .specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md
+	modified:   commands/generate-tests.md
+	modified:   commands/review-code.md
+	modified:   commands/review-spec.md
+	modified:   rules/api-standards.md
+	modified:   rules/documentation.md
+	modified:   rules/frontend.md
+	modified:   rules/java-springboot.md
+	modified:   rules/testing.md
+	modified:   spec/api-contract.md
+	modified:   spec/architecture.md
+	modified:   spec/data-model.md
+	modified:   spec/requirements.md
+	modified:   spec/state-machine.md
+
+ ...0-00-04Z-assessment-spec-completeness-review.md |  698 +++++++++++-
+ ...-10-03_20-10-18Z-state-machine-specification.md | 1188 +++++++++++++++++++-
+ commands/generate-tests.md                         |    6 +-
+ commands/review-code.md                            |    8 +-
+ commands/review-spec.md                            |    9 +-
+ rules/api-standards.md                             |   23 +-
+ rules/documentation.md                             |   20 +-
+ rules/frontend.md                                  |    4 +-
+ rules/java-springboot.md                           |    3 +-
+ rules/testing.md                                   |    5 +-
+ spec/api-contract.md                               |  681 ++++++++++-
+ spec/architecture.md                               |    1 +
+ spec/data-model.md                                 |    5 +-
+ spec/requirements.md                               |    9 +-
+ spec/state-machine.md                              |   13 +-
+ 15 files changed, 2586 insertions(+), 87 deletions(-)
+02bef7f Ad
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Staging API contract files while excluding large specstory files. Only spec, rules, and commands will be included.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add spec/api-contract.md spec/requirements.md spec/data-model.md spec/state-machine.md spec/architecture.md rules/ commands/ &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Add HTTP API contract spec with URIs, examples, and governance sync.
+
+Documents ticket/comment/ask payloads, envelopes, scenarios, and cURL/HTTP examples; updates rules and commands to reference spec/api-contract.md.
+EOF
+)&#34; &amp;&amp; git push &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add spec/api-contract.md spec/requirements.md spec/data-model.md spec/state-machine.md spec/architecture.md rules/ commands/ && git commit -m "$(cat <<'EOF'
+Add HTTP API contract spec with URIs, examples, and governance sync.
+
+Documents ticket/comment/ask payloads, envelopes, scenarios, and cURL/HTTP examples; updates rules and commands to reference spec/api-contract.md.
+EOF
+)" && git push && git status
+```
+
+```
+[main 5e56ea8] Add HTTP API contract spec with URIs, examples, and governance sync.
+ 13 files changed, 1228 insertions(+), 41 deletions(-)
+ create mode 100644 spec/api-contract.md
+To github-personal:vishnuaggarwal23/ticket-management.git
+   02bef7f..5e56ea8  main -> main
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-03_20-00-04Z-assessment-spec-completeness-review.md
+	modified:   .specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The commit and push are complete.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+**Committed** `5e56ea8` and **pushed** to `origin/main`.
+
+**Included (13 files):** `spec/api-contract.md` (full contract + URI/HTTP/cURL examples), updates to `spec/requirements.md`, `data-model.md`, `state-machine.md`, `architecture.md`, and synced `rules/` + `commands/`.
+
+**Left unstaged:** two `.specstory/history/` files (large session transcripts). Say if you want those committed or discarded.
+
+---
+
+_**User**_
+
+yes. commit and push
+
+---
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat .specstory/</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat .specstory/
+```
 </details></tool-use>
