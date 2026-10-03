@@ -175,3 +175,15 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 - Do not implement agents, tool calling, or side effects from `/api/ai/ask`.
 - Do not prescribe a prompt template or a second package layout (use `rules/java-springboot.md`).
 - Do not invent product features (auth on ask, rerankers, extra metadata) not in the assessment or an agreed spec.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial RAG ingest, PgVector, retrieve-then-generate ask, and grounding guidelines. |
+| 2026-10-03 | Aligned with approved stack; numeric chunk/K/model settings deferred to `spec/rag-ingestion.md`. |
+| 2026-10-04 | SDD expansion: OQ/DEC pointers; cross-links to architecture RAG sections and evaluation strategy. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md` §13–16. |
+| 2026-10-04 | Added revision history section. |

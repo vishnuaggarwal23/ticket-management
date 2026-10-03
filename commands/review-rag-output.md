@@ -187,3 +187,14 @@ Both matter for the assessment. Neither is proved by a single golden answer stri
 - **Retrieval verdict:** `good` | `partial` | `poor` | `not evaluated` (no seed / no logs)
 - **Misses:** question → expected id(s) → retrieved ids → brief cause hypothesis (wording, chunking, threshold, metadata filter)
 - **Follow-up:** spec or config change — do not implement unless the user asks
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial grounded-ask review workflow: citations, no-match, retrieval quality hooks. |
+| 2026-10-04 | Expanded retrieval verdict output; links to `spec/evaluation-strategy.md`. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md` and RAG rules. |
+| 2026-10-04 | Added revision history section. |

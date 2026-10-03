@@ -126,3 +126,14 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 - **Spec gaps** — code without spec, or spec without code
 - **Open questions the code assumed** — must confirm with the user
 - **Ready to merge?** yes / no
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial backend code review checklist against specs and `rules/`. |
+| 2026-10-04 | SDD expansion: routing table, severity labels, spec-gap and assumption reporting. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md`, `spec/architecture.md`, and aligned rules. |
+| 2026-10-04 | Added revision history section. |

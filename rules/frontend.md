@@ -155,3 +155,14 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 - Do not write frontend test files or pick a UI test framework.
 - Do not duplicate the state machine as the only enforcement.
 - Do not invent API fields, citation JSON, or agent actions from the ask box.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-10-03 | Initial React + Vite + TypeScript UI conventions and ticket/ask display rules. |
+| 2026-10-04 | SDD expansion: PDF vs convention; links to `spec/ui-flow.md` and API client patterns. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md` §12. |
+| 2026-10-04 | Added revision history section. |

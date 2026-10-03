@@ -82,3 +82,14 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 - **Open questions assumed** — confirm with the user
 - **Frontend tests** — none required; do not request generating them
 - **Ready?** yes / no
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-10-04 | Initial frontend review command (React/Vite/TS); no frontend tests required. |
+| 2026-10-04 | Aligned with `rules/frontend.md` and `spec/ui-flow.md` expectations. |
+| 2026-10-04 | Governance pass with expanded specs and rules index. |
+| 2026-10-04 | Added revision history section. |

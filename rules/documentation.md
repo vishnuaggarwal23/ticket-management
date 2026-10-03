@@ -108,6 +108,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 ## Writing bar
 
 - Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions, revision history.
+- **`rules/*.md` and `commands/*.md`** — keep a short **Revision history** table at the end when content changes (same `Date | Note` format as `spec/`).
 - Prefer checklists; link acceptance criteria to backend tests or `commands/review-frontend.md` for UI.
 - Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in `spec/requirements.md` (§8–§9) when proposing or reviewing tests.
 - Distinguish **PDF requirement** vs **project convention** (see any `rules/*.md` “Assessment vs conventions” section).
@@ -138,3 +139,15 @@ Review commands may **propose** an entry; confirm with the user before writing.
 ## Skill usage
 
 When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md`.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial documentation layout, spec set index, rules/commands steering, and writing bar. |
+| 2026-10-03 | Stack and workflow alignment; graphify and token-optimisation notes. |
+| 2026-10-04 | Expanded `requirements.md` / `architecture.md` reviewer maps; OQ/DEC and AC traceability for tests. |
+| 2026-10-04 | Governance pass with expanded `spec/requirements.md` and `spec/architecture.md`. |
+| 2026-10-04 | Added revision history section; documented history expectation for `rules/` and `commands/`. |

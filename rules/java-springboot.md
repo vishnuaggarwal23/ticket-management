@@ -229,3 +229,16 @@ IN_PROGRESS ────────► CANCELLED
 - Do not invent authentication, OpenAPI-as-requirement, or extra ticket resources. URI versioning follows `rules/api-standards.md`.
 - Do not implement agents or side effects from `/api/ai/ask`.
 - Do not treat this file as a substitute for `spec/` field catalogs or HTTP contracts.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial Java 21 / Spring Boot 3 layering, packages, and backend coding conventions. |
+| 2026-10-03 | Stack alignment: PostgreSQL, Liquibase, Maven Wrapper, Spring AI provider configuration. |
+| 2026-10-03 | Recorded agreed backend package layout (`api` / `domain` / `service` / `persistence` / `rag` / `config`). |
+| 2026-10-04 | SDD expansion: assessment vs convention; defer open payloads to agreed specs. |
+| 2026-10-04 | Synced with `spec/architecture.md` §8–9 technical components. |
+| 2026-10-04 | Added revision history section. |

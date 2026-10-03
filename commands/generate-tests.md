@@ -109,3 +109,15 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 - Do not skip negative paths on a P0 flow you did test positively
 - Do not generate frontend tests
 - Do not implement product code unless the user asked
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial backend test-generation workflow and `rules/testing.md` checklist. |
+| 2026-10-03 | Aligned with stack and spec-driven acceptance mapping. |
+| 2026-10-04 | Expanded AC traceability and negative-path requirements for P0 flows. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md` and governance pass. |
+| 2026-10-04 | Added revision history section. |

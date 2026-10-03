@@ -223,3 +223,14 @@ Use this order. Every finding that cites a problem must include **`spec/<file>.m
 12. **Ready for implementation?** yes / no — if no, list blocking questions (include unresolved **DEC-***)
 
 Confirm with the user before applying spec edits.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial spec review command: consistency, hallucinations, readiness gate. |
+| 2026-10-04 | Expanded for `requirements.md` OQ/DEC, architecture §16, demo script §8.7, AC mapping. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md`. |
+| 2026-10-04 | Added revision history section. |

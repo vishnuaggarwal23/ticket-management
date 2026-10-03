@@ -321,3 +321,15 @@ State that substitution in `spec/test-strategy.md` when written.
 - Do not skip negative paths for implemented flows.
 - Do not skip HTTP **API testing** (envelopes, pagination, `/api/v1`, 409) or treat service/repository tests as a substitute.
 - Do not replace repository tests with mocked repositories, or state-machine tests with controller-only tests.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial backend testing conventions: JUnit 5, Mockito, Testcontainers, layer coverage. |
+| 2026-10-03 | Aligned with approved stack and HTTP API contract testing expectations. |
+| 2026-10-04 | SDD expansion: map tests to `AC-CORE-*` / `AC-FEAT-*`; RAG retrieval vs golden-answer boundary. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/test-strategy.md` role. |
+| 2026-10-04 | Added revision history section. |

@@ -340,3 +340,15 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 - Do not prescribe Spring Security, API keys, or multi-tenancy.
 - Do not return persistence entities or a second JSON error shape from one controller.
 - Do not use PUT, unversioned `/api/tickets`, or cursor pagination unless a spec revises this file.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-09-24 | Initial REST conventions: envelopes, `/api/v1`, list params, ticket and ask capabilities. |
+| 2026-10-03 | Aligned with approved stack; AI and vector settings as configuration, not public API fields. |
+| 2026-10-04 | SDD expansion: assessment vs convention vs open decisions; `spec/requirements.md` §10 handoff. |
+| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md` API map. |
+| 2026-10-04 | Added revision history section. |
