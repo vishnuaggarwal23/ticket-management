@@ -870,10 +870,10 @@ Remaining **Open** in other specs:
 
 | ID | Owner |
 |----|-------|
-| DEC-01 re-ingest on close | `rag-ingestion.md` |
+| DEC-01 re-ingest on close | [`rag-ingestion.md`](rag-ingestion.md) §10 |
 | DEC-02 skipped transitions | `state-machine.md` |
 | DEC-06 transition API shape | [`api-contract.md`](api-contract.md) §4.4 (PATCH `status` interim) |
-| Embedding dimension, chunk sizes | `rag-ingestion.md` |
+| Embedding dimension, chunk sizes | [`rag-ingestion.md`](rag-ingestion.md) §9.3, §12 |
 | Ask `data` JSON | `rag-api-contract.md` |
 
 ---

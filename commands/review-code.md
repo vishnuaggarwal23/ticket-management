@@ -17,7 +17,7 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 ## Inputs
 
 - Diff / named paths
-- Agreed specs: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md), draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md) — interim map [`rules/documentation.md`](../rules/documentation.md); layout [`spec/architecture.md`](../spec/architecture.md) §8–9
+- Specs: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (**agreed**); draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md), [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), [`spec/ui-flow.md`](../spec/ui-flow.md), [`spec/test-strategy.md`](../spec/test-strategy.md); index [`rules/documentation.md`](../rules/documentation.md); layout [`spec/architecture.md`](../spec/architecture.md) §8–9
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements
@@ -31,7 +31,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### Spec and scope
 
 - [ ] Implements only **agreed** specs; no extra product features (auth, agents, attachments, bulk ops, rerankers) unless a spec agrees
-- [ ] No silent answers to open questions — check [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)**; still-open: **DEC-01, 02, 09–12, 11, 15**, chunking/model/K/threshold. **Interim:** **DEC-06**/**DEC-14** via [`spec/api-contract.md`](../spec/api-contract.md). **Agreed via [`spec/data-model.md`](../spec/data-model.md):** id `TKT-{n}`, category, resolution notes, create validation, `q` scope, initial `OPEN`
+- [ ] No silent answers to open questions — check [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)**; still-open: **DEC-01, 02, 09–12, 11, 15**, embedding model/dimension, top-K/threshold **values**. **Interim:** **DEC-06**/**DEC-14** via [`spec/api-contract.md`](../spec/api-contract.md); chunking per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §9 (**proposed** §9.3 until confirmed). **Agreed via [`spec/data-model.md`](../spec/data-model.md):** id `TKT-{n}`, category, resolution notes, create validation, `q` scope, initial `OPEN`
 - [ ] Domain status machine matches [`spec/state-machine.md`](../spec/state-machine.md) §5 (T1–T5, X1–X3, full invalid matrix)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
@@ -63,11 +63,11 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 
 - [ ] Knowledge text only from description, comments, resolution notes
 - [ ] Metadata per [`spec/data-model.md`](../spec/data-model.md) §11 (`ticketId`, `status`, `priority`, `assignee`, `category`; technical keys only as specified)
-- [ ] Re-ingest triggered on update and close (mechanism not invented if spec still open)
+- [ ] Re-ingest per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10 (**DEC-01** interim); hybrid chunker §6–§9
 - [ ] Retrieve-then-generate once; no tools, ticket create, or notify from ask
 - [ ] Empty/below-threshold retrieval does not call the LLM to invent an answer
 - [ ] Citations are ticket IDs from **retrieval**, not model-guessed ids
-- [ ] Chunking algorithm, model name, dimension, numeric K/threshold **not** invented in code
+- [ ] Chunking from [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); model name, dimension (**DEC-09**), numeric K/threshold values **not** hardcoded in Java
 
 ### Frontend
 
@@ -102,7 +102,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 - [ ] Methods stay focused; no god services that both mutate tickets and inline the transition table
 - [ ] `spring.jpa.open-in-view` not relied on; no OSIV lazy loads in controllers
 
-### Tests (`rules/testing.md`)
+### Tests (`rules/testing.md`, [`spec/test-strategy.md`](../spec/test-strategy.md))
 
 - [ ] JUnit 5; Mockito for unit doubles; no JUnit 4
 - [ ] **Domain** state-machine tests: legal and illegal edges (parameterized where a closed set)
@@ -143,3 +143,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 | 2026-10-04 | Three-spec interim map in `rules/documentation.md`; SM from requirements FEAT-11 until `state-machine.md`. |
 | 2026-10-04 | State machine checks use draft [`spec/state-machine.md`](../spec/state-machine.md). |
 | 2026-10-04 | HTTP contract checks use draft [`spec/api-contract.md`](../spec/api-contract.md). |
+| 2026-10-04 | RAG ingest checks use draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); tests map [`spec/test-strategy.md`](../spec/test-strategy.md). |

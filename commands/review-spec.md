@@ -17,9 +17,9 @@ Mark checklist items **Pass** / **Fail** / **N/A**. Failures are blocking for im
 
 ### When most of `spec/` does not exist yet
 
-Default **Ready for implementation?** → **no** for features that need missing contracts (`ui-flow`, `rag-api-contract`, `rag-ingestion`, etc.). **`data-model.md` is agreed**; **`state-machine.md`** and **`api-contract.md` are draft** — ticket HTTP may proceed per those specs + `rules/api-standards.md` unless open **DEC-*** blocks.
+Default **Ready for implementation?** → **no** until draft specs needed for the slice are complete and open **DEC-*** are resolved or explicitly accepted as interim. **`data-model.md` is agreed**; all other PDF-listed `spec/` files are **draft** — ticket HTTP, ingest, ask, UI, and eval may proceed per those specs + `rules/*` unless a **DEC-*** blocks (e.g. **DEC-09** embedding model, **DEC-11** no-match wording).
 
-You may still review **`requirements.md`** / partial **`architecture.md`** for PDF alignment and rule consistency. List **blocking missing files** explicitly in the output — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
+You may still review **`requirements.md`** / **`architecture.md`** for PDF alignment (requirements **§0.4**, [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**). List **blocking open decisions** explicitly — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
 
 ---
 
@@ -30,15 +30,15 @@ Before judging content, **name every file** you used and its role. If a file is 
 | Role | Typical path | Use in this review |
 |------|----------------|-------------------|
 | Requirements | [`spec/requirements.md`](../spec/requirements.md) | PDF scope; **AC-CORE** / **FEAT**; **OQ** / **DEC** (§10); handoff map (§10.3); §8.7 demo script |
-| Architecture | [`spec/architecture.md`](../spec/architecture.md) | Business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks only if agreed in `rag-ingestion.md` |
+| Architecture | [`spec/architecture.md`](../spec/architecture.md) | Business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) |
 | Data model | [`spec/data-model.md`](../spec/data-model.md) | entities, enums, DTOs §10, **indexes §14.5**, Liquibase order §14, **AC-DM-*** |
 | API contract | [`spec/api-contract.md`](../spec/api-contract.md) | payloads, scenarios, ask boundary (envelopes in `rules/api-standards.md`) |
 | State machine | [`spec/state-machine.md`](../spec/state-machine.md) | §5 legal/illegal matrix; **DEC-02** default (A) |
-| RAG ingestion | `spec/rag-ingestion.md` | chunking, models, ingest mechanics (when written) |
-| RAG API | `spec/rag-api-contract.md` | ask `data` fields, citations, no-match |
-| Evaluation | `spec/evaluation-strategy.md` | RAG quality (not unit tests) |
-| UI flow | `spec/ui-flow.md` | screens and interactions |
-| Test strategy | `spec/test-strategy.md` | acceptance ↔ test mapping |
+| RAG ingestion | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | chunking §6–§9, ingest §10–§11, **AC-RAG-ING-*** |
+| RAG API | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | ask `data` fields, citations, no-match (draft; **DEC-11**) |
+| Evaluation | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | RAG retrieval quality (draft) |
+| UI flow | [`spec/ui-flow.md`](../spec/ui-flow.md) | screens and interactions (draft) |
+| Test strategy | [`spec/test-strategy.md`](../spec/test-strategy.md) | **AC-SM** / **AC-API** / **AC-CORE** ↔ test layers |
 
 **Output must include:**
 
@@ -59,7 +59,8 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] PDF requirements are not weakened (CRUD, comments, search/filter, backend validation, backend state machine, persistence, grounded ask + citations or no-match)
 - [ ] Project conventions (Boot 3, `/api/v1`, PgVector, JUnit, envelopes, PATCH) are **labeled** as conventions, **not** as PDF mandates
 - [ ] Open items remain in **Open questions** (or equivalent), not smuggled into requirements as decided facts
-- [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): **§0.4** coverage map — every PDF theme row has a capture path or explicit gap (missing child spec name)
+- [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): **§0.4** coverage map — every PDF theme row has a capture path or explicit gap (**DEC-*** / demo evidence only)
+- [ ] **§6.8** hygiene map — each PDF-listed rule/command exists under `rules/` and `commands/` (and `skills/documentation/SKILL.md`)
 - [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
 - [ ] Child specs that resolve an **OQ-*** cite the matching **DEC-*** decision (or remain draft until user confirms)
 - [ ] New material in feature specs aligns with **[`spec/requirements.md`](../spec/requirements.md) §10.3** handoff (each OQ has a primary owning spec)
@@ -73,17 +74,17 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] Ask no-match is a success outcome, not an error envelope
 - [ ] State machine in domain/services, not UI or repository `UPDATE`
 - [ ] Test acceptance criteria can be implemented under `rules/testing.md`
-- [ ] RAG content does not contradict `rules/rag-vector-store.md` (no locked chunking/model/K/threshold unless agreed in `rag-ingestion.md`)
-- [ ] UI spec does not require Next.js or frontend tests; layout remains open until `spec/ui-flow.md` is agreed
+- [ ] RAG content does not contradict `rules/rag-vector-store.md` (chunking/ingest per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); no locked model/K/threshold unless **DEC-09** / §12 agreed)
+- [ ] UI spec does not require Next.js or frontend tests; layout remains open until [`spec/ui-flow.md`](../spec/ui-flow.md) is agreed
 
 ### Cross-spec validity (name both files when flagging)
 
-When a child spec **does not exist**, cross-check against the **interim map** in [`rules/documentation.md`](../rules/documentation.md) (e.g. transitions → `requirements.md` FEAT-11, DTOs → `data-model.md` §10). Mark **N/A** for missing-file pairs; flag **conflicts** among the three present specs + rules.
+When a child spec is **draft** or a section is **Open**, cross-check [`spec/requirements.md`](../spec/requirements.md) **§0.4** and the **DEC-*** register (§10.2). Flag **conflicts** among specs and `rules/*`.
 
 - [ ] [`state-machine.md`](../spec/state-machine.md) ↔ [`api-contract.md`](../spec/api-contract.md) — same transitions; PATCH `status` §4.4
 - [ ] [`data-model.md`](../spec/data-model.md) ↔ [`api-contract.md`](../spec/api-contract.md) — same fields, types, requiredness
 - [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities; no **DEC-*** closed in code but still **Open** in requirements
-- [ ] `architecture.md` ↔ `rag-ingestion.md` / `rag-api-contract.md` — no conflicting pipeline or API story
+- [ ] [`architecture.md`](../spec/architecture.md) ↔ [`rag-ingestion.md`](../spec/rag-ingestion.md) / `rag-api-contract.md` — no conflicting pipeline or API story
 - [ ] `ui-flow.md` ↔ API/RAG contracts — UI does not require impossible API shapes
 
 ### When [`spec/architecture.md`](../spec/architecture.md) is in scope (expanded checklist)
@@ -98,8 +99,8 @@ Use `rules/documentation.md` section map for headings. Mark **N/A** for sections
 - [ ] **API architecture** (§11) aligns with `rules/api-standards.md` (`POST /api/ai/ask`, PATCH tickets, envelopes)
 - [ ] **Vector DB** (§14): PgVector as **Convention**; relational DB remains SoR; rebuild-from-tickets story present
 - [ ] **RAG** (§15–16): ingest sources (description, comments, resolution notes); re-ingest on update/close per PDF with **DEC-01** noted if close-only is unresolved
-- [ ] **Chunking** (§16): strategy **justified** for ticket text; numeric size/overlap deferred to `rag-ingestion.md` unless explicitly agreed
-- [ ] **Embedding** (§16): local vs cloud tradeoffs documented; same model at ingest/query; model id not invented without `rag-ingestion.md`
+- [ ] **Chunking** (§16): strategy **justified** for ticket text; aligns with [`rag-ingestion.md`](../spec/rag-ingestion.md) §9; **proposed** numeric size/overlap §9.3 confirmed or still marked Proposed
+- [ ] **Embedding** (§16): local vs cloud tradeoffs documented; same model at ingest/query; model id not invented without [`rag-ingestion.md`](../spec/rag-ingestion.md) §12 (**DEC-09**)
 - [ ] **Open questions** (§21) align with `requirements.md` §10 OQ/DEC — no decisions closed only in architecture
 
 ### When [`spec/data-model.md`](../spec/data-model.md) is in scope
@@ -144,7 +145,7 @@ Checklist:
 
 - [ ] Every non-obvious design choice in the primary spec has a **why** (even one sentence)
 - [ ] Conventions are not presented as PDF requirements
-- [ ] RAG numeric or model choices appear only where `rag-ingestion.md` (or agreed section) justifies them
+- [ ] RAG numeric or model choices appear only where [`rag-ingestion.md`](../spec/rag-ingestion.md) (or agreed section) justifies them
 
 ### Unjustified (flag for fix or open question)
 
@@ -208,7 +209,7 @@ If unsure whether something is a convention or a hallucination, mark **needs use
 
 ### Quality
 
-- [ ] Every acceptance criterion maps to a test theme in `rules/testing.md` and, where present, to **`AC-CORE-*`** or **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md)
+- [ ] Every acceptance criterion maps to a test theme in [`spec/test-strategy.md`](../spec/test-strategy.md) and `rules/testing.md`, and to **`AC-CORE-*`** or **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md)
 - [ ] Positive **and** negative / empty outcomes for implemented capabilities
 - [ ] RAG: sources, metadata, re-ingest, grounding, citations, no-match; configurable K/threshold **without** numeric defaults unless agreed
 - [ ] When `architecture.md` is primary: §16 chunking + embedding justification present for **AC-CORE-19** / FEAT-20
@@ -249,3 +250,4 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Requirements §0.4 coverage check; interim map when only three specs exist (`rules/documentation.md`). |
 | 2026-10-04 | Draft [`spec/state-machine.md`](../spec/state-machine.md) in readiness and cross-spec checks. |
 | 2026-10-04 | Draft [`spec/api-contract.md`](../spec/api-contract.md) in readiness and cross-spec checks. |
+| 2026-10-04 | Draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/test-strategy.md`](../spec/test-strategy.md) in file map and readiness. |

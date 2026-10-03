@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-frontend.md`](../.cursor/commands/review-frontend.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, and agreed `spec/ui-flow.md` / API / RAG contracts.
+Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, and [`spec/ui-flow.md`](../spec/ui-flow.md) / API / RAG contracts.
 
 **Do not generate or require frontend tests.** Do not apply fixes unless the user asks.
 
@@ -13,10 +13,10 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 - Diff / named frontend paths
 - `rules/frontend.md`
 - `rules/api-standards.md` (paths, envelopes, PATCH, pagination, 409)
-- [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo until `ui-flow.md`; **§10** for open UI/API shape (**OQ/DEC**)
+- [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo until [`spec/ui-flow.md`](../spec/ui-flow.md); **§10** for open UI/API shape (**OQ/DEC**)
 - [`spec/architecture.md`](../spec/architecture.md) §12 (UI surfaces) when reviewing screen/API wiring
 - [`spec/data-model.md`](../spec/data-model.md) (agreed id, category, resolutionNotes, create requiredness)
-- `spec/ui-flow.md`, `spec/api-contract.md`, `spec/rag-api-contract.md` if the user has added them (default: **not** in repo — see [`rules/documentation.md`](../rules/documentation.md) interim map)
+- Draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/ui-flow.md`](../spec/ui-flow.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) — open **DEC-06**, **DEC-11**, **DEC-15** per [`spec/requirements.md`](../spec/requirements.md) §10.2
 - Assessment PDF only as background for **capabilities** (not stack)
 
 Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** / **minor** with file references.

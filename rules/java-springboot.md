@@ -10,8 +10,8 @@ Backend coding standards for the support ticket management application.
 | HTTP paths, envelopes, list params | `rules/api-standards.md`; API map [`spec/architecture.md`](../spec/architecture.md) §11 |
 | Ticket/comment **field** catalogs | [`spec/data-model.md`](../spec/data-model.md) (agreed); HTTP contract [`spec/api-contract.md`](../spec/api-contract.md) (draft) |
 | State machine rules | [`spec/state-machine.md`](../spec/state-machine.md) (draft); PDF hub [`spec/requirements.md`](../spec/requirements.md) FEAT-11 |
-| RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §14–16; numeric tuning in `spec/rag-ingestion.md` when added |
-| Tests | `rules/testing.md`, `commands/generate-tests.md` |
+| RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §14–16, [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (draft) |
+| Tests | `rules/testing.md`, [`spec/test-strategy.md`](../spec/test-strategy.md), `commands/generate-tests.md` |
 | UI | `rules/frontend.md` |
 
 ## Assessment vs project conventions
@@ -148,7 +148,7 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 
 ## Services
 
-- Application services own use cases: create, update fields, add comment, list/search/filter, load detail, **request a status transition**, trigger RAG refresh after update/close per `spec/rag-ingestion.md`.
+- Application services own use cases: create, update fields, add comment, list/search/filter, load detail, **request a status transition**, trigger RAG refresh after update/close per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10.
 - Annotate **write** methods `@Transactional`; read-only queries `@Transactional(readOnly = true)` when they need a transaction. Keep transactions short.
 - Delegate legality of `OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`, `OPEN`/`IN_PROGRESS` → `CANCELLED`, and all other moves to the **domain state machine**. On illegal move, throw a domain exception; do not save the illegal status.
 - After successful **update** or **close**, call the RAG ingestion port so embeddings do not go stale. Do not embed inside the repository.

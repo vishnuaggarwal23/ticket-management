@@ -16,11 +16,11 @@
 | [`data-model.md`](data-model.md) | Present (agreed) | Resolves OQ-01, OQ-02, OQ-03, OQ-10, OQ-13, OQ-14; **DEC-03, 04, 05, 07, 08, 13** recorded §10.2 |
 | [`api-contract.md`](api-contract.md) | Present (draft) | Ticket/comment REST + ask boundary; **DEC-14** interim; **DEC-06** PATCH `status` |
 | [`state-machine.md`](state-machine.md) | Present (draft) | T1–T5 / X1–X3 matrix; **DEC-02** default (A); interim PATCH (**DEC-06** open); **DEC-07** cross-ref |
-| `rag-ingestion.md` | Missing | Chunk/model numbers, re-ingest timing (DEC-01) |
-| `rag-api-contract.md` | Missing | Resolves OQ-05; no-match wording |
-| `evaluation-strategy.md` | Missing | Retrieval quality (**PDF** learning goal) |
-| `ui-flow.md` | Missing | Resolves OQ-11; ask + transition UX |
-| `test-strategy.md` | Missing | Maps AC-CORE → backend tests |
+| [`rag-ingestion.md`](rag-ingestion.md) | Present (draft) | Chunking (paragraph + fixed hybrid), ingest sources, re-ingest (**DEC-01** interim), **DEC-09** |
+| [`rag-api-contract.md`](rag-api-contract.md) | Present (draft) | Ask `data` shape; **DEC-11** no-match wording |
+| [`evaluation-strategy.md`](evaluation-strategy.md) | Present (draft) | Retrieval quality eval (**PDF** learning goal, FEAT-22) |
+| [`ui-flow.md`](ui-flow.md) | Present (draft) | Screens, flows A–E; transition UX (**DEC-06** interim) |
+| [`test-strategy.md`](test-strategy.md) | Present (draft) | Maps AC-CORE / AC-SM / AC-API → backend test layers |
 
 **Label legend**
 
@@ -72,13 +72,15 @@ Use this table to confirm nothing from the assignment is “lost” between the 
 | PDF theme (typical page) | Captured in | Gap / owner if not implementable yet |
 |--------------------------|-------------|--------------------------------------|
 | Process: spec-driven workflow, hygiene rules/commands, prompt history, AI mistake evidence (p.1–2) | §3.4, §6.8, §7 NFR-01…05, FEAT-23 | Mistake log file `docs/ai-mistakes.md` when first entry exists |
-| Learning goals: specs for AI-native feature; test deterministic + probabilistic (p.2) | §1.3, §2.5, FEAT-22, §6.7 | `evaluation-strategy.md`, `test-strategy.md` |
+| Learning goals: specs for AI-native feature; test deterministic + probabilistic (p.2) | §1.3, §2.5, FEAT-22, §6.7 | [`evaluation-strategy.md`](evaluation-strategy.md), [`test-strategy.md`](test-strategy.md) |
 | Token optimisation plugins + prompt caching (p.2) | §7 NFR-11, `rules/documentation.md` | Optional tooling — not product behaviour |
 | Stack: Java 21, Spring Boot, Spring AI, PostgreSQL/H2, embedding, vector store, REST, React/Next or equivalent (p.2–3) | §2.1, §6.1 | **DEC-09**, **DEC-10** for store/DB roles in `architecture.md` / `rag-ingestion.md` |
-| Ticket CRUD, comments, search, filter, persistence, validation, UI errors (p.3–4) | §4.2 FEAT-01…10, §8.1–8.2 | HTTP detail → `api-contract.md`; UI → `ui-flow.md` |
-| Backend state machine; valid transitions; invalid reopen examples (p.4) | §2.6, FEAT-11, Flow A/C | Skipped hops → **DEC-02** in `state-machine.md` |
+| Ticket CRUD, comments, search, filter, persistence, validation, UI errors (p.3–4) | §4.2 FEAT-01…10, §8.1–8.2 | HTTP → [`api-contract.md`](api-contract.md); UI → [`ui-flow.md`](ui-flow.md) |
+| Backend state machine; valid transitions; invalid reopen examples (p.4) | §2.6, FEAT-11, Flow A/C | [`state-machine.md`](state-machine.md); skipped hops → **DEC-02** |
+| Basic RAG pipeline diagram: tickets → knowledge → chunk → embed → store → ask → search → LLM → answer → sources (p.4) | §6.6, Flow D | [`architecture.md`](architecture.md) §15; `rules/rag-vector-store.md` pipeline |
+| Five illustrative assistant questions (p.4) | §4.3 **Example** table | Eval: [`evaluation-strategy.md`](evaluation-strategy.md) §5; review: `commands/review-rag-output.md` |
 | RAG: ingest description/comments/resolution; metadata keys; re-ingest on update or closed (p.5) | FEAT-12…14, Flow D | Numeric chunk/model → `rag-ingestion.md`; **DEC-01** |
-| Ask flow: similarity search → LLM; grounded answer; citations; example questions (p.4–5) | FEAT-15…17, Flow B, §4.3 | Response JSON → `rag-api-contract.md` |
+| Ask flow: similarity search → LLM; grounded answer; citations; example questions (p.4–5) | FEAT-15…17, Flow B, §4.3 | Response `data` → [`rag-api-contract.md`](rag-api-contract.md) (**DEC-11** wording open) |
 | Grounding guardrails; no agent; no create/notify/tools (p.5–6) | §2.2, FEAT-18, Flow E | — |
 | Configurable top-K and similarity threshold (p.5) | FEAT-19, AC-CORE-21 | Property names/values → `rag-ingestion.md` |
 | Document chunking + embedding justification (p.5–6) | FEAT-20, AC-CORE-19 | Narrative in `architecture.md` §16; numbers in `rag-ingestion.md` |
@@ -810,7 +812,7 @@ Each feature lists **testable acceptance criteria** (`AC-FEAT-xx-yy`). Wording u
 
 **Acceptance criteria**
 
-- **AC-FEAT-22-01:** Given `evaluation-strategy.md` (**Open** content), When defined, Then approach measures retrieval usefulness for ticket ask (**PDF** learning goals).
+- **AC-FEAT-22-01:** Given [`evaluation-strategy.md`](evaluation-strategy.md) (draft), When eval runs per that spec, Then approach measures retrieval usefulness for ticket ask (**PDF** learning goals).
 - **AC-FEAT-22-02:** Given sample questions (**PDF** list), When eval runs, Then results are reviewable (human or structured checklist)—not single golden LLM string only (**Example** aligns with project testing rules).
 
 ---
@@ -866,7 +868,7 @@ The PDF does **not** mandate seed data. The table below is an **Example** corpus
 | RAG ingest | FR-13…14 | FEAT-12…14 | Flow D; §11.1 |
 | RAG ask | FR-15…18, FR-21…22 | FEAT-15…19 | Flow B/E; §4.3 **Example** corpus |
 | Documentation / eval | FR-19…20, FR-23…24 | FEAT-20…23 | §6.2; §2.5 |
-| Frontend (implied) | FR-01…10, FR-15…18 | UI + API | §4.2; `ui-flow.md` **Open** |
+| Frontend (implied) | FR-01…10, FR-15…18 | UI + API | §4.2; [`ui-flow.md`](ui-flow.md) (draft; **DEC-06** / **DEC-15**) |
 
 ### 5.2 Functional requirements index
 
@@ -982,15 +984,21 @@ Create and maintain specifications before coding. PDF example set:
 
 ### 6.8 Engineering hygiene implementation requirements (**PDF**)
 
-Maintain steering artefacts including at minimum (**PDF**):
+Maintain steering artefacts including at minimum (**PDF**). Repo paths (edit `rules/` and `commands/`; Cursor pointers under `.cursor/`):
 
-- Java Spring Boot guidelines
-- Testing guidelines
-- API standards
-- Documentation skills
-- RAG / vector store guidelines (chunking convention, embedding model choice, retrieval-tuning defaults—values may remain **Open** until specs agree)
-- Commands: review code, review spec, generate tests
-- Command: review AI output for **hallucination / ungrounded answers**
+| PDF hygiene item | Repo file(s) |
+|------------------|--------------|
+| Java Spring Boot guidelines | `rules/java-springboot.md` |
+| Testing guidelines | `rules/testing.md` |
+| API standards | `rules/api-standards.md` |
+| Documentation skills | `rules/documentation.md`, `skills/documentation/SKILL.md` |
+| RAG / vector store guidelines (chunking convention, embedding model choice, retrieval-tuning defaults) | `rules/rag-vector-store.md`; justification [`architecture.md`](architecture.md) §16; numeric keys [`rag-ingestion.md`](rag-ingestion.md) |
+| Review code | `commands/review-code.md` |
+| Review spec | `commands/review-spec.md` |
+| Generate tests | `commands/generate-tests.md` |
+| Review AI output (hallucination / ungrounded answers) | `commands/review-rag-output.md` |
+| *(Convention)* Review frontend | `commands/review-frontend.md` — not named in PDF |
+| *(Convention)* Refresh prompt-history index | `commands/update-prompt-history.md` — rebuild `docs/prompt-history.md` from `.specstory/history/` |
 
 Demonstrate **reusable AI instructions** across the project (**PDF**).
 
@@ -1332,4 +1340,7 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | `data-model.md` agreed; OQ-01/02/03/10/13/14 resolved; DEC-03/04/05/07/08/13 recorded §10.2. |
 | 2026-10-04 | PDF coverage map §0.4; removed duplicate §11.2 paragraph (no new spec files). |
 | 2026-10-04 | Added draft [`state-machine.md`](state-machine.md); child-spec table and FEAT-11 handoff updated. |
+| 2026-10-04 | Full PDF spec set: [`rag-api-contract.md`](rag-api-contract.md), [`evaluation-strategy.md`](evaluation-strategy.md), [`ui-flow.md`](ui-flow.md); §0.4 coverage map updated. |
+| 2026-10-04 | §0.4: RAG pipeline diagram + illustrative questions rows; §6.8 hygiene → concrete `rules/` / `commands/` paths. |
+| 2026-10-04 | §6.8: `commands/update-prompt-history.md` (convention) for SpecStory index. |
 | 2026-10-04 | Added draft [`api-contract.md`](api-contract.md); **DEC-06**/**DEC-14** interim in §10.2. |

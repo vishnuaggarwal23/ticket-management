@@ -338,6 +338,24 @@ Content-Type: application/json
 }
 ```
 
+### 2.11 Complete endpoint catalog (method, URI, payloads)
+
+All paths are relative to **base URL** (§2.8). **Write** requests use flat JSON at the root (§2.2). **Success** responses wrap resources in `data` (§2.3); **errors** use `error` (§2.4).
+
+| # | HTTP method | URI path | Request body | Query params | Success HTTP | Response `data` type | `meta` |
+|---|-------------|----------|--------------|--------------|--------------|----------------------|--------|
+| 1 | `POST` | `/api/v1/tickets` | `CreateTicketRequest` (§3.4) | — | **201** | `TicketDetail` | omitted |
+| 2 | `GET` | `/api/v1/tickets` | — | `page`, `size`, `sort`, `q`, `status` (§4.2) | **200** | `TicketSummary[]` | **required** |
+| 3 | `GET` | `/api/v1/tickets/{id}` | — | — | **200** | `TicketDetail` | omitted |
+| 4 | `PATCH` | `/api/v1/tickets/{id}` | `UpdateTicketRequest` (§3.4) | — | **200** | `TicketDetail` | omitted |
+| 5 | `POST` | `/api/v1/tickets/{id}/comments` | `CreateCommentRequest` (§3.4) | — | **201** | `Comment` | omitted |
+| 6 | `POST` | `/api/ai/ask` | `AskRequest` (§3.4) | — | **200** | `AskResponseData` (§3.5) | omitted |
+| 7 | `POST` | `/api/v1/ai/ask` | `AskRequest` (§3.4) | — | **200** | `AskResponseData` (§3.5) | omitted |
+
+**Path parameters:** `{id}` = `TKT-{n}` (§2.7); `{commentId}` only appears in **201** `Location` for comments (§5.1), not as a separate GET route in v1.
+
+**Idempotency / safety:** GET list and GET detail are safe and idempotent. POST and PATCH are not idempotent. Repeating the same PATCH `status` after a successful transition may return **409** if the ticket is already in the target state (self-transition — [`state-machine.md`](state-machine.md) §6.1.1).
+
 ---
 
 ## 3. Resource models (JSON schemas)
@@ -412,9 +430,20 @@ Only properties **present** in JSON are applied (**partial PATCH**). Omitted pro
 |----------|------|----------|------------|
 | `question` | string | yes | Non-blank after trim |
 
+### 3.5 `AskResponseData` (success `data` for ask)
+
+Returned inside the success envelope on **200** for §6.1. Field names are **interim** until **DEC-11** / `rag-api-contract.md` finalizes wording.
+
+| Property | Type | Required in response | Notes |
+|----------|------|----------------------|-------|
+| `answer` | string | yes | Grounded narrative or honest no-match phrase |
+| `citedTicketIds` | string[] | yes | Public ticket ids (`TKT-{n}`); empty when no-match; each id MUST exist in DB when non-empty (**PDF**) |
+
 ---
 
 ## 4. Endpoints — tickets
+
+Per-endpoint detail below. Summary catalog: §2.11.
 
 ### 4.1 `POST /api/v1/tickets` — create ticket
 
@@ -867,6 +896,48 @@ PATCH  /api/v1/tickets/TKT-1001  {"status":"CLOSED"}
 GET    /api/v1/tickets/TKT-1001                   → status CLOSED
 ```
 
+#### 4.4.1 Legal status transitions (T1–T5) — request and response
+
+Rules: [`state-machine.md`](state-machine.md) §5.1, §5.5. Assume ticket `TKT-1001` exists and is in the **current** column before each PATCH.
+
+| ID | Current `status` | Request body (`UpdateTicketRequest`) | Success HTTP | Response `data.status` |
+|----|------------------|--------------------------------------|--------------|------------------------|
+| **T1** | `OPEN` | `{ "status": "IN_PROGRESS" }` | **200** | `IN_PROGRESS` |
+| **T2** | `IN_PROGRESS` | `{ "status": "RESOLVED" }` or `{ "resolutionNotes": "…", "status": "RESOLVED" }` | **200** | `RESOLVED` |
+| **T3** | `RESOLVED` | `{ "status": "CLOSED" }` | **200** | `CLOSED` |
+| **T4** | `OPEN` | `{ "status": "CANCELLED" }` | **200** | `CANCELLED` |
+| **T5** | `IN_PROGRESS` | `{ "status": "CANCELLED" }` | **200** | `CANCELLED` |
+
+**Example response shape (T1)** — same `TicketDetail` as §4.3; only `status` and `updatedAt` differ from prior GET:
+
+```json
+{
+  "data": {
+    "id": "TKT-1001",
+    "title": "Payment failed at checkout",
+    "description": "Card declined at step 3",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH",
+    "assignee": "agent@example.com",
+    "category": "PAYMENTS",
+    "resolutionNotes": null,
+    "comments": [],
+    "createdAt": "2026-10-03T12:00:00Z",
+    "updatedAt": "2026-10-04T09:00:00Z"
+  }
+}
+```
+
+**Illegal examples (must not return 200)** — full matrix in [`state-machine.md`](state-machine.md) §5.6:
+
+| Example | Current | Request `status` | HTTP | `error.code` |
+|---------|---------|------------------|------|--------------|
+| Skipped hop | `OPEN` | `RESOLVED` | **409** | `ILLEGAL_TRANSITION` |
+| Reopen X1 | `CLOSED` | `OPEN` | **409** | `ILLEGAL_TRANSITION` |
+| Reopen X2 | `RESOLVED` | `OPEN` | **409** | `ILLEGAL_TRANSITION` |
+| Reopen X3 | `CANCELLED` | `OPEN` | **409** | `ILLEGAL_TRANSITION` |
+| Self-transition | `IN_PROGRESS` | `IN_PROGRESS` | **409** | `ILLEGAL_TRANSITION` |
+
 | Scenario | HTTP | `error.code` | Notes |
 |----------|------|--------------|-------|
 | Patch one field | 200 | — | Others unchanged |
@@ -1139,6 +1210,8 @@ Sequence aligned with [`requirements.md`](requirements.md) §8.7 / Flow A + B. R
 | **AC-API-05** | Comment create returns 201 `Comment` in `data`. |
 | **AC-API-06** | Ask blank `question` → 400; no-match → 200 with empty `citedTicketIds`. |
 | **AC-API-07** | Both ask paths behave identically. |
+| **AC-API-08** | Endpoint catalog §2.11: each row returns the documented `data` type and HTTP success code. |
+| **AC-API-09** | PATCH §4.4.1: each T1–T5 succeeds from the documented current state; §5.6 illegal examples return **409**. |
 
 Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 
@@ -1161,3 +1234,4 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 |------|------|
 | 2026-10-04 | Initial contract: envelopes, ticket/comment/ask payloads, scenarios, REST table; DEC-06/14 interim. |
 | 2026-10-04 | Expanded URI catalog §2.8–2.10; full HTTP/cURL examples per endpoint; demo URI table §7. |
+| 2026-10-04 | §2.11 full endpoint catalog; §3.5 `AskResponseData`; §4.4.1 T1–T5 PATCH table; AC-API-08/09. |

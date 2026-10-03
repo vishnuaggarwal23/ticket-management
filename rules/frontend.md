@@ -2,18 +2,18 @@
 
 Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-React UI for tickets and grounded Q&A. Product screens and click-by-click flows: `spec/ui-flow.md` when added and agreed; until then [`spec/requirements.md`](../spec/requirements.md) Flows A–E and demo **§8.7**, plus [`spec/architecture.md`](../spec/architecture.md) §12. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-flow.md`](../spec/ui-flow.md) (draft; confirm **DEC-06** / **DEC-15** before calling agreed). Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E and demo **§8.7**; layout context [`spec/architecture.md`](../spec/architecture.md) §12. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
 
 **This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
 
 | Read first | Purpose |
 |------------|---------|
-| [`spec/requirements.md`](../spec/requirements.md) | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7**; journeys **§4.1** until `ui-flow.md` exists |
+| [`spec/requirements.md`](../spec/requirements.md) | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7**; journeys **§4.1** |
 | [`spec/architecture.md`](../spec/architecture.md) | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
 | [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client types |
-| `spec/ui-flow.md` | Screens and navigation (when agreed) |
-| `spec/rag-api-contract.md` | Citation / no-match fields inside ask `data` |
+| [`spec/ui-flow.md`](../spec/ui-flow.md) | Screens and navigation (draft) |
+| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Citation / no-match fields inside ask `data` (draft; **DEC-11**) |
 
 ## Assessment vs project conventions vs open decisions
 
@@ -43,11 +43,11 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 - Optional **category** enum; optional **resolutionNotes** on detail/edit (DEC-03, DEC-05)
 - Create: **title** required; priority/assignee/category optional; no status on create form (DEC-07, DEC-13)
 
-**Open — resolve via `spec/ui-flow.md` / contracts before inventing UI layout (do not assume):**
+**Open — resolve via [`spec/ui-flow.md`](../spec/ui-flow.md) / contracts before inventing UI layout (do not assume):**
 
 - Screen layout, navigation, how a transition is chosen, how ask is laid out
 - CSS framework, component library, router, client global store
-- Exact ask `data` field names beyond interim `answer` / `citedTicketIds` (`api-contract.md` §6) until `spec/rag-api-contract.md`
+- Exact ask `data` field names beyond interim `answer` / `citedTicketIds` ([`spec/api-contract.md`](../spec/api-contract.md) §6) until [`spec/rag-api-contract.md`](../spec/rag-api-contract.md)
 
 ## Stack
 
@@ -151,7 +151,7 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 
 ## Spec-driven implementation
 
-- Implement only behaviour in **agreed** `spec/ui-flow.md` plus API/RAG contracts. If `ui-flow.md` is missing, **stop and confirm** rather than inventing screens.
+- Implement behaviour from draft [`spec/ui-flow.md`](../spec/ui-flow.md) plus API/RAG contracts. For screens or flows not in that spec, **stop and confirm** rather than inventing.
 - Do not add auth screens unless a spec agrees.
 
 ## Do not

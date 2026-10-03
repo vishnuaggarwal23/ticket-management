@@ -11,12 +11,12 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 | `rules/java-springboot.md` | `rag/` package, `@ConfigurationProperties`, no magic numbers in Java |
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
 | `commands/review-rag-output.md` | Manual grounding review of ask answers |
-| `spec/rag-ingestion.md` | **Numeric** chunking, models, K, threshold, ingest timing (when file exists) |
-| `spec/rag-api-contract.md` | Field names inside ask `data` (when file exists) |
-| `spec/evaluation-strategy.md` | Probabilistic retrieval quality (when file exists) |
-| [`spec/requirements.md`](../spec/requirements.md) | Until above exist: §2.5 deterministic vs probabilistic; FEAT-22; §4.3 eval corpus; **DEC-01**, **DEC-09**, **DEC-11** §10 |
+| [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking strategy, ingest triggers, property keys; **proposed** numeric defaults §9.3 (**DEC-09** model/dimension still open) |
+| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Field names inside ask `data` (draft; **DEC-11** no-match wording) |
+| [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | Probabilistic retrieval quality (draft) |
+| [`spec/requirements.md`](../spec/requirements.md) | §2.5 deterministic vs probabilistic; FEAT-22; §4.3 eval corpus; **DEC-01**, **DEC-09**, **DEC-11** §10 |
 
-The PDF requires this **guidelines file** to cover chunking **convention**, embedding **model choice**, and retrieval-tuning **defaults**. **Justification** (non-numeric) lives in [`spec/architecture.md`](../spec/architecture.md) §16 (**AC-CORE-19**). Numeric values and property keys are agreed only when `spec/rag-ingestion.md` exists — do not invent in Java.
+The PDF requires this **guidelines file** to cover chunking **convention**, embedding **model choice**, and retrieval-tuning **defaults**. **Justification** (non-numeric) lives in [`spec/architecture.md`](../spec/architecture.md) §16 (**AC-CORE-19**). **Numeric** chunk sizes, K, threshold, and model ids are defined in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) — load via `@ConfigurationProperties`; do not hardcode in Java. Treat **proposed** §9.3 values as defaults only after user confirmation.
 
 ## Assessment vs project conventions vs open questions
 
@@ -26,7 +26,7 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 - Cite the **ticket ID(s)** actually used; if nothing relevant is retrieved, say so explicitly (**no relevant tickets found**) — do not fabricate tickets, facts, or citations.
 - Ingest **description, comments, and resolution notes** into searchable knowledge.
 - Attach metadata: `ticketId`, `status`, `priority`, `assignee`, `category` — shapes in [`spec/data-model.md`](../spec/data-model.md) §11 (`RagChunkMetadata` / JSONB on `ticket_vector_chunk`).
-- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale. PDF p.6 acceptance wording emphasises **updated** only — resolve **DEC-01** in `spec/rag-ingestion.md` with [`spec/requirements.md`](../spec/requirements.md) **§11.1** before treating close-only triggers as out of scope.
+- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale. PDF p.6 acceptance wording emphasises **updated** only — resolve **DEC-01** in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10 with [`spec/requirements.md`](../spec/requirements.md) **§11.1** before treating close-only triggers as out of scope.
 - **top-K** and **similarity threshold** must be **configurable**, not hardcoded. The PDF does **not** give numeric values.
 - Document chunking strategy and embedding-model tradeoffs in architecture / RAG ingestion **specs** (justification is required; a specific algorithm is **not** named by the PDF).
 - **Single retrieve → generate** — not an agent: no tool chaining, ticket creation, or notifications from the ask path.
@@ -42,7 +42,7 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 
 **Agreed relational / metadata shape — [`spec/data-model.md`](../spec/data-model.md):** tables `ticket`, `ticket_comment`, `ticket_vector_chunk`; resolution text column `resolution_notes`; ingest includes description, comments, resolution notes; chunk row metadata keys §11.1; re-ingest deletes/replaces rows per ticket (§8.4).
 
-**Open — do not assume, invent, or lock in these rules.** Record and agree in `spec/rag-ingestion.md` (models, chunking, ingest mechanics), `spec/rag-api-contract.md` (ask `data` fields), and evaluation strategy (quality scores) **before** implementing those details:
+**Still open — do not invent in Java without spec agreement.** Chunking **algorithm** and ingest mechanics → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (draft). Ask `data` / no-match wording → [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (draft; **DEC-11**). Retrieval **quality** scoring → [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft). Remaining open items:
 
 - Embedding **model** (name/id), vector **dimension**, generation **model**
 - Whether ingest and query always share one embedding model (they **must** stay compatible once a choice is agreed)
@@ -59,7 +59,7 @@ Do not assume **versions** of Spring AI, PostgreSQL, PgVector, Ollama, or models
 
 ## PDF guidance slots (conventions — values in specs)
 
-Record the **chosen** approach in `spec/rag-ingestion.md` (and justify tradeoffs in [`spec/architecture.md`](../spec/architecture.md)). Until agreed, do not hardcode in application code.
+Record the **chosen** approach in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (and justify tradeoffs in [`spec/architecture.md`](../spec/architecture.md) §16). Hybrid paragraph + fixed overflow is the draft default (§9); confirm **proposed** numbers before treating them as agreed.
 
 ### Chunking convention (PDF: paragraph vs fixed-size vs semantic)
 
@@ -69,7 +69,7 @@ Record the **chosen** approach in `spec/rag-ingestion.md` (and justify tradeoffs
 | **Fixed-size** | Uniform chunk length for vector index | Predictable size; may cut mid-sentence |
 | **Semantic** | Rich long descriptions | Better boundaries; more tooling/cost |
 
-Ingest builds one **knowledge document** per ticket (or as `rag-ingestion.md` agrees), then chunks before embed.
+Ingest builds one **knowledge document** per ticket per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §5, then chunks before embed.
 
 ### Embedding model choice (PDF: local Ollama vs cloud)
 
@@ -82,7 +82,7 @@ Ingest builds one **knowledge document** per ticket (or as `rag-ingestion.md` ag
 
 ### Retrieval-tuning defaults (PDF: configurable, not hardcoded)
 
-Wire through configuration (example shape — **property names and values** come from `spec/rag-ingestion.md`):
+Wire through configuration (example shape — **property names and values** come from [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §9.3, §12):
 
 ```yaml
 # application.yml — illustrative keys only; values TBD in spec
@@ -95,11 +95,11 @@ rag:
 
 - **top-K:** max chunks passed to the LLM after search.
 - **Similarity threshold:** discard hits below this; if none remain → **no relevant tickets found** (no LLM call on empty context).
-- **Distance metric** (cosine vs inner product): agree in `rag-ingestion.md` so threshold comparisons are meaningful.
+- **Distance metric** (cosine vs inner product): [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12.1 so threshold comparisons are meaningful.
 
 ### Illustrative ask questions (PDF — for eval and manual review)
 
-Use these in `commands/review-rag-output.md` and `spec/evaluation-strategy.md`; they are **not** golden answers:
+Use these in `commands/review-rag-output.md` and [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md); they are **not** golden answers:
 
 - “Have we seen payment failures before?”
 - “What was the resolution for ticket TKT-1001?” (example id only)
@@ -125,23 +125,23 @@ Tickets → knowledge documents → chunk → embeddings → PgVector
 
 This is **retrieve then generate** once. Do not add agents, multi-step tool orchestration, graph RAG, hybrid search, or reranking unless a later **agreed spec** says so.
 
-Pick the chunking row from **PDF guidance slots** in `spec/rag-ingestion.md` before implementing split logic. **Why** (ticket-shaped text, paragraph vs fixed vs semantic) belongs in [`spec/architecture.md`](../spec/architecture.md) §16; **numbers** belong in `spec/rag-ingestion.md`.
+Implement split logic per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9 before coding. **Why** belongs in [`spec/architecture.md`](../spec/architecture.md) §16; **numbers** in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §9.3 / §12.
 
 ## Ingestion and storage
 
 - Build knowledge text only from **description, comments, and resolution notes**. Do not invent extra source types.
 - Store assessment metadata on chunks/documents: `ticketId`, `status`, `priority`, `assignee`, `category`. Do not add metadata fields beyond the assessment and the **agreed** data model.
 - Persist derived embeddings in **PgVector**. Ticket rows remain the system of record. Vectors must be rebuildable from tickets.
-- On **update** or **close**, refresh that ticket’s derived data so stale vectors are not the only index. **How** (sync vs async, delete vs version) is **open** — `spec/rag-ingestion.md`, not this file.
+- On **update** or **close**, refresh that ticket’s derived data so stale vectors are not the only index. **How** → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10–§11 (**DEC-01** interim).
 - Use Spring AI for embed / store / search; keep the provider (Ollama first) in **configuration**.
-- Liquibase owns extensions (`vector`, `pg_trgm` for ticket search per data-model), `ticket_vector_chunk`, and indexes ([`spec/data-model.md`](../spec/data-model.md) §14.5–14.6). Vector **dimension** and HNSW **opclass** must match `spec/rag-ingestion.md` — do not invent a dimension here.
+- Liquibase owns extensions (`vector`, `pg_trgm` for ticket search per data-model), `ticket_vector_chunk`, and indexes ([`spec/data-model.md`](../spec/data-model.md) §14.5–14.6). Vector **dimension** and HNSW **opclass** must match [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12 once **DEC-09** is agreed — do not invent a dimension here.
 
-Do **not** implement a chunking strategy, size, or overlap from this file.
+Do **not** implement a chunking strategy, size, or overlap from this file alone — follow [`spec/rag-ingestion.md`](../spec/rag-ingestion.md).
 
 ## Retrieval and generation
 
 - Once an embedding model is agreed, embed the question with the **same** model used at ingest (or rebuild the index if the model changes). Do not pick the model here.
-- Similarity search MUST use **configurable** top-K and similarity threshold (external config / env — **no magic numbers in Java**). Do not put default numeric values in this file or in application code until `spec/rag-ingestion.md` agrees them.
+- Similarity search MUST use **configurable** top-K and similarity threshold (external config / env — **no magic numbers in Java**). Property keys in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12.1; numeric defaults remain **Open** until agreed.
 - If nothing passes the threshold, or retrieval is empty: honest **no relevant tickets found** (ask success envelope per `rules/api-standards.md`). Do **not** call the LLM to invent an answer from empty or irrelevant context.
 - Otherwise, pass **retrieved excerpts and their ticket ids** as the only factual context into generation.
 
@@ -149,7 +149,7 @@ Do **not** implement a chunking strategy, size, or overlap from this file.
 
 - Assessment path: `POST /api/ai/ask` with JSON `{"question":"..."}`.
 - Project convention: the same handler at `POST /api/v1/ai/ask`; success/error envelopes in `rules/api-standards.md`.
-- Fields **inside** `data` wait on `spec/rag-api-contract.md`.
+- Fields **inside** `data` wait on [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (interim [`spec/api-contract.md`](../spec/api-contract.md) §6).
 - Do not expose prompts, chunk dumps, model names, Ollama URLs, top-K, thresholds, or vector internals on the public API unless a spec explicitly makes them public (default: they are not).
 - Do not add agent, chat-session, tool, notification, or “AI creates a ticket” endpoints.
 
@@ -159,7 +159,7 @@ Do **not** implement a chunking strategy, size, or overlap from this file.
 - Citations must be ticket IDs that appear in the **retrieval result** — not ids the model guessed.
 - Keep evidence (retrieved chunks / ticket ids) distinct from generated wording. Prompt instructions help but **do not guarantee** grounding. Check retrieval and claims against context **independently**.
 - Use `commands/review-rag-output.md` (or `/review-rag-output`) before accepting assistant output — **Grounding** and **Retrieval quality** sections.
-- Retrieval quality eval procedure: `spec/evaluation-strategy.md` + retrieval section of `commands/review-rag-output.md`.
+- Retrieval quality eval procedure: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) + retrieval section of `commands/review-rag-output.md`.
 - Do **not** set numerical quality thresholds, formulas, or golden-answer corpora here.
 
 ## Testing
@@ -167,14 +167,14 @@ Do **not** implement a chunking strategy, size, or overlap from this file.
 Follow `rules/testing.md` (including API tests for ask). In this domain:
 
 - **Deterministic, where feasible:** assembling knowledge text from ticket fields; that update/close **triggers** ingest (testable port); Liquibase/PgVector schema **once** the ingestion spec defines it. PostgreSQL Testcontainers. Mockito (or other doubles) for embed/generate — no real Ollama in the default suite.
-- **Not ordinary unit tests:** retrieval ranking quality and free-form generated answers — document procedure in **`spec/evaluation-strategy.md`** (manual review with `commands/review-rag-output.md`, optional fixture tickets, no single expected prose string).
+- **Not ordinary unit tests:** retrieval ranking quality and free-form generated answers — document procedure in [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (manual review with `commands/review-rag-output.md`, optional fixture tickets, no single expected prose string).
 - Do not prescribe an eval harness, metrics, chunk fixtures that imply a frozen chunk size, or golden answer strings in `rules/testing.md`.
 
 ## Do not
 
 - Do not treat PgVector, Ollama, or Liquibase as if the PDF mandated them.
 - Do not invent or hardcode model names, Ollama URLs, top-K, thresholds, chunk sizes, overlap, dimensions, distance metrics, or index types.
-- Do not implement chunking or pick an embedding model from these rules — wait for `spec/rag-ingestion.md`.
+- Do not implement chunking or pick an embedding model from these rules alone — implement per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md).
 - Do not implement agents, tool calling, or side effects from `/api/ai/ask`.
 - Do not prescribe a prompt template or a second package layout (use `rules/java-springboot.md`).
 - Do not invent product features (auth on ask, rerankers, extra metadata) not in the assessment or an agreed spec.
@@ -187,6 +187,7 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 |------|------|
 | 2026-09-24 | Initial RAG ingest, PgVector, retrieve-then-generate ask, and grounding guidelines. |
 | 2026-10-03 | Aligned with approved stack; numeric chunk/K/model settings deferred to `spec/rag-ingestion.md`. |
+| 2026-10-04 | Linked draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); clarified open vs proposed defaults. |
 | 2026-10-04 | SDD expansion: OQ/DEC pointers; cross-links to architecture RAG sections and evaluation strategy. |
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §13–16. |
 | 2026-10-04 | Added revision history section. |

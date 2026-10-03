@@ -745,7 +745,7 @@ Knowledge is **derived**; authoritative text always remains in PostgreSQL.
 
 The PDF requires documenting approach; it does **not** mandate an algorithm.
 
-**Proposed primary strategy (**Convention** pending `rag-ingestion.md` agreement): **paragraph and comment-boundary splitting**, with secondary sentence splits for oversized blocks.
+**Primary strategy:** **paragraph and comment-boundary splitting**, with secondary fixed-size splits for oversized blocks — **authoritative detail** in [`rag-ingestion.md`](rag-ingestion.md) §6–§9.
 
 | Strategy | Fit for ticket data | Role |
 |----------|---------------------|------|

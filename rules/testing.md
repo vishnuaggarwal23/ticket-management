@@ -2,9 +2,9 @@
 
 Cursor attaches this file via [`.cursor/rules/testing.mdc`](../.cursor/rules/testing.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed). HTTP paths, payloads, scenarios: **[`spec/api-contract.md`](../spec/api-contract.md)** (draft). Ask `data` extensions: `spec/rag-api-contract.md`; interim ask shape in `api-contract.md` §6. RAG **retrieval quality**: [`spec/requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 + `commands/review-rag-output.md` until `spec/evaluation-strategy.md` exists — not golden strings here.
+Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed). HTTP paths, payloads, scenarios: **[`spec/api-contract.md`](../spec/api-contract.md)** (draft). Ask `data` extensions: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md); interim ask shape in [`spec/api-contract.md`](../spec/api-contract.md) §6. Ingest/chunking: [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**AC-RAG-ING-***). RAG **retrieval quality**: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) + `commands/review-rag-output.md` — not golden LLM answer strings in unit tests.
 
-**AC mapping when `spec/test-strategy.md` is missing:** use [`spec/requirements.md`](../spec/requirements.md) §8 (**AC-CORE-***) and §9 (FR traceability); [`spec/data-model.md`](../spec/data-model.md) §18 (**AC-DM-***).
+**AC mapping:** primary index [`spec/test-strategy.md`](../spec/test-strategy.md) (**AC-CORE-***, **AC-SM-***, **AC-API-***, **AC-DM-***). Fallback: [`spec/requirements.md`](../spec/requirements.md) §8–§9.
 
 | Command | Use |
 |---------|-----|
@@ -60,7 +60,7 @@ Align with `rules/java-springboot.md` (`api`, `domain`, `service`, `persistence`
 ### Domain / state machine
 
 - **Kind:** unit. Real domain types. **No Mockito** on the machine under test. No Spring, no JPA.
-- **Positive:** every legal transition in `spec/state-machine.md` (`OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`; `OPEN`/`IN_PROGRESS` → `CANCELLED`, and any other agreed legal edges).
+- **Positive:** every legal transition in [`spec/state-machine.md`](../spec/state-machine.md) (`OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`; `OPEN`/`IN_PROGRESS` → `CANCELLED`, and any other agreed legal edges).
 - **Negative:** every disallowed pair once the spec lists them; at minimum the assessment examples (`CLOSED` → `OPEN`, `RESOLVED` → `OPEN`, `CANCELLED` → `OPEN`). Prefer `@ParameterizedTest` over one method per edge.
 - Assert the resulting status **or** the domain exception. The machine MUST NOT depend on repositories.
 
@@ -97,7 +97,7 @@ Align with `rules/java-springboot.md` (`api`, `domain`, `service`, `persistence`
 
 ## API testing
 
-HTTP APIs MUST be tested as APIs — not only as Java controllers, services, or repositories. Prove `rules/api-standards.md`, [`spec/api-contract.md`](../spec/api-contract.md), and [`spec/data-model.md`](../spec/data-model.md) (and `spec/rag-api-contract.md` when added). Assessment capabilities (create, list, get, update fields, comments, keyword search, status filter, status transitions, ask) MUST have **positive and negative** HTTP tests.
+HTTP APIs MUST be tested as APIs — not only as Java controllers, services, or repositories. Prove `rules/api-standards.md`, [`spec/api-contract.md`](../spec/api-contract.md), and [`spec/data-model.md`](../spec/data-model.md) and [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (draft)). Assessment capabilities (create, list, get, update fields, comments, keyword search, status filter, status transitions, ask) MUST have **positive and negative** HTTP tests.
 
 ### Two levels (both required for implemented endpoints)
 
@@ -147,7 +147,7 @@ API integration tests MUST back these with real rows in PostgreSQL.
 | `POST /api/v1/tickets` | 201 + `data` + `Location` | 400 validation / malformed JSON; no row written (integration) |
 | `GET /api/v1/tickets` | 200 + `data`/`meta`; pagination/search/filter as above | invalid query params → 400 |
 | `GET /api/v1/tickets/{id}` | 200 + `data` | 404 `NOT_FOUND` |
-| `PATCH /api/v1/tickets/{id}` | 200 + updated `data` | 400 validation; 404; illegal status → **409** `ILLEGAL_TRANSITION` (row unchanged in integration) |
+| `PATCH /api/v1/tickets/{id}` | 200 + updated `data`; T1–T5 per [`api-contract.md`](../spec/api-contract.md) §4.4.1 (**AC-API-09**) | 400 validation; 404; illegal status → **409** `ILLEGAL_TRANSITION` (row unchanged in integration); **AC-API-08** row 4 |
 | `POST /api/v1/tickets/{id}/comments` | 201 + `data` | 400; 404 |
 | `POST /api/ai/ask` and `/api/v1/ai/ask` | 200 + `data` (grounded + citations **or** no-match) | 400 blank/missing `question` |
 
@@ -184,7 +184,7 @@ Unit tests MUST cover important **positive and negative** paths of deterministic
 
 | Area | Positive | Negative |
 |------|----------|----------|
-| State machine | Legal edges **T1–T5** per [`spec/state-machine.md`](../spec/state-machine.md) §5.1 | **X1–X3** and every **Invalid** pair in §5.4 master table (parameterized) |
+| State machine | Legal edges **T1–T5** per [`spec/state-machine.md`](../spec/state-machine.md) §5.1 (**AC-SM-01**) | **AC-SM-02** X1–X3; **AC-SM-06** all 20 §5.6 pairs; **AC-SM-07** self-transition; **AC-SM-08** PATCH without `status` (parameterized where possible) |
 | Ticket fields | Create/update with valid title, description, priority, assignee | Missing/blank/too-long fields per agreed validation; reject without persisting |
 | Comments | Add comment on an allowable ticket | Reject empty comment / comment on a state the spec forbids |
 | Search / filter | Keyword and status filter return matching tickets | No match → empty result, not an error; invalid status filter → client error |
@@ -239,7 +239,8 @@ No coverage **percentage** is required. Mapping test names to acceptance criteri
 ## Deterministic behaviour vs RAG
 
 - **Deterministic:** ticket CRUD, comments, search/filter, input validation, status transitions (valid and invalid), and persistence. These MUST have stable, repeatable tests with fixed expected results.
-- **Probabilistic / RAG:** retrieval ranking and free-form generated answers can vary. Evaluate grounding with `commands/review-rag-output.md`; evaluate **whether the right tickets were retrieved** with `spec/evaluation-strategy.md` and the **Retrieval quality** section of that command. Do **not** treat a single golden answer string as sufficient proof.
+- **Probabilistic / RAG:** retrieval ranking and free-form generated answers can vary. Evaluate grounding with `commands/review-rag-output.md`; evaluate **whether the right tickets were retrieved** with [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) and the **Retrieval quality** section of that command. Do **not** treat a single golden answer string as sufficient proof.
+- **Deterministic RAG ingest:** knowledge assembly and chunk boundaries per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §14 (**AC-RAG-ING-***); use doubles for embed API in default suite.
 - Ticket **re-ingestion** after update or close is an assessment behaviour to verify in unit and/or integration tests; how embeddings are scored is a RAG/evaluation concern.
 
 ## Persistence “restart” (PDF acceptance)
@@ -277,7 +278,7 @@ class TicketApiIntegrationTest {
 }
 ```
 
-- Use a **PgVector-capable** image when vector schema is under test (align image tag with `spec/rag-ingestion.md` when agreed).
+- Use a **PgVector-capable** image when vector schema is under test (align image tag and dimension with [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12).
 - `@DataJpaTest` + `@AutoConfigureTestDatabase(replace = NONE)` + the same container is fine for **repository-only** tests.
 - Stub **embedding/chat** ports in ask tests — no real Ollama in the default suite (`rules/rag-vector-store.md`).
 
@@ -300,12 +301,12 @@ PDF requires ticket created from UI, meaningful errors, etc. This milestone **do
 - Backend API integration tests for the same behaviours the UI calls.
 - `commands/review-frontend.md` on UI diffs before merge.
 
-State that substitution in `spec/test-strategy.md` when written.
+See [`spec/test-strategy.md`](../spec/test-strategy.md) §9.
 
 ## Acceptance traceability
 
-- Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md) (§8–§9) when cataloguing cases — use `commands/generate-tests.md`.
-- **`spec/test-strategy.md`** (when agreed) should list which **AC-CORE** rows each suite proves; RAG **answer wording** stays probabilistic per `spec/evaluation-strategy.md`, not golden strings here.
+- Map backend tests via [`spec/test-strategy.md`](../spec/test-strategy.md) (**AC-SM-***, **AC-API-***, **AC-CORE-***) — use `commands/generate-tests.md`.
+- RAG **answer wording** stays probabilistic per [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), not golden strings here.
 
 ## Repeatability and isolation
 
@@ -340,3 +341,4 @@ State that substitution in `spec/test-strategy.md` when written.
 | 2026-10-04 | AC traceability via [`spec/requirements.md`](../spec/requirements.md) §8–§9 when `test-strategy.md` absent. |
 | 2026-10-04 | State-machine negative set: [`spec/state-machine.md`](../spec/state-machine.md) §5.4 matrix. |
 | 2026-10-04 | HTTP API tests trace [`spec/api-contract.md`](../spec/api-contract.md) scenarios. |
+| 2026-10-04 | [`spec/test-strategy.md`](../spec/test-strategy.md): AC-SM-06–08, AC-API-08–09 mapping. |

@@ -189,6 +189,70 @@ For each **from** state, every **to** state is either a legal edge (T1–T5), a 
 | `CLOSED` | **X1 Invalid** | Invalid | Invalid | Invalid | Invalid |
 | `CANCELLED` | **X3 Invalid** | Invalid | Invalid | Invalid | Invalid |
 
+### 5.5 Valid transition operations (explicit)
+
+Each legal edge is a **directed** change from **current** persisted `status` to the **target** sent in PATCH `status`. Preconditions assume the ticket exists and the request body passes Bean Validation.
+
+| ID | Current (`from`) | Request `status` (`to`) | HTTP on success | Persisted `status` after | Notes |
+|----|------------------|-------------------------|---------------|--------------------------|-------|
+| **T1** | `OPEN` | `IN_PROGRESS` | **200** | `IN_PROGRESS` | Typical “start work” |
+| **T2** | `IN_PROGRESS` | `RESOLVED` | **200** | `RESOLVED` | May include `resolutionNotes` on same PATCH (**Convention**, [`data-model.md`](data-model.md) §13) |
+| **T3** | `RESOLVED` | `CLOSED` | **200** | `CLOSED` | Terminal; may trigger re-ingest (**DEC-01**) |
+| **T4** | `OPEN` | `CANCELLED` | **200** | `CANCELLED` | Terminal |
+| **T5** | `IN_PROGRESS` | `CANCELLED` | **200** | `CANCELLED` | Terminal |
+
+**API shape (all T1–T5):**
+
+```http
+PATCH /api/v1/tickets/{id} HTTP/1.1
+Content-Type: application/json
+
+{ "status": "<to>" }
+```
+
+Success: **200**, envelope `data` is full `TicketDetail` with `data.status` = `<to>` ([`api-contract.md`](api-contract.md) §4.4).
+
+### 5.6 Invalid transitions — exhaustive register (20 pairs)
+
+Under **DEC-02** default **(A)**, exactly **five** directed pairs are legal (§5.1); the remaining **20** of 25 possible `from`→`to` pairs are **illegal**. Every illegal pair MUST yield **409** `ILLEGAL_TRANSITION` when requested via PATCH (§6.3); the database `status` MUST remain the **from** value.
+
+| # | From | To | Category | Ref |
+|---|------|-----|----------|-----|
+| 1 | `OPEN` | `OPEN` | Self-transition | §5.3 |
+| 2 | `OPEN` | `RESOLVED` | Skipped hop | §5.3 |
+| 3 | `OPEN` | `CLOSED` | Skipped hop | §5.3 |
+| 4 | `IN_PROGRESS` | `OPEN` | Backward | §5.3 |
+| 5 | `IN_PROGRESS` | `IN_PROGRESS` | Self-transition | §5.3 |
+| 6 | `IN_PROGRESS` | `CLOSED` | Skipped hop | §5.3 |
+| 7 | `RESOLVED` | `OPEN` | Reopen (PDF example) | **X2** |
+| 8 | `RESOLVED` | `IN_PROGRESS` | Backward | §5.3 |
+| 9 | `RESOLVED` | `RESOLVED` | Self-transition | §5.3 |
+| 10 | `RESOLVED` | `CANCELLED` | Not in PDF | §5.3 |
+| 11 | `CLOSED` | `OPEN` | Reopen (PDF example) | **X1** |
+| 12 | `CLOSED` | `IN_PROGRESS` | Terminal outbound | §5.3 |
+| 13 | `CLOSED` | `RESOLVED` | Terminal outbound | §5.3 |
+| 14 | `CLOSED` | `CLOSED` | Self / terminal | §5.3 |
+| 15 | `CLOSED` | `CANCELLED` | Terminal outbound | §5.3 |
+| 16 | `CANCELLED` | `OPEN` | Reopen (PDF example) | **X3** |
+| 17 | `CANCELLED` | `IN_PROGRESS` | Terminal outbound | §5.3 |
+| 18 | `CANCELLED` | `RESOLVED` | Terminal outbound | §5.3 |
+| 19 | `CANCELLED` | `CLOSED` | Terminal outbound | §5.3 |
+| 20 | `CANCELLED` | `CANCELLED` | Self / terminal | §5.3 |
+
+**409 message pattern (**Convention**):** `Cannot transition from {FROM} to {TO}` where `{FROM}` is the persisted status and `{TO}` is the requested PATCH `status`.
+
+### 5.7 Domain transition API (**Convention**)
+
+Implementation MUST centralize §5.1–§5.6 in domain code (§8), e.g.:
+
+| Operation | Input | Output | Rule |
+|-----------|-------|--------|------|
+| `assertTransitionAllowed(current, target)` | `TicketStatus` × `TicketStatus` | void or exception | Throws `IllegalTicketTransitionException` when pair is not T1–T5 |
+| `isTransitionAllowed(current, target)` | same | `boolean` | `true` only for T1–T5 when `current ≠ target` |
+
+- **No-op:** `current == target` → **not allowed** (self-transition; rows #1, #5, #9, #14, #20 above).
+- **Create:** No transition API on create; server sets `OPEN` (**DEC-07**).
+
 ---
 
 ## 6. API and persistence behaviour
@@ -199,6 +263,16 @@ For each **from** state, every **to** state is either a legal edge (T1–T5), a 
 - Non-status fields may appear on the same PATCH per [`data-model.md`](data-model.md) §10 / [`api-contract.md`](api-contract.md) §4.4; when `status` is present, the state machine runs **before** commit.
 
 Dedicated transition sub-resources or UI-only wizards require a future **DEC-06** revision and spec update.
+
+### 6.1.1 When `status` is omitted, unchanged, or invalid
+
+| Request | State machine invoked? | HTTP | Notes |
+|---------|------------------------|------|-------|
+| PATCH body has **no** `status` property | **No** | **200** if at least one other valid field changes | Field-only update; current `status` unchanged |
+| PATCH `{}` (no updatable fields) | **No** | **400** `VALIDATION_ERROR` | Per [`api-contract.md`](api-contract.md) §4.4 |
+| PATCH `status` equals **current** persisted value | **Yes** (evaluated) | **409** `ILLEGAL_TRANSITION` | Treated as self-transition (§5.6 rows #1, #5, #9, #14, #20) |
+| PATCH `status` is unknown string | **No** (parse fails first) | **400** `VALIDATION_ERROR` | Enum validation before domain |
+| PATCH `status` is legal **to** from **current** | **Yes** | **200** | T1–T5 |
 
 ### 6.2 Success
 
@@ -254,6 +328,9 @@ Repositories must not encode transition rules ([`architecture.md`](architecture.
 | **AC-SM-03** | For every cell marked **Invalid** in §5.4 master table, when requested, then **409** and DB unchanged. |
 | **AC-SM-04** | Create ticket without `status` in body → persisted `OPEN` (**DEC-07**). |
 | **AC-SM-05** | Domain unit tests cover §5.1 and §5.2 without Spring; integration or API tests cover at least T1–T5 and X1–X3 (**PDF** AC-FEAT-11-05). |
+| **AC-SM-06** | For each row in §5.6 (all 20 illegal pairs), PATCH with matching `status` returns **409** and DB unchanged. |
+| **AC-SM-07** | PATCH with `status` equal to current value returns **409** (self-transition). |
+| **AC-SM-08** | PATCH without `status` updates only other fields; `status` unchanged. |
 
 Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](requirements.md).
 
@@ -276,3 +353,4 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | 2026-10-04 | Initial spec: PDF T1–T5 / X1–X3, full invalid matrix under DEC-02 default (A), API/domain placement, AC-SM-*. |
 | 2026-10-04 | **DEC-02:** user confirmed interim **(A)** — only T1–T5; decision remains Open in requirements §10.2. |
 | 2026-10-04 | §6.1 aligned with [`api-contract.md`](api-contract.md) PATCH body (not request `data` wrapper). |
+| 2026-10-04 | §5.5–5.7 valid ops + 20-row invalid register; §6.1.1 PATCH `status` presence rules; AC-SM-06–08. |

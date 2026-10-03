@@ -1,8 +1,9 @@
 # Assessment brief (ATL / TL Assignment)
 
-> **Source:** `docs/Assessments.pdf` only.  
-> **Status:** draft restatement for team understanding.  
-> **Rule:** Do not treat this file as permission to invent features. Anything not stated in the PDF remains an open decision for later specs.
+> **Primary source:** `docs/Assessments.pdf` (6 pages, dated 2026-09-24 in file metadata).  
+> **Implementable hub:** [`spec/requirements.md`](../spec/requirements.md) (PDF-faithful requirements, FEAT catalogue, AC-CORE checklist, OQ/DEC register).  
+> **Status:** living summary of everything extracted and agreed in this repo through **2026-10-04**.  
+> **Rule:** This brief restates and indexes; it does **not** grant permission to invent features. Behaviour not in the PDF stays **Open** until confirmed and recorded in `spec/` (see §12).
 
 ---
 
@@ -10,17 +11,17 @@
 
 Two layers:
 
-1. **Process / AI engineering** — Spec-driven delivery with Cursor (or Kiro / VS Code), reusable AI instructions, prompt history, review for hallucination/ungrounded answers, and evidence that AI output is not accepted blindly.
-2. **Product** — An AI-powered Support Ticket Management System where the RAG/assistant capability is designed **from the start**, not bolted on afterward.
+1. **Process / AI engineering** — Spec-driven delivery with Cursor (or Kiro / VS Code), reusable AI instructions, prompt history, structured review (hallucination / ungrounded answers), and evidence that AI output is validated—not accepted blindly.
+2. **Product** — An **AI-powered Support Ticket Management System** where the RAG assistant is designed **from the start**, not bolted on afterward.
 
-The PDF states the application is important, but the **main assessment** is how you build it using AI and how you design and reason about the AI assistant (grounding, hallucination, retrieval quality vs deterministic ticket logic).
+The PDF states the application is important, but the **main assessment** is **how** you build it with AI and **how** you design and reason about the assistant (grounding, hallucination, retrieval quality vs deterministic ticket logic).
 
-### Learning goals (as stated)
+### Learning goals (PDF p.2–3)
 
-- Analyse requirements and create specifications for a system that includes an AI-native feature from the start.
-- Use spec-driven development for both conventional CRUD and a RAG pipeline.
-- Manage AI context and validate AI-generated **code** and AI-generated **answers** (grounding, hallucination).
-- Test and debug both deterministic logic (ticket state machine) and probabilistic AI output (retrieval quality).
+- Analyse requirements and create specifications for a system that includes an **AI-native feature from the start**.
+- Use **spec-driven development** for both conventional CRUD and a **RAG pipeline**.
+- Manage AI context and validate **AI-generated code** and **AI-generated answers** (grounding, hallucination).
+- Test and debug **deterministic** logic (ticket state machine) and **probabilistic** AI output (retrieval quality).
 
 ---
 
@@ -32,35 +33,35 @@ Requirement → Specification → Plan / Tasks → Implementation → Testing �
 
 **Do not** start by asking AI to “Build the complete application.”
 
----
-
-## 3. Hygiene artefacts (generic)
-
-Regardless of IDE, maintain steering files that include at least:
-
-| Artefact | Purpose (as stated) |
-|----------|---------------------|
-| Java Spring Boot guidelines | Coding standards |
-| Testing guidelines | How to test |
-| API standards | API conventions |
-| Documentation skills | How to document |
-| RAG / Vector Store guidelines | Chunking convention, embedding model choice, retrieval-tuning defaults |
-| Commands to review code, spec, generate tests | Structured reviews / test generation |
-| Command to review AI output for hallucination / ungrounded answers | Grounding checks |
-
-Example Cursor-oriented layout from the PDF (structure may vary):
-
-- `rules/` — e.g. java-springboot, testing, api-standards, rag-vector-store
-- `skills/documentation/`
-- `commands/` — review-code, review-spec, generate-tests, review-rag-output
-
-**Important:** Demonstrate **reusable AI instructions** across the project context.
+Review commands in this repo map to the workflow: `commands/review-spec.md` before coding; `commands/generate-tests.md` / `commands/review-code.md` / `commands/review-frontend.md` during implementation; `commands/review-rag-output.md` for ask answers.
 
 ---
 
-## 4. Spec artefacts (before implementation)
+## 3. Hygiene artefacts (in this repository)
 
-Create specifications before implementation. Example structure from the PDF:
+Regardless of IDE, the PDF requires steering files for standards and review. This project keeps **source of truth** under `rules/` and `commands/`; `.cursor/rules/*.mdc` and `.cursor/commands/*.md` are pointers only.
+
+| PDF expectation | Location in repo |
+|-----------------|------------------|
+| Java Spring Boot guidelines | [`rules/java-springboot.md`](../rules/java-springboot.md) |
+| Testing guidelines | [`rules/testing.md`](../rules/testing.md) |
+| API standards | [`rules/api-standards.md`](../rules/api-standards.md) |
+| Documentation skills | [`rules/documentation.md`](../rules/documentation.md), [`skills/documentation/SKILL.md`](../skills/documentation/SKILL.md) |
+| RAG / vector store guidelines | [`rules/rag-vector-store.md`](../rules/rag-vector-store.md) |
+| Review code | [`commands/review-code.md`](../commands/review-code.md) |
+| Review spec | [`commands/review-spec.md`](../commands/review-spec.md) |
+| Generate tests | [`commands/generate-tests.md`](../commands/generate-tests.md) |
+| Review RAG output (hallucination / grounding) | [`commands/review-rag-output.md`](../commands/review-rag-output.md) |
+| Review frontend | [`commands/review-frontend.md`](../commands/review-frontend.md) |
+| Reusable AI instructions (Cursor) | `.cursor/rules/*.mdc`, `.cursor/commands/*.md`, `.cursor/skills/` |
+
+**Graphify:** `.cursor/rules/graphify.mdc` — run `graphify query` before broad codebase exploration when `graphify-out/` exists.
+
+---
+
+## 4. Spec artefacts (PDF list vs repo status)
+
+Create specifications **before** implementation. PDF example set:
 
 ```
 spec/
@@ -76,95 +77,318 @@ spec/
 └── test-strategy.md
 ```
 
-[`spec/architecture.md`](../spec/architecture.md) is later called out specifically for documenting and justifying **chunking strategy** and **embedding model choice**, and (in this repo) also holds the **system design**: business capabilities, ticket/RAG structure, technology layout, APIs, and vector-store role. Entity tables, enums, and DB indexes are in [`spec/data-model.md`](../spec/data-model.md) (agreed). Numeric chunking and model ids remain in `rag-ingestion.md` when agreed.
+### Present in repo (2026-10-04)
+
+| Spec | Status | Role |
+|------|--------|------|
+| [`requirements.md`](../spec/requirements.md) | draft hub | PDF coverage §0.4, FEAT-01…23, flows A–E, AC-CORE-01…23, OQ/DEC |
+| [`architecture.md`](../spec/architecture.md) | draft | System design; **must** justify chunking + embedding model (PDF p.5–6, §16) |
+| [`data-model.md`](../spec/data-model.md) | **agreed** | Entities, enums, Liquibase §14.5, DTOs, search scope (**DEC-08**), ticket id (**DEC-04**) |
+| [`state-machine.md`](../spec/state-machine.md) | draft | T1–T5 / X1–X3; full §5.6 illegal matrix; **AC-SM-***; interim PATCH `status` |
+| [`api-contract.md`](../spec/api-contract.md) | draft | §2.11 endpoint catalog; ticket/comment HTTP; ask boundary; **AC-API-*** |
+| [`rag-ingestion.md`](../spec/rag-ingestion.md) | draft | Hybrid paragraph + fixed overflow chunking; ingest sources; re-ingest (**DEC-01** interim); **AC-RAG-ING-*** |
+| [`test-strategy.md`](../spec/test-strategy.md) | draft | Maps **AC-CORE** / **AC-SM** / **AC-API** / **AC-DM** → backend test layers |
+| [`rag-api-contract.md`](../spec/rag-api-contract.md) | draft | Ask `data`: `answer`, `citedTicketIds`; grounded vs no-match; **DEC-11** wording open |
+| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | draft | Probabilistic retrieval eval (FEAT-22); corpus §4.3; `review-rag-output` procedure |
+| [`ui-flow.md`](../spec/ui-flow.md) | draft | Screens, flows A–E, API mapping; transition UX (**DEC-06** interim) |
+
+**PDF coverage:** theme → artefact map in [`requirements.md`](../spec/requirements.md) **§0.4**; summary table in **§13** below (open items = **DEC-*** in requirements §10.2).
+
+[`architecture.md`](../spec/architecture.md) holds **system design** (modules, APIs, RAG narrative). Entity tables and indexes: [`data-model.md`](../spec/data-model.md). Chunking mechanics and **proposed** defaults: [`rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9.3. Embedding model id, vector dimension, and top-K **values** remain **Open** (**DEC-09**, FEAT-19) until confirmed.
+
+### Engineering steering (rules + commands)
+
+| Layer | Location | Notes |
+|-------|----------|--------|
+| Rules (source of truth) | [`rules/`](../rules/) | `java-springboot`, `api-standards`, `testing`, `rag-vector-store`, `frontend`, `documentation` |
+| Commands | [`commands/`](../commands/) | `review-spec`, `generate-tests`, `review-code`, `review-frontend`, `review-rag-output`, `update-prompt-history` |
+| Cursor pointers | `.cursor/rules/*.mdc`, `.cursor/commands/*.md` | Do not duplicate rule bodies |
+| Documentation skill | [`skills/documentation/SKILL.md`](../skills/documentation/SKILL.md) | Spec template, artefact index, workflow |
 
 ---
 
-## 5. Prompt history
+## 5. Prompt history and AI mistake evidence
 
-- Any prompt must be saved to a file (e.g. SpecStory for Cursor/VS Code).
-- Repository should contain:
-  - `.specstory/history/`
-  - `docs/prompt-history.md`
+**Prompt history (PDF p.2):**
 
----
+- [`.specstory/history/`](../.specstory/history/) — tracked session history (SpecStory).
+- [`docs/prompt-history.md`](prompt-history.md) — index and expectations.
 
-## 6. AI mistake evidence
-
-Identify at least one **meaningful** mistake or incorrect AI suggestion during development:
-
-- Wrong code, **and/or**
-- Ungrounded or hallucinated assistant answers  
-
-Document this to show AI is used as an engineering assistant, not blindly accepted.
+**AI mistake (PDF p.3, acceptance p.6):** Identify at least one **meaningful** mistake—wrong code **and/or** ungrounded or hallucinated assistant answers. Log in `docs/ai-mistakes.md` when the first entry exists (**not** in repo yet as of 2026-10-04).
 
 ---
 
-## 7. Token optimisation (as stated)
+## 6. Token optimisation (PDF p.2)
 
-Use plugins such as Graphify, Caveman, Codebase-memory MCP to optimize token usage. Use prompt caching for static system-prompt portions (instructions, guardrails).
-
----
-
-## 8. Named technology stack
-
-Build using:
-
-- Java 21
-- Spring Boot
-- Spring AI
-- PostgreSQL / H2
-- An embedding model
-- A vector store (e.g. PGVector or Chroma)
-- REST API
-- React / Next.js or equivalent frontend
-- Cursor / GitHub Copilot / Kiro
+Use plugins such as **Graphify**, **Caveman**, **Codebase-memory MCP** to reduce token use. Use **prompt caching** for static system-prompt portions (instructions, guardrails).
 
 ---
 
-## 9. Application summary
+## 7. Technology stack
+
+### Named in the PDF (p.2–3)
+
+| Technology | PDF |
+|------------|-----|
+| Java 21 | Yes |
+| Spring Boot | Yes |
+| Spring AI | Yes |
+| PostgreSQL / H2 | Yes (roles not fully specified) |
+| Embedding model | Yes (product not mandated) |
+| Vector store | e.g. PGVector or Chroma |
+| REST API | Yes |
+| React / Next.js or equivalent frontend | Yes |
+| Cursor / GitHub Copilot / Kiro | Yes (workflow tooling) |
+
+### Project conventions (not PDF mandates — recorded in `rules/*`)
+
+| Choice | Convention |
+|--------|------------|
+| Spring Boot major version | **3** |
+| Build | **Maven Wrapper** (`./mvnw`) |
+| Runtime persistence | **PostgreSQL** + **PgVector** + **Liquibase** (not H2 for production path) |
+| Frontend | **React + Vite + TypeScript** (**DEC-15** still open in requirements) |
+| Initial LLM/embeddings provider | **Ollama via configuration** (model id still **Open** → **DEC-09**) |
+
+Conventions must **not contradict** PDF requirements. **DEC-09** (vector store + embedding product) and **DEC-10** (H2 vs PostgreSQL roles) remain **Open**.
+
+---
+
+## 8. Application capabilities (PDF p.3–4)
 
 **Support Ticket Management System** with:
 
-- Conventional ticket CRUD, comments, search, status filter, persistence, backend validation, meaningful UI errors
-- Backend-enforced ticket **status state machine** that allows valid status transitions and rejects invalid ones
-- Natural-language Q&A over ticket history via RAG, **grounded strictly in real ticket data**, with citations and honest no-match behavior
+| Capability | PDF |
+|------------|-----|
+| Create, list, view tickets | Yes |
+| Update title, description, priority, assignee | Yes |
+| Add comments | Yes |
+| Keyword search | Yes |
+| Filter by status | Yes |
+| Persist in database; survive restart | Yes |
+| Backend validation | Yes |
+| Meaningful UI errors | Yes |
+| Natural-language Q&A over ticket history (RAG) | Yes |
+| Grounded strictly in real ticket data | Yes |
+| Cite specific ticket(s) used for the answer | Yes |
+| Explicit indication when no relevant tickets (no fabrication) | Yes |
 
-Detailed functional requirements and acceptance criteria: see [`spec/requirements.md`](../spec/requirements.md).
-
----
-
-## 10. Explicitly out of scope (as stated for the assistant)
-
-The ask flow is a **single retrieval → generate** path, **not** an autonomous agent. The assistant must **not** independently:
-
-- Create tickets
-- Send notifications
-- Chain into other tools / further actions
-
----
-
-## 11. Underspecified in the PDF (not filled in here)
-
-The following are **not** fully defined in the assessment PDF and are **not** invented in this brief:
-
-- Full ticket field catalog beyond what is listed (e.g. how `category` is set)
-- Complete REST resource map for tickets/comments (only `POST /api/ai/ask` request shape is given)
-- Exact response JSON for `/api/ai/ask`
-- Auth, roles, multi-tenancy, attachments, notifications
-- Mandatory choice of embedding model or vector store product (examples only)
-- Whether H2 is for tests only or also runtime
-- How a status transition is initiated from the UI/API
-- Whether only the explicitly shown transitions are allowed, or skipped transitions such as `OPEN` → `RESOLVED` are allowed
-
-Resolve these later in dedicated specs—after confirmation—not by silent assumption.
+Detailed functional requirements, flows, and testable acceptance: [`spec/requirements.md`](../spec/requirements.md) §4 (FEAT-*) and §8 (AC-CORE-*).
 
 ---
 
-## Revision
+## 9. Ticket status state machine (PDF p.4)
+
+**Backend-enforced.** Valid paths:
+
+```
+OPEN → IN_PROGRESS → RESOLVED → CLOSED
+OPEN → CANCELLED
+IN_PROGRESS → CANCELLED
+```
+
+| ID | From | To |
+|----|------|-----|
+| T1 | `OPEN` | `IN_PROGRESS` |
+| T2 | `IN_PROGRESS` | `RESOLVED` |
+| T3 | `RESOLVED` | `CLOSED` |
+| T4 | `OPEN` | `CANCELLED` |
+| T5 | `IN_PROGRESS` | `CANCELLED` |
+
+**Invalid examples (must reject):**
+
+| ID | From | To |
+|----|------|-----|
+| X1 | `CLOSED` | `OPEN` |
+| X2 | `RESOLVED` | `OPEN` |
+| X3 | `CANCELLED` | `OPEN` |
+
+**Scraped / agreed in specs:**
+
+- **DEC-07 (agreed):** New tickets start as `OPEN`; create body does not accept `status` ([`data-model.md`](../spec/data-model.md) §5.1).
+- **DEC-02 (interim):** Only T1–T5 edges—no skipped hops (e.g. `OPEN` → `RESOLVED`) unless **DEC-02** is revised ([`state-machine.md`](../spec/state-machine.md) §5.3).
+- **DEC-06 (interim):** Status change via `PATCH` on `/api/v1/tickets/{id}` with `status` field ([`api-contract.md`](../spec/api-contract.md) §4.4).
+- Full **20 illegal** transition pairs documented in [`state-machine.md`](../spec/state-machine.md) §5.6; backend tests mapped in [`test-strategy.md`](../spec/test-strategy.md) §6 (**AC-SM-06**).
+
+State-machine **integration tests** are required (PDF acceptance p.6). Test mapping: **AC-CORE-14**, **FEAT-21**, [`test-strategy.md`](../spec/test-strategy.md) §10.
+
+---
+
+## 10. RAG and assistant (PDF p.4–6)
+
+### Basic flow (PDF)
+
+```
+Support Tickets → Knowledge Documents → Chunk → Embeddings → Vector Store
+User Question → Similarity Search → Relevant Tickets → LLM + Context → Grounded Answer → Ticket Sources
+```
+
+### Ingestion (PDF p.5)
+
+- Sources: **description**, **comments**, **resolution notes**.
+- Metadata on chunks: `ticketId`, `status`, `priority`, `assignee`, `category`.
+- **Re-ingest / refresh** when a ticket is **updated or closed** (do not let knowledge go stale).
+
+**Repo note:** Acceptance checklist (p.6) says re-ingestion when **updated** only; ingestion text says **updated or closed**. Requirements track this as **DEC-01** (still **Open**; **interim (B)** in [`rag-ingestion.md`](../spec/rag-ingestion.md) §10). **DEC-05 (agreed):** `resolution_notes` column on `ticket` for RAG text. Status **history** is not ingested as text—only current metadata snapshot on chunks (§4.2 of `rag-ingestion.md`).
+
+### Ask API (PDF p.5)
+
+- **Path:** `POST /api/ai/ask`
+- **Request (PDF example):**
+
+```json
+{
+  "question": "What caused previous payment failures?"
+}
+```
+
+- **Response JSON shape:** not defined in PDF → draft [`rag-api-contract.md`](../spec/rag-api-contract.md); exact no-match wording **DEC-11** still open.
+- **Convention:** alias `POST /api/v1/ai/ask` with identical behaviour ([`api-contract.md`](../spec/api-contract.md) §6).
+
+### Retrieval quality (PDF p.5)
+
+- Document and **justify** chunking strategy (paragraph vs fixed-size vs semantic) for ticket data → **`architecture.md`** §16 (PDF names this file); **mechanics and comparison** → [`rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9 (**hybrid** draft default).
+- **top-K** and **similarity threshold** configurable, not hardcoded.
+- Document and **justify** embedding model choice (e.g. local Ollama vs cloud) and cost/latency/quality tradeoffs → **`architecture.md`**.
+
+### Grounding and guardrails (PDF p.5–6)
+
+- Answer **only** from retrieved ticket context—no general LLM knowledge for support-specific questions.
+- If no relevant tickets, say so explicitly—no plausible fabrication.
+- **Single retrieval → generate** flow—not an autonomous agent. Must **not** independently create tickets, send notifications, or chain into other tools.
+
+### Example questions (PDF p.4)
+
+- “Have we seen payment failures before?”
+- “What was the resolution for ticket TKT-1001?”
+- “What are the common causes of shipment tracking issues?”
+- “Show me similar resolved tickets.”
+- “Which high-priority tickets are related to payment?”
+
+Example demo corpus (not mandated by PDF): [`requirements.md`](../spec/requirements.md) §4.3.
+
+---
+
+## 11. Core acceptance criteria (PDF p.6)
+
+The solution is complete when all of the following pass (expanded as **AC-CORE-*** in [`requirements.md`](../spec/requirements.md) §8):
+
+- [ ] Ticket created from UI
+- [ ] Tickets listed
+- [ ] Ticket details viewed
+- [ ] Ticket fields updated
+- [ ] Assignee changed
+- [ ] Comments added
+- [ ] Search works
+- [ ] Status filter works
+- [ ] Valid status transitions work
+- [ ] Invalid status transitions rejected by backend
+- [ ] Data survives application restart
+- [ ] Backend validation works
+- [ ] UI shows meaningful errors
+- [ ] State-machine integration tests pass
+- [ ] Ticket data converted to embeddings and stored in vector store
+- [ ] `POST /api/ai/ask` returns grounded, ticket-sourced answer for in-scope questions
+- [ ] Response cites specific ticket ID(s) used
+- [ ] Out-of-scope / no-match returns honest “no relevant tickets found” (not fabricated)
+- [ ] Chunking strategy and embedding model choice documented and justified in `architecture.md`
+- [ ] Re-ingestion when ticket is **updated** (see §10 for **close** vs **DEC-01**)
+- [ ] top-K and similarity threshold configurable
+- [ ] No secrets committed
+- [ ] At least one meaningful AI mistake caught and documented
+
+Demo walkthrough mapping: [`requirements.md`](../spec/requirements.md) §8.7.
+
+---
+
+## 12. Decisions scraped from specs (2026-10-04)
+
+### Agreed (recorded in requirements §10.2 and `data-model.md`)
+
+| DEC | Topic | Decision |
+|-----|--------|----------|
+| **DEC-03** | `category` | Optional user-selected `TicketCategory` enum on create/update |
+| **DEC-04** | Ticket id | Public id `TKT-{n}` from sequence (start 1001); `ticket.id` `VARCHAR(16)` PK |
+| **DEC-05** | Resolution notes | Nullable `resolution_notes` on `ticket`; ingested for RAG |
+| **DEC-07** | Initial status | Server default `OPEN` on create; not in create body |
+| **DEC-08** | Keyword search | `q` matches `title` and `description` (case-insensitive); comments excluded |
+| **DEC-13** | Create validation | Non-blank `title` required; `priority` defaults `MEDIUM`; other fields per data model §16.1 |
+
+### Interim (implementable draft; confirm before calling “agreed”)
+
+| DEC | Topic | Interim stance |
+|-----|--------|----------------|
+| **DEC-02** | Skipped status hops | Only T1–T5 (no `OPEN` → `RESOLVED`, etc.) |
+| **DEC-06** | Transition API | PATCH `status` on `PATCH /api/v1/tickets/{id}` |
+| **DEC-14** | Ticket REST surface | Paths/payloads in [`api-contract.md`](../spec/api-contract.md); envelopes in `rules/api-standards.md` |
+| **DEC-01** (interim) | Re-ingest on close | Implement update **or** close per [`rag-ingestion.md`](../spec/rag-ingestion.md) §10 pending user sign-off |
+
+### Still open
+
+| DEC | Topic |
+|-----|--------|
+| **DEC-01** | Re-ingest on **close** vs p.6 wording (interim **(B)** in `rag-ingestion.md` — confirm for sign-off) |
+| **DEC-09** | Embedding model + vector store product |
+| **DEC-10** | H2 vs PostgreSQL per environment |
+| **DEC-11** | Ask response JSON; no-match vs out-of-scope messaging |
+| **DEC-12** | Authentication (not in PDF) |
+| **DEC-15** | Frontend stack confirmation (convention: React + Vite + TS) |
+
+### Explicitly not in the PDF
+
+Do not add without a new agreed spec: authentication, multi-tenancy, attachments, notifications, delete-ticket API, agentic tool use, confidence scores on ask responses.
+
+---
+
+## 13. PDF → repo traceability
+
+Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. At a glance:
+
+| PDF pages | Captured in |
+|-----------|-------------|
+| 1–2 | Process, hygiene, spec list, prompt history, AI mistake, token optimisation |
+| 2–3 | Stack, learning goals, application feature list |
+| 4 | CRUD, search, filter, state machine, example ask questions, RAG flow diagram |
+| 5 | Ingestion, metadata, re-ingest, `POST /api/ai/ask`, retrieval documentation |
+| 6 | Grounding guardrails, non-agent scope, core acceptance checklist |
+
+**Hygiene file map (PDF p.1–2):** same table as [`requirements.md`](../spec/requirements.md) **§6.8** (`rules/*`, `commands/*`, `skills/documentation/SKILL.md`).
+
+**Outstanding PDF delivery (not missing from specs — evidence at demo time):** `docs/ai-mistakes.md` first entry (**AC-CORE-23**); user confirmation on open **DEC-*** (see §12).
+
+---
+
+## 14. Where to read next
+
+| Need | Document |
+|------|----------|
+| Full FEAT / AC / flows | [`spec/requirements.md`](../spec/requirements.md) |
+| Tables, Liquibase, DTOs | [`spec/data-model.md`](../spec/data-model.md) |
+| HTTP tickets + ask boundary | [`spec/api-contract.md`](../spec/api-contract.md) |
+| Transition matrix + tests | [`spec/state-machine.md`](../spec/state-machine.md) |
+| Chunking, ingest, re-ingest | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) |
+| AC → backend test layers | [`spec/test-strategy.md`](../spec/test-strategy.md) |
+| Ask `data` JSON, citations, no-match | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) |
+| Retrieval quality eval | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) |
+| UI screens and flows | [`spec/ui-flow.md`](../spec/ui-flow.md) |
+| PDF theme map (detailed) | [`spec/requirements.md`](../spec/requirements.md) **§0.4** |
+| Modules, RAG placement, chunking narrative | [`spec/architecture.md`](../spec/architecture.md) |
+| Artefact index and review workflow | [`rules/documentation.md`](../rules/documentation.md) |
+| Spec writing skill | [`skills/documentation/SKILL.md`](../skills/documentation/SKILL.md) |
+| REST envelopes (not duplicated in specs) | [`rules/api-standards.md`](../rules/api-standards.md) |
+| Backend test conventions | [`rules/testing.md`](../rules/testing.md) |
+| RAG ingest / ask grounding | [`rules/rag-vector-store.md`](../rules/rag-vector-store.md) |
+
+---
+
+## Revision history
 
 | Date | Note |
 |------|------|
-| 2026-09-24 | Initial faithful restatement from `docs/Assessments.pdf` (option C with `spec/requirements.md`). |
-| 2026-09-24 | State-machine summary clarified; status-transition gaps aligned with `spec/requirements.md`. |
-| 2026-10-04 | `architecture.md` scope note aligned with expanded `spec/architecture.md` and `rag-ingestion.md` split. |
+| 2026-09-24 | Initial faithful restatement from `docs/Assessments.pdf` (with `spec/requirements.md`). |
+| 2026-09-24 | State-machine summary clarified; status-transition gaps aligned with requirements. |
+| 2026-10-04 | `architecture.md` scope note; aligned with expanded system-design spec. |
+| 2026-10-04 | **Major update:** Merged PDF text (6 pages via extraction), all five `spec/` artefacts to date, agreed **DEC-03/04/05/07/08/13**, interim **DEC-02/06/14**, open **DEC** list, repo hygiene paths, conventions vs PDF, full acceptance checklist, RAG/ingestion reconciliation note. |
+| 2026-10-04 | Seven `spec/` files (added `rag-ingestion`, `test-strategy`); `rules/` + `commands/` index; AC-SM / AC-API / AC-RAG-ING pointers; hybrid chunking; links to documentation skill. |
+| 2026-10-04 | All **ten** PDF-listed `spec/` files present (`rag-api-contract`, `evaluation-strategy`, `ui-flow`); §0.4 / §13 traceability; removed “missing spec” interim table. |
+| 2026-10-04 | §13 hygiene map pointer; §6.8-aligned audit note (no new doc files). |

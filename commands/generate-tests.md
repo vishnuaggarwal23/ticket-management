@@ -11,11 +11,11 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 | Missing artefact | Action |
 |------------------|--------|
 | [`spec/data-model.md`](../spec/data-model.md) missing | Stop — do not invent ticket fields |
-| `spec/rag-api-contract.md` for ask `data` extensions | Use interim [`spec/api-contract.md`](../spec/api-contract.md) §6 `answer` + `citedTicketIds`; flag gaps vs `rag-api-contract.md` |
+| Ask `data` shape unclear vs draft [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Align with `answer` + `citedTicketIds`; flag **DEC-11** no-match wording gaps |
 ## Inputs
 
-- Specs that exist: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (agreed), [`spec/state-machine.md`](../spec/state-machine.md) (draft), [`spec/api-contract.md`](../spec/api-contract.md) (draft); `spec/test-strategy.md`, `spec/rag-api-contract.md`, `spec/evaluation-strategy.md` — **only when added** (see interim map in [`rules/documentation.md`](../rules/documentation.md))
-- **[`spec/requirements.md`](../spec/requirements.md)** — map each proposed test to **`AC-CORE-*`** (§8) and/or **`AC-FEAT-*`** (§4.2); use §9 for FR traceability. Do not invent coverage for **Open** **DEC-*** items.
+- Specs: all ten PDF-listed files under `spec/` (see [`rules/documentation.md`](../rules/documentation.md)); only [`data-model.md`](../spec/data-model.md) is **agreed**; others **draft**
+- **[`spec/test-strategy.md`](../spec/test-strategy.md)** — primary map for **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-CORE-*** layers. **[`spec/requirements.md`](../spec/requirements.md)** — **`AC-FEAT-*`** (§4.2) and FR traceability (§9). Do not invent coverage for **Open** **DEC-*** items.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
 - Code under test (if present) — generate against **implemented** behaviour first
@@ -37,10 +37,11 @@ These are the ticket/ask **capabilities**. For each, propose both **happy path**
 | Filter `status` | Matching status | Invalid enum → 400 | `q` **and** `status` (AND) |
 | Get detail | Found → 200 `data` | Unknown id → 404 | |
 | PATCH fields | Title, description, priority, assignee updated | 400 validation; 404 | Partial body (only agreed fields) |
-| Status transition | Each **legal** edge T1–T5 persisted | X1–X3 and every **Invalid** cell in [`spec/state-machine.md`](../spec/state-machine.md) §5.4 → domain reject + API **409**; **row unchanged** | Self-transitions rejected per §5.3 |
+| Status transition | Each **legal** edge T1–T5 persisted (**AC-SM-01**, **AC-API-09**) | **AC-SM-06** all 20 §5.6 pairs + X1–X3; **AC-SM-07** self-transition; API **409** + row unchanged (**AC-API-04**) | **AC-SM-08** PATCH without `status`; see [`spec/test-strategy.md`](../spec/test-strategy.md) §6–§7 |
 | Comments | Add + return on detail | Empty comment; ticket not found | Comment on a status the spec forbids |
 | Persistence / restart | GET after context reload still correct | | |
 | Ask | `POST /api/ai/ask` **and** `/api/v1/ai/ask`; grounded `data` + citations from retrieval | Blank/missing `question` → 400; **no relevant tickets** → 200 + no-match **in `data`**, no fabricated ids | Do **not** golden-string the generated prose |
+| RAG ingest | Knowledge doc + hybrid chunking per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §14 (**AC-RAG-ING-***) | Re-ingest replaces rows; comment boundaries preserved | Mock embed in default suite |
 
 ### P1 — Contract and orchestration (still major)
 
@@ -81,7 +82,7 @@ Follow `rules/testing.md`. A flow is not “covered” by one happy-path API tes
 
 **Frontend tests: skip.** Do not propose or write React/Vite/component/e2e tests. UI is reviewed with `commands/review-frontend.md` only.
 
-**RAG retrieval quality:** do not add golden-answer tests. Use `commands/review-rag-output.md` (**Retrieval quality** section) + `spec/evaluation-strategy.md` for seeded eval questions.
+**RAG retrieval quality:** do not add golden-answer tests. Use `commands/review-rag-output.md` (**Retrieval quality** section) + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) for seeded eval questions.
 
 ## Tooling (conventions, not PDF)
 
@@ -123,3 +124,4 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-10-04 | Inputs limited to three present specs + documentation interim map. |
 | 2026-10-04 | [`spec/state-machine.md`](../spec/state-machine.md) drives transition test matrix. |
 | 2026-10-04 | HTTP contract tests use draft [`spec/api-contract.md`](../spec/api-contract.md). |
+| 2026-10-04 | Inputs: [`spec/test-strategy.md`](../spec/test-strategy.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). |

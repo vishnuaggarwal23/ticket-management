@@ -25,7 +25,7 @@ alwaysApply: true
 | AI mistakes (PDF) | `docs/ai-mistakes.md` when at least one meaningful mistake is caught |
 | RAG eval approach | `spec/evaluation-strategy.md` (retrieval quality — not unit golden strings) |
 
-**Commands:** `review-code`, `review-frontend`, `review-spec`, `generate-tests`, `review-rag-output`.
+**Commands:** `review-code`, `review-frontend`, `review-spec`, `generate-tests`, `review-rag-output`, `update-prompt-history`.
 
 ## When reviewing AI output
 
@@ -34,6 +34,7 @@ alwaysApply: true
 - **Specs:** `commands/review-spec.md` before implementation.
 - **Ask answers:** `commands/review-rag-output.md` — every claim traceable to cited ticket ids from retrieval; honest no-match when nothing relevant.
 - **Tests:** `commands/generate-tests.md` — backend only.
+- **Prompt index:** `commands/update-prompt-history.md` — rebuild `docs/prompt-history.md` from `.specstory/history/`.
 - Prefer these commands over ad-hoc “looks fine”.
 - Document meaningful mistakes per `rules/documentation.md`.
 
