@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/testing.mdc`](../.cursor/rules/testing.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: `spec/architecture.md` §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Resource field catalogs: `spec/api-contract.md` / `spec/rag-api-contract.md` once agreed. RAG **retrieval quality** is judged per `spec/evaluation-strategy.md` + `commands/review-rag-output.md`, not golden strings here.
+Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed); HTTP narrative may extend in `spec/api-contract.md`. Ask `data`: `spec/rag-api-contract.md`. RAG **retrieval quality** is judged per `spec/evaluation-strategy.md` + `commands/review-rag-output.md`, not golden strings here.
 
 | Command | Use |
 |---------|-----|
@@ -78,7 +78,8 @@ Align with `rules/java-springboot.md` (`api`, `domain`, `service`, `persistence`
 ### Repositories (persistence)
 
 - **Kind:** integration. **PostgreSQL via Testcontainers**, Liquibase applied. Do **not** mock `TicketRepository` / `CommentRepository` / `EntityManager` to fake SQL.
-- **Positive:** insert and find by id; keyword search; filter by status; comments loaded as the query defines; updates that the repository is responsible for (field persistence, not status-machine rules).
+- **Positive:** insert and find by id (`TKT-{n}` format); keyword search on **title + description** (DEC-08); filter by status; comments ordered by `created_at` asc; field persistence (not status-machine rules).
+- **Schema:** Liquibase changelogs include indexes from [`spec/data-model.md`](../spec/data-model.md) §14.5; optional assertion **AC-DM-08** when adding migration tests (index names exist after migrate).
 - **Negative:** missing id → empty `Optional`; search/filter with no rows → empty collection, not an error; constraint violations the schema actually enforces (not null, unique) when those exist in Liquibase.
 - Repositories MUST NOT encode or bypass the state machine. Do not write a repository test that `UPDATE`s status around the domain rules and calls that a transition test.
 
@@ -94,7 +95,7 @@ Align with `rules/java-springboot.md` (`api`, `domain`, `service`, `persistence`
 
 ## API testing
 
-HTTP APIs MUST be tested as APIs — not only as Java controllers, services, or repositories. Prove `rules/api-standards.md` (and `spec/api-contract.md` / `spec/rag-api-contract.md` when those exist). Assessment capabilities (create, list, get, update fields, comments, keyword search, status filter, status transitions, ask) MUST have **positive and negative** HTTP tests.
+HTTP APIs MUST be tested as APIs — not only as Java controllers, services, or repositories. Prove `rules/api-standards.md` and field rules from [`spec/data-model.md`](../spec/data-model.md) (and `spec/api-contract.md` / `spec/rag-api-contract.md` when those exist). Assessment capabilities (create, list, get, update fields, comments, keyword search, status filter, status transitions, ask) MUST have **positive and negative** HTTP tests.
 
 ### Two levels (both required for implemented endpoints)
 
@@ -301,7 +302,7 @@ State that substitution in `spec/test-strategy.md` when written.
 
 ## Acceptance traceability
 
-- Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in `spec/requirements.md` (§8–§9) when cataloguing cases — use `commands/generate-tests.md`.
+- Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md) (§8–§9) when cataloguing cases — use `commands/generate-tests.md`.
 - **`spec/test-strategy.md`** (when agreed) should list which **AC-CORE** rows each suite proves; RAG **answer wording** stays probabilistic per `spec/evaluation-strategy.md`, not golden strings here.
 
 ## Repeatability and isolation
@@ -331,5 +332,6 @@ State that substitution in `spec/test-strategy.md` when written.
 | 2026-09-24 | Initial backend testing conventions: JUnit 5, Mockito, Testcontainers, layer coverage. |
 | 2026-10-03 | Aligned with approved stack and HTTP API contract testing expectations. |
 | 2026-10-04 | SDD expansion: map tests to `AC-CORE-*` / `AC-FEAT-*`; RAG retrieval vs golden-answer boundary. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/test-strategy.md` role. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and `spec/test-strategy.md` role. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Field/search assertions use agreed [`spec/data-model.md`](../spec/data-model.md); Liquibase index catalog §14.5 / AC-DM-08. |

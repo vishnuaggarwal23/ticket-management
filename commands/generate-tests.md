@@ -10,14 +10,15 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 
 | Missing artefact | Action |
 |------------------|--------|
-| `spec/api-contract.md` / `data-model.md` for create/PATCH bodies | Catalogue tests with **TBD** fields; ask user before writing assertions on title/priority/etc. |
+| `spec/api-contract.md` only (when HTTP narrative missing) | Use **[`spec/data-model.md`](../spec/data-model.md) §10/§16** for create/PATCH/comment field assertions; flag gaps vs `api-contract.md` when written |
+| [`spec/data-model.md`](../spec/data-model.md) missing | Stop — do not invent ticket fields |
 | `spec/rag-api-contract.md` for ask `data` | Test 400 blank question + envelope only; defer citation shape |
 | `spec/state-machine.md` | Use PDF legal path + illegal reopen examples only |
 
 ## Inputs
 
-- Specs that exist: `spec/test-strategy.md`, `spec/state-machine.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, `spec/data-model.md`, `spec/requirements.md`, `spec/architecture.md` (layers §8–9, ingest triggers §15.4), `spec/evaluation-strategy.md`
-- **`spec/requirements.md`** — map each proposed test to **`AC-CORE-*`** (§8) and/or **`AC-FEAT-*`** (§4.2); use §9 for FR traceability. Do not invent coverage for **Open** **DEC-*** items.
+- Specs that exist: `spec/test-strategy.md`, `spec/state-machine.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, [`spec/data-model.md`](../spec/data-model.md), [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md) (layers §8–9, ingest triggers §15.4), `spec/evaluation-strategy.md`
+- **[`spec/requirements.md`](../spec/requirements.md)** — map each proposed test to **`AC-CORE-*`** (§8) and/or **`AC-FEAT-*`** (§4.2); use §9 for FR traceability. Do not invent coverage for **Open** **DEC-*** items.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
 - Code under test (if present) — generate against **implemented** behaviour first
@@ -33,9 +34,9 @@ These are the ticket/ask **capabilities**. For each, propose both **happy path**
 
 | Flow | Positive (must) | Negative / empty (must) | Edge (prioritize) |
 |------|-----------------|-------------------------|-------------------|
-| Create ticket | Valid payload → persisted / 201 + `Location` + `data` | Validation / malformed JSON → 400; **no row** | Boundary lengths once spec agrees; missing required fields |
+| Create ticket | Valid payload → persisted / 201 + `Location` + `data`; id matches `TKT-{n}` | Blank **title** → 400; malformed JSON → 400; **no row** | `@Size` boundaries per `data-model.md` §16 |
 | List | Default page; `meta` present | Invalid `page`/`size`/`sort`/`status` → 400 | Last page; `size` 1 and 100; `size` 0 and 101 |
-| Search `q` | Keyword hits | No hits → **200** empty `data`, not 404 | Case / partial match only if spec defines it |
+| Search `q` | Keyword in **title or description** hits (DEC-08) | No hits → **200** empty `data`, not 404; keyword only in comment does **not** hit | Case-insensitive contains |
 | Filter `status` | Matching status | Invalid enum → 400 | `q` **and** `status` (AND) |
 | Get detail | Found → 200 `data` | Unknown id → 404 | |
 | PATCH fields | Title, description, priority, assignee updated | 400 validation; 404 | Partial body (only agreed fields) |
@@ -64,7 +65,7 @@ Every P0/P1 case in the proposal table must include:
 - **Polarity:** `positive` | `negative` | `empty`
 - **Edge?** yes/no — edges are boundaries and combinations of **major** flows (empty list, max `size`, illegal transition after persist), not trivia (`toString`)
 - **Layer:** domain | service | controller-slice | repository | API-integration | rag-unit
-- **Acceptance criterion** — `AC-CORE-*` / `AC-FEAT-*` from `spec/requirements.md`, or spec heading, or `rules/testing.md` theme
+- **Acceptance criterion** — `AC-CORE-*` / `AC-FEAT-*` from [`spec/requirements.md`](../spec/requirements.md), or spec heading, or `rules/testing.md` theme
 
 Do not emit a 200-case matrix of every DTO getter. Prefer `@ParameterizedTest` for closed sets (illegal transitions, required-field names).
 
@@ -119,5 +120,6 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-09-24 | Initial backend test-generation workflow and `rules/testing.md` checklist. |
 | 2026-10-03 | Aligned with stack and spec-driven acceptance mapping. |
 | 2026-10-04 | Expanded AC traceability and negative-path requirements for P0 flows. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md` and governance pass. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and governance pass. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | P0 assertions use agreed [`spec/data-model.md`](../spec/data-model.md) (id, title required, DEC-08 search). |

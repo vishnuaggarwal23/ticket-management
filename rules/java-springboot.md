@@ -6,11 +6,11 @@ Backend coding standards for the support ticket management application.
 
 | Topic | Where |
 |-------|--------|
-| Business/functional modules, layering map | `spec/architecture.md` §4, §8–9 |
-| HTTP paths, envelopes, list params | `rules/api-standards.md`; API map `spec/architecture.md` §11 |
-| Ticket/comment **field** catalogs | `spec/api-contract.md`, `spec/data-model.md` |
+| Business/functional modules, layering map | [`spec/architecture.md`](../spec/architecture.md) §4, §8–9 |
+| HTTP paths, envelopes, list params | `rules/api-standards.md`; API map [`spec/architecture.md`](../spec/architecture.md) §11 |
+| Ticket/comment **field** catalogs | [`spec/data-model.md`](../spec/data-model.md) (agreed); HTTP narrative in `spec/api-contract.md` |
 | Tests | `rules/testing.md`, `commands/generate-tests.md` |
-| RAG | `rules/rag-vector-store.md`, `spec/architecture.md` §14–16, `spec/rag-ingestion.md` |
+| RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §14–16, `spec/rag-ingestion.md` |
 | UI | `rules/frontend.md` |
 
 ## Assessment vs project conventions
@@ -46,7 +46,7 @@ Do not add MapStruct, Lombok, QueryDSL, or extra web stacks unless a spec agrees
 
 One root package under `src/main/java` (do not invent a second Spring Boot application). Pick one root (e.g. `com.example.tickets`) and use it consistently — **do not** commit a second package root.
 
-Layout is **by layer**, matching `spec/architecture.md` §9:
+Layout is **by layer**, matching [`spec/architecture.md`](../spec/architecture.md) §9:
 
 ```
 {root}/
@@ -85,7 +85,7 @@ Keep HTTP adapters thin. Repositories must not apply ad-hoc status updates.
 
 - Constructor injection only. Prefer a single `final` constructor (or one compact constructor). No field/`@Autowired` injection, no setter injection.
 - Readable names: `TicketService`, `TicketStatus`, `IllegalTicketTransitionException`. No opaque abbreviations (`TktSvc`, `SM`).
-- Prefer `record` for API DTOs and small immutable values. Prefer `enum` for ticket **status** (and other closed sets once `data-model.md` agrees). Do not use `String` for status in domain or persistence.
+- Prefer `record` for API DTOs and small immutable values. Use `enum` for `TicketStatus`, `TicketPriority`, `TicketCategory` per [`spec/data-model.md`](../spec/data-model.md) §5. Do not use `String` for those in domain or persistence.
 - Public application APIs must not return `null`. Use `Optional` for a missing ticket; empty `List`/`Page` for empty collections.
 - Prefer `final` on injected collaborators. Keep methods short; extract when a service method both mutates a ticket and implements transition tables.
 - Java 21 is fine (`record`, `switch`, text blocks for JPQL or prompts held in config/code as agreed). Do not use `sun.*` APIs.
@@ -140,7 +140,7 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 ## DTOs
 
 - Request and response types are **records** in `api` (or `api.dto`). They are the HTTP contract, not JPA entities.
-- Put Bean Validation on **request** records (`@NotBlank`, `@Size`, `@NotNull`, etc.) to match agreed field rules. Do not invent required fields the data-model/API spec has not agreed.
+- Put Bean Validation on **request** records to match [`spec/data-model.md`](../spec/data-model.md) §16 (e.g. `@NotBlank` on create `title`, `@Size` limits). Do not add required fields beyond that spec.
 - Map explicitly in the service or a dedicated mapper type in `api`/`service`. No bidirectional JPA graphs in JSON.
 - Ask response must be able to represent a grounded answer + cited ticket ids **or** honest no-match — field names wait on `spec/rag-api-contract.md`. Do not add a confidence field unless that spec does.
 - Do not return persistence entities from controllers. Do not put Jackson annotations on entities to “make the API work.”
@@ -187,14 +187,15 @@ IN_PROGRESS ────────► CANCELLED
 - Spring Data JPA interfaces in `persistence`. Naming: `TicketRepository`, `CommentRepository`.
 - Methods express queries (derived names or `@Query` with **parameters**). Never concatenate user input into JPQL/SQL.
 - Keyword search and filter-by-status belong here as queries the service calls — not as business-rule methods that change status.
-- Until `api-contract.md` extends scope: keyword `q` searches **title and description** (see `rules/api-standards.md`).
+- Keyword `q` searches **title and description** only (DEC-08; [`spec/data-model.md`](../spec/data-model.md) §15.2; `rules/api-standards.md`).
 - No `@Modifying` query that sets `status` except through the same path as the state machine (prefer loading the entity and letting the service apply a legal transition).
 - Do not expose `TicketRepository.save` from a controller.
 
 ## Entities
 
 - JPA entities live only in `persistence`. They map **1:1 with Liquibase** tables/columns. Explicit `@Table` / `@Column` names matching the changelog; do not let undocumented Hibernate naming be the schema.
-- Identity, associations (ticket ↔ comments), and column nullability follow `spec/data-model.md` once agreed. Do not invent `category`, resolution-notes shape, or id format here.
+- Tables: `ticket`, `ticket_comment`, `ticket_vector_chunk` ([`spec/data-model.md`](../spec/data-model.md) §6, §8, §14). Ticket PK `id` is `VARCHAR` `TKT-{n}`; comment PK `UUID`; `resolution_notes` on `ticket`.
+- Identity, associations, and nullability follow [`spec/data-model.md`](../spec/data-model.md). All indexes in §14.5 must appear in Liquibase (`003-ticket-indexes`, `005-vector-indexes`, extensions in `002`).
 - No state-machine tables inside entity setters. A setter that blindly does `this.status = next` is incorrect if it skips domain rules.
 - Prefer `Instant` + timezone-safe mapping. Do not use EAGER graphs that load the entire comment history unless the use case needs it; lazy + explicit fetch in queries is preferred.
 - Vector/chunk tables are persistence of **derived** RAG data, not the ticket source of truth. Schema for `vector` columns must match the agreed embedding dimension **once that model is agreed**.
@@ -211,9 +212,9 @@ IN_PROGRESS ────────► CANCELLED
 
 ## Liquibase (schema source of truth)
 
-- Changelogs under `src/main/resources/db/changelog/` (e.g. `db.changelog-master.yaml` including ticket tables, then vector extension/tables).
-- Every entity/column change needs a changeset. Hibernate `ddl-auto`: `validate` or `none`.
-- Integration tests apply the **same** changelogs via Testcontainers (`rules/testing.md`).
+- Changelogs under `src/main/resources/db/changelog/` (order per [`spec/data-model.md`](../spec/data-model.md) §14: tables → extensions `pg_trgm`/`vector` → relational indexes → vector table → HNSW).
+- Every entity/column/index change needs a changeset. Index names are fixed in [`spec/data-model.md`](../spec/data-model.md) §14.5 — do not rename without a spec revision.
+- Hibernate `ddl-auto`: `validate` or `none`. Integration tests apply the **same** changelogs via Testcontainers (`rules/testing.md`).
 
 ## Database (PostgreSQL)
 
@@ -240,5 +241,6 @@ IN_PROGRESS ────────► CANCELLED
 | 2026-10-03 | Stack alignment: PostgreSQL, Liquibase, Maven Wrapper, Spring AI provider configuration. |
 | 2026-10-03 | Recorded agreed backend package layout (`api` / `domain` / `service` / `persistence` / `rag` / `config`). |
 | 2026-10-04 | SDD expansion: assessment vs convention; defer open payloads to agreed specs. |
-| 2026-10-04 | Synced with `spec/architecture.md` §8–9 technical components. |
+| 2026-10-04 | Synced with [`spec/architecture.md`](../spec/architecture.md) §8–9 technical components. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Entities, enums, tables, and Liquibase index catalog aligned with agreed [`spec/data-model.md`](../spec/data-model.md). |

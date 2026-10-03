@@ -17,7 +17,7 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 ## Inputs
 
 - Diff / named paths
-- Agreed specs under `spec/` (do not invent missing contracts); layout reference: `spec/architecture.md` §8–9 when present
+- Agreed specs under `spec/` (do not invent missing contracts); layout reference: [`spec/architecture.md`](../spec/architecture.md) §8–9 when present
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements
@@ -31,8 +31,8 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### Spec and scope
 
 - [ ] Implements only **agreed** specs; no extra product features (auth, agents, attachments, bulk ops, rerankers) unless a spec agrees
-- [ ] No silent answers to open questions — check `spec/requirements.md` **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement unresolved **DEC-*** as fixed behaviour (ticket id format, chunking, embedding model, numeric top-K/threshold, ask `data` fields, skipped transitions, re-ingest on close, etc.)
-- [ ] Domain status machine matches `spec/state-machine.md` (or `spec/requirements.md` FEAT-11 / §2.6 until that spec exists)
+- [ ] No silent answers to open questions — check [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)**; still-open: **DEC-01, 02, 06, 09–12, 14, 15**, chunking/model/K/threshold, ask `data` fields. **Agreed via [`spec/data-model.md`](../spec/data-model.md):** id `TKT-{n}`, category, resolution notes, create validation, `q` scope, initial `OPEN`
+- [ ] Domain status machine matches `spec/state-machine.md` (or [`spec/requirements.md`](../spec/requirements.md) FEAT-11 / §2.6 until that spec exists)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
 
@@ -52,7 +52,8 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### Persistence and config (`rules/java-springboot.md`)
 
 - [ ] PostgreSQL + Liquibase; Hibernate DDL is not the schema source of truth
-- [ ] Entities match changelog; no ad-hoc status `UPDATE` that bypasses the state machine
+- [ ] Entities/tables match [`spec/data-model.md`](../spec/data-model.md) (`ticket`, `ticket_comment`, `ticket_vector_chunk`); indexes per §14.5 present in changelogs
+- [ ] No ad-hoc status `UPDATE` that bypasses the state machine
 - [ ] `jakarta.*` not `javax.*`; constructor injection; no field `@Autowired`
 - [ ] No secrets, machine-specific URLs, or hardcoded RAG model/K/threshold/chunk size in Java
 - [ ] RAG provider (Ollama) only via configuration
@@ -60,7 +61,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### RAG (`rules/rag-vector-store.md`) — if ingest/ask touched
 
 - [ ] Knowledge text only from description, comments, resolution notes
-- [ ] Metadata limited to assessment/data-model fields (`ticketId`, `status`, `priority`, `assignee`, `category` as agreed)
+- [ ] Metadata per [`spec/data-model.md`](../spec/data-model.md) §11 (`ticketId`, `status`, `priority`, `assignee`, `category`; technical keys only as specified)
 - [ ] Re-ingest triggered on update and close (mechanism not invented if spec still open)
 - [ ] Retrieve-then-generate once; no tools, ticket create, or notify from ask
 - [ ] Empty/below-threshold retrieval does not call the LLM to invent an answer
@@ -75,9 +76,9 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 
 ## 2. Code structure (layering and design)
 
-- [ ] Matches agreed **functional → technical** map in `spec/architecture.md` §8–9 when that spec exists (ticket ops in `service`/`persistence`, ask in `rag/`, state machine in `domain`)
+- [ ] Matches agreed **functional → technical** map in [`spec/architecture.md`](../spec/architecture.md) §8–9 when that spec exists (ticket ops in `service`/`persistence`, ask in `rag/`, state machine in `domain`)
 - [ ] Single Spring Boot app; packages by layer: `api`, `domain`, `service`, `persistence`, `rag`, `config` (`rules/java-springboot.md`)
-- [ ] Ticket mutations trigger RAG ingest via **service** hook/port after successful write — not from controller or repository directly (`spec/architecture.md` §10.2, §15.4)
+- [ ] Ticket mutations trigger RAG ingest via **service** hook/port after successful write — not from controller or repository directly ([`spec/architecture.md`](../spec/architecture.md) §10.2, §15.4)
 - [ ] Controllers thin: HTTP → `@Valid` DTO → one service call → envelope; no `@Transactional` on controllers; no transition tables in controllers
 - [ ] Domain has no Spring Web/JPA; status is an **enum**, not `String`
 - [ ] Services own use cases and transactions; depend on repository **interfaces**
@@ -135,5 +136,6 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 |------|------|
 | 2026-09-24 | Initial backend code review checklist against specs and `rules/`. |
 | 2026-10-04 | SDD expansion: routing table, severity labels, spec-gap and assumption reporting. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md`, `spec/architecture.md`, and aligned rules. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), and aligned rules. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Agreed data-model DECs vs open DECs; Liquibase index catalog §14.5 check. |

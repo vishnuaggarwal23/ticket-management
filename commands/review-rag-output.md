@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-rag-output.md`](../.cursor/commands/review-rag-output.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: `spec/architecture.md` §15–16. Ask JSON **inside** `data` follows `spec/rag-api-contract.md` when that spec exists — do not invent field names here.
+Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) §15–16. Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data` follows `spec/rag-api-contract.md` when that spec exists — do not invent field names here.
 
 **Pass only if all three hold:**
 
@@ -46,7 +46,7 @@ If none of the above is available, set verdict **cannot verify** for fabrication
 
 From the assessment — expect **grounded** answers only when retrieval supports them.
 
-**Example seed corpus (not mandated production data):** `spec/requirements.md` **§4.3** maps five illustrative questions to sample ticket ids (e.g. TKT-1001) for manual review and eval fixtures.
+**Example seed corpus (not mandated production data):** [`spec/requirements.md`](../spec/requirements.md) **§4.3** maps five illustrative questions to sample ticket ids (e.g. TKT-1001) for manual review and eval fixtures.
 
 - “Have we seen payment failures before?”
 - “What was the resolution for ticket TKT-1001?”
@@ -170,7 +170,7 @@ Both matter for the assessment. Neither is proved by a single golden answer stri
 | Input | Role |
 |-------|------|
 | **Question** | Same as grounding review |
-| **Expected ticket ids** (eval set) | From a **seeded** database or fixture — e.g. `spec/requirements.md` §4.3 (**Example**) or rows agreed in `evaluation-strategy.md` — not invented during review |
+| **Expected ticket ids** (eval set) | From a **seeded** database or fixture — e.g. [`spec/requirements.md`](../spec/requirements.md) §4.3 (**Example**) or rows agreed in `evaluation-strategy.md` — not invented during review |
 | **Retrieved set** | Actual ids (and ranks/scores if logged in dev) |
 | **Final cited ids** | What the API returned |
 
@@ -196,5 +196,6 @@ Both matter for the assessment. Neither is proved by a single golden answer stri
 |------|------|
 | 2026-09-24 | Initial grounded-ask review workflow: citations, no-match, retrieval quality hooks. |
 | 2026-10-04 | Expanded retrieval verdict output; links to `spec/evaluation-strategy.md`. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md` and RAG rules. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and RAG rules. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Citation ids must match [`spec/data-model.md`](../spec/data-model.md) `TKT-{n}` ticket PK. |

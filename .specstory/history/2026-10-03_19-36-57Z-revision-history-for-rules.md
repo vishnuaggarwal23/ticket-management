@@ -106,7 +106,61 @@ Parameters:
   "pattern": "Revision history|revision history"
 }
 ```
-Status: **loading**
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "Revision history|revision history",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": "commands/review-spec.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "skills/documentation/SKILL.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/documentation.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".specstory/history/2026-10-03_17-04-09Z-java-spring-boot-rules.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": ".specstory/history/2026-10-03_19-26-20Z-architecture-specification-update.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-09-24_17-36-50Z-architecture-md-specification.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-03_15-47-01Z-working-directory-audit.md"
+    },
+    {
+      "matchCount": 9,
+      "uri": ".specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/architecture.md"
+    }
+  ],
+  "totalFiles": 10,
+  "totalMatches": 23
+}
+```
+Status: **completed**
 
 </details></tool-use>
 
@@ -132,21 +186,51 @@ Parameters:
   "pattern": "^## "
 }
 ```
-Status: **loading**
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "^## ",
+  "topFiles": [
+    {
+      "matchCount": 15,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 15,
+      "uri": "spec/architecture.md"
+    }
+  ],
+  "totalFiles": 2,
+  "totalMatches": 40
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Checking spec/architecture.md for the revision history format. Verifying whether any rules/ or commands/ files already have revision history.
+
+Reading the end of each rules and commands file to add revision history sections.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
 
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
-
-</details></tool-use>
-
-_**Agent (auto-smart)**_
-
-<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
 
 </details></tool-use>
 
@@ -154,7 +238,30 @@ _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "Revision history",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
 
 </details></tool-use>
 
@@ -162,9 +269,52 @@ _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "Revision history",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "commands/review-spec.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The rules files currently lack revision history.
+
+I'll add revision history to all 7 rules files and 6 command files. I'll check git history and file contents to ensure accurate entries.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Checking file endings and git history to draft accurate revision entries.
+
+
+
 
 _**Agent (auto-smart)**_
 
@@ -173,11 +323,473 @@ _**Agent (auto-smart)**_
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && for f in rules/*.md commands/*.md; do echo "=== $f ==="; tail -5 "$f"; done && git log --oneline -5 -- rules/ commands/
 ```
+
+```
+=== rules/api-standards.md ===
+- Do not treat `/api/v1`, PATCH, 409, or these envelopes as PDF requirements.
+- Do not silently answer open questions in `spec/requirements.md` — use **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement unresolved **DEC-*** as fixed API behaviour (id format, category, ask `data` fields, etc.).
+- Do not prescribe Spring Security, API keys, or multi-tenancy.
+- Do not return persistence entities or a second JSON error shape from one controller.
+- Do not use PUT, unversioned `/api/tickets`, or cursor pagination unless a spec revises this file.
+=== rules/documentation.md ===
+- Optional: Caveman, codebase-memory MCP — use if installed; not required by this repo.
+
+## Skill usage
+
+When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md`.
+=== rules/frontend.md ===
+- Do not treat React/Vite/TypeScript as PDF mandates.
+- Do not use Next.js.
+- Do not write frontend test files or pick a UI test framework.
+- Do not duplicate the state machine as the only enforcement.
+- Do not invent API fields, citation JSON, or agent actions from the ask box.
+=== rules/java-springboot.md ===
+- Do not pin unfinalized versions (Boot patch, Spring AI, Postgres, PgVector, embedding model) as if decided.
+- Do not hardcode Ollama URLs, model names, top-K, or similarity thresholds in services.
+- Do not invent authentication, OpenAPI-as-requirement, or extra ticket resources. URI versioning follows `rules/api-standards.md`.
+- Do not implement agents or side effects from `/api/ai/ask`.
+- Do not treat this file as a substitute for `spec/` field catalogs or HTTP contracts.
+=== rules/rag-vector-store.md ===
+- Do not invent or hardcode model names, Ollama URLs, top-K, thresholds, chunk sizes, overlap, dimensions, distance metrics, or index types.
+- Do not implement chunking or pick an embedding model from these rules — wait for `spec/rag-ingestion.md`.
+- Do not implement agents, tool calling, or side effects from `/api/ai/ask`.
+- Do not prescribe a 
+… (output truncated)
+```
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
 
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Git logs will be fetched per file to build revision history for @rules/ and @commands/.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; for f in rules/*.md commands/*.md; do echo &#34;=== $f ===&#34;; git log --format=&#39;%ad %s&#39; --date=short -- &#34;$f&#34; | head -8; done</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && for f in rules/*.md commands/*.md; do echo "=== $f ==="; git log --format='%ad %s' --date=short -- "$f" | head -8; done
+```
+
+```
+=== rules/api-standards.md ===
+2026-10-04 Expand architecture spec and align rules, commands, and governance.
+2026-10-04 Align rules and commands with expanded spec/requirements.md.
+2026-10-04 docs: expand engineering rules and review commands for SDD
+2026-10-03 chore: align engineering standards with the approved stack
+2026-09-24 chore: add SDD hygiene rules, skills, and review commands
+=== rules/documentation.md ===
+2026-10-04 Expand architecture spec and align rules, commands, and governance.
+2026-10-04 Align rules and commands with expanded spec/requirements.md.
+2026-10-04 docs: expand engineering rules and review commands for SDD
+2026-10-03 chore: align engineering standards with the approved stack
+2026-09-24 chore: add SDD hygiene rules, skills, and review commands
+=== rules/frontend.md ===
+2026-10-04 Expand architecture spec and align rules, commands, and governance.
+2026-10-04 Align rules and commands with expanded spec/requirements.md.
+2026-10-04 docs: expand engineering rules and review commands for SDD
+2026-10-03 chore: align engineering standards with the approved stack
+=== rules/java-springboot.md ===
+2026-10-04 Expand architecture spec and align rules, commands, and governance.
+2026-10-04 docs: expand engineering rules and review commands for SDD
+2026-10-03 docs: record agreed Java/Spring package layout
+2026-10-03 chore: align engineering standards with the approved stack
+2026-09-24 chore: add SDD hygiene rules, skills, and review commands
+=== rules/rag-vector-store.md ===
+2026-10-04 Expand architecture spec and align rules, commands, and governance.
+2026-10-04 Align rules and commands with expanded spec/requirements.md.
+2026-10-04 docs: expand engineering rules and review commands for SDD
+2026-10-03 chore: align engineering standards with the approved stack
+2026-09-24 chore: add SDD hygiene rules, skills, and review commands
+=== rules/testing.md ===
+2026-10-04 Expand architecture spec and align rules, commands, and governance.
+2026-10-04 Align rules a
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-code.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Adding a consistent revision history section to all 13 files across @rules/ and @commands/.
+
+The revision history table will follow the format in spec/architecture.md. Consolidated git history entries cover initial SDD rules, stack alignment, java-springboot package layout, and spec alignment.
+
+The final revision entry will note the addition of the revision history section itself. Documentation.md will be updated to document this convention. Existing version headers in the files will be checked against requirements.md.
+
+Drafting the revision history entries now. For api-standards.md, the notes will cover REST envelope conventions, Testcontainers alignment, and SDD expansion.
+
+Checking uncommitted diffs to capture recent edits into the revision history. The documentation.md Writing bar will explicitly require revision history for all rules and commands.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff --stat rules/ commands/</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff --stat rules/ commands/
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Git diff returned no output despite git status showing modified files.
+
+Checking whether the changes are staged.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status -s rules/ commands/</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status -s rules/ commands/
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The current status appears clean. It may reflect the state at the start of this conversation.
+
+Adding revision history to all files under `@rules/` and `@commands/`. Each entry will use a common baseline plus file-specific notes. Most files will include dates for initial SDD hygiene setup and alignment with approved stack conventions.
+
+File-specific entries are being drafted. The Java Spring Boot template will record the agreed backend package layout. Documentation files will note their initial layout and steering tables. Other files will capture spec-driven expansion and governance passes.
+
+Review-frontend.md was added on 2026-10-04 only. Its history will be tailored accordingly. The documentation.md writing bar will be updated to require revision history for rules and commands, matching the spec convention.
+
+No extra changes to review-spec.md are needed. The scope stays limited to rules/ and commands/. Exact last lines for each file will be used to append the revision history sections.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Adding revision-history sections (matching spec format) and updating `documentation.md` to document the convention.
+
+
+
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/java-springboot.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/testing.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/generate-tests.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-code.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-rag-output.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The review-spec.md checklist will also be updated to include revision history for rules/ and commands/.
+
+SKILL.md may be updated too. A grep check will verify revision history across all files.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "## Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "## Revision history",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "rules/testing.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/rag-vector-store.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/java-springboot.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/frontend.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/api-standards.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/documentation.md"
+    }
+  ],
+  "totalFiles": 6,
+  "totalMatches": 6
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "## Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "## Revision history",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "commands/review-spec.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Only review-spec was found in commands. Checking other command files.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "commands/*",
+  "pattern": "Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "Revision history",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "commands/review-code.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/review-frontend.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/review-rag-output.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "commands/review-spec.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/generate-tests.md"
+    }
+  ],
+  "totalFiles": 5,
+  "totalMatches": 6
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Revision history has been added to all six commands and six rules.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Added **Revision history** sections to all steering artefacts under `rules/` and `commands/`, using the same `Date | Note` table format as `spec/architecture.md` and `spec/requirements.md`. Entries are backfilled from git history (2026-09-24 initial SDD setup through the 2026-10-04 governance pass), with a final row noting this addition.
+
+### Files updated
+
+**Rules (6)**  
+`rules/api-standards.md`, `rules/documentation.md`, `rules/frontend.md`, `rules/java-springboot.md`, `rules/rag-vector-store.md`, `rules/testing.md`
+
+**Commands (6)**  
+`commands/generate-tests.md`, `commands/review-code.md`, `commands/review-frontend.md`, `commands/review-rag-output.md`, `commands/review-spec.md`
+
+### Convention documented
+
+In **`rules/documentation.md` → Writing bar**, there is now an explicit expectation that `rules/*.md` and `commands/*.md` keep a short revision history at the end when content changes. That file also has its own history table.
+
+`.cursor/rules/*.mdc` and `.cursor/commands/*.md` pointers were not changed (bodies stay in `rules/` and `commands/` only).
+
+**Going forward:** append a new table row when you materially edit any of these files.
+
+---
+
+_**User**_
+
+commit and push
+
+---
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -5 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -5 --oneline
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add commands/*.md rules/*.md &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+docs: add revision history to rules and commands
+
+Backfill Date | Note tables for steering artefacts and document the convention in rules/documentation.md.
+EOF
+)&#34; &amp;&amp; git status &amp;&amp; git push</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add commands/*.md rules/*.md && git commit -m "$(cat <<'EOF'
+docs: add revision history to rules and commands
+
+Backfill Date | Note tables for steering artefacts and document the convention in rules/documentation.md.
+EOF
+)" && git status && git push
+```
 </details></tool-use>

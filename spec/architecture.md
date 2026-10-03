@@ -85,7 +85,7 @@ The assistant is **retrieve-then-generate** only (**PDF**): grounded answers wit
 
 ## 3. Architectural principles
 
-1. **Spec-driven** — behaviour follows agreed `spec/`; ambiguous product rules are confirmed before code (see `requirements.md` §10).
+1. **Spec-driven** — behaviour follows agreed `spec/`; ambiguous product rules are confirmed before code (see [`requirements.md`](requirements.md) §10).
 2. **Thin edges, rich domain** — HTTP adapters validate and map; ticket rules and the state machine live in **domain/services**, not controllers or the UI (**PDF**).
 3. **Single persistence truth for tickets** — PostgreSQL is the **system of record**; the vector index is a **derived** search/RAG index, refreshed when tickets change (**PDF** freshness).
 4. **Grounded AI** — generation for support Q&A uses **retrieved ticket context only**; no silent fallback to general world knowledge (**PDF**).
@@ -178,7 +178,7 @@ Business modules are **cohesive responsibility areas** for planning and traceabi
 
 ## 5. Ticket structure (conceptual)
 
-Field catalogs, enums, and Liquibase tables belong in **`data-model.md`**. This section defines the **architectural shape** of a ticket for design discussions.
+Field catalogs, enums, and Liquibase tables belong in [`data-model.md`](data-model.md) (agreed). This section defines the **architectural shape** of a ticket for design discussions.
 
 ### 5.1 Ticket aggregate (logical)
 
@@ -186,12 +186,12 @@ A **ticket** is the primary aggregate root for support work (**PDF**). Conceptua
 
 | Part | Description | PDF / Open |
 |------|-------------|------------|
-| **Identity** | Stable id used in UI, API, and RAG citations | **Open** (OQ-01, **Example** `TKT-1001`) |
+| **Identity** | Stable id used in UI, API, and RAG citations | **Agreed** — `TKT-{n}` ([`data-model.md`](data-model.md) §5.5, DEC-04) |
 | **Core metadata** | Title, description, priority, assignee | **PDF** (update list) |
 | **Lifecycle** | Status enum and transition history | **PDF** state machine |
 | **Timeline** | Ordered comments (agent notes) | **PDF** |
-| **Resolution narrative** | Text capturing how the issue was resolved | **PDF** ingestion source; field shape **Open** (OQ-10) |
-| **Taxonomy** | Category (for metadata and filters) | **PDF** metadata key; source **Open** (OQ-03) |
+| **Resolution narrative** | Text capturing how the issue was resolved | **PDF** ingestion source; `resolution_notes` ([`data-model.md`](data-model.md) §6.1, DEC-05) |
+| **Taxonomy** | Category (for metadata and filters) | **PDF** metadata key; optional enum ([`data-model.md`](data-model.md) §5.3, DEC-03) |
 | **Audit** | Created/updated timestamps | **Convention** for sorting (`rules/api-standards.md`) |
 
 ```mermaid
@@ -216,7 +216,7 @@ erDiagram
   }
 ```
 
-*Diagram is conceptual; column names and optionality are **Open** until `data-model.md` is agreed.*
+*Diagram is conceptual; physical columns and optionality → [`data-model.md`](data-model.md) §6.*
 
 ### 5.2 Status lifecycle (summary)
 
@@ -574,7 +574,7 @@ No secrets in the frontend bundle; LLM credentials stay server-side (**PDF** NFR
 - Schema changes via **Liquibase** (**Convention**); Hibernate `ddl-auto` validate/none.
 - **FR-08 / AC-CORE-09:** data survives restart.
 
-Identifiers, required fields, resolution notes → **`data-model.md`** (**Open**).
+Identifiers, required fields, resolution notes, indexes → [`data-model.md`](data-model.md) §6, §14.5, §16 (**agreed**).
 
 ### 13.2 Synchronization with vector index
 
@@ -609,7 +609,7 @@ Each **indexed unit** is a **chunk** of ticket knowledge with:
 | **Embedding vector** | Fixed dimension per chosen model (**Open** → `rag-ingestion.md`) |
 | **Chunk text** | Text segment passed to LLM at ask time (or reconstructable reference) |
 | **Metadata** | **PDF** keys: `ticketId`, `status`, `priority`, `assignee`, `category` |
-| **Technical keys** | Chunk id, optional ingest version — **Open** in `data-model.md` / `rag-ingestion.md` |
+| **Technical keys** | `chunkIndex`, `ingestedAt` — [`data-model.md`](data-model.md) §11.1; ingest version **Open** in `rag-ingestion.md` |
 
 ### 14.3 Operations
 
@@ -622,11 +622,11 @@ Each **indexed unit** is a **chunk** of ticket knowledge with:
 
 ### 14.4 Index and distance metric
 
-Vector index type (IVFFlat, HNSW, etc.) and distance metric (cosine vs inner product) → **Open**; must align with **similarity threshold** semantics in `rag-ingestion.md`.
+Vector index: default **HNSW** name/opclass in [`data-model.md`](data-model.md) §14.5; distance metric must align with **similarity threshold** semantics in `rag-ingestion.md`.
 
 ### 14.5 Schema ownership
 
-Vector tables and `pgvector` extension are versioned in **Liquibase** alongside ticket tables (**Convention**). Physical table names → `data-model.md` when agreed.
+Vector tables and `pgvector` / `pg_trgm` extensions are versioned in **Liquibase** alongside ticket tables (**Convention**). Physical tables and index names → [`data-model.md`](data-model.md) §14–§14.6.
 
 ### 14.6 Consistency model
 
@@ -862,15 +862,15 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 
 | ID | Topic | Owning spec |
 |----|-------|-------------|
-| OQ-01 / DEC-04 | Ticket id format | `data-model.md` |
-| OQ-02, OQ-03, OQ-10 / DEC-03, DEC-05, DEC-13 | Fields, category, resolution notes | `data-model.md` |
+| OQ-01 / DEC-04 | Ticket id format | [`data-model.md`](data-model.md) (agreed) |
+| OQ-02, OQ-03, OQ-10 / DEC-03, DEC-05, DEC-13 | Fields, category, resolution notes | [`data-model.md`](data-model.md) (agreed) |
 | OQ-04 / DEC-14 | REST details | `api-contract.md` |
 | OQ-05 / DEC-11 | Ask response schema | `rag-api-contract.md` |
 | OQ-06 / DEC-12 | Authentication | This file if in scope |
 | OQ-07 / DEC-09 | Store + embedding product | `rag-ingestion.md` + this file |
 | OQ-08 / DEC-10 | DB roles in test vs prod | `test-strategy.md` |
 | OQ-11, OQ-12 / DEC-02, DEC-06, DEC-07 | Transitions API and skipped hops | `state-machine.md`, `api-contract.md` |
-| OQ-14 / DEC-08 | Keyword search scope | `api-contract.md` |
+| OQ-14 / DEC-08 | Keyword search scope | [`data-model.md`](data-model.md) §15.2 (agreed); narrative in `api-contract.md` when written |
 | OQ-15 / DEC-01 | Re-ingest on close only | `rag-ingestion.md` |
 | — | Ingest sync vs async | `rag-ingestion.md` |
 | — | Metadata-filtered retrieval | Future spec / eval |
@@ -882,7 +882,7 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 | Spec | Contents |
 |------|----------|
 | [`requirements.md`](requirements.md) | PDF traceability, FEAT/AC, flows, OQ/DEC |
-| [`data-model.md`](data-model.md) | Entities, fields, Liquibase |
+| [`data-model.md`](data-model.md) | Entities, fields, Liquibase, indexes §14.5 |
 | [`api-contract.md`](api-contract.md) | Ticket/comment REST contracts |
 | [`state-machine.md`](state-machine.md) | Transitions, errors |
 | [`rag-ingestion.md`](rag-ingestion.md) | Chunk numbers, models, re-ingest execution |

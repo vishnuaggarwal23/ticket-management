@@ -17,7 +17,7 @@ Mark checklist items **Pass** / **Fail** / **N/A**. Failures are blocking for im
 
 ### When most of `spec/` does not exist yet
 
-Default **Ready for implementation?** → **no** for features that need missing contracts (`api-contract`, `data-model`, `state-machine`, `ui-flow`, `rag-api-contract`, etc.).
+Default **Ready for implementation?** → **no** for features that need missing contracts (`api-contract`, `state-machine`, `ui-flow`, `rag-api-contract`, `rag-ingestion`, etc.). **`data-model.md` is agreed** — ticket persistence may proceed; full HTTP surface still needs `api-contract.md` where payloads are narrative-only.
 
 You may still review **`requirements.md`** / partial **`architecture.md`** for PDF alignment and rule consistency. List **blocking missing files** explicitly in the output — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
 
@@ -29,9 +29,9 @@ Before judging content, **name every file** you used and its role. If a file is 
 
 | Role | Typical path | Use in this review |
 |------|----------------|-------------------|
-| Requirements | `spec/requirements.md` | PDF scope; **AC-CORE** / **FEAT**; **OQ** / **DEC** (§10); handoff map (§10.3); §8.7 demo script |
-| Architecture | `spec/architecture.md` | Business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks only if agreed in `rag-ingestion.md` |
-| Data model | `spec/data-model.md` | fields, ids, enums |
+| Requirements | [`spec/requirements.md`](../spec/requirements.md) | PDF scope; **AC-CORE** / **FEAT**; **OQ** / **DEC** (§10); handoff map (§10.3); §8.7 demo script |
+| Architecture | [`spec/architecture.md`](../spec/architecture.md) | Business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks only if agreed in `rag-ingestion.md` |
+| Data model | [`spec/data-model.md`](../spec/data-model.md) | entities, enums, DTOs §10, **indexes §14.5**, Liquibase order §14, **AC-DM-*** |
 | API contract | `spec/api-contract.md` | ticket HTTP payloads beyond `rules/api-standards.md` envelopes |
 | State machine | `spec/state-machine.md` | legal/illegal transitions |
 | RAG ingestion | `spec/rag-ingestion.md` | chunking, models, ingest mechanics (when written) |
@@ -59,9 +59,9 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] PDF requirements are not weakened (CRUD, comments, search/filter, backend validation, backend state machine, persistence, grounded ask + citations or no-match)
 - [ ] Project conventions (Boot 3, `/api/v1`, PgVector, JUnit, envelopes, PATCH) are **labeled** as conventions, **not** as PDF mandates
 - [ ] Open items remain in **Open questions** (or equivalent), not smuggled into requirements as decided facts
-- [ ] When reviewing `spec/requirements.md`: unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
+- [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
 - [ ] Child specs that resolve an **OQ-*** cite the matching **DEC-*** decision (or remain draft until user confirms)
-- [ ] New material in feature specs aligns with **`spec/requirements.md` §10.3** handoff (each OQ has a primary owning spec)
+- [ ] New material in feature specs aligns with **[`spec/requirements.md`](../spec/requirements.md) §10.3** handoff (each OQ has a primary owning spec)
 - [ ] Assessment acceptance mappable to **`AC-CORE-*`** (§8); feature detail mappable to **`AC-FEAT-*`** (§4.2) where applicable
 - [ ] No invented product features (auth, agents from ask, attachments, bulk ops, rerankers) unless explicitly in scope
 
@@ -83,7 +83,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] `architecture.md` ↔ `rag-ingestion.md` / `rag-api-contract.md` — no conflicting pipeline or API story
 - [ ] `ui-flow.md` ↔ API/RAG contracts — UI does not require impossible API shapes
 
-### When `spec/architecture.md` is in scope (expanded checklist)
+### When [`spec/architecture.md`](../spec/architecture.md) is in scope (expanded checklist)
 
 Use `rules/documentation.md` section map for headings. Mark **N/A** for sections not yet written.
 
@@ -98,6 +98,14 @@ Use `rules/documentation.md` section map for headings. Mark **N/A** for sections
 - [ ] **Chunking** (§16): strategy **justified** for ticket text; numeric size/overlap deferred to `rag-ingestion.md` unless explicitly agreed
 - [ ] **Embedding** (§16): local vs cloud tradeoffs documented; same model at ingest/query; model id not invented without `rag-ingestion.md`
 - [ ] **Open questions** (§21) align with `requirements.md` §10 OQ/DEC — no decisions closed only in architecture
+
+### When [`spec/data-model.md`](../spec/data-model.md) is in scope
+
+- [ ] **Status** is **agreed** (or draft decisions explicitly marked **Proposed**, not mixed with agreed DEC rows in `requirements.md` §10.2)
+- [ ] **DEC-03, 04, 05, 07, 08, 13** match `requirements.md` §10.2 decision text
+- [ ] **§14.5 index catalog** names every required BTREE, `pg_trgm` GIN, and vector HNSW index; §14.6 SQL matches §14.5
+- [ ] RAG metadata §11 uses only PDF keys + agreed technical keys (`chunkIndex`, `ingestedAt`)
+- [ ] No field catalog duplicated inside `architecture.md` §5 that contradicts §6/§10
 
 ---
 
@@ -197,7 +205,7 @@ If unsure whether something is a convention or a hallucination, mark **needs use
 
 ### Quality
 
-- [ ] Every acceptance criterion maps to a test theme in `rules/testing.md` and, where present, to **`AC-CORE-*`** or **`AC-FEAT-*`** in `spec/requirements.md`
+- [ ] Every acceptance criterion maps to a test theme in `rules/testing.md` and, where present, to **`AC-CORE-*`** or **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md)
 - [ ] Positive **and** negative / empty outcomes for implemented capabilities
 - [ ] RAG: sources, metadata, re-ingest, grounding, citations, no-match; configurable K/threshold **without** numeric defaults unless agreed
 - [ ] When `architecture.md` is primary: §16 chunking + embedding justification present for **AC-CORE-19** / FEAT-20
@@ -219,7 +227,7 @@ Use this order. Every finding that cites a problem must include **`spec/<file>.m
 8. **Gaps / ambiguities** — must resolve before coding
 9. **Suggested edits** — brief; do not rewrite whole specs unless asked
 10. **Open questions for the user** — do not answer these yourself
-11. **Demo readiness (optional)** — can `spec/requirements.md` §8.7 demo script be executed for the scope under review?
+11. **Demo readiness (optional)** — can [`spec/requirements.md`](../spec/requirements.md) §8.7 demo script be executed for the scope under review?
 12. **Ready for implementation?** yes / no — if no, list blocking questions (include unresolved **DEC-***)
 
 Confirm with the user before applying spec edits.
@@ -232,5 +240,6 @@ Confirm with the user before applying spec edits.
 |------|------|
 | 2026-09-24 | Initial spec review command: consistency, hallucinations, readiness gate. |
 | 2026-10-04 | Expanded for `requirements.md` OQ/DEC, architecture §16, demo script §8.7, AC mapping. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md`. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md). |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | `data-model.md` agreed gate; index catalog checklist §14.5. |

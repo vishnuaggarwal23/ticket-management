@@ -76,7 +76,7 @@ spec/
 └── test-strategy.md
 ```
 
-`architecture.md` is later called out specifically for documenting and justifying **chunking strategy** and **embedding model choice**, and (in this repo) also holds the **system design**: business capabilities, ticket/RAG structure, technology layout, APIs, and vector-store role. Numeric chunking and model ids remain in `rag-ingestion.md` when agreed.
+[`spec/architecture.md`](../spec/architecture.md) is later called out specifically for documenting and justifying **chunking strategy** and **embedding model choice**, and (in this repo) also holds the **system design**: business capabilities, ticket/RAG structure, technology layout, APIs, and vector-store role. Entity tables, enums, and DB indexes are in [`spec/data-model.md`](../spec/data-model.md) (agreed). Numeric chunking and model ids remain in `rag-ingestion.md` when agreed.
 
 ---
 

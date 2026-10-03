@@ -2,9 +2,9 @@
 
 Cursor attaches this file via [`.cursor/rules/api-standards.mdc`](../.cursor/rules/api-standards.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-JSON REST APIs for tickets and grounded Q&A. **Resource field catalogs, required payload fields, and ask answer/citation property names** still live in `spec/api-contract.md` and `spec/rag-api-contract.md` once those files exist and are agreed. Those specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
+JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16); **HTTP-only** nuances (optional list projections, error copy) may still be refined in `spec/api-contract.md`. **Ask** `data` field names remain in `spec/rag-api-contract.md`. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
 
-Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: `spec/architecture.md` §10–11.
+Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: [`spec/architecture.md`](../spec/architecture.md) §10–11.
 
 ## Assessment vs project conventions vs open decisions
 
@@ -28,11 +28,20 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 - Tests follow `rules/testing.md` (JUnit 5, Mockito, PostgreSQL Testcontainers)
 - Ollama, PgVector, and model settings are **configuration**, not public API fields
 
-**Open — resolve in API / RAG API / data-model / state-machine specs (do not assume here):**
+**Agreed — [`spec/data-model.md`](../spec/data-model.md) (DEC-03, 04, 05, 07, 08, 13; do not contradict in controllers):**
 
-- Ticket **identifier format** (`TKT-1001` is an example in a sample question only) and whether `category` / resolution notes are API fields
-- Create/update **required fields** and how a **status transition** is represented in the body (field vs dedicated sub-resource) — HTTP method for field updates is **PATCH** (below)
+- Ticket **id:** public string `TKT-{n}` (`n` from `ticket_number_seq`, start 1001); path param `{id}` uses this value
+- **Create:** `title` required (`@NotBlank`); `description`, `assignee`, `category`, `priority` optional; `priority` defaults `MEDIUM`; `description` defaults empty; **`status` not** on create — server sets `OPEN` (DEC-07)
+- **JSON properties:** camelCase — `resolutionNotes`, `createdAt`, `updatedAt`, `comments`; comment create field **`body`**; enums uppercase (`OPEN`, `HIGH`, `PAYMENTS`, …)
+- **Priority:** `LOW` | `MEDIUM` | `HIGH` | `CRITICAL`
+- **Category (optional):** `PAYMENTS` | `SHIPMENT` | `BILLING` | `LOGIN` | `OTHER`
+- **Keyword `q`:** case-insensitive match on **`title` and `description` only** (DEC-08); not comments
+- **Status transition:** PATCH `status` with **target** enum (convention until `state-machine.md` / `api-contract.md` refine); illegal → **409** `ILLEGAL_TRANSITION`
+
+**Open — resolve in API / RAG API / state-machine specs (do not assume here):**
+
 - Ask **business** JSON inside `data` (answer text, citation structure, no-match representation). No confidence field unless a spec adds it
+- Dedicated transition sub-resource vs PATCH-only (**DEC-06**)
 - Authentication / authorization / roles (not in the assessment)
 - Whether OpenAPI is produced (optional; if added it MUST match these rules and the specs)
 
@@ -50,7 +59,7 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 | `PUT` | Do **not** use for tickets (would imply full replace). |
 
 - `Content-Type: application/json` and `Accept: application/json` for request/response bodies. Charset UTF-8.
-- JSON property names: **camelCase**. Timestamps: ISO-8601 UTC (`Instant`). Enums: uppercase strings matching the domain (`OPEN`, `IN_PROGRESS`, …) once `spec/data-model.md` agrees.
+- JSON property names: **camelCase**. Timestamps: ISO-8601 UTC (`Instant`). Enums: uppercase strings matching [`spec/data-model.md`](../spec/data-model.md) §5 (`OPEN`, `IN_PROGRESS`, `MEDIUM`, `PAYMENTS`, …).
 - Path parameters identify a single resource. Query parameters filter, paginate, and sort **collections only**.
 - Return **DTO records**, never JPA entities. Validate at the boundary (`@Valid`).
 - `Location` header on **201 Created** pointing at the new resource URL.
@@ -195,10 +204,11 @@ Only these `sort` properties are valid on `GET /api/v1/tickets` (reject others w
 
 Default when omitted: `createdAt,desc`. Example: `GET /api/v1/tickets?sort=priority,asc&status=OPEN`.
 
-### Keyword search `q` (until `api-contract.md` revises)
+### Keyword search `q` (agreed DEC-08 — [`spec/data-model.md`](../spec/data-model.md) §15.2)
 
 - Assessment capability: **search tickets by keyword**.
-- Project default: `q` matches **title and description** (case-insensitive contains). Extend to comments only if `api-contract.md` says so.
+- **`q` matches `title` and `description`** (case-insensitive contains / `ILIKE`). Comments are **not** in scope unless a future spec revises DEC-08.
+- Persistence uses `pg_trgm` GIN indexes per [`spec/data-model.md`](../spec/data-model.md) §14.5 (`idx_ticket_title_trgm`, `idx_ticket_description_trgm`).
 - Blank or missing `q` = no keyword filter (still allow `status` filter).
 - Multiple words: treat as a single phrase unless the contract defines token AND/OR.
 
@@ -214,9 +224,9 @@ Default when omitted: `createdAt,desc`. Example: `GET /api/v1/tickets?sort=prior
 - **Status change:** include a `status` field (or name agreed in `state-machine.md` / `api-contract.md`) with the **target** enum value. Service runs the domain state machine; illegal → **409** `ILLEGAL_TRANSITION`.
 - Do not use a separate PUT or `/transition` URL unless a future spec replaces this convention.
 
-### Illustrative ticket payloads (envelope + `data` — field rules in `api-contract.md`)
+### Illustrative ticket payloads (envelope + `data` — validation in [`spec/data-model.md`](../spec/data-model.md) §16)
 
-Placeholders only. Replace validation (`@NotBlank`, `@Size`, enums) when `spec/api-contract.md` agrees.
+Examples use agreed field names; `spec/api-contract.md` may add narrative only.
 
 **Create** — `POST /api/v1/tickets` → **201** + `Location: /api/v1/tickets/{id}`
 
@@ -234,11 +244,13 @@ Placeholders only. Replace validation (`@NotBlank`, `@Size`, enums) when `spec/a
 ```json
 {
   "data": {
-    "id": "…",
+    "id": "TKT-1001",
     "title": "Payment failed at checkout",
     "description": "Customer reports card declined",
     "priority": "HIGH",
     "assignee": "agent@example.com",
+    "category": "PAYMENTS",
+    "resolutionNotes": null,
     "status": "OPEN",
     "comments": [],
     "createdAt": "2026-10-03T12:00:00Z",
@@ -274,9 +286,15 @@ Placeholders only. Replace validation (`@NotBlank`, `@Size`, enums) when `spec/a
 
 **Detail with comments** — `GET /api/v1/tickets/{id}` → **200** (`comments` array in `data`; exact comment shape in contract).
 
-### Payload fields still open
+### Payload fields — source of truth
 
-Until `spec/api-contract.md` + `spec/data-model.md` agree, rules **do not** define: which create fields are **required**, priority **enum** values, assignee type (string vs id), ticket `id` format, or comment field name (`body` vs `text`). **Do not invent them in controllers** — stop and confirm.
+| Topic | Spec |
+|-------|------|
+| Columns, enums, sizes, DB indexes | [`spec/data-model.md`](../spec/data-model.md) §6, §14.5, §16 |
+| REST request/response records | [`spec/data-model.md`](../spec/data-model.md) §10; refine in `spec/api-contract.md` when present |
+| Ask `data` JSON | `spec/rag-api-contract.md` |
+
+Do not invent fields beyond these specs. **Assignee** is a nullable string (email-like), not a user FK.
 
 ## RAG API
 
@@ -336,7 +354,7 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 ## Do not
 
 - Do not treat `/api/v1`, PATCH, 409, or these envelopes as PDF requirements.
-- Do not silently answer open questions in `spec/requirements.md` — use **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement unresolved **DEC-*** as fixed API behaviour (id format, category, ask `data` fields, etc.).
+- Do not silently answer open questions in [`spec/requirements.md`](../spec/requirements.md) — use **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement still-open **DEC-*** as fixed behaviour (**DEC-01, 02, 06, 09–12, 14, 15**, ask `data` fields, etc.). **DEC-03, 04, 05, 07, 08, 13** are agreed via [`spec/data-model.md`](../spec/data-model.md).
 - Do not prescribe Spring Security, API keys, or multi-tenancy.
 - Do not return persistence entities or a second JSON error shape from one controller.
 - Do not use PUT, unversioned `/api/tickets`, or cursor pagination unless a spec revises this file.
@@ -349,6 +367,7 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 |------|------|
 | 2026-09-24 | Initial REST conventions: envelopes, `/api/v1`, list params, ticket and ask capabilities. |
 | 2026-10-03 | Aligned with approved stack; AI and vector settings as configuration, not public API fields. |
-| 2026-10-04 | SDD expansion: assessment vs convention vs open decisions; `spec/requirements.md` §10 handoff. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md` API map. |
+| 2026-10-04 | SDD expansion: assessment vs convention vs open decisions; [`spec/requirements.md`](../spec/requirements.md) §10 handoff. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) API map. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Locked ticket id, enums, create/PATCH fields, `q` scope from agreed [`spec/data-model.md`](../spec/data-model.md); trgm index pointer §14.5. |

@@ -8,8 +8,8 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows 
 
 | Read first | Purpose |
 |------------|---------|
-| `spec/requirements.md` | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7** until `ui-flow.md` is agreed |
-| `spec/architecture.md` | UI functional areas and API usage (§12); client communication (§10) |
+| [`spec/requirements.md`](../spec/requirements.md) | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7** until `ui-flow.md` is agreed |
+| [`spec/architecture.md`](../spec/architecture.md) | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
 | `spec/ui-flow.md` | Screens and navigation (when agreed) |
 | `spec/rag-api-contract.md` | Citation / no-match fields inside ask `data` |
@@ -36,10 +36,15 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 - Call versioned ticket APIs and envelopes from `rules/api-standards.md` (`/api/v1`, `{ data }`, `{ error }`, list `meta`)
 - Preserve `POST /api/ai/ask` with `{ "question": "..." }` (also `/api/v1/ai/ask`)
 
-**Open — resolve via `spec/requirements.md` §10 (OQ/DEC) and `spec/ui-flow.md` / contracts before inventing UI (do not assume):**
+**Agreed data shape — [`spec/data-model.md`](../spec/data-model.md) (types in API client):**
+
+- Ticket **id** display/link: `TKT-{n}` strings from API (DEC-04)
+- Optional **category** enum; optional **resolutionNotes** on detail/edit (DEC-03, DEC-05)
+- Create: **title** required; priority/assignee/category optional; no status on create form (DEC-07, DEC-13)
+
+**Open — resolve via `spec/ui-flow.md` / contracts before inventing UI layout (do not assume):**
 
 - Screen layout, navigation, how a transition is chosen, how ask is laid out
-- Ticket ID format, `category`, resolution-notes as form fields
 - CSS framework, component library, router, client global store
 - Exact ask `data` field names until `spec/rag-api-contract.md`
 
@@ -164,5 +169,6 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 |------|------|
 | 2026-10-03 | Initial React + Vite + TypeScript UI conventions and ticket/ask display rules. |
 | 2026-10-04 | SDD expansion: PDF vs convention; links to `spec/ui-flow.md` and API client patterns. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md` §12. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §12. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Ticket id, category, resolutionNotes, create requiredness from agreed [`spec/data-model.md`](../spec/data-model.md). |

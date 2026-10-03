@@ -6,7 +6,7 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 
 | Read first | Purpose |
 |------------|---------|
-| `spec/architecture.md` | RAG pipeline (§15), vector DB (§14), knowledge/chunking/embedding **justification** (§16); business RAG modules (§4, §8) |
+| [`spec/architecture.md`](../spec/architecture.md) | RAG pipeline (§15), vector DB (§14), knowledge/chunking/embedding **justification** (§16); business RAG modules (§4, §8) |
 | `rules/api-standards.md` | Ask HTTP path, envelopes, 200 no-match vs 400 validation |
 | `rules/java-springboot.md` | `rag/` package, `@ConfigurationProperties`, no magic numbers in Java |
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
@@ -24,8 +24,8 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 - Natural-language Q&A over support-ticket history, grounded **only** in ticket data the system has (not general model knowledge for support questions).
 - Cite the **ticket ID(s)** actually used; if nothing relevant is retrieved, say so explicitly (**no relevant tickets found**) — do not fabricate tickets, facts, or citations.
 - Ingest **description, comments, and resolution notes** into searchable knowledge.
-- Attach metadata: `ticketId`, `status`, `priority`, `assignee`, `category` (exact field **shapes** wait on `spec/data-model.md`).
-- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale. PDF p.6 acceptance wording emphasises **updated** only — resolve **DEC-01** in `spec/rag-ingestion.md` with `spec/requirements.md` **§11.1** before treating close-only triggers as out of scope.
+- Attach metadata: `ticketId`, `status`, `priority`, `assignee`, `category` — shapes in [`spec/data-model.md`](../spec/data-model.md) §11 (`RagChunkMetadata` / JSONB on `ticket_vector_chunk`).
+- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale. PDF p.6 acceptance wording emphasises **updated** only — resolve **DEC-01** in `spec/rag-ingestion.md` with [`spec/requirements.md`](../spec/requirements.md) **§11.1** before treating close-only triggers as out of scope.
 - **top-K** and **similarity threshold** must be **configurable**, not hardcoded. The PDF does **not** give numeric values.
 - Document chunking strategy and embedding-model tradeoffs in architecture / RAG ingestion **specs** (justification is required; a specific algorithm is **not** named by the PDF).
 - **Single retrieve → generate** — not an agent: no tool chaining, ticket creation, or notifications from the ask path.
@@ -39,7 +39,9 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 - Vector table / extension / column **schema** goes through **Liquibase**, consistent with Java/Spring standards.
 - Default tests follow `rules/testing.md` (JUnit 5, Mockito doubles for embed/generate, PostgreSQL Testcontainers). **No CI** in this milestone.
 
-**Open — do not assume, invent, or lock in these rules.** Record and agree in `spec/rag-ingestion.md` (models, chunking, ingest mechanics), `spec/rag-api-contract.md` (ask `data` fields), `spec/data-model.md` (field shapes), and evaluation strategy (quality scores) **before** implementing those details:
+**Agreed relational / metadata shape — [`spec/data-model.md`](../spec/data-model.md):** tables `ticket`, `ticket_comment`, `ticket_vector_chunk`; resolution text column `resolution_notes`; ingest includes description, comments, resolution notes; chunk row metadata keys §11.1; re-ingest deletes/replaces rows per ticket (§8.4).
+
+**Open — do not assume, invent, or lock in these rules.** Record and agree in `spec/rag-ingestion.md` (models, chunking, ingest mechanics), `spec/rag-api-contract.md` (ask `data` fields), and evaluation strategy (quality scores) **before** implementing those details:
 
 - Embedding **model** (name/id), vector **dimension**, generation **model**
 - Whether ingest and query always share one embedding model (they **must** stay compatible once a choice is agreed)
@@ -56,7 +58,7 @@ Do not assume **versions** of Spring AI, PostgreSQL, PgVector, Ollama, or models
 
 ## PDF guidance slots (conventions — values in specs)
 
-Record the **chosen** approach in `spec/rag-ingestion.md` (and justify tradeoffs in `spec/architecture.md`). Until agreed, do not hardcode in application code.
+Record the **chosen** approach in `spec/rag-ingestion.md` (and justify tradeoffs in [`spec/architecture.md`](../spec/architecture.md)). Until agreed, do not hardcode in application code.
 
 ### Chunking convention (PDF: paragraph vs fixed-size vs semantic)
 
@@ -122,7 +124,7 @@ Tickets → knowledge documents → chunk → embeddings → PgVector
 
 This is **retrieve then generate** once. Do not add agents, multi-step tool orchestration, graph RAG, hybrid search, or reranking unless a later **agreed spec** says so.
 
-Pick the chunking row from **PDF guidance slots** in `spec/rag-ingestion.md` before implementing split logic. **Why** (ticket-shaped text, paragraph vs fixed vs semantic) belongs in `spec/architecture.md` §16; **numbers** belong in `spec/rag-ingestion.md`.
+Pick the chunking row from **PDF guidance slots** in `spec/rag-ingestion.md` before implementing split logic. **Why** (ticket-shaped text, paragraph vs fixed vs semantic) belongs in [`spec/architecture.md`](../spec/architecture.md) §16; **numbers** belong in `spec/rag-ingestion.md`.
 
 ## Ingestion and storage
 
@@ -131,7 +133,7 @@ Pick the chunking row from **PDF guidance slots** in `spec/rag-ingestion.md` bef
 - Persist derived embeddings in **PgVector**. Ticket rows remain the system of record. Vectors must be rebuildable from tickets.
 - On **update** or **close**, refresh that ticket’s derived data so stale vectors are not the only index. **How** (sync vs async, delete vs version) is **open** — `spec/rag-ingestion.md`, not this file.
 - Use Spring AI for embed / store / search; keep the provider (Ollama first) in **configuration**.
-- Liquibase owns vector extension/table/column definitions. Column **dimension** must match the agreed embedding model **after** that model is agreed — do not invent a dimension here.
+- Liquibase owns extensions (`vector`, `pg_trgm` for ticket search per data-model), `ticket_vector_chunk`, and indexes ([`spec/data-model.md`](../spec/data-model.md) §14.5–14.6). Vector **dimension** and HNSW **opclass** must match `spec/rag-ingestion.md` — do not invent a dimension here.
 
 Do **not** implement a chunking strategy, size, or overlap from this file.
 
@@ -185,5 +187,6 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 | 2026-09-24 | Initial RAG ingest, PgVector, retrieve-then-generate ask, and grounding guidelines. |
 | 2026-10-03 | Aligned with approved stack; numeric chunk/K/model settings deferred to `spec/rag-ingestion.md`. |
 | 2026-10-04 | SDD expansion: OQ/DEC pointers; cross-links to architecture RAG sections and evaluation strategy. |
-| 2026-10-04 | Synced with expanded `spec/requirements.md` and `spec/architecture.md` §13–16. |
+| 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §13–16. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Metadata/table/index pointers to agreed [`spec/data-model.md`](../spec/data-model.md) §8, §11, §14.5. |

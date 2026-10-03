@@ -11,14 +11,14 @@ Use these during implementation and review. **Edit `rules/` and `commands/`**; `
 | Topic | Rule | Command(s) |
 |-------|------|------------|
 | Backend Java / Spring | `rules/java-springboot.md` | `commands/review-code.md` |
-| REST envelopes, `/api/v1`, list params | `rules/api-standards.md` | `commands/review-code.md` |
+| REST envelopes, `/api/v1`, list params, agreed ticket JSON fields | `rules/api-standards.md` (+ [`spec/data-model.md`](../spec/data-model.md)) | `commands/review-code.md` |
 | Tests (backend only) | `rules/testing.md` | `commands/generate-tests.md`, `commands/review-code.md` |
 | RAG ingest / ask / grounding | `rules/rag-vector-store.md` | `commands/review-rag-output.md`, `commands/review-code.md` |
 | React / Vite / TypeScript UI | `rules/frontend.md` | `commands/review-frontend.md` |
 | Spec quality before coding | `rules/documentation.md` (architecture § map) | `commands/review-spec.md` |
 | This file (docs layout) | `rules/documentation.md` | — |
 
-Assessment PDF (`docs/Assessments.pdf`, may be gitignored): extract requirements into `spec/requirements.md`. **Clones without the PDF** rely on `spec/` + these rules.
+Assessment PDF (`docs/Assessments.pdf`, may be gitignored): extract requirements into [`spec/requirements.md`](../spec/requirements.md). **Clones without the PDF** rely on `spec/` + these rules.
 
 ### When to run which command
 
@@ -38,7 +38,7 @@ Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks
 
 | Artefact | Location |
 |----------|----------|
-| Assessment (authoritative assignment) | `docs/Assessments.pdf` (gitignored); restated in `spec/requirements.md` |
+| Assessment (authoritative assignment) | `docs/Assessments.pdf` (gitignored); restated in [`spec/requirements.md`](../spec/requirements.md) |
 | Implementable specs | `spec/` (see list below) |
 | Human docs / notes | `docs/` (e.g. `docs/assessment-brief.md`, `docs/prompt-history.md`, `docs/ai-mistakes.md`) |
 | Prompt / session history | `.specstory/history/` |
@@ -50,13 +50,13 @@ Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks
 
 Maintain detailed specs as work proceeds:
 
-`requirements.md`, `architecture.md`, `data-model.md`, `api-contract.md`, `state-machine.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md`.
+[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), `api-contract.md`, `state-machine.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md` (latter paths under `spec/` when added).
 
 | Spec | What it must nail down (so rules do not guess) |
 |------|-----------------------------------------------|
-| `requirements.md` | PDF hub: **FR** / **FEAT-***, **AC-CORE-*** (§8) and **AC-FEAT-*** (§4.2); **OQ-*** / **DEC-*** register and spec handoff (§10); precedence PDF → requirements → agreed specs → rules (§2.4); deterministic vs probabilistic proof (§2.5); demo script (§8.7); glossary (§12). Detail contracts live in child specs (§13). |
-| `architecture.md` | System design: business vs functional modules, ticket aggregate shape, tech/deployment, **communication** (sync REST), **API map**, **PgVector** index role, RAG pipeline; **chunking** and **embedding tradeoffs** (PDF NFR-07 / AC-CORE-19). Numeric chunk/K/model → `rag-ingestion.md` |
-| `data-model.md` | Ticket id format, fields, comments, resolution notes, category |
+| [`requirements.md`](../spec/requirements.md) | PDF hub: **FR** / **FEAT-***, **AC-CORE-*** (§8) and **AC-FEAT-*** (§4.2); **OQ-*** / **DEC-*** register and spec handoff (§10); precedence PDF → requirements → agreed specs → rules (§2.4); deterministic vs probabilistic proof (§2.5); demo script (§8.7); glossary (§12). Detail contracts live in child specs (§13). |
+| [`architecture.md`](../spec/architecture.md) | System design: business vs functional modules, ticket aggregate shape, tech/deployment, **communication** (sync REST), **API map**, **PgVector** index role, RAG pipeline; **chunking** and **embedding tradeoffs** (PDF NFR-07 / AC-CORE-19). Numeric chunk/K/model → `rag-ingestion.md` |
+| [`data-model.md`](../spec/data-model.md) | Entities, Liquibase tables, enums, RAG chunk metadata, DTO catalogs, **indexes §14.5**; **DEC-03/04/05/07/08/13** |
 | `api-contract.md` | Ticket/comment payloads **inside** `data` (envelopes are in `rules/api-standards.md`) |
 | `state-machine.md` | Legal/illegal transitions (including skipped steps if any) |
 | `rag-ingestion.md` | Chunking **values**, models, dimensions, ingest timing, property keys |
@@ -67,7 +67,7 @@ Maintain detailed specs as work proceeds:
 
 **Agreed spec:** status `agreed` (or equivalent) in the spec header, or explicit user confirmation in chat. Until then, treat as **draft** — implement only what rules already lock (envelopes, stack conventions) and stop for open payloads.
 
-### `spec/requirements.md` structure (for reviewers)
+### [`spec/requirements.md`](../spec/requirements.md) structure (for reviewers)
 
 Use this map when running `commands/review-spec.md` or tracing tests — do not duplicate the full text in rules.
 
@@ -84,7 +84,7 @@ Use this map when running `commands/review-spec.md` or tracing tests — do not 
 
 Closing an **OQ** requires updating the owning child spec, recording **Decision** in §10.2, and user confirmation — see §10.3.
 
-### `spec/architecture.md` structure (for reviewers)
+### [`spec/architecture.md`](../spec/architecture.md) structure (for reviewers)
 
 Use when running `commands/review-spec.md` or tracing implementation to layers — do not duplicate the full text in rules.
 
@@ -105,12 +105,23 @@ Use when running `commands/review-spec.md` or tracing implementation to layers �
 
 Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 table). Architecture **labels** PDF vs **Convention** vs **Open**.
 
+### [`spec/data-model.md`](../spec/data-model.md) structure (for reviewers)
+
+| Section | Use |
+|---------|-----|
+| §4–7 | Domain overview, enums, relational entities, associations |
+| §8–9 | Vector/`ticket_vector_chunk`, logical RAG pipeline types |
+| §10–12 | API DTOs, `RagChunkMetadata`, embeddables |
+| §13–15 | Data flows, Liquibase DDL + **§14.5 index catalog**, search SQL |
+| §16–17 | Validation rules; **agreed DEC** table (sync with `requirements.md` §10.2) |
+| §18 | **AC-DM-*** acceptance checks |
+
 ## Writing bar
 
 - Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions, revision history.
 - **`rules/*.md` and `commands/*.md`** — keep a short **Revision history** table at the end when content changes (same `Date | Note` format as `spec/`).
 - Prefer checklists; link acceptance criteria to backend tests or `commands/review-frontend.md` for UI.
-- Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in `spec/requirements.md` (§8–§9) when proposing or reviewing tests.
+- Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md) (§8–§9) when proposing or reviewing tests.
 - Distinguish **PDF requirement** vs **project convention** (see any `rules/*.md` “Assessment vs conventions” section).
 - Do not invent features the PDF does not support.
 
@@ -149,5 +160,9 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-09-24 | Initial documentation layout, spec set index, rules/commands steering, and writing bar. |
 | 2026-10-03 | Stack and workflow alignment; graphify and token-optimisation notes. |
 | 2026-10-04 | Expanded `requirements.md` / `architecture.md` reviewer maps; OQ/DEC and AC traceability for tests. |
-| 2026-10-04 | Governance pass with expanded `spec/requirements.md` and `spec/architecture.md`. |
+| 2026-10-04 | Governance pass with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md). |
 | 2026-10-04 | Added revision history section; documented history expectation for `rules/` and `commands/`. |
+| 2026-10-04 | `data-model.md` reviewer map; spec index updated for agreed data model. |
+| 2026-10-04 | Reviewer map: index catalog §14.5 in `data-model.md`. |
+| 2026-10-04 | Rules/commands synced with agreed data model (fields, indexes, DEC split). |
+| 2026-10-04 | Markdown links to existing `spec/requirements.md`, `architecture.md`, `data-model.md` in all `rules/` and `commands/` files. |
