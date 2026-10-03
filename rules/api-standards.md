@@ -36,12 +36,12 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 - **Priority:** `LOW` | `MEDIUM` | `HIGH` | `CRITICAL`
 - **Category (optional):** `PAYMENTS` | `SHIPMENT` | `BILLING` | `LOGIN` | `OTHER`
 - **Keyword `q`:** case-insensitive match on **`title` and `description` only** (DEC-08); not comments
-- **Status transition:** PATCH `status` with **target** enum (convention until `state-machine.md` / `api-contract.md` refine); illegal → **409** `ILLEGAL_TRANSITION`
+- **Status transition:** PATCH `status` with **target** enum per [`spec/state-machine.md`](../spec/state-machine.md) §6.1 (**DEC-06** may add a dedicated sub-resource later); illegal → **409** `ILLEGAL_TRANSITION`
 
-**Open — resolve in API / RAG API / state-machine specs when those files exist (do not assume here):**
+**Open — resolve in API / RAG API specs when those files exist (do not assume here):**
 
 - Ask **business** JSON inside `data` (answer text, citation structure, no-match representation). No confidence field unless a spec adds it
-- Dedicated transition sub-resource vs PATCH-only (**DEC-06**)
+- Dedicated transition sub-resource vs PATCH-only (**DEC-06** — interim PATCH documented in `state-machine.md`)
 - Authentication / authorization / roles (not in the assessment)
 - Whether OpenAPI is produced (optional; if added it MUST match these rules and the specs)
 
@@ -372,3 +372,4 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Locked ticket id, enums, create/PATCH fields, `q` scope from agreed [`spec/data-model.md`](../spec/data-model.md); trgm index pointer §14.5. |
 | 2026-10-04 | Ticket HTTP map: [`spec/architecture.md`](../spec/architecture.md) §11 until `api-contract.md` added. |
+| 2026-10-04 | Status transitions point to draft [`spec/state-machine.md`](../spec/state-machine.md) §6.1. |

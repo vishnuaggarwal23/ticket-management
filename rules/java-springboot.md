@@ -9,7 +9,7 @@ Backend coding standards for the support ticket management application.
 | Business/functional modules, layering map | [`spec/architecture.md`](../spec/architecture.md) §4, §8–9 |
 | HTTP paths, envelopes, list params | `rules/api-standards.md`; API map [`spec/architecture.md`](../spec/architecture.md) §11 |
 | Ticket/comment **field** catalogs | [`spec/data-model.md`](../spec/data-model.md) (agreed); HTTP narrative in `spec/api-contract.md` when added |
-| State machine rules | [`spec/requirements.md`](../spec/requirements.md) FEAT-11 / §2.6 until `spec/state-machine.md` |
+| State machine rules | [`spec/state-machine.md`](../spec/state-machine.md) (draft); PDF hub [`spec/requirements.md`](../spec/requirements.md) FEAT-11 |
 | RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §14–16; numeric tuning in `spec/rag-ingestion.md` when added |
 | Tests | `rules/testing.md`, `commands/generate-tests.md` |
 | UI | `rules/frontend.md` |
@@ -156,28 +156,7 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 
 ## Domain (state machine)
 
-Authoritative transition table: **`spec/state-machine.md`** once agreed. Until then, implement **only** what the assessment PDF states (below). Do not allow skipped steps (e.g. `OPEN` → `RESOLVED`) unless `state-machine.md` explicitly allows them.
-
-### PDF state machine (minimum until `spec/state-machine.md`)
-
-```
-OPEN ──► IN_PROGRESS ──► RESOLVED ──► CLOSED
-
-OPEN ───────────────► CANCELLED
-IN_PROGRESS ────────► CANCELLED
-```
-
-| From | To | Allowed? |
-|------|-----|----------|
-| `OPEN` | `IN_PROGRESS` | Yes |
-| `IN_PROGRESS` | `RESOLVED` | Yes |
-| `RESOLVED` | `CLOSED` | Yes |
-| `OPEN` | `CANCELLED` | Yes |
-| `IN_PROGRESS` | `CANCELLED` | Yes |
-| `CLOSED` | `OPEN` | **No** (PDF example) |
-| `RESOLVED` | `OPEN` | **No** (PDF example) |
-| `CANCELLED` | `OPEN` | **No** (PDF example) |
-| Any other pair | | **No** until `state-machine.md` says otherwise |
+Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machine.md)** — legal edges **T1–T5**, forbidden reopen **X1–X3**, and full invalid matrix under default **DEC-02 (A)**. Do not allow skipped hops (e.g. `OPEN` → `RESOLVED`) unless **DEC-02** is agreed to option (B) and the spec is updated.
 
 - `TicketStatus` is an enum. Transition rules live in a dedicated type (e.g. `TicketStatusMachine`) with **no** Spring imports.
 - Invalid transitions throw a domain exception; service must not persist the illegal status.
@@ -246,3 +225,4 @@ IN_PROGRESS ────────► CANCELLED
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Entities, enums, tables, and Liquibase index catalog aligned with agreed [`spec/data-model.md`](../spec/data-model.md). |
 | 2026-10-04 | State machine interim: requirements FEAT-11; child specs only when user adds files. |
+| 2026-10-04 | Domain SM defers to draft [`spec/state-machine.md`](../spec/state-machine.md); removed duplicate edge table. |

@@ -184,7 +184,7 @@ Unit tests MUST cover important **positive and negative** paths of deterministic
 
 | Area | Positive | Negative |
 |------|----------|----------|
-| State machine | Legal transitions (`OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`; `OPEN`/`IN_PROGRESS` → `CANCELLED` per `spec/state-machine.md`) | Illegal transitions (assessment examples: `CLOSED` → `OPEN`, `RESOLVED` → `OPEN`, `CANCELLED` → `OPEN`, and every other disallowed pair once the spec lists them) |
+| State machine | Legal edges **T1–T5** per [`spec/state-machine.md`](../spec/state-machine.md) §5.1 | **X1–X3** and every **Invalid** pair in §5.4 master table (parameterized) |
 | Ticket fields | Create/update with valid title, description, priority, assignee | Missing/blank/too-long fields per agreed validation; reject without persisting |
 | Comments | Add comment on an allowable ticket | Reject empty comment / comment on a state the spec forbids |
 | Search / filter | Keyword and status filter return matching tickets | No match → empty result, not an error; invalid status filter → client error |
@@ -338,3 +338,4 @@ State that substitution in `spec/test-strategy.md` when written.
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Field/search assertions use agreed [`spec/data-model.md`](../spec/data-model.md); Liquibase index catalog §14.5 / AC-DM-08. |
 | 2026-10-04 | AC traceability via [`spec/requirements.md`](../spec/requirements.md) §8–§9 when `test-strategy.md` absent. |
+| 2026-10-04 | State-machine negative set: [`spec/state-machine.md`](../spec/state-machine.md) §5.4 matrix. |

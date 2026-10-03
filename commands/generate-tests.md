@@ -13,11 +13,9 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 | `spec/api-contract.md` only (when HTTP narrative missing) | Use **[`spec/data-model.md`](../spec/data-model.md) §10/§16** for create/PATCH/comment field assertions; flag gaps vs `api-contract.md` when written |
 | [`spec/data-model.md`](../spec/data-model.md) missing | Stop — do not invent ticket fields |
 | `spec/rag-api-contract.md` for ask `data` | Test 400 blank question + envelope only; defer citation shape |
-| `spec/state-machine.md` | Use PDF legal path + illegal reopen examples only |
-
 ## Inputs
 
-- Specs that exist: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (agreed); `spec/test-strategy.md`, `spec/state-machine.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, `spec/evaluation-strategy.md` — **only when added** (see interim map in [`rules/documentation.md`](../rules/documentation.md))
+- Specs that exist: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (agreed), [`spec/state-machine.md`](../spec/state-machine.md) (draft); `spec/test-strategy.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, `spec/evaluation-strategy.md` — **only when added** (see interim map in [`rules/documentation.md`](../rules/documentation.md))
 - **[`spec/requirements.md`](../spec/requirements.md)** — map each proposed test to **`AC-CORE-*`** (§8) and/or **`AC-FEAT-*`** (§4.2); use §9 for FR traceability. Do not invent coverage for **Open** **DEC-*** items.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
@@ -40,7 +38,7 @@ These are the ticket/ask **capabilities**. For each, propose both **happy path**
 | Filter `status` | Matching status | Invalid enum → 400 | `q` **and** `status` (AND) |
 | Get detail | Found → 200 `data` | Unknown id → 404 | |
 | PATCH fields | Title, description, priority, assignee updated | 400 validation; 404 | Partial body (only agreed fields) |
-| Status transition | Each **legal** edge persisted | Assessment-illegal reopen (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`) and other illegal pairs per state-machine spec → domain reject + API **409**; **row unchanged** | Same-status no-op only if spec defines it |
+| Status transition | Each **legal** edge T1–T5 persisted | X1–X3 and every **Invalid** cell in [`spec/state-machine.md`](../spec/state-machine.md) §5.4 → domain reject + API **409**; **row unchanged** | Self-transitions rejected per §5.3 |
 | Comments | Add + return on detail | Empty comment; ticket not found | Comment on a status the spec forbids |
 | Persistence / restart | GET after context reload still correct | | |
 | Ask | `POST /api/ai/ask` **and** `/api/v1/ai/ask`; grounded `data` + citations from retrieval | Blank/missing `question` → 400; **no relevant tickets** → 200 + no-match **in `data`**, no fabricated ids | Do **not** golden-string the generated prose |
@@ -124,3 +122,4 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | P0 assertions use agreed [`spec/data-model.md`](../spec/data-model.md) (id, title required, DEC-08 search). |
 | 2026-10-04 | Inputs limited to three present specs + documentation interim map. |
+| 2026-10-04 | [`spec/state-machine.md`](../spec/state-machine.md) drives transition test matrix. |

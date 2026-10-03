@@ -15,7 +15,7 @@
 | [`architecture.md`](architecture.md) | Present (draft) | System design (modules, ticket shape, APIs, communication, RAG, vector DB); chunking + embedding justification (**PDF**, §16); reviewer map in [`rules/documentation.md`](../rules/documentation.md) |
 | [`data-model.md`](data-model.md) | Present (agreed) | Resolves OQ-01, OQ-02, OQ-03, OQ-10, OQ-13, OQ-14; **DEC-03, 04, 05, 07, 08, 13** recorded §10.2 |
 | `api-contract.md` | Missing | Resolves OQ-04; ticket REST (**Open** in PDF) |
-| `state-machine.md` | Missing | Resolves OQ-11, OQ-12, OQ-13 |
+| [`state-machine.md`](state-machine.md) | Present (draft) | T1–T5 / X1–X3 matrix; **DEC-02** default (A); interim PATCH (**DEC-06** open); **DEC-07** cross-ref |
 | `rag-ingestion.md` | Missing | Chunk/model numbers, re-ingest timing (DEC-01) |
 | `rag-api-contract.md` | Missing | Resolves OQ-05; no-match wording |
 | `evaluation-strategy.md` | Missing | Retrieval quality (**PDF** learning goal) |
@@ -638,7 +638,7 @@ Each feature lists **testable acceptance criteria** (`AC-FEAT-xx-yy`). Wording u
 - Cancel path: `OPEN` → `CANCELLED`.
 - Illegal: `RESOLVED` → `OPEN` (reopen) rejected.
 
-**Open:** Skipped hops (e.g. `OPEN` → `RESOLVED`); transition API shape; initial status on create.
+**Open:** Skipped hops (**DEC-02** — default (A) in [`state-machine.md`](state-machine.md) §5.3); transition API shape (**DEC-06** — interim PATCH in `state-machine.md` §6.1). Initial status → **agreed** **DEC-07** / `data-model.md` §5.1.
 
 ---
 
@@ -929,7 +929,7 @@ Create and maintain specifications before coding. PDF example set:
 | `architecture.md` | System design; **must justify chunking and embedding model** |
 | `data-model.md` | Entities, fields, persistence |
 | `api-contract.md` | REST contracts (tickets, comments, errors) |
-| `state-machine.md` | Transitions, rejection rules, API/UI touchpoints |
+| [`state-machine.md`](state-machine.md) | Transitions, rejection rules, API/UI touchpoints |
 | `rag-ingestion.md` | Knowledge docs, metadata, re-ingest triggers |
 | `rag-api-contract.md` | Ask request/response, citations, no-match |
 | `evaluation-strategy.md` | Retrieval quality evaluation |
@@ -1221,7 +1221,7 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 | DEC ID | Related OQ | Question | Neutral options | Owner spec | Blocks | Status | Decision |
 |--------|------------|----------|-----------------|------------|--------|--------|----------|
 | **DEC-01** | OQ-15 | Re-ingest trigger on **close**? | (A) Update only per p.6 acceptance (B) Update or close per p.5 ingestion (C) Close always implies update event | `rag-ingestion.md` | AC-CORE-20, FEAT-14 | Open | — |
-| **DEC-02** | OQ-12 | Allow skipped status hops? | (A) Only T1–T5 edges (B) Allow additional edges with spec list | `state-machine.md` | FEAT-11 tests | Open | — |
+| **DEC-02** | OQ-12 | Allow skipped status hops? | (A) Only T1–T5 edges (B) Allow additional edges with spec list | `state-machine.md` | FEAT-11 tests | Open (implement **A** for now — confirmed 2026-10-04) | Interim: no skipped hops; full matrix §5.4 in `state-machine.md`. Revisit before adding edges. |
 | **DEC-03** | OQ-03 | How is `category` set? | User field / enum / derived rule | `data-model.md` | FEAT-13 metadata | Agreed 2026-10-04 | Optional user-selected `TicketCategory` enum on create/update (`data-model.md` §5.3). |
 | **DEC-04** | OQ-01 | Ticket id format | Opaque UUID / `TKT-*` / numeric | `data-model.md` | UI, citations | Agreed 2026-10-04 | Public id `TKT-{n}` from `ticket_number_seq` (start 1001); `ticket.id` `VARCHAR(16)` PK (`data-model.md` §5.5, §14.1). |
 | **DEC-05** | OQ-10 | Resolution notes shape | Dedicated field / comment template / resolve action text | `data-model.md`, `rag-ingestion.md` | FEAT-12 | Agreed 2026-10-04 | Nullable `resolution_notes` column on `ticket`; ingested for RAG (`data-model.md` §6.1). |
@@ -1331,3 +1331,4 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | Child-spec table: `architecture.md` role aligned with expanded system-design spec and `rules/documentation.md` reviewer map. |
 | 2026-10-04 | `data-model.md` agreed; OQ-01/02/03/10/13/14 resolved; DEC-03/04/05/07/08/13 recorded §10.2. |
 | 2026-10-04 | PDF coverage map §0.4; removed duplicate §11.2 paragraph (no new spec files). |
+| 2026-10-04 | Added draft [`state-machine.md`](state-machine.md); child-spec table and FEAT-11 handoff updated. |

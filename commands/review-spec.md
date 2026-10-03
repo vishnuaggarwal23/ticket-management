@@ -17,7 +17,7 @@ Mark checklist items **Pass** / **Fail** / **N/A**. Failures are blocking for im
 
 ### When most of `spec/` does not exist yet
 
-Default **Ready for implementation?** → **no** for features that need missing contracts (`api-contract`, `state-machine`, `ui-flow`, `rag-api-contract`, `rag-ingestion`, etc.). **`data-model.md` is agreed** — ticket persistence may proceed; full HTTP surface still needs `api-contract.md` where payloads are narrative-only.
+Default **Ready for implementation?** → **no** for features that need missing contracts (`api-contract`, `ui-flow`, `rag-api-contract`, `rag-ingestion`, etc.). **`data-model.md` is agreed**; **`state-machine.md` is draft** — status transitions may proceed per §5 unless **DEC-02** / **DEC-06** change; full HTTP surface still needs `api-contract.md` where payloads are narrative-only.
 
 You may still review **`requirements.md`** / partial **`architecture.md`** for PDF alignment and rule consistency. List **blocking missing files** explicitly in the output — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
 
@@ -33,7 +33,7 @@ Before judging content, **name every file** you used and its role. If a file is 
 | Architecture | [`spec/architecture.md`](../spec/architecture.md) | Business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks only if agreed in `rag-ingestion.md` |
 | Data model | [`spec/data-model.md`](../spec/data-model.md) | entities, enums, DTOs §10, **indexes §14.5**, Liquibase order §14, **AC-DM-*** |
 | API contract | `spec/api-contract.md` | ticket HTTP payloads beyond `rules/api-standards.md` envelopes |
-| State machine | `spec/state-machine.md` | legal/illegal transitions |
+| State machine | [`spec/state-machine.md`](../spec/state-machine.md) | §5 legal/illegal matrix; **DEC-02** default (A) |
 | RAG ingestion | `spec/rag-ingestion.md` | chunking, models, ingest mechanics (when written) |
 | RAG API | `spec/rag-api-contract.md` | ask `data` fields, citations, no-match |
 | Evaluation | `spec/evaluation-strategy.md` | RAG quality (not unit tests) |
@@ -80,7 +80,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 
 When a child spec **does not exist**, cross-check against the **interim map** in [`rules/documentation.md`](../rules/documentation.md) (e.g. transitions → `requirements.md` FEAT-11, DTOs → `data-model.md` §10). Mark **N/A** for missing-file pairs; flag **conflicts** among the three present specs + rules.
 
-- [ ] `state-machine.md` ↔ `api-contract.md` — same transitions and how status is requested (**N/A** until files exist — use requirements FEAT-11 + data-model PATCH `status` convention)
+- [ ] [`state-machine.md`](../spec/state-machine.md) ↔ `api-contract.md` — same transitions and how status is requested (**partial** — SM §6.1 interim PATCH until `api-contract.md` / **DEC-06**)
 - [ ] `data-model.md` ↔ `api-contract.md` — same fields, types, requiredness
 - [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities; no **DEC-*** closed in code but still **Open** in requirements
 - [ ] `architecture.md` ↔ `rag-ingestion.md` / `rag-api-contract.md` — no conflicting pipeline or API story
@@ -247,3 +247,4 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | `data-model.md` agreed gate; index catalog checklist §14.5. |
 | 2026-10-04 | Requirements §0.4 coverage check; interim map when only three specs exist (`rules/documentation.md`). |
+| 2026-10-04 | Draft [`spec/state-machine.md`](../spec/state-machine.md) in readiness and cross-spec checks. |

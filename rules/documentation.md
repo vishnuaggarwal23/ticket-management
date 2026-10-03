@@ -50,24 +50,24 @@ Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks
 
 Maintain detailed specs as work proceeds:
 
-[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), `api-contract.md`, `state-machine.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md` (latter paths under `spec/` when added).
+[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), `api-contract.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md` (latter paths under `spec/` when added).
 
 ### Spec files in repo today (2026-10-04)
 
-Only these exist under `spec/` — **do not create** the others without an explicit user request:
+Only these exist under `spec/` (as of 2026-10-04) — **do not create** the others without an explicit user request:
 
 | Present | Status |
 |---------|--------|
 | [`requirements.md`](../spec/requirements.md) | draft hub |
 | [`architecture.md`](../spec/architecture.md) | draft system design |
 | [`data-model.md`](../spec/data-model.md) | **agreed** |
+| [`state-machine.md`](../spec/state-machine.md) | **draft** |
 
 Until missing PDF-listed files are added, use this **interim source map** (rules/commands must point here — not invent contracts):
 
 | Missing spec | Use instead (do not duplicate long text in rules) |
 |--------------|---------------------------------------------------|
 | `api-contract.md` | [`data-model.md`](../spec/data-model.md) §10 DTOs + `rules/api-standards.md` envelopes; API map [`architecture.md`](../spec/architecture.md) §11 |
-| `state-machine.md` | [`requirements.md`](../spec/requirements.md) §2.6, FEAT-11, Flow A/C; placement [`architecture.md`](../spec/architecture.md) §17 |
 | `rag-ingestion.md` | [`architecture.md`](../spec/architecture.md) §15–16 (justification); numeric K/chunk/model **Open** — **DEC-01**, **DEC-09** in requirements §10 |
 | `rag-api-contract.md` | PDF request in requirements FEAT-15; HTTP in `rules/api-standards.md`; **DEC-11** |
 | `evaluation-strategy.md` | [`requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 **Example** corpus + `commands/review-rag-output.md` |
@@ -86,7 +86,7 @@ PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **
 | [`architecture.md`](../spec/architecture.md) | System design: business vs functional modules, ticket aggregate shape, tech/deployment, **communication** (sync REST), **API map**, **PgVector** index role, RAG pipeline; **chunking** and **embedding tradeoffs** (PDF NFR-07 / AC-CORE-19). Numeric chunk/K/model → `rag-ingestion.md` |
 | [`data-model.md`](../spec/data-model.md) | Entities, Liquibase tables, enums, RAG chunk metadata, DTO catalogs, **indexes §14.5**; **DEC-03/04/05/07/08/13** |
 | `api-contract.md` | Ticket/comment payloads **inside** `data` (envelopes are in `rules/api-standards.md`) |
-| `state-machine.md` | Legal/illegal transitions (including skipped steps if any) |
+| [`state-machine.md`](../spec/state-machine.md) | Legal/illegal transitions (including skipped steps if any) |
 | `rag-ingestion.md` | Chunking **values**, models, dimensions, ingest timing, property keys |
 | `rag-api-contract.md` | Ask `data` fields: answer, citations, no-match wording |
 | `evaluation-strategy.md` | How to judge **retrieval quality** (PDF: probabilistic; not unit-test golden strings) |
@@ -144,6 +144,17 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §16–17 | Validation rules; **agreed DEC** table (sync with `requirements.md` §10.2) |
 | §18 | **AC-DM-*** acceptance checks |
 
+### [`spec/state-machine.md`](../spec/state-machine.md) structure (for reviewers)
+
+| Section | Use |
+|---------|-----|
+| §3–4 | States, terminal behaviour, diagrams |
+| §5.1–5.2 | **PDF** valid T1–T5 and forbidden X1–X3 |
+| §5.3–5.4 | **DEC-02** default (A) and full valid/invalid matrix |
+| §6 | PATCH + **409** `ILLEGAL_TRANSITION` (**DEC-06** interim) |
+| §8–9 | Domain placement; **AC-SM-*** tests |
+| §10 | Open **DEC-02**, **DEC-06**; agreed **DEC-07** pointer |
+
 ## Writing bar
 
 - Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions, revision history.
@@ -195,3 +206,4 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Rules/commands synced with agreed data model (fields, indexes, DEC split). |
 | 2026-10-04 | Markdown links to existing `spec/requirements.md`, `architecture.md`, `data-model.md` in all `rules/` and `commands/` files. |
 | 2026-10-04 | Three-spec repo: interim source map, §0.4 pointer, agreed vs open **DEC** list for rules/commands. |
+| 2026-10-04 | Added [`state-machine.md`](../spec/state-machine.md) (draft); reviewer map; interim map no longer substitutes for SM. |

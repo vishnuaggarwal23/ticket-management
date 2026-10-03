@@ -903,3 +903,4 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | Status **agreed**; DEC-03/04/05/07/08/13 synced to `requirements.md` §10.2. |
 | 2026-10-04 | §14.5–14.6 index catalog: BTREE, `pg_trgm` GIN for `q`, vector HNSW; Liquibase changelog order; AC-DM-08. |
 | 2026-10-04 | Terminology pass: **Agreed** / **Convention** replace stale **Proposed** on DEC-03/04/05/07/08/13 rows. |
+| 2026-10-04 | Cross-ref only: transition matrix in draft [`state-machine.md`](state-machine.md). |

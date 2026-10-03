@@ -131,7 +131,7 @@ Use this section only when the user asked to review a **coding** assistant, not 
 
 - [ ] Types, paths, and config keys exist in the repo or agreed rules
 - [ ] No invented spec requirements
-- [ ] Status transitions legal per `spec/state-machine.md` if touched, else [`spec/requirements.md`](../spec/requirements.md) FEAT-11 / §2.6
+- [ ] Status transitions legal per [`spec/state-machine.md`](../spec/state-machine.md) §5 if touched
 
 ---
 

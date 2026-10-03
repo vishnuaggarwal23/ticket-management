@@ -32,7 +32,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 
 - [ ] Implements only **agreed** specs; no extra product features (auth, agents, attachments, bulk ops, rerankers) unless a spec agrees
 - [ ] No silent answers to open questions — check [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)**; still-open: **DEC-01, 02, 06, 09–12, 14, 15**, chunking/model/K/threshold, ask `data` fields. **Agreed via [`spec/data-model.md`](../spec/data-model.md):** id `TKT-{n}`, category, resolution notes, create validation, `q` scope, initial `OPEN`
-- [ ] Domain status machine matches `spec/state-machine.md` (or [`spec/requirements.md`](../spec/requirements.md) FEAT-11 / §2.6 until that spec exists)
+- [ ] Domain status machine matches [`spec/state-machine.md`](../spec/state-machine.md) §5 (T1–T5, X1–X3, full invalid matrix)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
 
@@ -140,3 +140,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Agreed data-model DECs vs open DECs; Liquibase index catalog §14.5 check. |
 | 2026-10-04 | Three-spec interim map in `rules/documentation.md`; SM from requirements FEAT-11 until `state-machine.md`. |
+| 2026-10-04 | State machine checks use draft [`spec/state-machine.md`](../spec/state-machine.md). |
