@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-rag-output.md`](../.cursor/commands/review-rag-output.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) §15–16. Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data` follows `spec/rag-api-contract.md` when that spec exists — do not invent field names here.
+Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) §15–16. Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data` follows `spec/rag-api-contract.md` when that file exists (**DEC-11** open). **Retrieval quality** (right tickets in top-K): [`spec/requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 until `spec/evaluation-strategy.md` exists.
 
 **Pass only if all three hold:**
 
@@ -110,7 +110,7 @@ For **each** claim:
 | Relevant hits (B) | No-match | **Fail** — false no-match |
 | Relevant hits (B) | Grounded answer + retrieved ids | **Pass** this check |
 
-Equivalent user-visible wording is allowed if `spec/rag-api-contract.md` defines it. Do not require a golden string.
+Equivalent user-visible wording is allowed when **`spec/rag-api-contract.md`** defines it (or user confirms **DEC-11**). Do not require a golden string.
 
 HTTP: no-match is **not** the error envelope and **not** 404.
 
@@ -131,7 +131,7 @@ Use this section only when the user asked to review a **coding** assistant, not 
 
 - [ ] Types, paths, and config keys exist in the repo or agreed rules
 - [ ] No invented spec requirements
-- [ ] Status transitions legal per `spec/state-machine.md` if touched
+- [ ] Status transitions legal per `spec/state-machine.md` if touched, else [`spec/requirements.md`](../spec/requirements.md) FEAT-11 / §2.6
 
 ---
 
@@ -157,7 +157,7 @@ Use this section only when the user asked to review a **coding** assistant, not 
 **Grounding** asks: “Is every claim supported by **cited** retrieved text?”  
 **Retrieval quality** asks: “Did search return the **right** ticket(s) for this question?”
 
-Both matter for the assessment. Neither is proved by a single golden answer string. Document approach in **`spec/evaluation-strategy.md`**; use this section for manual or seeded checks.
+Both matter for the assessment. Neither is proved by a single golden answer string. Document approach in **`spec/evaluation-strategy.md`** when added; until then use [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 / §4.3. Use this section for manual or seeded checks.
 
 ### When to run
 
@@ -170,7 +170,7 @@ Both matter for the assessment. Neither is proved by a single golden answer stri
 | Input | Role |
 |-------|------|
 | **Question** | Same as grounding review |
-| **Expected ticket ids** (eval set) | From a **seeded** database or fixture — e.g. [`spec/requirements.md`](../spec/requirements.md) §4.3 (**Example**) or rows agreed in `evaluation-strategy.md` — not invented during review |
+| **Expected ticket ids** (eval set) | From a **seeded** database or fixture — e.g. [`spec/requirements.md`](../spec/requirements.md) §4.3 (**Example**) — not invented during review |
 | **Retrieved set** | Actual ids (and ranks/scores if logged in dev) |
 | **Final cited ids** | What the API returned |
 
@@ -199,3 +199,4 @@ Both matter for the assessment. Neither is proved by a single golden answer stri
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and RAG rules. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Citation ids must match [`spec/data-model.md`](../spec/data-model.md) `TKT-{n}` ticket PK. |
+| 2026-10-04 | Eval interim: requirements §2.5 / §4.3 when `evaluation-strategy.md` absent. |

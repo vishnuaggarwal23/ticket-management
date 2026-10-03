@@ -234,7 +234,7 @@ Only these ticket-owned texts feed the knowledge pipeline (**PDF** FR-13):
 |--------|---------------|-------|
 | Description | Always when present | Primary problem statement |
 | Comments | Each comment body | Timeline context |
-| Resolution notes | When field exists / populated | **Open** shape (OQ-10) |
+| Resolution notes | Nullable `resolution_notes` on ticket | **Agreed** — [`data-model.md`](data-model.md) §6.1 (**DEC-05**); OQ-10 resolved |
 
 Title and metadata (`status`, `priority`, `assignee`, `category`) are attached as **chunk metadata** for filtering and citation display, not necessarily embedded as standalone documents unless `rag-ingestion.md` agrees.
 
@@ -363,7 +363,7 @@ No message broker, no separate RAG microservice, no BFF unless a future spec add
 
 | Component | Responsibility |
 |-----------|----------------|
-| **Keyword search** | SQL/JPQL (or agreed) search over searchable fields (**Open** OQ-14) |
+| **Keyword search** | `title` + `description` only (**Agreed** **DEC-08**; [`data-model.md`](data-model.md) §15.2) |
 | **Status filter** | Restrict list by `status` query param (**Convention** `rules/api-standards.md`) |
 
 Distinct from **vector similarity search** (RAG only).
@@ -812,7 +812,7 @@ States and transitions: [`state-machine.md`](state-machine.md) + `requirements.m
 - Repositories do not expose unguarded status updates.
 - Illegal transition → domain error → **409** `ILLEGAL_TRANSITION` (**Convention**).
 
-**Open:** skipped hops (**DEC-02**); transition API (**DEC-06**); initial status on create (**DEC-07**).
+**Open:** skipped hops (**DEC-02**); transition API (**DEC-06**). **Agreed:** initial status `OPEN` on create (**DEC-07** — [`data-model.md`](data-model.md) §5.1).
 
 ---
 
@@ -919,3 +919,4 @@ Architecture supports verification of:
 | 2026-10-03 | Aligned with engineering rules: PDF vs project stack; Maven Wrapper, Liquibase, Ollama-as-provider, React+Vite+TS, Testcontainers. |
 | 2026-10-03 | Backend package tree recorded as agreed convention (`rules/java-springboot.md`). |
 | 2026-10-04 | Major expansion: business vs functional modules, ticket conceptual structure, tech and communication architecture, API map, vector DB and RAG depth, knowledge/chunking/embedding justification; synced with `requirements.md` (2026-10-04). |
+| 2026-10-04 | Sync: resolution notes **Agreed** (DEC-05); keyword search **DEC-08**; DEC-07 agreed in §17. |

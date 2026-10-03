@@ -29,7 +29,7 @@ Assessment PDF (`docs/Assessments.pdf`, may be gitignored): extract requirements
 | Backend Java / API / RAG code diff before merge | `commands/review-code.md` |
 | React / Vite / TypeScript UI diff before merge | `commands/review-frontend.md` |
 | Manual or demo check of an `/api/ai/ask` answer | `commands/review-rag-output.md` |
-| Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + `spec/evaluation-strategy.md` |
+| Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 (until `spec/evaluation-strategy.md` exists) |
 | Caught wrong AI code or ungrounded answer | Note in `docs/ai-mistakes.md` (see below) |
 
 Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks → Implementation → **generate-tests** / write tests → **review-code** / **review-frontend** → Fix.
@@ -52,6 +52,34 @@ Maintain detailed specs as work proceeds:
 
 [`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), `api-contract.md`, `state-machine.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md` (latter paths under `spec/` when added).
 
+### Spec files in repo today (2026-10-04)
+
+Only these exist under `spec/` — **do not create** the others without an explicit user request:
+
+| Present | Status |
+|---------|--------|
+| [`requirements.md`](../spec/requirements.md) | draft hub |
+| [`architecture.md`](../spec/architecture.md) | draft system design |
+| [`data-model.md`](../spec/data-model.md) | **agreed** |
+
+Until missing PDF-listed files are added, use this **interim source map** (rules/commands must point here — not invent contracts):
+
+| Missing spec | Use instead (do not duplicate long text in rules) |
+|--------------|---------------------------------------------------|
+| `api-contract.md` | [`data-model.md`](../spec/data-model.md) §10 DTOs + `rules/api-standards.md` envelopes; API map [`architecture.md`](../spec/architecture.md) §11 |
+| `state-machine.md` | [`requirements.md`](../spec/requirements.md) §2.6, FEAT-11, Flow A/C; placement [`architecture.md`](../spec/architecture.md) §17 |
+| `rag-ingestion.md` | [`architecture.md`](../spec/architecture.md) §15–16 (justification); numeric K/chunk/model **Open** — **DEC-01**, **DEC-09** in requirements §10 |
+| `rag-api-contract.md` | PDF request in requirements FEAT-15; HTTP in `rules/api-standards.md`; **DEC-11** |
+| `evaluation-strategy.md` | [`requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 **Example** corpus + `commands/review-rag-output.md` |
+| `ui-flow.md` | [`requirements.md`](../spec/requirements.md) Flows A–E, §8.7 demo; [`architecture.md`](../spec/architecture.md) §12 |
+| `test-strategy.md` | [`requirements.md`](../spec/requirements.md) §8–§9 **AC-CORE-*** / **AC-FEAT-*** + `rules/testing.md` |
+
+PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **§0.4** (coverage map).
+
+**Agreed DEC (do not contradict):** **DEC-03, 04, 05, 07, 08, 13** — register in requirements §10.2; detail in [`data-model.md`](../spec/data-model.md).
+
+**Still Open (stop and confirm):** **DEC-01, 02, 06, 09, 10, 11, 12, 14, 15** — requirements §10.2.
+
 | Spec | What it must nail down (so rules do not guess) |
 |------|-----------------------------------------------|
 | [`requirements.md`](../spec/requirements.md) | PDF hub: **FR** / **FEAT-***, **AC-CORE-*** (§8) and **AC-FEAT-*** (§4.2); **OQ-*** / **DEC-*** register and spec handoff (§10); precedence PDF → requirements → agreed specs → rules (§2.4); deterministic vs probabilistic proof (§2.5); demo script (§8.7); glossary (§12). Detail contracts live in child specs (§13). |
@@ -73,7 +101,7 @@ Use this map when running `commands/review-spec.md` or tracing tests — do not 
 
 | Section | Use |
 |---------|-----|
-| §0 | How to read the file; audience |
+| §0 | How to read the file; audience; **§0.4 PDF coverage map** |
 | §2.4–2.7 | Precedence, deterministic vs probabilistic, status enum, anti-patterns |
 | §4.1–4.3 | Flows A–E; per-feature AC; **Example** demo corpus (not mandated seed data) |
 | §8, §8.7 | **AC-CORE-*** sign-off; demo / grading script |
@@ -166,3 +194,4 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Reviewer map: index catalog §14.5 in `data-model.md`. |
 | 2026-10-04 | Rules/commands synced with agreed data model (fields, indexes, DEC split). |
 | 2026-10-04 | Markdown links to existing `spec/requirements.md`, `architecture.md`, `data-model.md` in all `rules/` and `commands/` files. |
+| 2026-10-04 | Three-spec repo: interim source map, §0.4 pointer, agreed vs open **DEC** list for rules/commands. |

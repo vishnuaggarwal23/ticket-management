@@ -66,7 +66,7 @@ HTTP envelopes, paths, and ask `data` wording remain in `rules/api-standards.md`
 | Comments | Child rows linked to ticket; ordering for display |
 | Vector index rows | Chunk text, embedding column, PDF metadata keys |
 | DTO shapes | Request/response records aligned with entities |
-| Search | Which columns participate in keyword `q` (**Proposed** DEC-08) |
+| Search | Keyword `q` on `title` + `description` (**Agreed** **DEC-08**) |
 | RAG metadata | Snapshot of ticket fields on each chunk at ingest time |
 
 ### 2.2 Non-goals
@@ -109,7 +109,7 @@ erDiagram
   TICKET ||--o{ TICKET_VECTOR_CHUNK : "derived index"
 
   TICKET {
-    varchar id PK "TKT-nnnn Proposed"
+    varchar id PK "TKT-n Agreed"
     varchar title
     text description
     varchar status "enum"
@@ -167,11 +167,11 @@ Stored as `VARCHAR` in PostgreSQL; Java `enum`; JSON uppercase string.
 
 Transition legality is **not** encoded in the enum; see [`state-machine.md`](state-machine.md) / requirements FEAT-11.
 
-**Proposed (DEC-07):** On create, `status` defaults to `OPEN` and is **not** accepted from the create request body (server-assigned).
+**Agreed (DEC-07):** On create, `status` defaults to `OPEN` and is **not** accepted from the create request body (server-assigned).
 
 ### 5.2 `TicketPriority` (**PDF** requires priority field; values **Open** in requirements)
 
-**Proposed (DEC-13 alignment):** Closed set:
+**Agreed (DEC-13):** Closed set:
 
 | Constant | Sort order (for `sort=priority`) |
 |----------|----------------------------------|
@@ -180,11 +180,11 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 | `HIGH` | 3 |
 | `CRITICAL` | 4 |
 
-**Proposed:** Create default `MEDIUM` if omitted.
+**Agreed:** Create default `MEDIUM` if omitted.
 
 ### 5.3 `TicketCategory` (**PDF** metadata key `category`; source **Open** OQ-03)
 
-**Proposed (DEC-03):** Optional user-selected taxonomy at create/update; stored on ticket and copied into RAG metadata.
+**Agreed (DEC-03):** Optional user-selected taxonomy at create/update; stored on ticket and copied into RAG metadata.
 
 | Constant | Typical use (**Example**) |
 |----------|---------------------------|
@@ -198,11 +198,11 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 
 ### 5.4 `Assignee` (value object, **Convention**)
 
-Not a separate table. **Proposed:** `assignee` is a nullable `VARCHAR(320)` holding an **email-like** identifier (e.g. `sam@example.com`). No user directory or FK.
+**Convention:** `assignee` is a nullable `VARCHAR(320)` holding an **email-like** identifier (e.g. `sam@example.com`). No user directory or FK.
 
-### 5.5 `TicketId` (value object, **Proposed DEC-04**)
+### 5.5 `TicketId` (value object, **Agreed DEC-04**)
 
-**Proposed:** Public identifier string `TKT-{n}` where `n` is a monotonic integer from sequence `ticket_number_seq`, minimum **1001** for demo alignment with PDF **Example** `TKT-1001`.
+**Agreed:** Public identifier string `TKT-{n}` where `n` is a monotonic integer from sequence `ticket_number_seq`, minimum **1001** for demo alignment with PDF **Example** `TKT-1001`.
 
 - Primary key `ticket.id` = this string (no separate surrogate UUID for tickets).
 - Comments reference `ticket_id` (same string).
@@ -220,14 +220,14 @@ Authoritative support record (**PDF**).
 
 | Column | Type | Null | Default | Notes |
 |--------|------|------|---------|-------|
-| `id` | `VARCHAR(16)` | NO | from sequence | **Proposed** `TKT-{n}` |
-| `title` | `VARCHAR(500)` | NO | — | Searchable (**Proposed** DEC-08) |
+| `id` | `VARCHAR(16)` | NO | from sequence | **Agreed** `TKT-{n}` |
+| `title` | `VARCHAR(500)` | NO | — | Searchable (**Agreed** **DEC-08**) |
 | `description` | `TEXT` | NO | `''` | Searchable; may be empty string |
 | `status` | `VARCHAR(32)` | NO | `OPEN` | Enum §5.1 |
 | `priority` | `VARCHAR(16)` | NO | `MEDIUM` | Enum §5.2 |
 | `assignee` | `VARCHAR(320)` | YES | — | §5.4 |
 | `category` | `VARCHAR(32)` | YES | — | Enum §5.3 |
-| `resolution_notes` | `TEXT` | YES | — | **Proposed** DEC-05; RAG source (**PDF**) |
+| `resolution_notes` | `TEXT` | YES | — | **Agreed** **DEC-05**; RAG source (**PDF**) |
 | `created_at` | `TIMESTAMPTZ` | NO | `now()` | UTC |
 | `updated_at` | `TIMESTAMPTZ` | NO | `now()` | UTC; bump on any ticket/comment change |
 
@@ -244,7 +244,7 @@ Timeline notes on a ticket (**PDF** FEAT-05).
 | `id` | `UUID` | NO | PK, generated |
 | `ticket_id` | `VARCHAR(16)` | NO | FK → `ticket.id` ON DELETE CASCADE |
 | `body` | `TEXT` | NO | RAG source text (**PDF**) |
-| `created_at` | `TIMESTAMPTZ` | NO | Display order **Proposed:** ascending `created_at` |
+| `created_at` | `TIMESTAMPTZ` | NO | Display order **Agreed:** ascending `created_at` |
 
 **Indexes:** [§14.5](#145-index-catalog) (`ticket_comment_pkey`, `idx_ticket_comment_ticket_created`).
 
@@ -281,7 +281,7 @@ Exact required/optional validation → §16 and [`api-contract.md`](api-contract
 | Cardinality | 1 ticket : N comments |
 | Ownership | Comments are **owned** by ticket; no shared comments |
 | FK | `ticket_comment.ticket_id` → `ticket.id` |
-| Delete | **Proposed:** `ON DELETE CASCADE` (assessment has no delete-ticket API; cascade simplifies test cleanup) |
+| Delete | **Convention:** `ON DELETE CASCADE` (assessment has no delete-ticket API; cascade simplifies test cleanup) |
 | Load | **Lazy** `OneToMany` from `Ticket` to `Comment`; fetch join for detail view |
 
 ### 7.2 Ticket ↔ Vector chunks
@@ -290,7 +290,7 @@ Exact required/optional validation → §16 and [`api-contract.md`](api-contract
 |--------|------|
 | Cardinality | 1 ticket : N chunks (derived) |
 | FK | `ticket_vector_chunk.ticket_id` → `ticket.id` |
-| Delete | **Proposed:** `ON DELETE CASCADE` + explicit delete-all-for-ticket before re-ingest |
+| Delete | **Convention:** `ON DELETE CASCADE` + explicit delete-all-for-ticket before re-ingest |
 | Consistency | Chunks may lag ticket briefly if ingest is async (**Open**); must converge after re-ingest |
 
 ### 7.3 Referential integrity summary
@@ -345,7 +345,7 @@ Store **chunked**, **embedded** ticket knowledge with metadata keys: `ticketId`,
 
 If Spring AI PgVector auto-schema is used, **still** document the logical model here and add a Liquibase changeset that matches the store’s table/column names. Single source of truth remains Liquibase ([`rules/java-springboot.md`](../rules/java-springboot.md)).
 
-### 8.4 Re-ingest storage strategy (**Proposed**)
+### 8.4 Re-ingest storage strategy (**Convention**)
 
 On re-ingest for `ticket_id`:
 
@@ -422,13 +422,13 @@ Title is for human context in chunks; **PDF** ingest sources are description, co
 
 DTOs are **Java records** in `api` with Bean Validation on **requests**. Responses use the success envelope `{ "data": ... }` ([`rules/api-standards.md`](../rules/api-standards.md)).
 
-Field names below are **Proposed** until [`api-contract.md`](api-contract.md) is agreed; they must stay aligned with this data model.
+Field names below are **Agreed** with this data model; HTTP-only nuances may be refined in [`api-contract.md`](api-contract.md).
 
 ### 10.1 Ticket commands
 
 **`CreateTicketRequest`**
 
-| Field | Type | Validation **Proposed** |
+| Field | Type | Validation **Agreed** |
 |-------|------|-------------------------|
 | `title` | `String` | `@NotBlank`, `@Size(max = 500)` |
 | `description` | `String` | `@Size(max = 100_000)` optional |
@@ -798,7 +798,7 @@ CREATE INDEX idx_ticket_vector_chunk_embedding_hnsw
 | `status` | `WHERE ticket.status = :status` |
 | `page` / `size` | Spring Data `Pageable` |
 
-### 15.2 Keyword search `q` (**Proposed DEC-08**)
+### 15.2 Keyword search `q` (**Agreed DEC-08**)
 
 Align with [`rules/api-standards.md`](../rules/api-standards.md) default:
 
@@ -822,7 +822,7 @@ Maps to columns: `created_at`, `updated_at`, `priority`, `status` — priority s
 
 ## 16. Validation and constraints
 
-### 16.1 Create ticket (**Proposed DEC-13**)
+### 16.1 Create ticket (**Agreed DEC-13**)
 
 | Field | Rule |
 |-------|------|
@@ -838,7 +838,7 @@ Maps to columns: `created_at`, `updated_at`, `priority`, `status` — priority s
 |-------|------|
 | `body` | Required, non-blank, max 50k |
 
-### 16.3 Resolution notes (**Proposed DEC-05**)
+### 16.3 Resolution notes (**Agreed DEC-05**)
 
 | Field | Rule |
 |-------|------|
@@ -902,3 +902,4 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | Initial data model: entities, RAG/vector tables, DTOs, metadata, embeddables, flows, proposed DEC resolutions for OQ-01/02/03/10/13/14. |
 | 2026-10-04 | Status **agreed**; DEC-03/04/05/07/08/13 synced to `requirements.md` §10.2. |
 | 2026-10-04 | §14.5–14.6 index catalog: BTREE, `pg_trgm` GIN for `q`, vector HNSW; Liquibase changelog order; AC-DM-08. |
+| 2026-10-04 | Terminology pass: **Agreed** / **Convention** replace stale **Proposed** on DEC-03/04/05/07/08/13 rows. |

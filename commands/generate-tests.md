@@ -17,7 +17,7 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 
 ## Inputs
 
-- Specs that exist: `spec/test-strategy.md`, `spec/state-machine.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, [`spec/data-model.md`](../spec/data-model.md), [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md) (layers §8–9, ingest triggers §15.4), `spec/evaluation-strategy.md`
+- Specs that exist: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (agreed); `spec/test-strategy.md`, `spec/state-machine.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, `spec/evaluation-strategy.md` — **only when added** (see interim map in [`rules/documentation.md`](../rules/documentation.md))
 - **[`spec/requirements.md`](../spec/requirements.md)** — map each proposed test to **`AC-CORE-*`** (§8) and/or **`AC-FEAT-*`** (§4.2); use §9 for FR traceability. Do not invent coverage for **Open** **DEC-*** items.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
@@ -123,3 +123,4 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and governance pass. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | P0 assertions use agreed [`spec/data-model.md`](../spec/data-model.md) (id, title required, DEC-08 search). |
+| 2026-10-04 | Inputs limited to three present specs + documentation interim map. |

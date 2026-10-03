@@ -65,6 +65,28 @@
 
 Until §10 decisions are **agreed**, treat implementable detail in child specs as **draft**; do not close Open items only in code. See [`rules/documentation.md`](../rules/documentation.md) (“Agreed spec”).
 
+### 0.4 Assessment PDF coverage map (**PDF** → this repo)
+
+Use this table to confirm nothing from the assignment is “lost” between the PDF and specs. Page numbers refer to `docs/Assessments.pdf` (6 pages). Human restatement: [`docs/assessment-brief.md`](../docs/assessment-brief.md).
+
+| PDF theme (typical page) | Captured in | Gap / owner if not implementable yet |
+|--------------------------|-------------|--------------------------------------|
+| Process: spec-driven workflow, hygiene rules/commands, prompt history, AI mistake evidence (p.1–2) | §3.4, §6.8, §7 NFR-01…05, FEAT-23 | Mistake log file `docs/ai-mistakes.md` when first entry exists |
+| Learning goals: specs for AI-native feature; test deterministic + probabilistic (p.2) | §1.3, §2.5, FEAT-22, §6.7 | `evaluation-strategy.md`, `test-strategy.md` |
+| Token optimisation plugins + prompt caching (p.2) | §7 NFR-11, `rules/documentation.md` | Optional tooling — not product behaviour |
+| Stack: Java 21, Spring Boot, Spring AI, PostgreSQL/H2, embedding, vector store, REST, React/Next or equivalent (p.2–3) | §2.1, §6.1 | **DEC-09**, **DEC-10** for store/DB roles in `architecture.md` / `rag-ingestion.md` |
+| Ticket CRUD, comments, search, filter, persistence, validation, UI errors (p.3–4) | §4.2 FEAT-01…10, §8.1–8.2 | HTTP detail → `api-contract.md`; UI → `ui-flow.md` |
+| Backend state machine; valid transitions; invalid reopen examples (p.4) | §2.6, FEAT-11, Flow A/C | Skipped hops → **DEC-02** in `state-machine.md` |
+| RAG: ingest description/comments/resolution; metadata keys; re-ingest on update or closed (p.5) | FEAT-12…14, Flow D | Numeric chunk/model → `rag-ingestion.md`; **DEC-01** |
+| Ask flow: similarity search → LLM; grounded answer; citations; example questions (p.4–5) | FEAT-15…17, Flow B, §4.3 | Response JSON → `rag-api-contract.md` |
+| Grounding guardrails; no agent; no create/notify/tools (p.5–6) | §2.2, FEAT-18, Flow E | — |
+| Configurable top-K and similarity threshold (p.5) | FEAT-19, AC-CORE-21 | Property names/values → `rag-ingestion.md` |
+| Document chunking + embedding justification (p.5–6) | FEAT-20, AC-CORE-19 | Narrative in `architecture.md` §16; numbers in `rag-ingestion.md` |
+| Core acceptance checklist (p.6) | §8 **AC-CORE-01…23**, §8.7 demo script | Sign-off uses §8.6 checklist |
+| `POST /api/ai/ask` request `{ "question": "..." }` (p.5) | FEAT-15, §2.6 | Response shape **Open** → **DEC-11** |
+
+**Not in the PDF (do not add without a new agreed spec):** authentication, multi-tenancy, attachments, notifications, delete-ticket API, agentic tool use, confidence scores on ask responses.
+
 ---
 
 ## 1. Problem and context
@@ -1245,8 +1267,6 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 
 ### 11.2 Out-of-scope vs empty retrieval
 
-Acceptance bundles **out-of-scope** and **no-match** into one honest response theme (**PDF** p.6). Implementation should treat both as **no fabricated answer**; exact messaging may differ (**Open** in `rag-api-contract.md`).
-
 Acceptance bundles **out-of-scope** and **no-match** into one honest response theme (**PDF** p.6). Implementation should treat both as **no fabricated answer**; exact messaging may differ (**Open** → DEC-11, `rag-api-contract.md`).
 
 ---
@@ -1310,3 +1330,4 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | Clarity pass: §0 navigation, §2.4–2.7 precedence/enums/anti-patterns, §5 deduped, §8.7 demo script, §10 OQ/DEC/handoff, §12 glossary, §13 scope boundary. |
 | 2026-10-04 | Child-spec table: `architecture.md` role aligned with expanded system-design spec and `rules/documentation.md` reviewer map. |
 | 2026-10-04 | `data-model.md` agreed; OQ-01/02/03/10/13/14 resolved; DEC-03/04/05/07/08/13 recorded §10.2. |
+| 2026-10-04 | PDF coverage map §0.4; removed duplicate §11.2 paragraph (no new spec files). |

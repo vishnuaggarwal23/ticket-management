@@ -17,7 +17,7 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 ## Inputs
 
 - Diff / named paths
-- Agreed specs under `spec/` (do not invent missing contracts); layout reference: [`spec/architecture.md`](../spec/architecture.md) §8–9 when present
+- Agreed specs: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) — do not invent missing contracts; interim map [`rules/documentation.md`](../rules/documentation.md); layout [`spec/architecture.md`](../spec/architecture.md) §8–9
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements
@@ -139,3 +139,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), and aligned rules. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Agreed data-model DECs vs open DECs; Liquibase index catalog §14.5 check. |
+| 2026-10-04 | Three-spec interim map in `rules/documentation.md`; SM from requirements FEAT-11 until `state-machine.md`. |

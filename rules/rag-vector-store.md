@@ -11,11 +11,12 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 | `rules/java-springboot.md` | `rag/` package, `@ConfigurationProperties`, no magic numbers in Java |
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
 | `commands/review-rag-output.md` | Manual grounding review of ask answers |
-| `spec/rag-ingestion.md` | **Numeric** chunking, models, K, threshold, ingest timing (when agreed) |
-| `spec/rag-api-contract.md` | Field names inside ask `data` |
-| `spec/evaluation-strategy.md` | Probabilistic retrieval quality (PDF learning goal) |
+| `spec/rag-ingestion.md` | **Numeric** chunking, models, K, threshold, ingest timing (when file exists) |
+| `spec/rag-api-contract.md` | Field names inside ask `data` (when file exists) |
+| `spec/evaluation-strategy.md` | Probabilistic retrieval quality (when file exists) |
+| [`spec/requirements.md`](../spec/requirements.md) | Until above exist: §2.5 deterministic vs probabilistic; FEAT-22; §4.3 eval corpus; **DEC-01**, **DEC-09**, **DEC-11** §10 |
 
-The PDF requires this **guidelines file** to cover chunking **convention**, embedding **model choice**, and retrieval-tuning **defaults**. Those are **documented below as slots and options** — actual numbers and chosen algorithms are agreed in `spec/rag-ingestion.md` / `architecture.md`, not invented in Java.
+The PDF requires this **guidelines file** to cover chunking **convention**, embedding **model choice**, and retrieval-tuning **defaults**. **Justification** (non-numeric) lives in [`spec/architecture.md`](../spec/architecture.md) §16 (**AC-CORE-19**). Numeric values and property keys are agreed only when `spec/rag-ingestion.md` exists — do not invent in Java.
 
 ## Assessment vs project conventions vs open questions
 
@@ -190,3 +191,4 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §13–16. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Metadata/table/index pointers to agreed [`spec/data-model.md`](../spec/data-model.md) §8, §11, §14.5. |
+| 2026-10-04 | Interim: architecture §16 justification; requirements §10 for open RAG **DEC** when child specs absent. |

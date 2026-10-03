@@ -8,9 +8,10 @@ Backend coding standards for the support ticket management application.
 |-------|--------|
 | Business/functional modules, layering map | [`spec/architecture.md`](../spec/architecture.md) §4, §8–9 |
 | HTTP paths, envelopes, list params | `rules/api-standards.md`; API map [`spec/architecture.md`](../spec/architecture.md) §11 |
-| Ticket/comment **field** catalogs | [`spec/data-model.md`](../spec/data-model.md) (agreed); HTTP narrative in `spec/api-contract.md` |
+| Ticket/comment **field** catalogs | [`spec/data-model.md`](../spec/data-model.md) (agreed); HTTP narrative in `spec/api-contract.md` when added |
+| State machine rules | [`spec/requirements.md`](../spec/requirements.md) FEAT-11 / §2.6 until `spec/state-machine.md` |
+| RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §14–16; numeric tuning in `spec/rag-ingestion.md` when added |
 | Tests | `rules/testing.md`, `commands/generate-tests.md` |
-| RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §14–16, `spec/rag-ingestion.md` |
 | UI | `rules/frontend.md` |
 
 ## Assessment vs project conventions
@@ -244,3 +245,4 @@ IN_PROGRESS ────────► CANCELLED
 | 2026-10-04 | Synced with [`spec/architecture.md`](../spec/architecture.md) §8–9 technical components. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Entities, enums, tables, and Liquibase index catalog aligned with agreed [`spec/data-model.md`](../spec/data-model.md). |
+| 2026-10-04 | State machine interim: requirements FEAT-11; child specs only when user adds files. |

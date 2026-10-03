@@ -12,11 +12,11 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 
 - Diff / named frontend paths
 - `rules/frontend.md`
-- [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§10** for open UI/API shape (**OQ/DEC**)
 - `rules/api-standards.md` (paths, envelopes, PATCH, pagination, 409)
+- [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo until `ui-flow.md`; **§10** for open UI/API shape (**OQ/DEC**)
 - [`spec/architecture.md`](../spec/architecture.md) §12 (UI surfaces) when reviewing screen/API wiring
 - [`spec/data-model.md`](../spec/data-model.md) (agreed id, category, resolutionNotes, create requiredness)
-- `spec/ui-flow.md`, `spec/api-contract.md`, `spec/rag-api-contract.md` if they exist
+- `spec/ui-flow.md`, `spec/api-contract.md`, `spec/rag-api-contract.md` if the user has added them (default: **not** in repo — see [`rules/documentation.md`](../rules/documentation.md) interim map)
 - Assessment PDF only as background for **capabilities** (not stack)
 
 Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** / **minor** with file references.
@@ -27,7 +27,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 
 ### Spec and scope
 
-- [ ] Only agreed `ui-flow.md` (or user-confirmed screens). No invented auth, agent-from-ask, extra ticket resources
+- [ ] Only agreed `ui-flow.md` (or user-confirmed screens). Until that file exists, use requirements **§4.1** / **§8.7** + architecture **§12** — no invented auth, agent-from-ask, extra ticket resources
 - [ ] Open items not silently decided — **DEC-06, 15**, layout/router still open; **do not** invent id format or category (use [`spec/data-model.md`](../spec/data-model.md): `TKT-{n}`, category enum, `resolutionNotes`, title required on create)
 - [ ] PDF capabilities present or explicitly deferred; when implemented, mappable to **`AC-CORE-01…11`** (§8): create, list, detail, update title/description/priority/assignee, comments, keyword search, status filter, status display, valid transitions, meaningful errors, ask with citations or no-match
 
@@ -95,3 +95,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 | 2026-10-04 | Governance pass with expanded specs and rules index. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | [`spec/data-model.md`](../spec/data-model.md) inputs; id/category/resolutionNotes no longer open in UI review. |
+| 2026-10-04 | Interim flows from requirements §4.1 / §8.7 when `ui-flow.md` not in repo. |

@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/api-standards.mdc`](../.cursor/rules/api-standards.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16); **HTTP-only** nuances (optional list projections, error copy) may still be refined in `spec/api-contract.md`. **Ask** `data` field names remain in `spec/rag-api-contract.md`. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
+JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16); **HTTP capability map** (paths/methods): [`spec/architecture.md`](../spec/architecture.md) §11 until `spec/api-contract.md` exists. **Ask** `data` field names remain in `spec/rag-api-contract.md` when added. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
 
 Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: [`spec/architecture.md`](../spec/architecture.md) §10–11.
 
@@ -38,7 +38,7 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 - **Keyword `q`:** case-insensitive match on **`title` and `description` only** (DEC-08); not comments
 - **Status transition:** PATCH `status` with **target** enum (convention until `state-machine.md` / `api-contract.md` refine); illegal → **409** `ILLEGAL_TRANSITION`
 
-**Open — resolve in API / RAG API / state-machine specs (do not assume here):**
+**Open — resolve in API / RAG API / state-machine specs when those files exist (do not assume here):**
 
 - Ask **business** JSON inside `data` (answer text, citation structure, no-match representation). No confidence field unless a spec adds it
 - Dedicated transition sub-resource vs PATCH-only (**DEC-06**)
@@ -371,3 +371,4 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) API map. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Locked ticket id, enums, create/PATCH fields, `q` scope from agreed [`spec/data-model.md`](../spec/data-model.md); trgm index pointer §14.5. |
+| 2026-10-04 | Ticket HTTP map: [`spec/architecture.md`](../spec/architecture.md) §11 until `api-contract.md` added. |

@@ -2,13 +2,13 @@
 
 Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-React UI for tickets and grounded Q&A. Product screens and click-by-click flows live in `spec/ui-flow.md` once that file exists and is agreed. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows: `spec/ui-flow.md` when added and agreed; until then [`spec/requirements.md`](../spec/requirements.md) Flows A–E and demo **§8.7**, plus [`spec/architecture.md`](../spec/architecture.md) §12. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
 
 **This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
 
 | Read first | Purpose |
 |------------|---------|
-| [`spec/requirements.md`](../spec/requirements.md) | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7** until `ui-flow.md` is agreed |
+| [`spec/requirements.md`](../spec/requirements.md) | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7**; journeys **§4.1** until `ui-flow.md` exists |
 | [`spec/architecture.md`](../spec/architecture.md) | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
 | `spec/ui-flow.md` | Screens and navigation (when agreed) |
@@ -172,3 +172,4 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §12. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Ticket id, category, resolutionNotes, create requiredness from agreed [`spec/data-model.md`](../spec/data-model.md). |
+| 2026-10-04 | Interim UI flows: requirements §4.1 / §8.7 + architecture §12 when `ui-flow.md` missing. |

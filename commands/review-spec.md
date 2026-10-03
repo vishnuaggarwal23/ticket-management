@@ -59,6 +59,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] PDF requirements are not weakened (CRUD, comments, search/filter, backend validation, backend state machine, persistence, grounded ask + citations or no-match)
 - [ ] Project conventions (Boot 3, `/api/v1`, PgVector, JUnit, envelopes, PATCH) are **labeled** as conventions, **not** as PDF mandates
 - [ ] Open items remain in **Open questions** (or equivalent), not smuggled into requirements as decided facts
+- [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): **§0.4** coverage map — every PDF theme row has a capture path or explicit gap (missing child spec name)
 - [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
 - [ ] Child specs that resolve an **OQ-*** cite the matching **DEC-*** decision (or remain draft until user confirms)
 - [ ] New material in feature specs aligns with **[`spec/requirements.md`](../spec/requirements.md) §10.3** handoff (each OQ has a primary owning spec)
@@ -77,7 +78,9 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 
 ### Cross-spec validity (name both files when flagging)
 
-- [ ] `state-machine.md` ↔ `api-contract.md` — same transitions and how status is requested
+When a child spec **does not exist**, cross-check against the **interim map** in [`rules/documentation.md`](../rules/documentation.md) (e.g. transitions → `requirements.md` FEAT-11, DTOs → `data-model.md` §10). Mark **N/A** for missing-file pairs; flag **conflicts** among the three present specs + rules.
+
+- [ ] `state-machine.md` ↔ `api-contract.md` — same transitions and how status is requested (**N/A** until files exist — use requirements FEAT-11 + data-model PATCH `status` convention)
 - [ ] `data-model.md` ↔ `api-contract.md` — same fields, types, requiredness
 - [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities; no **DEC-*** closed in code but still **Open** in requirements
 - [ ] `architecture.md` ↔ `rag-ingestion.md` / `rag-api-contract.md` — no conflicting pipeline or API story
@@ -243,3 +246,4 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md). |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | `data-model.md` agreed gate; index catalog checklist §14.5. |
+| 2026-10-04 | Requirements §0.4 coverage check; interim map when only three specs exist (`rules/documentation.md`). |

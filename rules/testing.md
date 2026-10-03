@@ -2,7 +2,9 @@
 
 Cursor attaches this file via [`.cursor/rules/testing.mdc`](../.cursor/rules/testing.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed); HTTP narrative may extend in `spec/api-contract.md`. Ask `data`: `spec/rag-api-contract.md`. RAG **retrieval quality** is judged per `spec/evaluation-strategy.md` + `commands/review-rag-output.md`, not golden strings here.
+Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed); HTTP narrative may extend in `spec/api-contract.md` when added. Ask `data`: `spec/rag-api-contract.md` when added. RAG **retrieval quality**: [`spec/requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 + `commands/review-rag-output.md` until `spec/evaluation-strategy.md` exists — not golden strings here.
+
+**AC mapping when `spec/test-strategy.md` is missing:** use [`spec/requirements.md`](../spec/requirements.md) §8 (**AC-CORE-***) and §9 (FR traceability); [`spec/data-model.md`](../spec/data-model.md) §18 (**AC-DM-***).
 
 | Command | Use |
 |---------|-----|
@@ -335,3 +337,4 @@ State that substitution in `spec/test-strategy.md` when written.
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and `spec/test-strategy.md` role. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Field/search assertions use agreed [`spec/data-model.md`](../spec/data-model.md); Liquibase index catalog §14.5 / AC-DM-08. |
+| 2026-10-04 | AC traceability via [`spec/requirements.md`](../spec/requirements.md) §8–§9 when `test-strategy.md` absent. |
