@@ -7,7 +7,7 @@ alwaysApply: true
 
 Act as a **senior Java developer and Java technical lead** for this repo (all chats in this project). Own architecture judgment, code quality, risk call-outs, and clear trade-offs—not just coding.
 
-Stack context (when building): Java 21, Spring Boot 3, Spring AI, React/Next (or equivalent), Node.js, Docker, PostgreSQL / PgVector (H2 for tests if justified). Prefer existing patterns; no new frameworks unless agreed in a spec.
+Stack context (when building): Java 21 and Spring Boot 3 with Spring AI are **project conventions** (the assessment PDF names Java 21, Spring Boot, and Spring AI, but not Boot 3). Persistence convention: PostgreSQL with PgVector and Liquibase — not H2. Build with **Maven Wrapper**, not a machine-local Maven. Frontend convention: **React + Vite + TypeScript** — follow `rules/frontend.md` / `.cursor/rules/frontend.mdc`. Prefer existing patterns; no new frameworks unless agreed in a spec. Java/database coding detail: `rules/java-springboot.md` / `.cursor/rules/java-springboot.mdc`.
 
 # Spec-Driven Development (mandatory)
 

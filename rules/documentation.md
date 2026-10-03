@@ -1,14 +1,15 @@
-
 # Documentation skills
 
 ## Where things live
 
 | Artefact | Location |
 |----------|----------|
-| Specs (source of truth) | `spec/` |
+| Assessment requirements (authoritative assignment) | `docs/Assessments.pdf` (may be gitignored); extract into `spec/` |
+| Implementable specs | `spec/` |
 | Human docs / notes | `docs/` |
 | Prompt / session history | `.specstory/history/` (+ index `docs/prompt-history.md`) |
 | Steering rules | `.cursor/rules/` (mirrors under `rules/` for hygiene) |
+| Frontend engineering rules | `rules/frontend.md` / `.cursor/rules/frontend.mdc` |
 | Slash / review prompts | `.cursor/commands/` and `commands/` |
 | Documentation skill | `skills/documentation/` |
 
@@ -18,14 +19,14 @@ Maintain detailed specs as work proceeds (names may grow; start from these):
 
 `requirements.md`, `architecture.md`, `data-model.md`, `api-contract.md`, `state-machine.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md`.
 
-`architecture.md` must justify **chunking strategy** and **embedding model** choice (cost/latency/quality).
+`architecture.md` must justify **chunking strategy** and **embedding model** choice (cost/latency/quality). Numeric chunk/retrieval defaults belong in `rag-ingestion.md` once agreed.
 
 ## Writing bar
 
 - Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions.
 - Prefer short paragraphs and checklists; link acceptance criteria to tests.
 - Document at least one **meaningful AI mistake** (wrong code or ungrounded RAG answer) caught during development—when it happens, record it under `docs/` (e.g. `docs/ai-mistakes.md`).
-- Do not treat `docs/Assessments.pdf` as a committed spec; extract agreed requirements into `spec/`.
+- The **assessment PDF** is the source of truth for **what the assignment requires**. `spec/` is the implementable extraction plus **agreed project conventions**. Do not invent features the PDF does not support. Distinguish PDF requirements from project conventions in specs and rules.
 
 ## Skill usage
 

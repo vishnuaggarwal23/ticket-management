@@ -7,15 +7,19 @@ Generate tests from **agreed specs** and acceptance criteria—not from guesswor
 - Specs: especially `test-strategy.md`, `state-machine.md`, `api-contract.md`, `rag-api-contract.md`, `evaluation-strategy.md`
 - Existing test layout and frameworks in the repo
 - Code under test (if already present)
+- Testing standards: `rules/testing.md` / `.cursor/rules/testing.mdc`
 
 ## Rules
 
-- Prefer Given/When/Then names tied to acceptance criteria.
+- Map test names to acceptance criteria. Given/When/Then is a **useful pattern**, not a required template.
 - Cover valid and **invalid** status transitions.
 - Cover validation failures and meaningful API errors.
-- For RAG: grounded citation cases + **no relevant tickets** case; stub LLM in unit/CI tests unless user approves live calls.
+- Backend integration tests that need a database: **PostgreSQL via Testcontainers** (Liquibase applied). Do not default to H2. Do not depend on a developer’s local Postgres or Compose.
+- Run tests with **Maven Wrapper** (`./mvnw test` or equivalent). Do not rely on a machine-local Maven.
+- **Deterministic** ticket/API behavior belongs in ordinary unit/integration tests. RAG **retrieval quality** and free-form generated answers belong in the evaluation approach — do not treat a golden string as sufficient RAG proof.
+- For RAG **contract** cases once specified: citations + **no relevant tickets**; use test doubles for embedding/generation in the default suite. Do not call paid or developer-local Ollama unless a later evaluation spec says so. There is **no CI** in this milestone.
 - Do not invent endpoints or fields absent from specs—ask first.
-- Follow `.cursor/rules/testing.mdc`.
+- Do not prescribe a frontend test framework.
 
 ## Output
 

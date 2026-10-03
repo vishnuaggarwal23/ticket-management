@@ -7,29 +7,87 @@ alwaysApply: true
 
 Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 
-## Pipeline
+## Assessment vs project conventions vs open decisions
 
-Tickets → knowledge documents → **chunk** → **embeddings** → vector store (PgVector preferred) → user question → similarity search → LLM + retrieved context → **grounded answer** + **ticket sources**.
+**Assessment PDF requires** (do not weaken these):
 
-## Ingestion
+- Natural-language Q&A over support-ticket history, grounded **only** in ticket data the system has (not general model knowledge for support questions).
+- Cite the **ticket ID(s)** actually used; if nothing relevant is retrieved, say so explicitly (**no relevant tickets found**) — do not fabricate tickets, facts, or citations.
+- Ingest **description, comments, and resolution notes** into searchable knowledge.
+- Attach metadata: `ticketId`, `status`, `priority`, `assignee`, `category` (exact field shapes wait on the **data model** spec).
+- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale.
+- **top-K** and **similarity threshold** are **configurable**, not hardcoded.
+- Document chunking strategy and embedding-model tradeoffs in architecture / RAG ingestion specs (justification is required; a specific algorithm is **not** named by the PDF).
+- **Single retrieve → generate** — not an agent: no tool chaining, ticket creation, or notifications from the ask path.
+- Named stack examples: Spring AI, an embedding model, a vector store (**PGVector or Chroma**). The PDF does **not** pick one store, Ollama, Liquibase, or a model name.
 
-- Source fields: description, comments, resolution notes (and other ticket text agreed in `spec/rag-ingestion.md`).
-- Metadata on each chunk/document: `ticketId`, `status`, `priority`, `assignee`, `category`.
-- **Re-ingest / refresh** when a ticket is updated or closed—knowledge must not go stale.
-- Document chunking choice (paragraph vs fixed-size vs semantic) for **ticket data** in `spec/architecture.md` / `rag-ingestion.md`.
+**This project’s approved conventions** (not PDF mandates):
 
-## Retrieval
+- **PostgreSQL with PgVector** is the selected vector store (same database family as tickets).
+- **Spring AI** is the integration framework for embeddings, vector operations, and generation.
+- **Ollama** is the **initial** provider — configure it (base URL, model ids) rather than scattering Ollama-specific clients through services.
+- Vector/chunk **schema changes** go through **Liquibase**, consistent with Java/Spring standards.
+- Default tests: **JUnit 5**, PostgreSQL **Testcontainers**; no paid/external model calls in the default suite; **no CI** in this milestone.
 
-- `top-K` and **similarity threshold** are **configurable** (Spring config)—never hardcoded magic numbers in code.
-- Document embedding model choice (e.g. local Ollama vs cloud) and cost/latency/quality tradeoff in architecture docs.
+**Open until recorded in `spec/rag-ingestion.md` (and evaluation strategy where noted) and agreed:**
 
-## Grounding & guardrails
+- Embedding **model**, vector **dimension**, and whether ingest and query always share one model (they must stay compatible once chosen).
+- Chunking algorithm, chunk size, overlap, and whether one document vs many per ticket.
+- Numeric top-K, similarity threshold **values**, distance metric, and index type (config keys must exist; values are not locked here).
+- Metadata columns beyond the assessment list / approved data model.
+- Synchronous vs asynchronous ingestion; delete-and-replace vs versioned historical embeddings.
+- Exact `POST /api/ai/ask` **response JSON** (belongs in the RAG API contract).
+- Numerical RAG quality scores, golden-answer sets (evaluation strategy — not this file).
 
-- Answer **only** from retrieved ticket context—do not fall back to general LLM knowledge for support questions.
-- If nothing relevant: say **no relevant tickets found**; do not fabricate.
-- Cite specific ticket ID(s) used.
-- **Single** retrieve → generate flow—not an autonomous agent (no tool-chaining, ticket creation, or notifications from the ask endpoint).
+Do not assume Spring AI, PostgreSQL, PgVector, Ollama, or model **versions** until finalized.
 
-## Validation
+## Pipeline (engineering guidance)
 
-Use `/review-rag-output` (or `commands/review-rag-output.md`) to check assistant answers for hallucination / ungrounded claims before accepting them.
+```
+Tickets → knowledge documents → chunk → embeddings → PgVector
+  → user question → similarity search → retrieved ticket context
+  → generate from that context only → grounded answer + ticket sources
+```
+
+This is **retrieve then generate** once. Do not add agents, multi-step tool orchestration, graph RAG, hybrid search, or reranking as requirements. Those are out of scope unless a later agreed spec says otherwise.
+
+## Ingestion and storage
+
+- Build knowledge text from description, comments, and resolution notes. Do not invent extra source types.
+- Associate assessment metadata on stored chunks/documents. Do not invent a metadata schema beyond the assessment and the approved data model.
+- Persist embeddings and metadata in **PgVector**; keep ticket rows as the system of record. Derived vectors must be refreshable from tickets.
+- On **update** or **close**, refresh that ticket’s derived data so stale chunks are not left as the only index. The **mechanism** (sync/async, delete vs version) is specified in `spec/rag-ingestion.md`, not here.
+- Use Spring AI for embed/store/search; keep provider (Ollama first) in **configuration**.
+- Liquibase owns vector table/extension/column definitions. Embedding **dimension** in schema must match the chosen model **once that model is agreed**.
+
+Chunking and document preparation: keep units meaningful for ticket text; **do not** freeze paragraph vs fixed-size vs semantic, sizes, or overlap in these rules. Record the choice and justification in `spec/architecture.md` / `spec/rag-ingestion.md` before implementation.
+
+## Retrieval and generation
+
+- Embed the question with the **same** embedding model used at ingest (once chosen).
+- Similarity search with **configurable** top-K and similarity threshold (Spring configuration / env — not magic numbers in Java).
+- If nothing passes the threshold (or retrieval is empty), return the honest no-match outcome **without** asking the LLM to invent an answer from an empty or irrelevant context.
+- Otherwise, pass **retrieved excerpts + ticket ids** as the only factual context into generation.
+
+## Grounding and answer quality
+
+- Support answers must be based on **retrieved ticket content**, not the model’s general knowledge.
+- Keep **evidence** (retrieved chunks / ticket ids) distinct from **wording** the model produces. Citations must be ticket IDs that appear in the retrieval result — not ids the model guessed.
+- Prompt instructions help but **do not guarantee** grounding. Check retrieval (was the right ticket context fetched?) and the generated answer (does each claim map to that context?) **independently**.
+- Use `commands/review-rag-output.md` (or `/review-rag-output`) before accepting assistant output.
+- Do **not** set numerical quality thresholds, formulas, or golden-answer corpora here.
+
+## Testing boundaries
+
+- **Deterministic, where feasible:** document/chunk assembly from ticket fields, metadata persistence, Liquibase/PgVector schema, and that update/close **triggers** a refresh (or a clearly testable ingestion port). Use PostgreSQL **Testcontainers** per testing standards.
+- **Not ordinary unit tests:** retrieval ranking quality and free-form generated answers. Evaluate those separately (evaluation strategy).
+- Default suite: **no** real Ollama, cloud, or paid model calls — use doubles for generation/embedding APIs unless a later evaluation spec explicitly requires a local model.
+- Do not prescribe a RAG eval harness, metrics, or golden sets in this file.
+
+## Do not
+
+- Do not treat PgVector, Ollama, or Liquibase as if the PDF mandated them.
+- Do not hardcode model names, Ollama URLs, top-K, thresholds, chunk sizes, or dimensions in application code.
+- Do not implement agents, tool calling, or side effects from `/api/ai/ask`.
+- Do not prescribe a package layout, prompt template, or class design.
+- Do not invent product features (auth filters on ask, rerankers, etc.) not in the assessment or an agreed spec.

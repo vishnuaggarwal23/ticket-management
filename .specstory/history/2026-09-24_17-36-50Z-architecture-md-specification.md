@@ -365,5 +365,300 @@ Simplifying the vector synchronization section by removing premature execution m
 
 Line 161 will reference api-contract.md for illegal transition errors instead of assuming a 409 response. The vector store table and §8.2 will drop the Chroma alternative and note the open question. §9.4 will describe embedding tradeoffs without locking to a specific model name, deferring final selection to rag-ingestion.md.
 
-Scope line 29 will be updated to justify embedding tradeoffs
+Scope line 29 will be updated to justify embedding tradeoffs here while deferring model selection to rag-ingestion.md.
+
+Test infrastructure details will be removed from §8.3 and the stack table, with references redirected to test-strategy.md.
+
+JPA and Flyway entries will be dropped from the configuration table, and open question 14 will be revised.
+
+§9.7 will be trimmed or replaced with a reference to test-strategy.md.
+
+Open questions 7, 8, 12, and 14 will be updated or removed as appropriate.
+
+Lines 137–139 now state that ticket knowledge re-ingestion follows updates or closures, deferring execution model to rag-ingestion.md. The vector store table will list PgVector with the PostgreSQL instance, and the tests row will point to test-strategy.md.
+
+The embedding tradeoff table will use generic Local versus Cloud labels rather than specific model names. §12 will drop the JPA ddl-auto and Flyway rows, keeping only a brief persistence configuration note.
+
+The illegal-status-transition error in §13 will also defer to api-contract.md rather than assuming a 409 response. Open question 7 is being removed because the vector store is now decided. Question 8 will be revised to point to test-strategy.md or deleted. Question 14 about migrations is being removed. A revision-history entry will be added for these corrections. The rag-ingestion.md related specification will be updated to mention embedding model selection.
 </details></think>
+
+_**Agent (auto-smart)**_
+
+Applying targeted edits to `spec/architecture.md`.
+
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Checking whether §17 acceptance criteria still correctly references embedding tradeoffs documented in this file.
+
+The mermaid diagram label was left unchanged since it was not requested. The §10 Tests line remains correct under NFR-09. All requested corrections have been applied.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Applied the requested review corrections to `spec/architecture.md` with minimal edits:
+
+| Area | Change |
+|------|--------|
+| **Vector sync (§6)** | Re-ingest after update/close only; execution model deferred to `rag-ingestion.md` (removed “before next ask…” and after-commit preference). |
+| **State machine (§6 table, §10)** | Illegal transition → domain-level error; HTTP status/body → `api-contract.md`. |
+| **Frontend errors (§7)** | Wording no longer assumes 409. |
+| **PgVector (§5, §8.2)** | Chosen store; Chroma alternative removed. |
+| **Embeddings (§9.4, scope table, §12)** | Generic local vs cloud tradeoffs; no model names; final choice in `rag-ingestion.md`. |
+| **Testing (§5, §8.3, §9.7)** | Point to `test-strategy.md`. |
+| **Migrations** | Removed from §12 config table and open questions. |
+| **Open questions (§15)** | Renumbered; dropped vector-store, H2, and migration items; re-ingest execution → `rag-ingestion.md`. |
+| **Related specs** | `rag-ingestion.md` row updated for embedding model + execution model. |
+| **Revision history** | One line added for this review pass. |
+
+---
+
+_**User**_
+
+looks good! commit all the changes and push
+
+---
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Committing and pushing all changes now.
+
+Running git status, diff, and log first to review the changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status
+```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.specstory/history/2026-09-24_17-36-50Z-architecture-md-specification.md
+	.specstory/history/2026-09-24_17-36-50Z-lets-go-to-the.md
+	spec/architecture.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff &amp;&amp; git diff --staged</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff && git diff --staged
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git log -5 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git log -5 --oneline
+```
+
+```
+3410032 docs: update SpecStory session history
+0cd6ff4 docs: refine requirements after assessment review
+9b20cda docs: update SpecStory session history
+14a8db9 docs: seed assessment brief and requirements from PDF
+b21ed5b docs: update SpecStory prompt history
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Adding spec/architecture.md and the SpecStory history files.
+
+Committing with a conventional message and pushing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add spec/architecture.md .specstory/history/2026-09-24_17-36-50Z-architecture-md-specification.md .specstory/history/2026-09-24_17-36-50Z-lets-go-to-the.md &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+docs: add architecture spec for ticket system and RAG
+
+Captures stack, layering, PgVector, state machine placement, and RAG pipeline with open items deferred to sibling specs.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add spec/architecture.md .specstory/history/2026-09-24_17-36-50Z-architecture-md-specification.md .specstory/history/2026-09-24_17-36-50Z-lets-go-to-the.md && git commit -m "$(cat <<'EOF'
+docs: add architecture spec for ticket system and RAG
+
+Captures stack, layering, PgVector, state machine placement, and RAG pipeline with open items deferred to sibling specs.
+EOF
+)" && git status
+```
+
+```
+[main a7b29d0] docs: add architecture spec for ticket system and RAG
+ 3 files changed, 835 insertions(+)
+ create mode 100644 .specstory/history/2026-09-24_17-36-50Z-architecture-md-specification.md
+ create mode 100644 .specstory/history/2026-09-24_17-36-50Z-lets-go-to-the.md
+ create mode 100644 spec/architecture.md
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Pushing the committed changes to origin.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git push -u origin HEAD</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git push -u origin HEAD
+```
+
+```
+To github-personal:vishnuaggarwal23/ticket-management.git
+   3410032..a7b29d0  HEAD -> main
+branch 'main' set up to track 'origin/main'.
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+All changes have been committed and pushed.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+**Committed** `a7b29d0` on `main`:
+
+- `spec/architecture.md` — architecture specification  
+- `.specstory/history/2026-09-24_17-36-50Z-*.md` — session history  
+
+**Message:** `docs: add architecture spec for ticket system and RAG`
+
+**Pushed** to `origin/main` (`3410032..a7b29d0`). Working tree is clean.

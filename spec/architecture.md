@@ -96,23 +96,25 @@ flowchart LR
 
 | Layer | Choice (from assessment + project steering) | Notes |
 |-------|-----------------------------------------------|--------|
-| Language / runtime | **Java 21** | LTS; records and modern APIs where helpful |
-| Backend framework | **Spring Boot 3** | Web, validation, JPA, configuration |
-| AI integration | **Spring AI** | Embeddings, vector store abstractions, chat client for grounded answers |
-| Ticket persistence | **PostgreSQL** | Primary system of record |
-| Vector search | **PgVector** (PostgreSQL + pgvector extension) | Same database instance as ticket tables (§8) |
-| Tests | — | See [`test-strategy.md`](test-strategy.md) |
-| API style | **REST**, JSON, base path `/api/...` | Conventions in `rules/api-standards.md` |
-| Frontend | **React or Next.js** (or equivalent SPA) | Exact framework TBD (§15) |
-| Tooling | Cursor / Copilot / Kiro, SpecStory, project `rules/` and `commands/` | Process, not runtime |
+| Language / runtime | **Java 21** | Assessment names Java 21 |
+| Backend framework | **Spring Boot 3** | **Project convention** (PDF names Spring Boot, not a major version) |
+| Build | **Maven Wrapper** (`./mvnw`) | **Project convention** — do not rely on a machine-local Maven |
+| AI integration | **Spring AI** | Assessment names Spring AI; embeddings, vector store, chat |
+| Ticket persistence | **PostgreSQL** + **Liquibase** | PDF names PostgreSQL/H2; **this project** uses PostgreSQL and Liquibase |
+| Vector search | **PgVector** (same Postgres instance) | **Project selection** (PDF examples: PGVector or Chroma) — §8 |
+| Initial model host | **Ollama** (via Spring AI config) | **Project convention**; model **name** still open (`rag-ingestion.md`) |
+| Tests | JUnit 5; PostgreSQL **Testcontainers** | **Project convention** — see [`test-strategy.md`](test-strategy.md) and `rules/testing.md` |
+| API style | **REST**, JSON | Assessment: REST; `/api/ai/ask` is the only path the PDF names |
+| Frontend | **React + Vite + TypeScript** | **Project convention** (PDF: React/Next **or equivalent**) — `rules/frontend.md` |
+| Tooling | Cursor / Copilot / Kiro, SpecStory, `rules/` / `commands/` | Process, not runtime |
 
-**Not mandated by the PDF:** Docker, Kubernetes, message brokers, or separate RAG microservice. Local **Docker Compose** for PostgreSQL (+ optional Ollama) is a reasonable **developer convenience** but not a product requirement unless we add it later.
+**Not mandated by the PDF:** Docker, Kubernetes, message brokers, or a RAG microservice. **Docker Compose** is this project’s approved **local infrastructure** convenience.
 
 ---
 
 ## 6. Logical structure (backend)
 
-Package by **feature-oriented layers** (aligns with `rules/java-springboot.md`):
+Keep HTTP adapters thin and persistence separate from ticket/RAG rules (`rules/java-springboot.md`). The following package names are an **example**, not a mandated layout:
 
 ```
 api/          Controllers, request/response DTOs, validation annotations
@@ -132,7 +134,7 @@ config/       Spring configuration, RAG properties, Spring AI beans
 | State machine | Pure rules: allowed transitions; reject illegal moves with a domain-level error (HTTP mapping in `api-contract.md`) |
 | RAG ingestion | On relevant ticket changes: build documents → chunk → embed → upsert/delete in vector store |
 | Ask service | Embed question → similarity search → filter by threshold → prompt LLM with context only → map to response DTO |
-| `@ControllerAdvice` | Map validation, not-found, illegal transition, and generic failures to stable JSON error bodies |
+| `@ControllerAdvice` | Map validation, not-found, illegal transition, and generic failures to client-safe errors (exact JSON in `api-contract.md`) |
 
 **Synchronization between DB and vector index**
 
@@ -142,7 +144,7 @@ After a successful ticket **update** or transition to **closed** (and any other 
 
 ## 7. Frontend architecture
 
-The UI is a **single-page or multi-page app** that consumes the backend REST API (no requirement for a separate BFF).
+The UI is a **React + Vite + TypeScript** app (project convention) that consumes the backend REST API (no BFF). Screens and interaction detail belong in [`ui-flow.md`](ui-flow.md); this section only lists surfaces implied by the assessment.
 
 **Functional surfaces** (mapped to requirements; detail in `ui-flow.md`):
 
@@ -157,13 +159,13 @@ The UI is a **single-page or multi-page app** that consumes the backend REST API
 
 **Error display**
 
-- Parse stable error JSON (`message`, optional `details` for field errors) and show user-visible text (FR-10).
-- For illegal status transition errors (per `api-contract.md`), show the server message (no silent retry with a different status).
+- Show user-visible messages from the API (FR-10). Exact error JSON is **not** frozen here — follow `api-contract.md` once agreed (`rules/api-standards.md`, `rules/frontend.md`).
+- For illegal status transitions, show the **server** message. The UI may guide valid actions; it is not the enforcer.
 
 **Configuration**
 
-- Frontend reads **API base URL** from environment (e.g. `NEXT_PUBLIC_API_URL` or Vite equivalent) for local vs deployed backends.
-- No secrets in the frontend bundle; any LLM keys stay server-side only.
+- Frontend reads **API base URL** from Vite env (for example `import.meta.env.VITE_*`). Do not hardcode machine-specific hosts.
+- No secrets in the frontend bundle; LLM keys stay server-side only.
 
 ---
 
@@ -179,21 +181,21 @@ The UI is a **single-page or multi-page app** that consumes the backend REST API
 
 **Purpose:** similarity search over ticket text for RAG retrieval.
 
-**Chosen store:** **PgVector** — PostgreSQL with the **pgvector** extension in the **same database instance** as ticket tables (separate table(s) for chunks/embeddings).
+**Project-selected store:** **PgVector** — PostgreSQL with the **pgvector** extension in the **same database instance** as ticket tables (separate table(s) for chunks/embeddings). Schema for tickets **and** vectors is versioned with **Liquibase**.
 
-**Rationale:** one operational datastore, Spring AI PgVector support, aligned with project steering (`rules/rag-vector-store.md`).
+**Rationale:** one operational datastore and Spring AI PgVector support. The assessment PDF allows PGVector **or** Chroma; this project chose PgVector (`rules/rag-vector-store.md`).
 
 **Stored per chunk (minimum, from requirements):** metadata `ticketId`, `status`, `priority`, `assignee`, `category`, plus embedding vector and text (or reference) for prompt context.
 
 **Lifecycle**
 
-- **Insert/update** chunks on ingest/re-ingest for a ticket.
-- **Delete or replace** all chunks for a `ticketId` on re-ingest to avoid duplicates and stale segments.
+- Refresh derived vectors when a ticket is **updated or closed** so stale chunks are not left as the only index (FR-14).
+- **How** to refresh (synchronous vs async; delete-and-replace vs versioned history) is specified in [`rag-ingestion.md`](rag-ingestion.md), not here.
 - Vector data may be **rebuilt from PostgreSQL** if the index is lost (tickets remain authoritative).
 
 ### 8.3 Test and runtime databases
 
-Runtime and test database choices (e.g. PostgreSQL vs H2, Testcontainers) are defined in [`test-strategy.md`](test-strategy.md), not in this document.
+**Runtime:** PostgreSQL (with PgVector). **Backend integration tests:** PostgreSQL via **Testcontainers**, with Liquibase applied (`rules/testing.md`). H2 is not the default. Details belong in [`test-strategy.md`](test-strategy.md).
 
 ---
 
@@ -221,23 +223,25 @@ This is a **single** retrieve-then-generate path—no agent loop, no side effect
 
 **Open:** whether each comment is a separate sub-document vs one composite document per ticket—affects chunk boundaries; default recommendation is **one composite document per ticket per ingest version**, then chunk (§9.3).
 
-### 9.3 Chunking strategy (required justification)
+### 9.3 Chunking strategy (justification for NFR-07; sizes not frozen)
 
-| Strategy | Fit for ticket data | Decision |
-|----------|---------------------|----------|
-| **Paragraph-based** | Comments and descriptions are naturally paragraph- or message-sized; preserves semantic units | **Primary approach** |
-| Fixed-size only | Can split mid-sentence across unrelated comments | Use only as a **secondary split** when a paragraph exceeds max size |
-| Semantic splitting (embedding-based boundaries) | Higher cost/complexity; marginal gain for short support tickets | **Out of scope** for initial delivery unless evaluation shows poor retrieval |
+The assessment requires **documenting and justifying** a chunking approach for ticket data. It does **not** name an algorithm. Engineering rules leave sizes, overlap, and algorithm to [`rag-ingestion.md`](rag-ingestion.md).
 
-**Chosen approach: paragraph-based chunking with a configurable maximum chunk size**
+**Proposed default (agree in `rag-ingestion.md` before implementation):** paragraph-based splitting with a configurable maximum size.
 
-1. Split knowledge text on paragraph boundaries (blank lines) and on **comment boundaries** (each comment at least one block).
-2. If a block exceeds **max-chars** (or max-tokens proxy), split on sentence boundaries until under the limit.
-3. Optionally merge very small adjacent blocks up to a **min-chars** threshold to avoid tiny fragments (e.g. “Thanks” alone).
+| Strategy | Fit for ticket data | Status |
+|----------|---------------------|--------|
+| **Paragraph-based** | Comments and descriptions are naturally paragraph- or message-sized | **Proposed primary** |
+| Fixed-size only | Can split mid-sentence across unrelated comments | Secondary split only if a paragraph exceeds max size |
+| Semantic splitting | Higher cost/complexity; marginal gain for short tickets | Not required for initial delivery unless evaluation shows poor retrieval |
 
-**Configuration properties (examples):** `rag.chunking.max-chars`, `rag.chunking.min-chars` — defaults documented in `rag-ingestion.md`, not hardcoded in code.
+**Proposed mechanics** (parameter names/values in `rag-ingestion.md`, not hardcoded in Java):
 
-**Why this fits:** ticket content is structured and short-to-medium length; paragraph/comment boundaries align with how agents read threads; avoids the operational burden of semantic chunkers while meeting the PDF’s ask to **document and justify** strategy (NFR-07).
+1. Split knowledge text on paragraph boundaries (blank lines) and on **comment boundaries**.
+2. If a block exceeds max-chars (or a token proxy), split on sentence boundaries until under the limit.
+3. Optionally merge tiny adjacent blocks up to a min-chars threshold.
+
+**Why this is a reasonable default:** ticket text is structured and short-to-medium; paragraph/comment boundaries match how people read threads; it avoids a semantic chunker while still meeting NFR-07.
 
 ### 9.4 Embedding provider (tradeoffs; model selection deferred)
 
@@ -250,7 +254,7 @@ Spring AI should target a **swappable**, **configuration-driven** embedding prov
 
 **Architecture constraint:** the embedding model used at **ingest** and **query** time must be the **same** (or the index must be fully re-built when the model changes).
 
-**Final embedding model and provider** — including defaults for local dev, CI, and demo — are **selected and justified in [`rag-ingestion.md`](rag-ingestion.md)**. This section documents tradeoffs only (NFR-07); it does not lock a specific model name or vendor.
+**Final embedding model** — including defaults for local dev and demo — is **selected and justified in [`rag-ingestion.md`](rag-ingestion.md)**. **Ollama** is the initial **provider** (project convention), not a frozen model id. This section documents tradeoffs only (NFR-07).
 
 ### 9.5 Retrieval
 
@@ -299,12 +303,12 @@ States and transitions are defined in [`state-machine.md`](state-machine.md) (to
 
 ## 11. API and integration architecture
 
-- **Ticket resources** under `/api/tickets` (and nested comments path per `rules/api-standards.md`); exact methods and bodies in `api-contract.md`.
-- **AI** under `/api/ai/ask` — request body `{ "question": "..." }` per assessment.
-- **JSON** everywhere; `Content-Type: application/json`.
-- **CORS** enabled for local frontend origin during development (implementation detail in backend config).
+- **Ticket resources:** capabilities from the assessment (create, list, get, update fields, comments, search, status filter). **Paths are not named in the PDF.** `/api/tickets` (and nested comments) is a **proposal** for [`api-contract.md`](api-contract.md), not an assessment mandate (`rules/api-standards.md`).
+- **AI:** `POST /api/ai/ask` — request body `{ "question": "..." }` per assessment. Response JSON is open until [`rag-api-contract.md`](rag-api-contract.md).
+- **JSON** unless a later spec says otherwise.
+- **CORS** for the local Vite origin during development is an implementation detail, not an assessment requirement.
 
-**Versioning:** none required for assessment; prefer additive API changes documented in spec revisions.
+**Versioning:** none required by the PDF. Prefer additive changes after a contract is agreed. Do not invent `/v1` without a decision.
 
 ---
 
@@ -318,7 +322,7 @@ Configuration is **externalized** (environment variables and/or `application.yml
 | Spring AI | Base URLs, API keys, model identifiers | Server-side only; embedding model per `rag-ingestion.md` |
 | RAG retrieval | `top-k`, similarity threshold | FR-18 |
 | RAG chunking | max/min chunk size | §9.3 |
-| Frontend | API base URL | Build-time env |
+| Frontend | API base URL | Vite `import.meta.env` (names only in committed examples) |
 
 Use typed `@ConfigurationProperties` for RAG settings to keep retrieval tuning out of business logic.
 
@@ -326,19 +330,18 @@ Use typed `@ConfigurationProperties` for RAG settings to keep retrieval tuning o
 
 ## 13. Error handling and API errors
 
-Align with `rules/api-standards.md`:
+Align with `rules/api-standards.md`. **Do not** treat the following codes or body fields as finalized — `api-contract.md` decides them.
 
-| Situation | HTTP | Body shape |
-|-----------|------|------------|
-| Bean Validation failures | 400 | Stable error + field `details` |
-| Ticket not found | 404 | Stable error + message |
-| Illegal status transition | Per `api-contract.md` | Message explaining invalid transition |
-| Malformed JSON / bad request | 400 | Generic or parse message |
-| Unexpected server fault | 500 | Generic message; **no** stack trace to client |
+| Situation | Guidance |
+|-----------|----------|
+| Validation failures | Client error; useful field-level messages when practical |
+| Ticket not found | Distinct from validation (typically not-found) |
+| Illegal status transition | Client-usable message; HTTP status **open** (not locked to 409 vs 400 here) |
+| Unexpected server fault | Generic message; **no** stack trace, SQL, or secrets |
 
-**Logging:** server logs include correlation-friendly messages; do not log secrets or unnecessary PII.
+**Logging:** correlation-friendly messages; do not log secrets or unnecessary PII.
 
-**UI contract:** frontend relies on `message` and `details` for display (FR-10).
+**UI:** show user-safe API messages (FR-10); exact keys once the contract exists.
 
 ---
 
@@ -360,7 +363,7 @@ Carried from `requirements.md` and architecture-level gaps—**do not implement 
 4. **REST contract** — paths, PATCH vs PUT, search/filter query parameters (`api-contract.md`).
 5. **`POST /api/ai/ask` response schema** — citations structure, no-match representation (`rag-api-contract.md`).
 6. **Authentication / roles** — absent from PDF.
-7. **Frontend framework** — React vs Next.js vs equivalent.
+7. **Frontend stack** — **resolved as project convention:** React + Vite + TypeScript (`rules/frontend.md`). Screens still belong in `ui-flow.md`.
 8. **Status transition API** — how clients request a transition.
 9. **Skipped transitions** — e.g. `OPEN` → `RESOLVED` allowed or not.
 10. **Re-ingestion execution** — inline, after-commit, async, failure handling (`rag-ingestion.md`).
@@ -403,3 +406,4 @@ Architecture supports verification of these themes from `requirements.md`:
 |------|------|
 | 2026-09-24 | Initial architecture draft from `requirements.md`, `docs/assessment-brief.md`, and project `rules/` / `.cursor/rules/`. |
 | 2026-09-24 | Review corrections: PgVector chosen; re-ingest execution deferred to `rag-ingestion.md`; illegal transition HTTP deferred to `api-contract.md`; embedding model selection deferred; testing and DB migrations out of scope here. |
+| 2026-10-03 | Aligned with approved engineering rules: PDF vs project stack; Maven Wrapper, Liquibase, Ollama-as-provider, React+Vite+TS, Testcontainers; ticket URL and error JSON not mandated; chunking marked proposed pending `rag-ingestion.md`. |

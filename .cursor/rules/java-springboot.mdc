@@ -5,27 +5,52 @@ alwaysApply: true
 
 # Java Spring Boot guidelines
 
-Stack: **Java 21**, **Spring Boot 3**, Spring Data JPA, validation, PostgreSQL (H2 only for tests if needed). Prefer Spring AI for embeddings/RAG when implementing AI features.
+## Assessment vs project conventions
 
-## Structure
+**Assessment PDF** names Java 21, Spring Boot, Spring AI, PostgreSQL/H2, an embedding model, and a vector store (examples include PGVector or Chroma). It requires backend validation, backend-enforced ticket status rules, and no secrets in the repository. It does **not** mandate Spring Boot 3, Maven, Liquibase, PgVector over Chroma, Ollama, or a specific database for tests.
 
-- Package by feature or clear layers: `api` (controllers/DTOs), `domain`, `service`, `persistence`, `config`, `ai`/`rag`.
-- Controllers stay thin; business rules and **ticket state machine** live in services/domain—not in controllers or the UI.
-- Prefer constructor injection; avoid field injection.
-- Use records for immutable DTOs where practical; entities stay JPA-managed.
+**This project’s approved conventions** (use these when implementing; do not describe them as PDF requirements):
 
-## Practices
+- Java **21**
+- Spring Boot **3** (major version only — do not assume a patch version)
+- Spring AI for embeddings and chat (do not assume a Spring AI version)
+- **Maven with Maven Wrapper** — run `./mvnw` (or `mvnw.cmd`); do not rely on a locally installed Maven
+- **PostgreSQL with PgVector** as the database and vector store (do not assume PostgreSQL or PgVector versions)
+- **Liquibase** for version-controlled schema changes
+- **Ollama** as the **initial** AI provider — wire it through Spring AI configuration, not provider-specific code scattered through services
 
-- Validate inputs with Bean Validation (`@Valid`, constraints) on request DTOs; reject invalid data at the API boundary.
-- Map domain errors to consistent HTTP responses via `@ControllerAdvice` (no stack traces to clients).
-- Transactions on service methods that mutate state; keep them short.
-- No secrets in code or commits; use env / Spring config with `.env.example` only.
-- Prefer `Optional` at service boundaries sparingly; do not return `null` from public APIs.
-- Use meaningful names; avoid abbreviations that obscure ticket/RAG domain terms.
-- Log with correlation-friendly messages; never log PII/secrets.
+Do not assume a finalized embedding model, vector dimension, or Spring AI starter set until those are agreed.
+
+## Responsibilities
+
+- Keep HTTP adapters thin. Ticket business rules and the **status state machine** live in domain/services — not in controllers, repositories, or the UI.
+- Keep **persistence** (repositories, JPA mappings, Liquibase) separate from **business logic**. Repositories must not bypass the state machine or apply ad-hoc status updates.
+- Prefer **constructor-based** dependency injection; avoid field injection.
+- Use established Spring and Java conventions: readable names (avoid opaque abbreviations for ticket/RAG terms), clear types, short transactional service methods that mutate state.
+
+## Validation and errors
+
+- Validate request input with Bean Validation (`@Valid` and constraints) at the API boundary.
+- Map domain errors to consistent HTTP responses via `@ControllerAdvice`. Do not leak stack traces, internals, or secrets to clients.
+- Do not return `null` from public APIs.
+
+## Database, schema, and PgVector
+
+- PostgreSQL is the system of record for tickets; PgVector holds derived embedding data. Schema for both belongs in **Liquibase** changelogs, not in undocumented manual SQL.
+- Keep Liquibase migrations and entity mappings **consistent**. Changing a column, constraint, or vector column in code without a matching migration (or the reverse) is incorrect.
+- Use PostgreSQL and PgVector types that fit the data. When an embedding model is finalized, vector **dimensions** in migrations, mappings, and Spring AI config must match that model.
+- In normal workflows, **do not** apply schema changes outside Liquibase (no ad-hoc `psql` DDL as the source of truth).
+- Do **not** prescribe H2 as the project or “only” test database. Integration testing direction is PostgreSQL (Testcontainers); detailed test conventions live in testing standards, not here.
+
+## Configuration and secrets
+
+- Never commit credentials, API keys, or machine-specific paths. Use environment variables and Spring configuration; committed examples may list **names only** (for example `.env.example`).
+- Log with correlation-friendly messages; never log secrets or unnecessary PII.
+- Do not hardcode RAG top-K or similarity thresholds — use configuration properties.
 
 ## Do not
 
-- Do not start from “build the complete application”—implement only what the current agreed spec/plan covers.
-- Do not bypass the status state machine in repositories or ad-hoc SQL updates.
-- Do not hardcode RAG top-K / similarity thresholds—use configuration properties.
+- Do not start from “build the complete application” — implement only the current agreed spec/plan.
+- Do not pin unfinalized versions (Spring Boot 3 patch, Spring AI, PostgreSQL, PgVector, embedding model) in these rules or in code as if they were decided.
+- Do not hardcode Ollama URLs, model names, or client types throughout the codebase; keep provider choice in configuration.
+- Do not invent authentication, a mandatory package layout, mandatory Java records, a fixed ORM mapping style, or a database naming strategy unless a spec or later approved decision says so.
