@@ -11,6 +11,7 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows:
 | [`spec/requirements.md`](../spec/requirements.md) | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7**; journeys **§4.1** until `ui-flow.md` exists |
 | [`spec/architecture.md`](../spec/architecture.md) | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
+| [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client types |
 | `spec/ui-flow.md` | Screens and navigation (when agreed) |
 | `spec/rag-api-contract.md` | Citation / no-match fields inside ask `data` |
 
@@ -46,7 +47,7 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 
 - Screen layout, navigation, how a transition is chosen, how ask is laid out
 - CSS framework, component library, router, client global store
-- Exact ask `data` field names until `spec/rag-api-contract.md`
+- Exact ask `data` field names beyond interim `answer` / `citedTicketIds` (`api-contract.md` §6) until `spec/rag-api-contract.md`
 
 ## Stack
 
@@ -172,4 +173,5 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §12. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Ticket id, category, resolutionNotes, create requiredness from agreed [`spec/data-model.md`](../spec/data-model.md). |
+| 2026-10-04 | API client types: draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | Interim UI flows: requirements §4.1 / §8.7 + architecture §12 when `ui-flow.md` missing. |

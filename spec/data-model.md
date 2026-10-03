@@ -422,7 +422,7 @@ Title is for human context in chunks; **PDF** ingest sources are description, co
 
 DTOs are **Java records** in `api` with Bean Validation on **requests**. Responses use the success envelope `{ "data": ... }` ([`rules/api-standards.md`](../rules/api-standards.md)).
 
-Field names below are **Agreed** with this data model; HTTP-only nuances may be refined in [`api-contract.md`](api-contract.md).
+Field names below are **Agreed** with this data model; HTTP paths, scenarios, and envelope usage → [`api-contract.md`](api-contract.md).
 
 ### 10.1 Ticket commands
 
@@ -872,7 +872,7 @@ Remaining **Open** in other specs:
 |----|-------|
 | DEC-01 re-ingest on close | `rag-ingestion.md` |
 | DEC-02 skipped transitions | `state-machine.md` |
-| DEC-06 transition API shape | `api-contract.md` (PATCH `status` assumed) |
+| DEC-06 transition API shape | [`api-contract.md`](api-contract.md) §4.4 (PATCH `status` interim) |
 | Embedding dimension, chunk sizes | `rag-ingestion.md` |
 | Ask `data` JSON | `rag-api-contract.md` |
 
@@ -904,3 +904,4 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | §14.5–14.6 index catalog: BTREE, `pg_trgm` GIN for `q`, vector HNSW; Liquibase changelog order; AC-DM-08. |
 | 2026-10-04 | Terminology pass: **Agreed** / **Convention** replace stale **Proposed** on DEC-03/04/05/07/08/13 rows. |
 | 2026-10-04 | Cross-ref only: transition matrix in draft [`state-machine.md`](state-machine.md). |
+| 2026-10-04 | HTTP contract cross-ref [`api-contract.md`](api-contract.md). |

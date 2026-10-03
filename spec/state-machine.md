@@ -193,14 +193,12 @@ For each **from** state, every **to** state is either a legal edge (T1–T5), a 
 
 ## 6. API and persistence behaviour
 
-### 6.1 Request shape (**Convention** — **DEC-06** open)
+### 6.1 Request shape (**DEC-06** interim — [`api-contract.md`](api-contract.md) §4.4)
 
-Until `api-contract.md` / `ui-flow.md` close **DEC-06**:
+- Status change: **`PATCH /api/v1/tickets/{id}`** with request body field **`status`** set to the **target** enum string (same values as §3). Success response wraps the ticket in envelope `data` (not request body).
+- Non-status fields may appear on the same PATCH per [`data-model.md`](data-model.md) §10 / [`api-contract.md`](api-contract.md) §4.4; when `status` is present, the state machine runs **before** commit.
 
-- Status change: **`PATCH /api/v1/tickets/{id}`** with JSON `data` containing **`status`** set to the **target** enum string (same values as §3).
-- Non-status fields may appear on the same PATCH per [`data-model.md`](data-model.md) §10; when `status` is present, the state machine runs **before** commit.
-
-Dedicated transition sub-resources or UI wizards require **DEC-06** and spec updates first.
+Dedicated transition sub-resources or UI-only wizards require a future **DEC-06** revision and spec update.
 
 ### 6.2 Success
 
@@ -266,7 +264,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | ID | Topic | Status | Owner spec |
 |----|-------|--------|------------|
 | **DEC-02** | Skipped hops / extra edges | **Open** — implement **option (A)** only (confirmed 2026-10-04; may revisit later) | This file |
-| **DEC-06** | Dedicated transition API vs PATCH | **Open** — interim PATCH §6.1 | `api-contract.md`, `ui-flow.md` |
+| **DEC-06** | Dedicated transition API vs PATCH | **Interim** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | `ui-flow.md` for UX |
 | **DEC-07** | Initial `OPEN` on create | **Agreed** | [`data-model.md`](data-model.md) §5.1 |
 
 ---
@@ -277,3 +275,4 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 |------|------|
 | 2026-10-04 | Initial spec: PDF T1–T5 / X1–X3, full invalid matrix under DEC-02 default (A), API/domain placement, AC-SM-*. |
 | 2026-10-04 | **DEC-02:** user confirmed interim **(A)** — only T1–T5; decision remains Open in requirements §10.2. |
+| 2026-10-04 | §6.1 aligned with [`api-contract.md`](api-contract.md) PATCH body (not request `data` wrapper). |

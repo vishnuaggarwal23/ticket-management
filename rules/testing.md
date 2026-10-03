@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/testing.mdc`](../.cursor/rules/testing.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed); HTTP narrative may extend in `spec/api-contract.md` when added. Ask `data`: `spec/rag-api-contract.md` when added. RAG **retrieval quality**: [`spec/requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 + `commands/review-rag-output.md` until `spec/evaluation-strategy.md` exists — not golden strings here.
+Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed). HTTP paths, payloads, scenarios: **[`spec/api-contract.md`](../spec/api-contract.md)** (draft). Ask `data` extensions: `spec/rag-api-contract.md`; interim ask shape in `api-contract.md` §6. RAG **retrieval quality**: [`spec/requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 + `commands/review-rag-output.md` until `spec/evaluation-strategy.md` exists — not golden strings here.
 
 **AC mapping when `spec/test-strategy.md` is missing:** use [`spec/requirements.md`](../spec/requirements.md) §8 (**AC-CORE-***) and §9 (FR traceability); [`spec/data-model.md`](../spec/data-model.md) §18 (**AC-DM-***).
 
@@ -97,7 +97,7 @@ Align with `rules/java-springboot.md` (`api`, `domain`, `service`, `persistence`
 
 ## API testing
 
-HTTP APIs MUST be tested as APIs — not only as Java controllers, services, or repositories. Prove `rules/api-standards.md` and field rules from [`spec/data-model.md`](../spec/data-model.md) (and `spec/api-contract.md` / `spec/rag-api-contract.md` when those exist). Assessment capabilities (create, list, get, update fields, comments, keyword search, status filter, status transitions, ask) MUST have **positive and negative** HTTP tests.
+HTTP APIs MUST be tested as APIs — not only as Java controllers, services, or repositories. Prove `rules/api-standards.md`, [`spec/api-contract.md`](../spec/api-contract.md), and [`spec/data-model.md`](../spec/data-model.md) (and `spec/rag-api-contract.md` when added). Assessment capabilities (create, list, get, update fields, comments, keyword search, status filter, status transitions, ask) MUST have **positive and negative** HTTP tests.
 
 ### Two levels (both required for implemented endpoints)
 
@@ -339,3 +339,4 @@ State that substitution in `spec/test-strategy.md` when written.
 | 2026-10-04 | Field/search assertions use agreed [`spec/data-model.md`](../spec/data-model.md); Liquibase index catalog §14.5 / AC-DM-08. |
 | 2026-10-04 | AC traceability via [`spec/requirements.md`](../spec/requirements.md) §8–§9 when `test-strategy.md` absent. |
 | 2026-10-04 | State-machine negative set: [`spec/state-machine.md`](../spec/state-machine.md) §5.4 matrix. |
+| 2026-10-04 | HTTP API tests trace [`spec/api-contract.md`](../spec/api-contract.md) scenarios. |

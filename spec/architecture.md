@@ -920,3 +920,4 @@ Architecture supports verification of:
 | 2026-10-03 | Backend package tree recorded as agreed convention (`rules/java-springboot.md`). |
 | 2026-10-04 | Major expansion: business vs functional modules, ticket conceptual structure, tech and communication architecture, API map, vector DB and RAG depth, knowledge/chunking/embedding justification; synced with `requirements.md` (2026-10-04). |
 | 2026-10-04 | Sync: resolution notes **Agreed** (DEC-05); keyword search **DEC-08**; DEC-07 agreed in §17. |
+| 2026-10-04 | API detail handoff: draft [`api-contract.md`](api-contract.md) (§11 defers payloads/scenarios). |

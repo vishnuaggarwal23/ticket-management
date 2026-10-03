@@ -14,7 +14,7 @@
 | `requirements.md` | Present (this file) | PDF + acceptance hub |
 | [`architecture.md`](architecture.md) | Present (draft) | System design (modules, ticket shape, APIs, communication, RAG, vector DB); chunking + embedding justification (**PDF**, §16); reviewer map in [`rules/documentation.md`](../rules/documentation.md) |
 | [`data-model.md`](data-model.md) | Present (agreed) | Resolves OQ-01, OQ-02, OQ-03, OQ-10, OQ-13, OQ-14; **DEC-03, 04, 05, 07, 08, 13** recorded §10.2 |
-| `api-contract.md` | Missing | Resolves OQ-04; ticket REST (**Open** in PDF) |
+| [`api-contract.md`](api-contract.md) | Present (draft) | Ticket/comment REST + ask boundary; **DEC-14** interim; **DEC-06** PATCH `status` |
 | [`state-machine.md`](state-machine.md) | Present (draft) | T1–T5 / X1–X3 matrix; **DEC-02** default (A); interim PATCH (**DEC-06** open); **DEC-07** cross-ref |
 | `rag-ingestion.md` | Missing | Chunk/model numbers, re-ingest timing (DEC-01) |
 | `rag-api-contract.md` | Missing | Resolves OQ-05; no-match wording |
@@ -928,7 +928,7 @@ Create and maintain specifications before coding. PDF example set:
 | `requirements.md` | This document — PDF-derived requirements |
 | `architecture.md` | System design; **must justify chunking and embedding model** |
 | `data-model.md` | Entities, fields, persistence |
-| `api-contract.md` | REST contracts (tickets, comments, errors) |
+| [`api-contract.md`](api-contract.md) | REST contracts (tickets, comments, errors, ask boundary) |
 | [`state-machine.md`](state-machine.md) | Transitions, rejection rules, API/UI touchpoints |
 | `rag-ingestion.md` | Knowledge docs, metadata, re-ingest triggers |
 | `rag-api-contract.md` | Ask request/response, citations, no-match |
@@ -1225,7 +1225,7 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 | **DEC-03** | OQ-03 | How is `category` set? | User field / enum / derived rule | `data-model.md` | FEAT-13 metadata | Agreed 2026-10-04 | Optional user-selected `TicketCategory` enum on create/update (`data-model.md` §5.3). |
 | **DEC-04** | OQ-01 | Ticket id format | Opaque UUID / `TKT-*` / numeric | `data-model.md` | UI, citations | Agreed 2026-10-04 | Public id `TKT-{n}` from `ticket_number_seq` (start 1001); `ticket.id` `VARCHAR(16)` PK (`data-model.md` §5.5, §14.1). |
 | **DEC-05** | OQ-10 | Resolution notes shape | Dedicated field / comment template / resolve action text | `data-model.md`, `rag-ingestion.md` | FEAT-12 | Agreed 2026-10-04 | Nullable `resolution_notes` column on `ticket`; ingested for RAG (`data-model.md` §6.1). |
-| **DEC-06** | OQ-11 | Transition API & UI | Dedicated PATCH transition / status field on update / wizard | `api-contract.md`, `ui-flow.md` | FEAT-11 | Open | — |
+| **DEC-06** | OQ-11 | Transition API & UI | Dedicated PATCH transition / status field on update / wizard | `api-contract.md`, `ui-flow.md` | FEAT-11 | Interim | PATCH `status` on `PATCH /api/v1/tickets/{id}` — [`api-contract.md`](api-contract.md) §4.4; dedicated sub-resource still Open for UX |
 | **DEC-07** | OQ-13 | Initial status on create | Default `OPEN` / other | `state-machine.md`, `data-model.md` | FEAT-01 | Agreed 2026-10-04 | Server default `OPEN` on create; not accepted from create request body (`data-model.md` §5.1). |
 | **DEC-08** | OQ-14 | Searchable fields | Title only / title+description / include comments | `api-contract.md`, `data-model.md` | FEAT-06 | Agreed 2026-10-04 | Keyword `q` matches `title` and `description` (case-insensitive); comments excluded (`data-model.md` §15.2). |
 | **DEC-09** | OQ-07 | Vector store + embedding product | PGVector vs Chroma; local vs cloud model | `architecture.md`, `rag-ingestion.md` | FEAT-13, IR-04 | Open | — |
@@ -1233,7 +1233,7 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 | **DEC-11** | OQ-05 | No-match vs out-of-scope messaging | Single message / distinct codes | `rag-api-contract.md` | AC-CORE-18 | Open | — |
 | **DEC-12** | OQ-06 | Auth | None for assessment / basic auth / other | `architecture.md` (if any) | **Open** scope | Open | — |
 | **DEC-13** | OQ-02 | Required fields on create | Minimal set aligned to PDF | `data-model.md` | FEAT-01, 09 | Agreed 2026-10-04 | Create requires non-blank `title`; `description`, `assignee`, `category` optional; `priority` defaults `MEDIUM`; `description` defaults empty (`data-model.md` §16.1). |
-| **DEC-14** | OQ-04 | Ticket REST surface | Align with **Convention** in `rules/api-standards.md` | `api-contract.md` | All FEAT API | Open | — |
+| **DEC-14** | OQ-04 | Ticket REST surface | Align with **Convention** in `rules/api-standards.md` | `api-contract.md` | All FEAT API | Interim agreed 2026-10-04 | Paths/methods/payloads in [`api-contract.md`](api-contract.md); envelopes in `rules/api-standards.md` |
 | **DEC-15** | OQ-09 | Frontend stack | React+Next vs React+Vite+TS (**Convention** in rules) | `ui-flow.md` | FEAT UI | Open | — |
 
 ### 10.3 Spec handoff map (OQ → spec)
@@ -1332,3 +1332,4 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | `data-model.md` agreed; OQ-01/02/03/10/13/14 resolved; DEC-03/04/05/07/08/13 recorded §10.2. |
 | 2026-10-04 | PDF coverage map §0.4; removed duplicate §11.2 paragraph (no new spec files). |
 | 2026-10-04 | Added draft [`state-machine.md`](state-machine.md); child-spec table and FEAT-11 handoff updated. |
+| 2026-10-04 | Added draft [`api-contract.md`](api-contract.md); **DEC-06**/**DEC-14** interim in §10.2. |

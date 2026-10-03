@@ -17,7 +17,7 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 ## Inputs
 
 - Diff / named paths
-- Agreed specs: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) — do not invent missing contracts; interim map [`rules/documentation.md`](../rules/documentation.md); layout [`spec/architecture.md`](../spec/architecture.md) §8–9
+- Agreed specs: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md), draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md) — interim map [`rules/documentation.md`](../rules/documentation.md); layout [`spec/architecture.md`](../spec/architecture.md) §8–9
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements
@@ -31,14 +31,15 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### Spec and scope
 
 - [ ] Implements only **agreed** specs; no extra product features (auth, agents, attachments, bulk ops, rerankers) unless a spec agrees
-- [ ] No silent answers to open questions — check [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)**; still-open: **DEC-01, 02, 06, 09–12, 14, 15**, chunking/model/K/threshold, ask `data` fields. **Agreed via [`spec/data-model.md`](../spec/data-model.md):** id `TKT-{n}`, category, resolution notes, create validation, `q` scope, initial `OPEN`
+- [ ] No silent answers to open questions — check [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)**; still-open: **DEC-01, 02, 09–12, 11, 15**, chunking/model/K/threshold. **Interim:** **DEC-06**/**DEC-14** via [`spec/api-contract.md`](../spec/api-contract.md). **Agreed via [`spec/data-model.md`](../spec/data-model.md):** id `TKT-{n}`, category, resolution notes, create validation, `q` scope, initial `OPEN`
 - [ ] Domain status machine matches [`spec/state-machine.md`](../spec/state-machine.md) §5 (T1–T5, X1–X3, full invalid matrix)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
 
-### API (`rules/api-standards.md`)
+### API (`rules/api-standards.md`, [`spec/api-contract.md`](../spec/api-contract.md))
 
 - [ ] Ticket URLs under `/api/v1`; **PATCH** for field/status updates; no **PUT**
+- [ ] Request/response shapes and status codes match `api-contract.md` §4–§6 (create rejects `status`, comment 201 returns `Comment`, empty PATCH → 400)
 - [ ] `POST /api/ai/ask` with `{"question":"..."}` still works; `/api/v1/ai/ask` behaves the same
 - [ ] Success envelope `{ "data" }`; lists also have `{ "data", "meta" }`
 - [ ] Create returns **201** + `Location`
@@ -141,3 +142,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 | 2026-10-04 | Agreed data-model DECs vs open DECs; Liquibase index catalog §14.5 check. |
 | 2026-10-04 | Three-spec interim map in `rules/documentation.md`; SM from requirements FEAT-11 until `state-machine.md`. |
 | 2026-10-04 | State machine checks use draft [`spec/state-machine.md`](../spec/state-machine.md). |
+| 2026-10-04 | HTTP contract checks use draft [`spec/api-contract.md`](../spec/api-contract.md). |

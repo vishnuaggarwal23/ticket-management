@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/api-standards.mdc`](../.cursor/rules/api-standards.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16); **HTTP capability map** (paths/methods): [`spec/architecture.md`](../spec/architecture.md) §11 until `spec/api-contract.md` exists. **Ask** `data` field names remain in `spec/rag-api-contract.md` when added. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
+JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16). **HTTP paths, request/response payloads, and per-endpoint scenarios** are in [`spec/api-contract.md`](../spec/api-contract.md) (draft). **Ask** `data` field names may be refined in `spec/rag-api-contract.md` (**DEC-11**). Capability map: [`spec/architecture.md`](../spec/architecture.md) §11. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
 
 Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: [`spec/architecture.md`](../spec/architecture.md) §10–11.
 
@@ -38,10 +38,10 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 - **Keyword `q`:** case-insensitive match on **`title` and `description` only** (DEC-08); not comments
 - **Status transition:** PATCH `status` with **target** enum per [`spec/state-machine.md`](../spec/state-machine.md) §6.1 (**DEC-06** may add a dedicated sub-resource later); illegal → **409** `ILLEGAL_TRANSITION`
 
-**Open — resolve in API / RAG API specs when those files exist (do not assume here):**
+**Open — resolve in RAG API spec when finalized (do not assume beyond interim contract):**
 
-- Ask **business** JSON inside `data` (answer text, citation structure, no-match representation). No confidence field unless a spec adds it
-- Dedicated transition sub-resource vs PATCH-only (**DEC-06** — interim PATCH documented in `state-machine.md`)
+- Ask **business** JSON inside `data` beyond interim `answer` + `citedTicketIds` in [`spec/api-contract.md`](../spec/api-contract.md) §6 (**DEC-11** → `rag-api-contract.md`)
+- Dedicated transition sub-resource vs PATCH-only — **interim:** PATCH `status` per `api-contract.md` §4.4 and [`state-machine.md`](../spec/state-machine.md) §6.1
 - Authentication / authorization / roles (not in the assessment)
 - Whether OpenAPI is produced (optional; if added it MUST match these rules and the specs)
 
@@ -70,7 +70,7 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 
 ### Conventional ticket paths (project, not PDF)
 
-Until `spec/api-contract.md` names otherwise, implement:
+Authoritative path table: [`spec/api-contract.md`](../spec/api-contract.md) §7. Summary:
 
 | Capability | Method and path |
 |------------|-----------------|
@@ -104,7 +104,7 @@ Every successful JSON response uses this envelope. Do not return a bare entity o
 }
 ```
 
-`data` is the resource object whose fields are defined in `spec/api-contract.md` (or the RAG spec for ask).
+`data` is the resource object whose fields are defined in [`spec/api-contract.md`](../spec/api-contract.md) (or the RAG spec for ask extensions).
 
 **Collection** (list):
 
@@ -191,7 +191,7 @@ Applies to `GET /api/v1/tickets` (and any later collection GET). All of these ar
 - Do not use cursor pagination unless a later spec replaces this convention.
 - Page size default/max belong in configuration for the **implementation**, but the **public query names and semantics** stay as in this table.
 
-### `sort` whitelist (project convention until `api-contract.md` revises)
+### `sort` whitelist ([`spec/api-contract.md`](../spec/api-contract.md) §4.2.1)
 
 Only these `sort` properties are valid on `GET /api/v1/tickets` (reject others with 400 `VALIDATION_ERROR`):
 
@@ -215,8 +215,8 @@ Default when omitted: `createdAt,desc`. Example: `GET /api/v1/tickets?sort=prior
 ### Comments and ticket detail
 
 - Assessment: **add** and **view** comments.
-- **View:** `GET /api/v1/tickets/{id}` returns ticket `data` **including a `comments` array** (shape in `api-contract.md`). No separate list-comments route required unless the contract adds one.
-- **Add:** `POST /api/v1/tickets/{id}/comments` → **201** + `data` for the new comment (or updated ticket — contract chooses).
+- **View:** `GET /api/v1/tickets/{id}` returns ticket `data` **including a `comments` array** ([`spec/api-contract.md`](../spec/api-contract.md) §4.3).
+- **Add:** `POST /api/v1/tickets/{id}/comments` → **201** + `data` = created **Comment** ([`spec/api-contract.md`](../spec/api-contract.md) §5.1).
 
 ### PATCH body and status transitions
 
@@ -291,8 +291,8 @@ Examples use agreed field names; `spec/api-contract.md` may add narrative only.
 | Topic | Spec |
 |-------|------|
 | Columns, enums, sizes, DB indexes | [`spec/data-model.md`](../spec/data-model.md) §6, §14.5, §16 |
-| REST request/response records | [`spec/data-model.md`](../spec/data-model.md) §10; refine in `spec/api-contract.md` when present |
-| Ask `data` JSON | `spec/rag-api-contract.md` |
+| REST request/response records | [`spec/api-contract.md`](../spec/api-contract.md) §3; DTO names in [`spec/data-model.md`](../spec/data-model.md) §10 |
+| Ask `data` JSON (extensions) | `spec/rag-api-contract.md`; interim §6 in `api-contract.md` |
 
 Do not invent fields beyond these specs. **Assignee** is a nullable string (email-like), not a user FK.
 
@@ -373,3 +373,4 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Locked ticket id, enums, create/PATCH fields, `q` scope from agreed [`spec/data-model.md`](../spec/data-model.md); trgm index pointer §14.5. |
 | 2026-10-04 | Ticket HTTP map: [`spec/architecture.md`](../spec/architecture.md) §11 until `api-contract.md` added. |
 | 2026-10-04 | Status transitions point to draft [`spec/state-machine.md`](../spec/state-machine.md) §6.1. |
+| 2026-10-04 | Ticket HTTP payloads/scenarios defer to draft [`spec/api-contract.md`](../spec/api-contract.md). |

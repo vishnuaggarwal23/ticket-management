@@ -50,7 +50,7 @@ Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks
 
 Maintain detailed specs as work proceeds:
 
-[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), `api-contract.md`, `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md` (latter paths under `spec/` when added).
+[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md` (latter paths under `spec/` when added).
 
 ### Spec files in repo today (2026-10-04)
 
@@ -62,12 +62,12 @@ Only these exist under `spec/` (as of 2026-10-04) — **do not create** the othe
 | [`architecture.md`](../spec/architecture.md) | draft system design |
 | [`data-model.md`](../spec/data-model.md) | **agreed** |
 | [`state-machine.md`](../spec/state-machine.md) | **draft** |
+| [`api-contract.md`](../spec/api-contract.md) | **draft** |
 
 Until missing PDF-listed files are added, use this **interim source map** (rules/commands must point here — not invent contracts):
 
 | Missing spec | Use instead (do not duplicate long text in rules) |
 |--------------|---------------------------------------------------|
-| `api-contract.md` | [`data-model.md`](../spec/data-model.md) §10 DTOs + `rules/api-standards.md` envelopes; API map [`architecture.md`](../spec/architecture.md) §11 |
 | `rag-ingestion.md` | [`architecture.md`](../spec/architecture.md) §15–16 (justification); numeric K/chunk/model **Open** — **DEC-01**, **DEC-09** in requirements §10 |
 | `rag-api-contract.md` | PDF request in requirements FEAT-15; HTTP in `rules/api-standards.md`; **DEC-11** |
 | `evaluation-strategy.md` | [`requirements.md`](../spec/requirements.md) §2.5, FEAT-22, §4.3 **Example** corpus + `commands/review-rag-output.md` |
@@ -85,7 +85,7 @@ PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **
 | [`requirements.md`](../spec/requirements.md) | PDF hub: **FR** / **FEAT-***, **AC-CORE-*** (§8) and **AC-FEAT-*** (§4.2); **OQ-*** / **DEC-*** register and spec handoff (§10); precedence PDF → requirements → agreed specs → rules (§2.4); deterministic vs probabilistic proof (§2.5); demo script (§8.7); glossary (§12). Detail contracts live in child specs (§13). |
 | [`architecture.md`](../spec/architecture.md) | System design: business vs functional modules, ticket aggregate shape, tech/deployment, **communication** (sync REST), **API map**, **PgVector** index role, RAG pipeline; **chunking** and **embedding tradeoffs** (PDF NFR-07 / AC-CORE-19). Numeric chunk/K/model → `rag-ingestion.md` |
 | [`data-model.md`](../spec/data-model.md) | Entities, Liquibase tables, enums, RAG chunk metadata, DTO catalogs, **indexes §14.5**; **DEC-03/04/05/07/08/13** |
-| `api-contract.md` | Ticket/comment payloads **inside** `data` (envelopes are in `rules/api-standards.md`) |
+| [`api-contract.md`](../spec/api-contract.md) | Ticket/comment payloads, scenarios, ask boundary (envelopes in `rules/api-standards.md`) |
 | [`state-machine.md`](../spec/state-machine.md) | Legal/illegal transitions (including skipped steps if any) |
 | `rag-ingestion.md` | Chunking **values**, models, dimensions, ingest timing, property keys |
 | `rag-api-contract.md` | Ask `data` fields: answer, citations, no-match wording |
@@ -155,6 +155,18 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §8–9 | Domain placement; **AC-SM-*** tests |
 | §10 | Open **DEC-02**, **DEC-06**; agreed **DEC-07** pointer |
 
+### [`spec/api-contract.md`](../spec/api-contract.md) structure (for reviewers)
+
+| Section | Use |
+|---------|-----|
+| §2 | Envelopes; **§2.8** URI catalog; **§2.9** headers; **§2.10** error examples |
+| §3 | JSON resource models (ticket, comment, writes) |
+| §4–5 | Endpoints with full HTTP + cURL + scenario tables |
+| §6 | Ask URIs (`/api/ai/ask`, `/api/v1/ai/ask`), interim `data` shape |
+| §7 | Demo end-to-end URI sequence |
+| §8–9 | REST summary; **AC-API-*** |
+| §10 | **DEC-06**, **DEC-11**, **DEC-14** |
+
 ## Writing bar
 
 - Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions, revision history.
@@ -207,3 +219,5 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Markdown links to existing `spec/requirements.md`, `architecture.md`, `data-model.md` in all `rules/` and `commands/` files. |
 | 2026-10-04 | Three-spec repo: interim source map, §0.4 pointer, agreed vs open **DEC** list for rules/commands. |
 | 2026-10-04 | Added [`state-machine.md`](../spec/state-machine.md) (draft); reviewer map; interim map no longer substitutes for SM. |
+| 2026-10-04 | Added [`api-contract.md`](../spec/api-contract.md) (draft); reviewer map; removed API interim row. |
+| 2026-10-04 | `api-contract.md` reviewer map: URI catalog, HTTP examples, §7 demo sequence. |

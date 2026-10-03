@@ -10,12 +10,11 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 
 | Missing artefact | Action |
 |------------------|--------|
-| `spec/api-contract.md` only (when HTTP narrative missing) | Use **[`spec/data-model.md`](../spec/data-model.md) §10/§16** for create/PATCH/comment field assertions; flag gaps vs `api-contract.md` when written |
 | [`spec/data-model.md`](../spec/data-model.md) missing | Stop — do not invent ticket fields |
-| `spec/rag-api-contract.md` for ask `data` | Test 400 blank question + envelope only; defer citation shape |
+| `spec/rag-api-contract.md` for ask `data` extensions | Use interim [`spec/api-contract.md`](../spec/api-contract.md) §6 `answer` + `citedTicketIds`; flag gaps vs `rag-api-contract.md` |
 ## Inputs
 
-- Specs that exist: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (agreed), [`spec/state-machine.md`](../spec/state-machine.md) (draft); `spec/test-strategy.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, `spec/evaluation-strategy.md` — **only when added** (see interim map in [`rules/documentation.md`](../rules/documentation.md))
+- Specs that exist: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (agreed), [`spec/state-machine.md`](../spec/state-machine.md) (draft), [`spec/api-contract.md`](../spec/api-contract.md) (draft); `spec/test-strategy.md`, `spec/rag-api-contract.md`, `spec/evaluation-strategy.md` — **only when added** (see interim map in [`rules/documentation.md`](../rules/documentation.md))
 - **[`spec/requirements.md`](../spec/requirements.md)** — map each proposed test to **`AC-CORE-*`** (§8) and/or **`AC-FEAT-*`** (§4.2); use §9 for FR traceability. Do not invent coverage for **Open** **DEC-*** items.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
@@ -123,3 +122,4 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-10-04 | P0 assertions use agreed [`spec/data-model.md`](../spec/data-model.md) (id, title required, DEC-08 search). |
 | 2026-10-04 | Inputs limited to three present specs + documentation interim map. |
 | 2026-10-04 | [`spec/state-machine.md`](../spec/state-machine.md) drives transition test matrix. |
+| 2026-10-04 | HTTP contract tests use draft [`spec/api-contract.md`](../spec/api-contract.md). |
