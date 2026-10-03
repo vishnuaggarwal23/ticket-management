@@ -31,8 +31,8 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### Spec and scope
 
 - [ ] Implements only **agreed** specs; no extra product features (auth, agents, attachments, bulk ops, rerankers) unless a spec agrees
-- [ ] No silent answers to open questions (ticket id format, chunking, embedding model, numeric top-K/threshold, ask `data` fields, etc.)
-- [ ] Domain status machine matches `spec/state-machine.md` (or requirements until that spec exists)
+- [ ] No silent answers to open questions — check `spec/requirements.md` **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement unresolved **DEC-*** as fixed behaviour (ticket id format, chunking, embedding model, numeric top-K/threshold, ask `data` fields, skipped transitions, re-ingest on close, etc.)
+- [ ] Domain status machine matches `spec/state-machine.md` (or `spec/requirements.md` FEAT-11 / §2.6 until that spec exists)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
 

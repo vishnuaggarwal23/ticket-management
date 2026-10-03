@@ -54,7 +54,7 @@ Maintain detailed specs as work proceeds:
 
 | Spec | What it must nail down (so rules do not guess) |
 |------|-----------------------------------------------|
-| `requirements.md` | PDF-derived FR/NFR and acceptance checklist |
+| `requirements.md` | PDF hub: **FR** / **FEAT-***, **AC-CORE-*** (§8) and **AC-FEAT-*** (§4.2); **OQ-*** / **DEC-*** register and spec handoff (§10); precedence PDF → requirements → agreed specs → rules (§2.4); deterministic vs probabilistic proof (§2.5); demo script (§8.7); glossary (§12). Detail contracts live in child specs (§13). |
 | `architecture.md` | **Chunking strategy** and **embedding model tradeoffs** (PDF NFR-07); system context |
 | `data-model.md` | Ticket id format, fields, comments, resolution notes, category |
 | `api-contract.md` | Ticket/comment payloads **inside** `data` (envelopes are in `rules/api-standards.md`) |
@@ -67,10 +67,28 @@ Maintain detailed specs as work proceeds:
 
 **Agreed spec:** status `agreed` (or equivalent) in the spec header, or explicit user confirmation in chat. Until then, treat as **draft** — implement only what rules already lock (envelopes, stack conventions) and stop for open payloads.
 
+### `spec/requirements.md` structure (for reviewers)
+
+Use this map when running `commands/review-spec.md` or tracing tests — do not duplicate the full text in rules.
+
+| Section | Use |
+|---------|-----|
+| §0 | How to read the file; audience |
+| §2.4–2.7 | Precedence, deterministic vs probabilistic, status enum, anti-patterns |
+| §4.1–4.3 | Flows A–E; per-feature AC; **Example** demo corpus (not mandated seed data) |
+| §8, §8.7 | **AC-CORE-*** sign-off; demo / grading script |
+| §9 | FR → AC → FEAT traceability |
+| §10 | **OQ-*** catalogue, **DEC-*** register (agree before implementing), handoff to child specs |
+| §11 | PDF wording tensions (e.g. re-ingest on close — **DEC-01**) |
+| §12–§13 | Glossary; what must not live in `requirements.md` |
+
+Closing an **OQ** requires updating the owning child spec, recording **Decision** in §10.2, and user confirmation — see §10.3.
+
 ## Writing bar
 
 - Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions, revision history.
 - Prefer checklists; link acceptance criteria to backend tests or `commands/review-frontend.md` for UI.
+- Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in `spec/requirements.md` (§8–§9) when proposing or reviewing tests.
 - Distinguish **PDF requirement** vs **project convention** (see any `rules/*.md` “Assessment vs conventions” section).
 - Do not invent features the PDF does not support.
 

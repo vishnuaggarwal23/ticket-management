@@ -29,7 +29,7 @@ Before judging content, **name every file** you used and its role. If a file is 
 
 | Role | Typical path | Use in this review |
 |------|----------------|-------------------|
-| Requirements | `spec/requirements.md` | PDF extraction; scope |
+| Requirements | `spec/requirements.md` | PDF scope; **AC-CORE** / **FEAT**; **OQ** / **DEC** (§10); handoff map (§10.3); §8.7 demo script |
 | Architecture | `spec/architecture.md` | layering, RAG placement, chunking *discussion* (not numeric locks unless agreed) |
 | Data model | `spec/data-model.md` | fields, ids, enums |
 | API contract | `spec/api-contract.md` | ticket HTTP payloads beyond `rules/api-standards.md` envelopes |
@@ -59,6 +59,10 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] PDF requirements are not weakened (CRUD, comments, search/filter, backend validation, backend state machine, persistence, grounded ask + citations or no-match)
 - [ ] Project conventions (Boot 3, `/api/v1`, PgVector, JUnit, envelopes, PATCH) are **labeled** as conventions, **not** as PDF mandates
 - [ ] Open items remain in **Open questions** (or equivalent), not smuggled into requirements as decided facts
+- [ ] When reviewing `spec/requirements.md`: unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
+- [ ] Child specs that resolve an **OQ-*** cite the matching **DEC-*** decision (or remain draft until user confirms)
+- [ ] New material in feature specs aligns with **`spec/requirements.md` §10.3** handoff (each OQ has a primary owning spec)
+- [ ] Assessment acceptance mappable to **`AC-CORE-*`** (§8); feature detail mappable to **`AC-FEAT-*`** (§4.2) where applicable
 - [ ] No invented product features (auth, agents from ask, attachments, bulk ops, rerankers) unless explicitly in scope
 
 ### Consistency with engineering rules
@@ -75,7 +79,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 
 - [ ] `state-machine.md` ↔ `api-contract.md` — same transitions and how status is requested
 - [ ] `data-model.md` ↔ `api-contract.md` — same fields, types, requiredness
-- [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities
+- [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities; no **DEC-*** closed in code but still **Open** in requirements
 - [ ] `architecture.md` ↔ `rag-ingestion.md` / `rag-api-contract.md` — no conflicting pipeline or API story
 - [ ] `ui-flow.md` ↔ API/RAG contracts — UI does not require impossible API shapes
 
@@ -172,12 +176,12 @@ If unsure whether something is a convention or a hallucination, mark **needs use
 - [ ] Scope and **non-goals**
 - [ ] Requirements and testable **acceptance criteria**
 - [ ] Contracts / data / flows where relevant
-- [ ] **Open questions** (not buried in requirements prose)
+- [ ] **Open questions** (not buried in requirements prose); for `requirements.md` use **OQ-*** / **DEC-*** (§10) not ad-hoc lists only
 - [ ] Revision history when the file is in flux
 
 ### Quality
 
-- [ ] Every acceptance criterion maps to a test theme in `rules/testing.md`
+- [ ] Every acceptance criterion maps to a test theme in `rules/testing.md` and, where present, to **`AC-CORE-*`** or **`AC-FEAT-*`** in `spec/requirements.md`
 - [ ] Positive **and** negative / empty outcomes for implemented capabilities
 - [ ] RAG: sources, metadata, re-ingest, grounding, citations, no-match; configurable K/threshold **without** numeric defaults unless agreed
 - [ ] No “build the complete application” scope
@@ -198,6 +202,7 @@ Use this order. Every finding that cites a problem must include **`spec/<file>.m
 8. **Gaps / ambiguities** — must resolve before coding
 9. **Suggested edits** — brief; do not rewrite whole specs unless asked
 10. **Open questions for the user** — do not answer these yourself
-11. **Ready for implementation?** yes / no — if no, list blocking questions
+11. **Demo readiness (optional)** — can `spec/requirements.md` §8.7 demo script be executed for the scope under review?
+12. **Ready for implementation?** yes / no — if no, list blocking questions (include unresolved **DEC-***)
 
 Confirm with the user before applying spec edits.

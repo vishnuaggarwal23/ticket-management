@@ -17,6 +17,7 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 ## Inputs
 
 - Specs that exist: `spec/test-strategy.md`, `spec/state-machine.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`, `spec/data-model.md`, `spec/requirements.md`, `spec/evaluation-strategy.md`
+- **`spec/requirements.md`** — map each proposed test to **`AC-CORE-*`** (§8) and/or **`AC-FEAT-*`** (§4.2); use §9 for FR traceability. Do not invent coverage for **Open** **DEC-*** items.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
 - Code under test (if present) — generate against **implemented** behaviour first
@@ -63,7 +64,7 @@ Every P0/P1 case in the proposal table must include:
 - **Polarity:** `positive` | `negative` | `empty`
 - **Edge?** yes/no — edges are boundaries and combinations of **major** flows (empty list, max `size`, illegal transition after persist), not trivia (`toString`)
 - **Layer:** domain | service | controller-slice | repository | API-integration | rag-unit
-- **Acceptance criterion** (spec heading or `rules/testing.md` theme)
+- **Acceptance criterion** — `AC-CORE-*` / `AC-FEAT-*` from `spec/requirements.md`, or spec heading, or `rules/testing.md` theme
 
 Do not emit a 200-case matrix of every DTO getter. Prefer `@ParameterizedTest` for closed sets (illegal transitions, required-field names).
 
@@ -93,7 +94,7 @@ Follow `rules/testing.md`. A flow is not “covered” by one happy-path API tes
 ## Workflow (mandatory)
 
 1. **Scope** — List implemented packages/endpoints and which spec files exist. Mark P0 gaps.
-2. **Catalogue** — Table of proposed tests: id, flow, polarity, edge?, layer, criterion, notes. **P0 first.**
+2. **Catalogue** — Table of proposed tests: id, flow, polarity, edge?, layer, **AC-CORE / AC-FEAT** (or criterion), notes. **P0 first.**
 3. **Confirm** — Stop if specs conflict, fields are open, or a major flow has no agreed contract. Ask the user.
 4. **Write** — Only after the catalogue is clear (or the user said to proceed). Match existing test packages; smallest change.
 5. **Report** — What was generated, what was deferred (P2 / missing impl), what was **not** run.

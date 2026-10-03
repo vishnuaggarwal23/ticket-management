@@ -299,6 +299,11 @@ PDF requires ticket created from UI, meaningful errors, etc. This milestone **do
 
 State that substitution in `spec/test-strategy.md` when written.
 
+## Acceptance traceability
+
+- Map backend tests to **`AC-CORE-*`** / **`AC-FEAT-*`** in `spec/requirements.md` (§8–§9) when cataloguing cases — use `commands/generate-tests.md`.
+- **`spec/test-strategy.md`** (when agreed) should list which **AC-CORE** rows each suite proves; RAG **answer wording** stays probabilistic per `spec/evaluation-strategy.md`, not golden strings here.
+
 ## Repeatability and isolation
 
 - Tests must not depend on developer-specific config, secrets, a pre-existing local database, or a running Docker Compose Postgres.

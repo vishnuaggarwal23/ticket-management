@@ -336,7 +336,7 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 ## Do not
 
 - Do not treat `/api/v1`, PATCH, 409, or these envelopes as PDF requirements.
-- Do not silently answer open questions in `spec/requirements.md` (id format, category, ask `data` fields).
+- Do not silently answer open questions in `spec/requirements.md` — use **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement unresolved **DEC-*** as fixed API behaviour (id format, category, ask `data` fields, etc.).
 - Do not prescribe Spring Security, API keys, or multi-tenancy.
 - Do not return persistence entities or a second JSON error shape from one controller.
 - Do not use PUT, unversioned `/api/tickets`, or cursor pagination unless a spec revises this file.

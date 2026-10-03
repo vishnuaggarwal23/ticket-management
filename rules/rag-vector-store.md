@@ -24,7 +24,7 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 - Cite the **ticket ID(s)** actually used; if nothing relevant is retrieved, say so explicitly (**no relevant tickets found**) — do not fabricate tickets, facts, or citations.
 - Ingest **description, comments, and resolution notes** into searchable knowledge.
 - Attach metadata: `ticketId`, `status`, `priority`, `assignee`, `category` (exact field **shapes** wait on `spec/data-model.md`).
-- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale.
+- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale. PDF p.6 acceptance wording emphasises **updated** only — resolve **DEC-01** in `spec/rag-ingestion.md` with `spec/requirements.md` **§11.1** before treating close-only triggers as out of scope.
 - **top-K** and **similarity threshold** must be **configurable**, not hardcoded. The PDF does **not** give numeric values.
 - Document chunking strategy and embedding-model tradeoffs in architecture / RAG ingestion **specs** (justification is required; a specific algorithm is **not** named by the PDF).
 - **Single retrieve → generate** — not an agent: no tool chaining, ticket creation, or notifications from the ask path.

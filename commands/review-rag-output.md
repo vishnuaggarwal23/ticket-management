@@ -44,7 +44,9 @@ If none of the above is available, set verdict **cannot verify** for fabrication
 
 ### PDF illustrative questions (use as review fixtures)
 
-From the assessment — expect **grounded** answers only when retrieval supports them:
+From the assessment — expect **grounded** answers only when retrieval supports them.
+
+**Example seed corpus (not mandated production data):** `spec/requirements.md` **§4.3** maps five illustrative questions to sample ticket ids (e.g. TKT-1001) for manual review and eval fixtures.
 
 - “Have we seen payment failures before?”
 - “What was the resolution for ticket TKT-1001?”
@@ -168,7 +170,7 @@ Both matter for the assessment. Neither is proved by a single golden answer stri
 | Input | Role |
 |-------|------|
 | **Question** | Same as grounding review |
-| **Expected ticket ids** (eval set) | From a **seeded** database or fixture doc agreed in `evaluation-strategy.md` — not invented during review |
+| **Expected ticket ids** (eval set) | From a **seeded** database or fixture — e.g. `spec/requirements.md` §4.3 (**Example**) or rows agreed in `evaluation-strategy.md` — not invented during review |
 | **Retrieved set** | Actual ids (and ranks/scores if logged in dev) |
 | **Final cited ids** | What the API returned |
 
