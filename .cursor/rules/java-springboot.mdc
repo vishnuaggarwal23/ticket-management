@@ -1,5 +1,5 @@
 ---
-description: Java 21 / Spring Boot 3 coding guidelines
+description: Java 21 / Spring Boot 3 — layers, PDF state machine until spec, Liquibase, api-standards pointers
 alwaysApply: true
 ---
 

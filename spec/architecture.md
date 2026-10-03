@@ -303,12 +303,12 @@ States and transitions are defined in [`state-machine.md`](state-machine.md) (to
 
 ## 11. API and integration architecture
 
-- **Ticket resources:** capabilities from the assessment (create, list, get, update fields, comments, search, status filter). **Paths are not named in the PDF.** `/api/tickets` (and nested comments) is a **proposal** for [`api-contract.md`](api-contract.md), not an assessment mandate (`rules/api-standards.md`).
-- **AI:** `POST /api/ai/ask` — request body `{ "question": "..." }` per assessment. Response JSON is open until [`rag-api-contract.md`](rag-api-contract.md).
+- **Ticket resources:** capabilities from the assessment (create, list, get, update fields, comments, search, status filter). **Paths are not named in the PDF.** Project convention (not a PDF mandate): `/api/v1/tickets` and nested comments, PATCH updates, shared success/error envelopes — see `rules/api-standards.md`. Field catalogs remain in [`api-contract.md`](api-contract.md).
+- **AI:** `POST /api/ai/ask` — request body `{ "question": "..." }` per assessment (also `POST /api/v1/ai/ask`). Business fields inside the success `data` object wait on [`rag-api-contract.md`](rag-api-contract.md).
 - **JSON** unless a later spec says otherwise.
 - **CORS** for the local Vite origin during development is an implementation detail, not an assessment requirement.
 
-**Versioning:** none required by the PDF. Prefer additive changes after a contract is agreed. Do not invent `/v1` without a decision.
+**Versioning:** none required by the PDF. **Project convention:** URI version `/api/v1` for ticket APIs; keep the assessment ask path. Breaking changes need `/api/v2` (`rules/api-standards.md`).
 
 ---
 

@@ -2,7 +2,15 @@
 
 Cursor attaches this file via [`.cursor/rules/java-springboot.mdc`](../.cursor/rules/java-springboot.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Backend coding standards for the support ticket management application. **Public paths, payloads, and error JSON** live in `spec/api-contract.md` / `spec/rag-api-contract.md` and `rules/api-standards.md` once agreed. **Tests** live in `rules/testing.md`. **RAG pipeline detail** lives in `rules/rag-vector-store.md` and `spec/rag-ingestion.md`.
+Backend coding standards for the support ticket management application.
+
+| Topic | Where |
+|-------|--------|
+| HTTP paths, envelopes, list params | `rules/api-standards.md` |
+| Ticket/comment **field** catalogs | `spec/api-contract.md`, `spec/data-model.md` |
+| Tests | `rules/testing.md`, `commands/generate-tests.md` |
+| RAG | `rules/rag-vector-store.md`, `spec/rag-ingestion.md` |
+| UI | `rules/frontend.md` |
 
 ## Assessment vs project conventions
 
@@ -35,7 +43,9 @@ Do not add MapStruct, Lombok, QueryDSL, or extra web stacks unless a spec agrees
 
 ## Package structure
 
-One root package under `src/main/java` (do not invent a second Spring Boot application). Layout is **by layer**, matching `spec/architecture.md`:
+One root package under `src/main/java` (do not invent a second Spring Boot application). Pick one root (e.g. `com.example.tickets`) and use it consistently — **do not** commit a second package root.
+
+Layout is **by layer**, matching `spec/architecture.md`:
 
 ```
 {root}/
@@ -97,17 +107,27 @@ public Optional<Ticket> findById(TicketId id) { return tickets.findById(id); }
 - Committed examples list **environment variable names only** (`.env.example`). Never commit passwords, keys, or machine-specific absolute paths.
 - Spring profiles: `local` / default for Docker Compose Postgres; tests use Testcontainers (see testing rules). Do not point the default test suite at a developer’s already-running database.
 - Set `spring.jpa.open-in-view=false`. Do not use Open Session in View to lazy-load in controllers.
-- CORS for the local Vite origin is an implementation convenience, not an assessment requirement. Do not enable permissive `*` CORS as a permanent default.
+- CORS for the local Vite dev server is an implementation convenience, not an assessment requirement. Example (adjust port to your Vite config):
+
+```java
+// config/WebCorsConfig.java — dev-oriented; not *
+registry.addMapping("/api/**")
+    .allowedOrigins("http://localhost:5173")
+    .allowedMethods("GET", "POST", "PATCH", "OPTIONS")
+    .allowedHeaders("*");
+```
+
+Do not enable permissive `*` CORS as a permanent default.
 
 ## API conventions (Spring)
 
-Contracts (paths, PUT vs PATCH, pagination names, error body) are **not** frozen here. Implementation rules:
+Public envelopes, pagination/sort/search query params, HTTP status mapping, PATCH-for-updates, and URI versioning (`/api/v1`) are defined in `rules/api-standards.md`. Resource field catalogs remain in `spec/api-contract.md` / `spec/rag-api-contract.md`. Implementation rules:
 
-- `@RestController` + JSON. Class-level `@RequestMapping` under `/api` when the contract uses that prefix. Preserve `POST /api/ai/ask` with a JSON body field `"question"` as named in the assessment.
-- One update style for ticket fields, chosen in `spec/api-contract.md`. Status changes go through the service + state machine, not a raw entity setter in the controller.
-- Controllers return DTO records or `ResponseEntity<DTO>`. Use `@Valid` / `@Validated` on request bodies and relevant params.
-- Keyword search and status filter are **capabilities** on list/search endpoints; query-parameter names wait on the API spec.
-- Do not version URLs (`/v1`) unless a spec agrees. Do not add auth filters, actor roles, attachments, bulk ops, or webhooks unless a spec agrees.
+- `@RestController` + JSON. Ticket controllers use `/api/v1`. Preserve `POST /api/ai/ask` with a JSON body field `"question"` as named in the assessment; also map `POST /api/v1/ai/ask`.
+- Ticket field updates are **PATCH**. Status changes go through the service + state machine, not a raw entity setter in the controller.
+- Controllers return the success envelope (`data` / list `meta`) as DTO records or `ResponseEntity`. Use `@Valid` / `@Validated` on request bodies and relevant params.
+- List endpoints accept `page`, `size`, `sort`, `q`, and `status` per api-standards.
+- Do not add auth filters, actor roles, attachments, bulk ops, or webhooks unless a spec agrees.
 - Do not expose Spring AI, PgVector, or Ollama types on the HTTP boundary.
 
 ## Controllers
@@ -134,8 +154,31 @@ Contracts (paths, PUT vs PATCH, pagination names, error body) are **not** frozen
 
 ## Domain (state machine)
 
-- `TicketStatus` (or equivalent) is an enum. Transition rules are a dedicated type (e.g. `TicketStatusMachine`) with no Spring imports.
-- Invalid examples from the assessment (`CLOSED` → `OPEN`, `RESOLVED` → `OPEN`, `CANCELLED` → `OPEN`) must be rejected here.
+Authoritative transition table: **`spec/state-machine.md`** once agreed. Until then, implement **only** what the assessment PDF states (below). Do not allow skipped steps (e.g. `OPEN` → `RESOLVED`) unless `state-machine.md` explicitly allows them.
+
+### PDF state machine (minimum until `spec/state-machine.md`)
+
+```
+OPEN ──► IN_PROGRESS ──► RESOLVED ──► CLOSED
+
+OPEN ───────────────► CANCELLED
+IN_PROGRESS ────────► CANCELLED
+```
+
+| From | To | Allowed? |
+|------|-----|----------|
+| `OPEN` | `IN_PROGRESS` | Yes |
+| `IN_PROGRESS` | `RESOLVED` | Yes |
+| `RESOLVED` | `CLOSED` | Yes |
+| `OPEN` | `CANCELLED` | Yes |
+| `IN_PROGRESS` | `CANCELLED` | Yes |
+| `CLOSED` | `OPEN` | **No** (PDF example) |
+| `RESOLVED` | `OPEN` | **No** (PDF example) |
+| `CANCELLED` | `OPEN` | **No** (PDF example) |
+| Any other pair | | **No** until `state-machine.md` says otherwise |
+
+- `TicketStatus` is an enum. Transition rules live in a dedicated type (e.g. `TicketStatusMachine`) with **no** Spring imports.
+- Invalid transitions throw a domain exception; service must not persist the illegal status.
 - Domain exceptions are unchecked and meaningful (`IllegalTicketTransitionException`, not-found). They must not include SQL, stack traces, or secrets in `getMessage()`.
 
 ## Repositories
@@ -143,6 +186,7 @@ Contracts (paths, PUT vs PATCH, pagination names, error body) are **not** frozen
 - Spring Data JPA interfaces in `persistence`. Naming: `TicketRepository`, `CommentRepository`.
 - Methods express queries (derived names or `@Query` with **parameters**). Never concatenate user input into JPQL/SQL.
 - Keyword search and filter-by-status belong here as queries the service calls — not as business-rule methods that change status.
+- Until `api-contract.md` extends scope: keyword `q` searches **title and description** (see `rules/api-standards.md`).
 - No `@Modifying` query that sets `status` except through the same path as the state machine (prefer loading the entity and letting the service apply a legal transition).
 - Do not expose `TicketRepository.save` from a controller.
 
@@ -156,13 +200,19 @@ Contracts (paths, PUT vs PATCH, pagination names, error body) are **not** frozen
 
 ## Error handling
 
-- `@RestControllerAdvice` in `api` maps:
-  - Bean Validation → client input error (field-level messages where practical)
-  - not found → client-safe not found
-  - illegal transition → client-usable message (HTTP **code** is defined in `api-contract.md`, not here)
-  - unexpected failure → generic 500 **without** stack traces, SQL, or internals
+- `@RestControllerAdvice` in `api` maps exceptions onto the **error envelope** in `rules/api-standards.md`:
+  - Bean Validation → 400 `VALIDATION_ERROR` (field-level `details`)
+  - not found → 404 `NOT_FOUND`
+  - illegal transition → 409 `ILLEGAL_TRANSITION`
+  - unexpected failure → 500 `INTERNAL_ERROR` **without** stack traces, SQL, or internals
 - Do not return `null` bodies to mean not found. Do not leak `ConstraintViolation` SQL or Hibernate entity state.
-- Keep one error envelope once `api-contract.md` agrees it; until then, still stay consistent and client-safe — do not invent a second ad-hoc JSON per controller.
+- Do not invent a second error JSON per controller.
+
+## Liquibase (schema source of truth)
+
+- Changelogs under `src/main/resources/db/changelog/` (e.g. `db.changelog-master.yaml` including ticket tables, then vector extension/tables).
+- Every entity/column change needs a changeset. Hibernate `ddl-auto`: `validate` or `none`.
+- Integration tests apply the **same** changelogs via Testcontainers (`rules/testing.md`).
 
 ## Database (PostgreSQL)
 
@@ -175,6 +225,6 @@ Contracts (paths, PUT vs PATCH, pagination names, error body) are **not** frozen
 - Do not start from “build the complete application” — implement the current agreed spec/plan only.
 - Do not pin unfinalized versions (Boot patch, Spring AI, Postgres, PgVector, embedding model) as if decided.
 - Do not hardcode Ollama URLs, model names, top-K, or similarity thresholds in services.
-- Do not invent authentication, `/v1`, OpenAPI-as-requirement, or extra ticket resources.
+- Do not invent authentication, OpenAPI-as-requirement, or extra ticket resources. URI versioning follows `rules/api-standards.md`.
 - Do not implement agents or side effects from `/api/ai/ask`.
 - Do not treat this file as a substitute for `spec/` field catalogs or HTTP contracts.

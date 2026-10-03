@@ -11,18 +11,32 @@ alwaysApply: true
 - Workflow: **Requirement → Specification → Plan/Tasks → Implementation → Testing → Review → Fix**.
 - **Never** start by building the complete application in one shot.
 - **Confirm with the user** before acting on doubts, open questions, or non-obvious judgments.
-- Prefer Graphify / token-saving tools for exploration when `graphify-out/` exists; keep static rules in always-apply files for prompt caching.
+- Prefer **graphify** for codebase exploration when `graphify-out/` exists (`.cursor/rules/graphify.mdc`). Keep static rules in `rules/` + pointer `.mdc` files for prompt caching.
 
 ## Artefacts to maintain
 
-- Rules: `.cursor/rules/` (+ `rules/` mirrors).
-- Commands: `.cursor/commands/` and `commands/` (`review-code`, `review-spec`, `generate-tests`, `review-rag-output`).
-- Specs: `spec/` before code.
-- Prompt history: SpecStory → `.specstory/history/` (see `docs/prompt-history.md`).
-- Catch and document AI mistakes (code or RAG)—do not blindly accept output.
+| Artefact | Location |
+|----------|----------|
+| Rules (source of truth) | `rules/*.md` |
+| Rules (Cursor pointers) | `.cursor/rules/*.mdc` — do not duplicate bodies |
+| Commands | `commands/*.md`; `.cursor/commands/*.md` pointers only |
+| Specs before code | `spec/` — see `rules/documentation.md` for the full list |
+| Prompt history | SpecStory → `.specstory/history/`; index `docs/prompt-history.md` |
+| AI mistakes (PDF) | `docs/ai-mistakes.md` when at least one meaningful mistake is caught |
+| RAG eval approach | `spec/evaluation-strategy.md` (retrieval quality — not unit golden strings) |
+
+**Commands:** `review-code`, `review-frontend`, `review-spec`, `generate-tests`, `review-rag-output`.
 
 ## When reviewing AI output
 
-- Code: compile/lint mentally against specs and state machine; reject illegal transitions and missing validation.
-- RAG answers: every claim must map to cited tickets; otherwise flag as ungrounded/hallucinated.
-- Prefer running project commands for structured reviews over ad-hoc acceptance.
+- **Backend code:** `commands/review-code.md` against specs + `rules/*`.
+- **UI code:** `commands/review-frontend.md` — no frontend tests this milestone.
+- **Specs:** `commands/review-spec.md` before implementation.
+- **Ask answers:** `commands/review-rag-output.md` — every claim traceable to cited ticket ids from retrieval; honest no-match when nothing relevant.
+- **Tests:** `commands/generate-tests.md` — backend only.
+- Prefer these commands over ad-hoc “looks fine”.
+- Document meaningful mistakes per `rules/documentation.md`.
+
+## Assessment PDF (local)
+
+Authoritative assignment: `docs/Assessments.pdf` (gitignored). Extract into `spec/requirements.md`. Distinguish **PDF requirement** vs **project convention** in every rule file’s opening sections.

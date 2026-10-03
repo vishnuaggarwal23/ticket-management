@@ -1,79 +1,155 @@
 # Frontend guidelines
 
-React UI for tickets and grounded Q&A. Product screens and flows live in `spec/ui-flow.md` (and API/RAG contracts) once those files exist and are agreed. These rules do **not** replace those specifications.
+Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
+
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows live in `spec/ui-flow.md` once that file exists and is agreed. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+
+**This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
+
+| Read first | Purpose |
+|------------|---------|
+| `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
+| `spec/ui-flow.md` | Screens and navigation (when agreed) |
+| `spec/rag-api-contract.md` | Citation / no-match fields inside ask `data` |
 
 ## Assessment vs project conventions vs open decisions
 
-**Assessment PDF requires** (UI capabilities, not a frontend stack):
+**Assessment PDF requires** (UI **capabilities**, not a frontend stack):
 
-- Create, list, view, and update tickets (title, description, priority, assignee).
+- Create, list, view, and update tickets (**title, description, priority, assignee**).
 - Add and view comments.
 - Search by keyword; filter by status.
-- Show ticket status; users can take **valid** status transitions (backend still enforces the machine).
+- Show ticket **status**; users can take **valid** status transitions (backend still **enforces** the machine).
 - Show **meaningful** validation and API errors.
-- Ask natural-language questions over ticket history; show a **grounded** answer with **ticket ID** citations, or an honest **no relevant tickets found** (or equivalent) result.
+- Ask natural-language questions over ticket history; show a **grounded** answer with **ticket ID** citations, or an honest **no relevant tickets found** (or equivalent).
+- No agent UI from ask (no create-ticket / notify / tool-chain from the question box).
 
-The PDF names React/Next.js **or equivalent**. It does **not** mandate React, Vite, TypeScript, Next.js, a CSS/UI kit, a router, or a frontend test tool.
+The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, TypeScript, Next.js, a CSS kit, a router, or a frontend test tool.
 
-**This project’s approved conventions** (not PDF mandates): **React**, **Vite**, and **TypeScript**. No Next.js. Portable config across developer machines (API base URL via Vite env — names only in committed examples).
+**This project’s approved conventions** (not PDF mandates):
 
-**Open — resolve in `spec/ui-flow.md`, API/RAG contracts, and test strategy (do not assume):**
+- **React** + **Vite** + **TypeScript**
+- **No Next.js**
+- API base URL via Vite env (`import.meta.env.VITE_*`) — committed examples list **variable names only**
+- Call versioned ticket APIs and envelopes from `rules/api-standards.md` (`/api/v1`, `{ data }`, `{ error }`, list `meta`)
+- Preserve `POST /api/ai/ask` with `{ "question": "..." }` (also `/api/v1/ai/ask`)
 
-- Screen layout, navigation, and exact interaction (how a transition is chosen, how ask is presented).
-- Ticket ID format, field catalog, `category`, resolution notes.
-- Endpoint paths, payloads, error JSON (follow contracts when they exist; do not invent them here).
-- Citation JSON shape and no-match representation.
-- CSS framework, component library, router, client state library, frontend test framework.
-- Authentication / roles (not in the assessment).
+**Open — resolve in `spec/ui-flow.md` and contracts before inventing UI (do not assume):**
+
+- Screen layout, navigation, how a transition is chosen, how ask is laid out
+- Ticket ID format, `category`, resolution-notes as form fields
+- CSS framework, component library, router, client global store
+- Exact ask `data` field names until `spec/rag-api-contract.md`
 
 ## Stack
 
-- Implement the UI with **React + Vite + TypeScript**.
-- Type API data, component props, and application state. Avoid `any` and unsafe assertions where practical.
-- Do not add Next.js or another UI framework.
-- Do not mandate Tailwind, MUI, React Router, Redux, Zustand, Vitest, Testing Library, Playwright, or Cypress unless separately approved.
+- SPA with Vite; React function components; TypeScript for props, API types, and state.
+- Avoid `any` and unsafe assertions where practical. Prefer types that match API DTO records (`data` payloads), not invented parallel models.
+- Do not add Next.js, Remix, or a second UI framework.
+- Do not add Tailwind, MUI, React Router, Redux, or Zustand unless the user or an agreed spec says so.
+- Do not add a frontend test runner or write `.test.tsx` / e2e UI tests.
 
-## Components and structure
+## Structure
 
-- Separate **presentation**, **API interaction**, and **application logic** when that keeps code maintainable.
-- **Centralize** HTTP access (one client/module) instead of `fetch`/`axios` in every component.
-- Reuse components when it clearly reduces duplication; keep them focused. Avoid premature abstraction.
-- Hold state at the level that owns it. Do not require a global store library.
-- Do **not** prescribe a folder tree or component hierarchy.
+- Separate **presentation**, **HTTP access**, and **view logic** when that keeps files maintainable.
+- **One** HTTP module (fetch or a thin wrapper) — no `fetch`/`axios` copied into every screen.
+- Map API success `{ data, meta? }` and error `{ error }` in that module. Surface `error.message` and field `details` on forms. Do not parse a second ad-hoc JSON shape.
+- Hold state at the screen that owns it. No required global store.
+- Do **not** freeze a folder tree here. Prefer a small Vite `src/` with screens + `api` client when implementing.
 
-## API integration
+### Suggested layout (convention, not mandatory)
 
-- Call only what **approved** API contracts define. Do not invent paths, fields, or error envelopes.
-- Backend is authoritative for validation, business rules, and **status transitions**. The UI may hide or disable illegal actions as **guidance only**.
-- Configure the API base URL with Vite env (for example `import.meta.env.VITE_*`). Do not hardcode machine-specific hosts. Do not commit secrets.
-- Handle **loading**, **success**, **empty**, and **error** states. Surface user-safe messages; never show stack traces, SQL, or internal exception text.
+```
+frontend/                 # or repo root if monorepo — pick one and document in README
+  src/
+    api/                  # fetch wrapper, types for envelopes
+    screens/              # route-level pages
+    components/           # reusable UI
+    App.tsx
+  .env.example            # VITE_API_BASE_URL only — no secrets
+```
 
-## Usability and accessibility
+### Environment and API base URL
 
-- Semantic HTML; accessible names on controls; visible labels on form fields.
-- Keyboard-usable interactions. Clear validation and action feedback. Do not fail or discard input silently.
-- Loading and empty states for lists and ask results.
-- Do **not** prescribe theme, palette, branding, or a design system.
+Committed **`.env.example`** (names only):
 
-## RAG answers
+```bash
+# Backend origin for dev (Vite proxies or calls directly)
+VITE_API_BASE_URL=http://localhost:8080
+```
 
-- Visually distinguish **assistant** output from user-authored ticket text (comments, description).
-- Show ticket ID citations so a user can tell **which** tickets were used, per the RAG API contract once it exists.
-- Communicate no-match honestly. Do not dress unsupported model text as verified ticket facts.
-- Do not invent confidence scores or citation formats.
+Client usage:
 
-## Testing
+```typescript
+const base = import.meta.env.VITE_API_BASE_URL;
+const res = await fetch(`${base}/api/v1/tickets?page=0&size=20`);
+const body = await res.json();
+if (!res.ok) throw new ApiError(body.error);
+return body.data;
+```
 
-- Keep UI and HTTP access separable so tests can be added later.
-- Do **not** name a frontend test framework here. Tooling belongs in the test strategy and a later approved decision.
+Use **`POST /api/v1/ai/ask`** for ask (see `rules/api-standards.md`). Dev proxy in `vite.config.ts` is optional:
+
+```typescript
+server: {
+  proxy: { '/api': { target: 'http://localhost:8080', changeOrigin: true } },
+},
+```
+
+If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api/v1/...`.
+
+## API usage
+
+- Tickets: `GET/POST /api/v1/tickets`, `GET/PATCH /api/v1/tickets/{id}`, `POST .../comments` per api-standards. List: `page`, `size`, `sort`, `q`, `status`.
+- Updates: **PATCH**, not PUT.
+- Create: expect **201** and follow `Location` or `data` as the contract defines.
+- Empty list: **200** + empty `data` — show an empty state, not a fake error.
+- 400 validation, 404 not found, 409 illegal transition: show `error.message` (and `details` when present). Backend is source of truth for illegal status.
+- UI may disable obvious illegal transitions as **guidance only**.
+- Ask: POST JSON `{ "question" }` to `/api/v1/ai/ask`. Loading + result. Citations = ticket ids from `data` (field names per `rag-api-contract.md`). No-match: show API text honestly — e.g. “No relevant tickets found” — not a dressed-up model essay.
+- Do not hardcode machine hosts. Do not commit secrets.
+
+## Capabilities the UI must support (when `ui-flow.md` agrees how)
+
+| Capability | Notes |
+|------------|--------|
+| Create | Title, description, priority, assignee |
+| List | Search keyword, filter status, pagination from `meta` if the screen lists pages |
+| Detail | Status, fields, comments |
+| Update | Same fields; PATCH |
+| Transition | Valid moves only as guidance; show 409 if backend rejects |
+| Comments | Add and view |
+| Errors | Meaningful, user-safe; never stack traces or SQL |
+| Ask | Grounded answer + ticket id citations **or** no relevant tickets found |
+
+## Usability
+
+- Semantic HTML; labels on inputs; keyboard-usable controls.
+- Loading, empty, and error states for list and ask.
+- Do not discard form input silently on validation failure.
+- Do not prescribe theme or branding.
+
+## RAG display
+
+- Distinguish assistant text from ticket description/comments.
+- Show cited ticket IDs from the API; do not invent ids in the client.
+- Honest no-match. No confidence badges unless a spec adds them.
+
+## Testing (skipped)
+
+- **Do not generate frontend unit, component, or e2e tests** in this milestone.
+- Keep the HTTP client separable from JSX so tests could be added later if approved.
+- `/generate-tests` and `rules/testing.md` apply to the **backend** only.
 
 ## Spec-driven implementation
 
-- Implement only UI behavior covered by **agreed** specs. Flag gaps or contradictions; do not silently invent screens, auth, or workflows.
-- If `spec/ui-flow.md` or contracts are missing, stop and confirm rather than guessing.
+- Implement only behaviour in **agreed** `spec/ui-flow.md` plus API/RAG contracts. If `ui-flow.md` is missing, **stop and confirm** rather than inventing screens.
+- Do not add auth screens unless a spec agrees.
 
 ## Do not
 
-- Do not treat React/Vite/TypeScript as PDF requirements.
-- Do not add agent-style UI (create ticket / notify from the ask box) unless a spec says so.
-- Do not scatter backend URLs or duplicate the state machine in the client as the only enforcement.
+- Do not treat React/Vite/TypeScript as PDF mandates.
+- Do not use Next.js.
+- Do not write frontend test files or pick a UI test framework.
+- Do not duplicate the state machine as the only enforcement.
+- Do not invent API fields, citation JSON, or agent actions from the ask box.
