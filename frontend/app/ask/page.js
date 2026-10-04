@@ -1,10 +1,5 @@
-import RouteStub from '@/components/RouteStub';
+import AskPanel from '@/components/AskPanel';
 
 export default function AskPage() {
-  return (
-    <RouteStub
-      title="Ask"
-      hint="Ask questions grounded in ticket history with cited ticket IDs."
-    />
-  );
+  return <AskPanel />;
 }

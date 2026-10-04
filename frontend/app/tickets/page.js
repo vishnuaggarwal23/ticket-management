@@ -42,7 +42,7 @@ export default async function TicketsPage({ searchParams }) {
       loadError = error;
     } else {
       loadError = new ApiError({
-        message: 'Could not load tickets. Is the API running on port 8080?',
+        message: 'Could not load tickets. Check that the API is running.',
         status: 0,
         code: 'LOAD_FAILED',
         details: [],

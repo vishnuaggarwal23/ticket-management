@@ -24,7 +24,7 @@ export default async function TicketDetailPage({ params }) {
     }
     return (
       <ErrorBanner
-        message="Could not load ticket. Is the API running on port 8080?"
+        message="Could not load ticket. Check that the API is running."
       />
     );
   }

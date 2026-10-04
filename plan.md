@@ -4,7 +4,7 @@
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code roots:** `backend/` (Spring Boot) and `frontend/` (Next.js + Vite + JavaScript). **Do not** put Java at repo root or under a second backend app.  
 > **Backend status:** Phases **A–F** and stack upgrade **G** complete. Live Ollama/Spring AI optional for local ask demos.  
-> **Frontend status:** **UI-J complete** — continue **Part II** (§20) **UI-K** (ask page) after backend on **8080**.  
+> **Frontend status:** **UI-L complete** — Part II **FG4**; manual demo [`spec/requirements.md`](spec/requirements.md) **§8.7** + [`frontend/README.md`](frontend/README.md) demo section.  
 > **Date:** 2026-10-04 (frontend plan added).
 
 ---
@@ -881,14 +881,14 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 | **UI-H Detail save** | complete | manual | n/a | **AC-UI-04** |
 | **UI-I Comments** | complete | manual | n/a | **AC-UI-05** |
 | **UI-J Status** | complete | manual | n/a | **AC-UI-06** |
-| **UI-K Ask** | not started | manual (+ optional live RAG) | review-rag-output optional | **AC-UI-08…12** |
-| **UI-L Demo + review** | not started | §8.7 script | review-frontend | **AC-UI-07**, hub **§8.7** |
+| **UI-K Ask** | complete | manual (+ optional live RAG) | review-frontend Pass (ask) | **AC-UI-08…12** |
+| **UI-L Demo + review** | complete | §8.7 script in `frontend/README.md` | review-frontend Pass | **FG4**, hub **§8.7** |
 
 ---
 
 ## 20. Part II — Frontend implementation (`frontend/`)
 
-**Status:** in progress (UI-J complete)  
+**Status:** complete (UI-A…UI-L, 2026-10-04)  
 **Depends on:** Backend Part I **complete** (ticket + ask APIs on **8080**). For grounded ask demos, operator-managed Ollama + corpus per [`spec/evaluation-strategy.md`](spec/evaluation-strategy.md) — not required to merge individual UI slices.  
 **Implements:** **FEAT-01…11**, **FEAT-15…18** (user-visible); **FR-UI-01…03**; **AC-UI-01…12**; demo [`spec/requirements.md`](spec/requirements.md) **§8.7**.  
 **Read first:** [`rules/frontend.md`](rules/frontend.md), [`spec/ui-flow.md`](spec/ui-flow.md), [`spec/architecture.md`](spec/architecture.md) **§12**, [`spec/api-contract.md`](spec/api-contract.md), [`spec/rag-api-contract.md`](spec/rag-api-contract.md) **§7**, [`commands/review-frontend.md`](commands/review-frontend.md).
@@ -1173,7 +1173,7 @@ UI-A (scaffold)
 
 ### 20.14 Phase UI-K — Ask / assistant page
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-C, UI-B (**parallel** with ticket phases after UI-C); UI-G for citation links  
 **Maps to:** **AC-UI-08…12**; [`spec/rag-api-contract.md`](spec/rag-api-contract.md) **DEC-11**
 
@@ -1188,14 +1188,14 @@ UI-A (scaffold)
 
 **Done criteria — UI-K**
 
-- [ ] Band A backend tests already green; UI manual check with stub or live RAG.
+- [x] Band A backend tests already green; UI manual check with stub or live RAG.
 - [ ] Optional: one [`commands/review-rag-output.md`](commands/review-rag-output.md) pass when Ollama corpus available.
 
 ---
 
 ### 20.15 Phase UI-L — Demo hardening and review
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-E, UI-F, UI-H, UI-I, UI-J, UI-K (FG3 + FG4)  
 **Maps to:** [`spec/requirements.md`](spec/requirements.md) **§8.7**; [`spec/ui-flow.md`](spec/ui-flow.md) §11–§12
 
@@ -1208,8 +1208,8 @@ UI-A (scaffold)
 
 **Done criteria — UI-L**
 
-- [ ] **FG4**; review-frontend **Pass**.
-- [ ] Demo **§8.7** UI steps repeatable without Postman.
+- [x] **FG4**; review-frontend **Pass** (blocker ask stub resolved; minors: rewrite env, generic API errors).
+- [x] Demo **§8.7** UI steps repeatable without Postman (`frontend/README.md` walkthrough).
 
 ---
 

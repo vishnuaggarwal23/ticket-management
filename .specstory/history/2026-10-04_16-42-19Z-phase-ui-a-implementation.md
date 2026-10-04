@@ -5825,14 +5825,8 @@ Status: **completed**
 _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
-<summary>Tool use: **run_terminal_command_v2** • Run command: export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem &amp;&amp; cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend &amp;&amp; ./mvnw test -Dtest=&#39;*IT&#39; 2&gt;&amp;1 | grep -E &#34;Tests run:|BUILD|Failures&#34;</summary>
-```bash
-export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem && cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend && ./mvnw test -Dtest='*IT' 2>&1 | grep -E "Tests run:|BUILD|Failures"
-```
-
-```
-]633;C
-```
+<summary>Tool use: **run_terminal_command_v2**</summary>
+Cancelled
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
@@ -5982,8 +5976,536 @@ _**User**_
 
 _**Agent (composer-2.5)**_
 
+<think><details><summary>Thought Process</summary>
+Running the frontend review.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing the full frontend codebase against the checklist.
+
+Systematically exploring the frontend codebase. Grepping for fen app/ references. Reading the ask page. Checking the list for sort parameters.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend",
+  "pattern": "fetch\\("
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend",
+  "pattern": "fetch\\(",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "frontend/src/api/client.js"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/ask/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **35** results in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend`** (35 files)
+
+| File |
+|------|
+| `src/lib/mapFieldErrors.js` |
+| `src/components/TicketListToolbar.jsx` |
+| `src/components/RouteStub.jsx` |
+| `next.config.js` |
+| `src/api/ask.js` |
+| `app/tickets/loading.js` |
+| `app/layout.js` |
+| `src/lib/ticketCategories.js` |
+| `src/api/tickets.js` |
+| `src/components/TicketNotFound.jsx` |
+| `app/ask/page.js` |
+| `src/api/types.js` |
+| `src/lib/ticketStatuses.js` |
+| `src/components/TicketDetailPanel.jsx` |
+| `src/lib/buildTicketPatch.js` |
+| `src/components/StatusTransitionButtons.jsx` |
+| `src/components/CommentList.jsx` |
+| `src/components/CommentComposer.jsx` |
+| `app/tickets/[id]/loading.js` |
+| `src/components/ErrorBanner.jsx` |
+| `vite.config.js` |
+| `src/lib/legalStatusTransitions.js` |
+| `src/lib/ticketsListHref.js` |
+| `src/components/SiteHeader.jsx` |
+| `app/tickets/page.js` |
+| `src/lib/ticketPriorities.js` |
+| `app/tickets/new/page.js` |
+| `src/components/TicketListPagination.jsx` |
+| `src/components/CreateTicketForm.jsx` |
+| `src/components/TicketTable.jsx` |
+| `src/components/Loading.jsx` |
+| `src/lib/formatDate.js` |
+| `src/api/client.js` |
+| `app/tickets/[id]/page.js` |
+| `app/page.js` |
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The Ask page is still a stub. This is a major UI-K failure.
+
+The review covers UI-I and UI-J. AC-UI-08 through AC-UI-12 are N/A until the Ask page is built. This prevents a "Ready?" pass. TicketListToolbar lacks a sort control. Pagination may be optional per ui-flow 7.1.
+
+UI-J.4's optional demo illegal reopen is not implemented. This is minor and N/A. The create form omits the status field. This is correct. patchTicket handles transitions properly. Hardcoded localhost:8080 appears only in next.config.js rewrites. This is acceptable. client.js uses 127.0.0.1:3000 for SSR. This is not a source-level hardcoded value.
+
+Ticket detail correctly shows category and read-only status badges. Comments are implemented. List sorting and page size are handled by backend defaults. No major blockers remain within the reviewed UI slices. The hardcoded next.config.js rewrite is a minor issue.
+
+The ask form does not validate the 2000-character question limit client-side. This is irrelevant while the ask page remains unimplemented.
+
+Transition refetch on 409 conflicts is working correctly.
+
+The create form uses HTML5 required attributes for empty titles. Backend field errors display properly.
+
+The list page was reviewed briefly.
+
+Duplicate formError handling between save and transition in the detail view is acceptable. The review will proceed against the current diff as a partial product. Steering artefacts and findings tables will follow the AC-UI Pass/Fail/N/Ai format.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/tickets/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/next.config.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/components/CreateTicketForm.jsx</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The error message in tickets/page.js references port 8080. This is minor and useful for developers.
+
+buildTicketPatch correctly handles null assignee and category values. Ticket flows through UI-J largely pass. UI-K is incomplete and blocks full FG4. Structure and tests pass. Vite lacks an SPA entry but that is acceptable. Pagination and filter logic work correctly.
+
+AC-UI-06 passes with a prominent error banner. AC-UI-05 passes with the comment composer.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+## Frontend review (`commands/review-frontend.md`)
+
+**Scope:** Full `frontend/` tree (UI-A through UI-J implemented; **UI-K/L not implemented**).
+
+### Steering artefacts read
+
+| Artefact | Sections used |
+|----------|----------------|
+| `spec/ui-flow.md` | §4, §6–§9, §10 (ask), §13 **AC-UI-*** |
+| `spec/requirements.md` | §2.3 Reference, §4.1, §8.7 (demo — not fully runnable) |
+| `spec/api-contract.md` | §3–§5 (shapes); §6 ask boundary |
+| `spec/data-model.md` | §5 enums, DEC-04/07/08 |
+| `spec/state-machine.md` | §5.1 legal edges, §6 PATCH `status` |
+| `spec/rag-api-contract.md` | §7, §13 (ask UI obligations) |
+| `spec/architecture.md` | §12 (frontend summary) |
+| `spec/rag-ingestion.md` | §10 (no ingest UI) |
+| `rules/frontend.md` | Stack, API client, capabilities, do-not list |
+| `rules/api-standards.md` | Envelopes, PATCH, list params, ask paths |
+| `rules/rag-vector-store.md` | Grounding / no vector debug UI |
+| `rules/documentation.md` | Artefact boundaries |
+| `frontend/README.md` | Runbook (no secrets) |
+
+---
+
+### §1 Validity — **Pass** (ticket flows) / **Fail** (ask)
+
+| Check | Result |
+|-------|--------|
+| Agreed routes, no auth/delete/agent UI | **Pass** |
+| DEC-15/20 stack (Next + Vite + JS, Node 24) | **Pass** |
+| Single HTTP module; no `fetch` in `app/` | **Pass** (`client.js` only) |
+| Ticket API: `/api/v1`, PATCH, envelopes, empty list | **Pass** |
+| 400/404/409 + `details` on forms | **Pass** (create, detail save, comments, transitions) |
+| SM guidance + backend enforcement | **Pass** (`legalStatusTransitions.js`, 409 refetch) |
+| Ask / RAG display | **Fail** — `/ask` is still `RouteStub` (`app/ask/page.js`) |
+
+---
+
+### §2 Structure — **Pass**
+
+Thin `app/*` routes; `src/api`, `src/components`, `src/lib` split; JSDoc on API types; PascalCase components.
+
+---
+
+### §3 Quality — **Pass** (implemented screens) / **Partial**
+
+| Check | Result |
+|-------|--------|
+| Labels, semantic HTML, keyboard forms | **Pass** |
+| Loading / empty / error (list, detail) | **Pass** (`loading.js`, empty states, `ErrorBanner`) |
+| Forms keep input on validation failure | **Pass** |
+| No secrets in repo | **Pass** (`.env.example` names only) |
+| Loading / empty / error **ask** | **Fail** — ask not built |
+
+---
+
+### §4 Code quality — **Pass** (minor notes)
+
+- **Pass:** `async/await`, `ApiError`, `mapFieldErrors`, `finally` on submits, refetch after comment/409.
+- **Minor:** `TicketDetailPanel.jsx` is large but delegates to child components; acceptable for this milestone.
+- **Minor:** Generic load errors mention “port 8080” (`app/tickets/page.js`, `app/tickets/[id]/page.js`) — dev-friendly, not a leak, slightly environment-specific (`rules/frontend.md` usability).
+
+---
+
+### §5 Spec compliance
+
+| Area | Result |
+|------|--------|
+| **§5.1** `rules/*` | **Pass** (ticket UI) |
+| **§5.3** Routes §4 | **Pass** (`/`, nav, tickets/new, `[id]`) |
+| **§5.3** List §7.1 | **Pass** — `q`, status, Apply+Enter, pagination, empty/no-match |
+| **§5.3** List `sort` | **Minor** — API supports `sort`; UI always uses server default (no sort control). Not required for **AC-UI-02** if default list is acceptable; cite `ui-flow.md` §7.1 if you want explicit sort UX later. |
+| **§5.3** Create §7.2 | **Pass** |
+| **§5.3** Detail §7.3 / §9 | **Pass** — read + Save without `status`; separate status buttons; `/ask` link on detail |
+| **§5.3** Ask §10 | **Fail** — stub only |
+| **§5.6** SM matrix | **Pass** — matches §9.1; terminal states show no actions |
+| **§5.7** RAG contract | **N/A** until ask UI exists |
+| **§5.8** Reference §2.3 | **Pass** |
+
+### AC-UI-01…12
+
+| ID | Result | Notes |
+|----|--------|--------|
+| **AC-UI-01** | **Pass** | `CreateTicketForm` → detail |
+| **AC-UI-02** | **Pass** | Search + status + pagination |
+| **AC-UI-03** | **Pass** | Detail fields + comments |
+| **AC-UI-04** | **Pass** | Partial PATCH, reload persists (manual) |
+| **AC-UI-05** | **Pass** | `CommentComposer` |
+| **AC-UI-06** | **Pass** | Legal buttons; **409** banner + refetch |
+| **AC-UI-07** | **Pass** | `error.message` / `details`; no stacks |
+| **AC-UI-08** | **Fail** | No ask submit UI |
+| **AC-UI-09** | **Fail** | No citations UI |
+| **AC-UI-10** | **Fail** | No no-match UI |
+| **AC-UI-11** | **Pass** | No agent actions (N/A on stub) |
+| **AC-UI-12** | **Fail** | No assistant panel |
+
+---
+
+### Findings
+
+| Sev | File | Checklist | Citation | Fix (do not implement unless asked) |
+|-----|------|-----------|----------|-------------------------------------|
+| **Blocker** | `frontend/app/ask/page.js` | §1 Ask, §5.3 §10, AC-UI-08–10, 12 | `ui-flow.md` §10, §13 | Implement **UI-K**: `askQuestion`, loading, answer panel, citation links, no-match **200** |
+| **Minor** | `frontend/next.config.js` | §1 stack / plan FG | `plan.md` §20.17, `rules/frontend.md` env | Prefer rewrite target from env at build time or document as local-dev-only convention |
+| **Minor** | `frontend/app/tickets/page.js` (and detail error path) | §3 | `rules/frontend.md` usability | Soften “port 8080” to generic “API unavailable” for non-local deploys |
+| **Minor** | List UI | §5.3 §7.1 | `ui-flow.md` §7.1 | Optional `sort` control if product wants non-default ordering in UI |
+
+No **spec vs rules** conflicts found. No ingest/debug/auth UI.
+
+---
+
+### Related commands
+
+- After **UI-K:** run [`commands/review-rag-output.md`](commands/review-rag-output.md) once with a live/stub corpus.
+- Full demo: [`spec/requirements.md`](spec/requirements.md) §8.7 after **UI-L**.
+
+### Open questions
+
+- None for ticket flows. Ask behaviour is deferred by missing **UI-K**, not by ambiguous spec.
+
+### Frontend tests
+
+None required per command.
+
+---
+
+### Ready?
+
+**No** — ticket CRUD/search/detail/comments/status slices are in good shape for **FG3**-style manual proof, but **FG4** / **UI-L** are blocked until **UI-K** (and demo hardening) land. **Merge-ready frontend review: Pass for UI-A–J; Fail overall until ask is implemented.**
+
+---
+
+_**User**_
+
+commit all
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Committing all changes.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline
+```
+
+```
+On branch main
+Your branch is ahead of 'origin/main' by 4 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-04_16-42-19Z-phase-ui-a-implementation.md
+	modified:   backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+
+no changes added to commit (use "git add" and/or "git commit -a")
+ ...26-10-04_16-42-19Z-phase-ui-a-implementation.md | 1409 +++++++++++++++++++-
+ .../com/ticketmanagement/controller/AskApiIT.java  |   12 +
+ 2 files changed, 1419 insertions(+), 2 deletions(-)
+7fc9625 feat(frontend): add comment composer and status transitions on detail
+10de9de feat(frontend): extract ticket detail and create flows into shared components
+fedcdaf docs: integrate spec, rules, commands, skills, and docs in review-frontend
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The commit includes only the AskApiIT change and the specstory history.
+
+UI-F/G/H changes may be in commit 10de9de. The commit message will reference the ask validation IT test.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add -A &amp;&amp; git commit --trailer &#34;Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt;&#34; -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+test(ask): assert question over 2000 chars returns 400 on both ask paths
+
+Band A API integration coverage for DEC-17 max length validation.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add -A && git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "$(cat <<'EOF'
+test(ask): assert question over 2000 chars returns 400 on both ask paths
+
+Band A API integration coverage for DEC-17 max length validation.
+EOF
+)" && git status
+```
+
+```
+[main 849f4d0] test(ask): assert question over 2000 chars returns 400 on both ask paths
+ 2 files changed, 1419 insertions(+), 2 deletions(-)
+On branch main
+Your branch is ahead of 'origin/main' by 5 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+All changes have been committed.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Committed **`849f4d0`** — `test(ask): assert question over 2000 chars returns 400 on both ask paths` (`AskApiIT` + SpecStory history).
+
+Working tree is clean. **`main` is 5 commits ahead** of `origin/main` (not pushed).
+
+---
+
+_**User**_
+
+implemenet UI-K, UI-L
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Implementing UI-K (Ask page) and UI-L (Demo hardening and review).
+
+Reading the UI-L plan, ask UI spec, and existing ask.js API. Will run graphify first per workspace rules.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Implementing UI-K (ask page) and UI-L (demo hardening). Reviewing the plan and ask UI specs.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/api/ask.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify query &#34;ask page AskResponse citedTicketIds frontend&#34;</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify query "ask page AskResponse citedTicketIds frontend"
+```
+
+```
+Graph: graphify-out/graph.json (2395 nodes) | Traversal: BFS depth=2 | Start: ['page', 'AskResponseData', 'AskResponseData.java', '.ask()', 'Frontend guidelines'] | 138 nodes found
+
+[!] TRUNCATED: showing 50 of 138 nodes (~2000-token budget). The answer may be among the 88 cut nodes — raise the token budget (CLI: --budget) or narrow the query (e.g. context_filter=['call'], or get_node for a specific symbol).
+
+NODE page [src= loc= community=page]
+NODE AskResponseData [src=backend/src/main/java/com/ticketmanagement/dto/response/AskResponseData.java loc=L5 community=AskResponseData]
+NODE AskResponseData.java [src=backend/src/main/java/com/ticketmanagement/dto/response/AskResponseData.java loc=L1 community=AskResponseData]
+NODE .ask() [src=backend/src/main/java/com/ticketmanagement/service/AskService.java loc=L35 community=VectorChunkStore]
+NODE Frontend guidelines [src=rules/frontend.md loc=L1 community=Frontend guidelines]
+NODE .status() [src=backend/src/test/java/com/ticketmanagement/rag/TicketIngestionHookIT.java loc=L169 community=.status]
+NODE list [src= loc= community=list]
+NODE AskService [src=backend/src/main/java/com/ticketmanagement/service/AskService.java loc=L13 community=VectorChunkStore]
+NODE frontend.md [src=rules/frontend.md loc=L1 community=Prompt History Index]
+NODE UI-B (`frontend/src/api/`) [src=.specstory/history/2026-10-04_16-42-19Z-phase-ui-a-implementation.md loc=L3114 community=ApiError]
+NODE AiAskController.java [src=backend/src/main/java/com/ticketmanagement/controller/AiAskController.java loc=L1 community=TicketStatus]
+NODE 2.11 Complete endpoint catalog (method, URI, payloads) [src=spec/api-contract.md loc=L395 community=.create]
+NODE .searchSimilar() [src=backend/src/main/java/com/ticketmanagement/rag/VectorChunkStore.java loc=L12 community=VectorChunkStore]
+NODE .citationsFollowRetrievalOrderAndDedupe() [src=backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java loc=L54 community=VectorChunkStore]
+NODE .generateReceivesRetriev
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Planning the AskPanel component with a textarea, submit button, loading state, assistant panel, citations, no-match handling, 400 validation, and a 2000-character client-side limit.
+
+The ask page will use AskPanel. UI-L hardening will fix the ask page blocker from review and apply optional minor fixes. The frontend README needs a demo walkthrough section. Plan.md also needs updating. Next step is reading the AskService NO_MATCH_ANSWER constant.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend",
+  "pattern": "NO_MATCH"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend",
+  "pattern": "NO_MATCH",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java"
+    },
+    {
+      "matchCount": 3,
+      "uri": "backend/src/test/java/com/ticketmanagement/controller/AiAskControllerSliceTest.java"
+    },
+    {
+      "matchCount": 1,
+      "uri": "backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java"
+    },
+    {
+      "matchCount": 2,
+      "uri": "backend/src/main/java/com/ticketmanagement/service/AskService.java"
+    }
+  ],
+  "totalFiles": 4,
+  "totalMatches": 7
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/README.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
 
 </details></tool-use>
 
@@ -5991,21 +6513,435 @@ _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "contextAfter": 40,
+  "contextBefore": 0,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "8\\.7"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "8\\.7",
+  "topFiles": [
+    {
+      "matchCount": 245,
+      "uri": "spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 9
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Starting implementation of the AskPanel component.
+
+AskPanel will enforce a 2000-character limit with client-side validation. It will call the askQuestion API, display answers in the assistant panel, and render citations as links. A no-match response shows the answer without an error banner. HTTP 400 errors trigger an ErrorBanner. The maximum length constant will move to lib/askConstraints.js. ask/page.js will import AskPanel, and CSS classes for the panel, response, and citations will be added. For UI-L, the README will get a demo walkthrough section per requirement §8.7. Minor review issues will be fixed by softening error messages on the tickets and detail pages.
+
+The Next.js rewrite rule will use BACKEND_REWRITE_URL from environment variables instead of a hardcoded localhost fallback. This variable will be added to .env.example, with the README documenting the fallback address.
+
+plan.md is updated to mark UI-K and UI-L complete. The ask feature resolves the UI-L.2 blocker. A brief note about the documentation review pass will be added to the plan or README. npm build and graphify update will follow. AskPage will import AskPanel directly. AskPanel state will track the question, loading flag, result object with answer and citedTicketIds, error, and fieldError.
+
+A `--no-match` modifier class will style empty-citation responses. The textarea will trim whitespace on submit and disable submission while loading or empty. The 2000-character limit will be enforced via the textarea `maxLength` attribute. A character count hint is optional.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Implementing the ask page (UI-K) and demo/README hardening (UI-L).
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/lib/askConstraints.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/components/AskPanel.jsx</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/ask/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/next.config.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/.env.example</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/tickets/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/tickets/[id]/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding CSS for the ask panel. Updating the README with a demo script.
+
+Updating plan.md for UI-K, UI-L, frontatus, and sign-off table. Running build and graphify.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/globals.css</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/README.md</summary>
 
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
 
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
 
-<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
-<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **0** directories</summary>
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
 
-No results found
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "UI-K|UI-L|Frontend status"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "UI-K|UI-L|Frontend status",
+  "topFiles": [
+    {
+      "matchCount": 28,
+      "uri": "plan.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 28
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating plan.md to cover UI-K, UI-L, Part II status, sign-off table, and in-progress status line.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "Status:.*in progress"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "Status:.*in progress",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "plan.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating multiple plan sections.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend &amp;&amp; npm run build</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend && npm run build
+```
+
+```
+
+> ticket-management-frontend@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.27
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.6s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/7) ...
+   Generating static pages (1/7) 
+   Generating static pages (3/7) 
+   Generating static pages (5/7) 
+ ✓ Generating static pages (7/7)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      130 B         103 kB
+├ ○ /_not-found                            995 B         104 kB
+├ ○ /ask                                 2.27 kB         108 kB
+├ ƒ /tickets                               161 B         106 kB
+├ ƒ /tickets/[id]                        3.75 kB         110 kB
+└ ○ /tickets/new                         2.49 kB         109 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/255-ce8c7c75002f810b.js       46.5 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify update .</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify update .
+```
+
+```
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 17 file(s) not classified (no supported extension or shebang), skipped: .env.example, .gitignore, .nvmrc, ai-project-instructions.mdc, api-standards.mdc, documentation.mdc (+11 more)
+  AST extraction: 47/47 uncached files (100%) [12 workers]
+[graphify watch] community set changed since labeling (174 saved labels, 171 communities now; renamed 63 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.
+[graphify] backed up curated graph (5 files) -> 2026-10-04/
+[graphify watch] Rebuilt: 2424 nodes, 5153 edges, 171 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+UI-K and UI-L are implemented. Review pass notes are included inline in the plan.
+
+All acceptance criteria for UI-K and UI-L should now pass. The optional review-rag-output remains open.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+### UI-K — `/ask`
+- **`AskPanel`** (`src/components/AskPanel.jsx`): multiline question, **Ask** submit, loading/disabled state
+- Calls **`askQuestion`** → `POST /api/v1/ai/ask` with `{ question }`
+- **200 grounded:** assistant panel (distinct styling) + **Cited tickets** links to `/tickets/{id}`
+- **200 no-match:** same panel (muted style), honest `data.answer`, no error banner; note when citations empty
+- **400 / client:** blank or >2000 chars (`askConstraints.js`); `ErrorBanner` for API errors
+- No agent/create/notify controls (**AC-UI-11**)
+
+### UI-L — Demo + hardening
+- **`frontend/README.md`:** §8.7-style UI demo steps (list → create → search → detail → save → comment → status → ask)
+- **`BACKEND_REWRITE_URL`** in `.env.example` + `next.config.js` (configurable rewrite target)
+- Softer generic API error copy on list/detail load failures
+- **`plan.md`:** UI-K/UI-L marked complete; Part II **FG4** noted
+
+`npm run build` succeeds.
+
+**Manual check:** backend on 8080 → `npm run dev` → `/ask` with a question that matches ticket text (stub RAG returns citations) and one that does not (no-match).
+
+Optional later: [`commands/review-rag-output.md`](commands/review-rag-output.md) with live Ollama corpus. Changes are uncommitted unless you want a commit.
+
+---
+
+_**User**_
+
+<system_notification>
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.
+
+<task>
+kind: shell
+status: aborted
+task_id: 937060
+title: Run all *IT integration tests explicitly
+tool_call_id: tool_5a0c5740-0615-4d87-a68c-d720ebca53b
+output_path: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/terminals/937060.txt
+</task>
+</system_notification>
+<user_query>Briefly inform the user about the task result and perform any follow-up actions (if needed). If there's no follow-ups needed, don't explicitly say that.</user_query>
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The IT integration test run was aborted. I will provide a brief update on its status.
+
+Checking the terminal file for output before the abort.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/terminals/937060.txt</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The IT test run aborted after roughly 17 minutes with no output captured. Grep buffering or a hung process likely caused the hang.
+
+Unit tests passed. Integration tests were not confirmed in this session. I will not re-run them unless requested.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+The background **`./mvnw test -Dtest='*IT'`** run was **aborted** after about 17 minutes. The terminal log has **no test summary** (output was piped through `grep`, so nothing was captured before stop).
+
+That run was only to confirm **integration** tests (`TicketApiIT`, `AskApiIT`, etc.). They are **not** part of the default **139-test** `./mvnw test` suite on JDK 25.
+
+To run integration tests locally:
+
+```bash
+export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem
+cd backend && ./mvnw test -Dtest='*IT'
+```
+
+Expect several minutes (Testcontainers). I can run that in a follow-up if you want a full pass/fail line.
+
+---
+
+_**User**_
+
+commit all
+
+---
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline
+```
 </details></tool-use>
