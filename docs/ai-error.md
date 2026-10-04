@@ -29,6 +29,8 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | [AE-006](#ae-006) | 2026-10-04 08:30 | spec / docs | Project conventions described as PDF requirements |
 | [AE-007](#ae-007) | 2026-10-04 08:51 | spec / docs | Stale “interim” / async ingest after **DEC-06** / **DEC-18** |
 | [AE-008](#ae-008) | 2026-10-04 08:51 | spec / docs | Glossary still pointed at **OQ-05** after **DEC-11** |
+| [AE-009](#ae-009) | 2026-10-04 10:50 | code | Phase B review: page size, field `EntityManager`, silent 500 |
+| [AE-010](#ae-010) | 2026-10-04 11:56 | code | `TicketService` dual constructors failed Spring boot |
 
 ---
 
@@ -96,6 +98,22 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 - **How detected:** Same `/review-spec` pass as AE-007.
 - **How resolved:** Glossary and OQ catalogue point at **DEC-11** / `rag-api-contract.md`, not a still-open **OQ-05**.
 
+## AE-009
+
+- **When:** 2026-10-04 10:50 UTC
+- **Kind:** code
+- **What was wrong:** Phase B list `size` used `@RequestParam(defaultValue = "20")` instead of `ApiProperties.pageSizeDefault`. `TicketRepositoryCustomImpl` field-injected `EntityManager` with `@PersistenceContext`. `RestExceptionHandler.handleUnexpected` returned a generic 500 with no error log.
+- **How detected:** `/review-code` on the Phase B diff ([`.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md`](../.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md)).
+- **How resolved:** Omitted `size` falls back to `pageSizeDefault`; constructor-inject `EntityManager`; log unexpected errors with path and ticket id. Covered by slice/unit tests. Commit `637662f`.
+
+## AE-010
+
+- **When:** 2026-10-04 11:56 UTC
+- **Kind:** code
+- **What was wrong:** Phase C added a package-private four-arg `TicketService` constructor for tests without `@Autowired` on the three-arg production constructor. Spring did not select it and failed with “No default constructor found”.
+- **How detected:** `./mvnw test` — `ApplicationSmokeTest.contextLoadsAndRelationalSchemaIsApplied` (`IllegalStateException` / `BeanInstantiationException`).
+- **How resolved:** Marked the three-arg constructor `@Autowired` (delegates to `new TicketStatusMachine()`). Context load and SM tests green. Commit `f74517a`.
+
 ---
 
 ## Revision history
@@ -103,3 +121,4 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | Date | Note |
 |------|------|
 | 2026-10-04 | Initial chronological log AE-001…008 from SpecStory and spec/review fixes; no RAG ungrounded-answer row yet. |
+| 2026-10-04 | Added AE-009…010 (2 new); skipped 0 duplicates; total 10 entries. |
