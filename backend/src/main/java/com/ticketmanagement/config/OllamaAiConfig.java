@@ -1,27 +1,32 @@
 package com.ticketmanagement.config;
 
+import com.ticketmanagement.rag.DisabledEmbeddingPort;
+import com.ticketmanagement.rag.DisabledGenerationPort;
 import com.ticketmanagement.rag.EmbeddingPort;
 import com.ticketmanagement.rag.GenerationPort;
 import com.ticketmanagement.rag.OllamaEmbeddingPort;
 import com.ticketmanagement.rag.OllamaGenerationPort;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class OllamaAiConfig {
 
     @Bean
-    @ConditionalOnBean(EmbeddingModel.class)
-    EmbeddingPort ollamaEmbeddingPort(EmbeddingModel embeddingModel) {
-        return new OllamaEmbeddingPort(embeddingModel);
+    @Lazy
+    EmbeddingPort embeddingPort(ObjectProvider<EmbeddingModel> embeddingModel) {
+        EmbeddingModel model = embeddingModel.getIfAvailable();
+        return model != null ? new OllamaEmbeddingPort(model) : new DisabledEmbeddingPort();
     }
 
     @Bean
-    @ConditionalOnBean(ChatModel.class)
-    GenerationPort ollamaGenerationPort(ChatModel chatModel) {
-        return new OllamaGenerationPort(chatModel);
+    @Lazy
+    GenerationPort generationPort(ObjectProvider<ChatModel> chatModel) {
+        ChatModel model = chatModel.getIfAvailable();
+        return model != null ? new OllamaGenerationPort(model) : new DisabledGenerationPort();
     }
 }

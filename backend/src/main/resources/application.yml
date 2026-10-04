@@ -24,8 +24,7 @@ spring:
       init:
         pull-model-strategy: never
       embedding:
-        options:
-          model: nomic-embed-text
+        model: nomic-embed-text
       chat:
         options:
           model: ${OLLAMA_CHAT_MODEL:llama3.2}

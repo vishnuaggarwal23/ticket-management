@@ -1,16 +1,15 @@
 package com.ticketmanagement.rag;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 
-@Component
-@ConditionalOnMissingBean(EmbeddingPort.class)
+/**
+ * Fail-fast stub when no {@link EmbeddingModel} is available (see {@code OllamaAiConfig}).
+ */
 public class DisabledEmbeddingPort implements EmbeddingPort {
 
     @Override
     public List<float[]> embedAll(List<String> texts) {
-        throw new IllegalStateException("Live embeddings are disabled; set a test or Ollama EmbeddingPort");
+        throw new IllegalStateException(
+                "Embeddings are not configured. Start Ollama with nomic-embed-text or check spring.ai.ollama settings.");
     }
 }
