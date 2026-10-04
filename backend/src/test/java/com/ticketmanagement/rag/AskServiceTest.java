@@ -8,7 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -81,5 +83,53 @@ class AskServiceTest {
 
         assertThat(result.citedTicketIds()).containsExactly("TKT-1001");
         verify(generation).generate("checkout", hits);
+    }
+
+    @Test
+    void explicitTicketIdLoadsStoredChunksWhenVectorSearchIsEmpty() {
+        String question = "What is the status of TKT-1006?";
+        VectorChunkStore.StoredChunk stored = new VectorChunkStore.StoredChunk(
+                UUID.randomUUID(),
+                "TKT-1006",
+                0,
+                "Ticket TKT-1006: Form\nStatus: OPEN | Priority: CRITICAL",
+                new float[768],
+                "{}",
+                Instant.parse("2026-10-04T00:00:00Z")
+        );
+        when(embeddings.embedAll(List.of(question))).thenReturn(List.of(new float[]{1f}));
+        when(store.searchSimilar(any(), eq(8), eq(0.72))).thenReturn(List.of());
+        when(store.findByTicketId("TKT-1006")).thenReturn(List.of(stored));
+        when(generation.generate(eq(question), any())).thenReturn("Status is OPEN.");
+
+        AskService.AskResult result = service.ask(question);
+
+        assertThat(result.citedTicketIds()).containsExactly("TKT-1006");
+        assertThat(result.answer()).isEqualTo("Status is OPEN.");
+        verify(generation).generate(eq(question), any());
+    }
+
+    @Test
+    void explicitTicketIdChunksPrecedeVectorHitsForCitationOrder() {
+        String question = "Status of TKT-1006?";
+        VectorChunkStore.StoredChunk stored = new VectorChunkStore.StoredChunk(
+                UUID.randomUUID(),
+                "TKT-1006",
+                0,
+                "header chunk",
+                new float[768],
+                "{}",
+                Instant.parse("2026-10-04T00:00:00Z")
+        );
+        when(embeddings.embedAll(List.of(question))).thenReturn(List.of(new float[]{1f}));
+        when(store.searchSimilar(any(), eq(8), eq(0.72))).thenReturn(List.of(
+                new VectorChunkStore.RetrievedChunk("TKT-1001", "other", 0.95)
+        ));
+        when(store.findByTicketId("TKT-1006")).thenReturn(List.of(stored));
+        when(generation.generate(eq(question), any())).thenReturn("ok");
+
+        AskService.AskResult result = service.ask(question);
+
+        assertThat(result.citedTicketIds()).containsExactly("TKT-1006", "TKT-1001");
     }
 }

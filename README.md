@@ -26,7 +26,7 @@ The assessment PDF names Java 21 and allows H2; this repo standardizes on the ve
 | Path | Purpose |
 |------|---------|
 | [`backend/`](backend/) | Spring Boot REST API, domain state machine, RAG ingest/ask |
-| [`frontend/`](frontend/) | Ticket list/detail UI and Ask screen |
+| [`frontend/`](frontend/) | Ticket list/detail UI, Ask screen — see [`frontend/README.md`](frontend/README.md) (UX patterns + changelog) |
 | [`spec/`](spec/) | **Source of truth** — ten agreed specs (requirements, architecture, APIs, RAG, UI, tests, etc.) |
 | [`rules/`](rules/) | Engineering standards (Java, API, RAG, frontend, testing, documentation) |
 | [`commands/`](commands/) | Review and workflow commands used from Cursor (`.cursor/commands/` are pointers) |
@@ -46,7 +46,7 @@ Before coding a slice, read the relevant `spec/*.md` files and the matching `rul
 You need **PostgreSQL with the pgvector extension**, **Ollama** (embed + chat models pulled), and env vars for the backend. Step-by-step setup is in the module READMEs:
 
 - **API:** [`backend/README.md`](backend/README.md) — `./mvnw spring-boot:run` (default port **8080**)
-- **UI:** [`frontend/README.md`](frontend/README.md) — `npm run dev` (default port **3000**)
+- **UI:** [`frontend/README.md`](frontend/README.md) — `npm run dev` (default port **3000**); includes **UI architecture**, **UX patterns**, and a **changelog** of post-review frontend work (2026-10-04)
 
 Copy `backend/.env.example` and `frontend/.env.example` to local env files; do not commit secrets.
 

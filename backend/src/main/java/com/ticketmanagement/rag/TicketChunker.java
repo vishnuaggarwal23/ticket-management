@@ -25,6 +25,7 @@ public class TicketChunker {
         }
         RagProperties.Chunking cfg = ragProperties.chunking();
         List<SectionBlock> blocks = new ArrayList<>();
+        blocks.addAll(headerBlocks(document.assembledText()));
         blocks.addAll(descriptionBlocks(document.assembledText()));
         blocks.addAll(commentBlocks(document.assembledText()));
         blocks.addAll(resolutionBlocks(document.assembledText()));
@@ -64,6 +65,18 @@ public class TicketChunker {
             return overflow;
         }
         return mergeSmall(overflow, cfg.minChars(), cfg.maxChars());
+    }
+
+    private static List<SectionBlock> headerBlocks(String assembled) {
+        int descriptionStart = assembled.indexOf("Description:");
+        if (descriptionStart < 0) {
+            return List.of();
+        }
+        String header = assembled.substring(0, descriptionStart).trim();
+        if (header.isBlank()) {
+            return List.of();
+        }
+        return List.of(new SectionBlock(header, false));
     }
 
     private static List<SectionBlock> descriptionBlocks(String assembled) {

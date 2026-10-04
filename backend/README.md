@@ -40,3 +40,9 @@ Do not commit a `.env` file.
 ```bash
 ./mvnw test
 ```
+
+Requires **JDK 25** (see `java.version` in `pom.xml`). Integration tests use Testcontainers PostgreSQL only; RAG ports are stubbed in ITs (no real Ollama in the default suite).
+
+### Recent test alignment (2026-10-04)
+
+- **`AskApiIT.unknownAskPropertyIs400`** — Asserts HTTP **400** with `error.code` **`VALIDATION_ERROR`** and `details` for unknown ask body fields (e.g. `confidence`), consistent with `RestExceptionHandler`, `AiAskControllerSliceTest`, and [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) **DEC-17** / **AC-RAG-API-01**.

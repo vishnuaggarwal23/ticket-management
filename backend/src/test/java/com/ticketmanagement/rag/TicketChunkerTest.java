@@ -21,6 +21,26 @@ class TicketChunkerTest {
     }
 
     @Test
+    void headerLineIsItsOwnChunkForIdAndStatusRetrieval() {
+        String assembled = """
+                Ticket TKT-1: Pay
+                Status: OPEN | Priority: HIGH | Assignee: a | Category: PAYMENTS
+
+                Description:
+                Card failed.
+
+                Comments:
+                (none)
+
+                Resolution:
+                (none)
+                """;
+        List<TextChunk> chunks = chunker.chunk(document(true, assembled));
+        assertThat(chunks.stream().map(TextChunk::text))
+                .anyMatch(text -> text.contains("Ticket TKT-1:") && text.contains("Status: OPEN"));
+    }
+
+    @Test
     void commentBoundariesAreSeparateChunks() {
         String assembled = """
                 Ticket TKT-1: Pay

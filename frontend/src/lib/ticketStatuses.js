@@ -9,10 +9,30 @@ export const TICKET_STATUSES = [
   'CANCELLED',
 ];
 
+/** @type {Record<TicketStatus, string>} */
+const STATUS_MODIFIERS = {
+  OPEN: 'open',
+  IN_PROGRESS: 'in-progress',
+  RESOLVED: 'resolved',
+  CLOSED: 'closed',
+  CANCELLED: 'cancelled',
+};
+
 /**
- * @param {TicketStatus} status
+ * @param {TicketStatus | string} status
  * @returns {string}
  */
 export function formatStatusLabel(status) {
-  return status.replace(/_/g, ' ');
+  return String(status).replace(/_/g, ' ');
+}
+
+/**
+ * CSS modifier for colored status badges.
+ * @param {TicketStatus | string} status
+ * @returns {string}
+ */
+export function statusBadgeClass(status) {
+  const key = String(status);
+  const mod = STATUS_MODIFIERS[key] ?? 'unknown';
+  return `status-badge status-badge--${mod}`;
 }

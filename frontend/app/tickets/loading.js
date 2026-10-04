@@ -1,5 +1,5 @@
-import Loading from '@/components/Loading';
+import { ListPageSkeleton } from '@/components/Skeleton';
 
 export default function TicketsLoading() {
-  return <Loading message="Loading tickets…" />;
+  return <ListPageSkeleton />;
 }

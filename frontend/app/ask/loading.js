@@ -1,5 +1,5 @@
 import { DetailPageSkeleton } from '@/components/Skeleton';
 
-export default function TicketDetailLoading() {
+export default function AskLoading() {
   return <DetailPageSkeleton />;
 }

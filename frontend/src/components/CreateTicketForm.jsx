@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ApiError } from '@/api/client';
 import { createTicket } from '@/api/tickets';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import ErrorBanner from '@/components/ErrorBanner';
 import { TICKET_CATEGORIES, formatCategoryLabel } from '@/lib/ticketCategories';
 import { mapFieldErrors } from '@/lib/mapFieldErrors';
@@ -79,8 +80,18 @@ export default function CreateTicketForm() {
 
   return (
     <div className="ticket-form-page">
-      <header className="page-header">
-        <h1>New ticket</h1>
+      <Breadcrumbs
+        items={[
+          { label: 'Tickets', href: '/tickets' },
+          { label: 'New ticket' },
+        ]}
+      />
+
+      <header className="page-header page-header--compact">
+        <div>
+          <h1>New ticket</h1>
+          <p className="page-header__lede">Title is required; everything else is optional.</p>
+        </div>
         <Link href="/tickets" className="button button--secondary">
           Cancel
         </Link>
@@ -88,9 +99,11 @@ export default function CreateTicketForm() {
 
       {formError ? <ErrorBanner message={formError} /> : null}
 
-      <form className="ticket-form" onSubmit={handleSubmit} noValidate>
+      <form className="ticket-form panel" onSubmit={handleSubmit} noValidate>
         <div className="ticket-form__field">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title">
+            Title <span className="label-required">(required)</span>
+          </label>
           <input
             id="title"
             name="title"

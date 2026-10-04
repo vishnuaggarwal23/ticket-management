@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { listTickets } from '@/api/tickets';
 import { ApiError } from '@/api/client';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import ErrorBanner from '@/components/ErrorBanner';
 import TicketListPagination from '@/components/TicketListPagination';
 import TicketListToolbar from '@/components/TicketListToolbar';
 import TicketTable from '@/components/TicketTable';
 import { formatStatusLabel } from '@/lib/ticketStatuses';
+import { DEFAULT_TICKETS_LIST_SORT } from '@/lib/ticketsListQuery';
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_SIZE = 20;
@@ -32,6 +34,7 @@ export default async function TicketsPage({ searchParams }) {
     const result = await listTickets({
       page,
       size,
+      sort: DEFAULT_TICKETS_LIST_SORT,
       q: q || undefined,
       status: status || undefined,
     });
@@ -52,11 +55,15 @@ export default async function TicketsPage({ searchParams }) {
 
   return (
     <div className="ticket-list-page">
-      <header className="page-header">
-        <h1>Tickets</h1>
-        <Link href="/tickets/new" className="button">
-          New ticket
-        </Link>
+      <Breadcrumbs items={[{ label: 'Tickets' }]} />
+
+      <header className="page-header page-header--compact">
+        <div>
+          <h1>Tickets</h1>
+          <p className="page-header__lede">
+            Use status chips for one-click filters, or search and press Enter.
+          </p>
+        </div>
       </header>
 
       <TicketListToolbar q={q} status={status} />
@@ -66,23 +73,43 @@ export default async function TicketsPage({ searchParams }) {
       ) : null}
 
       {!loadError && tickets.length === 0 && !hasFilters ? (
-        <div className="empty-state">
-          <p>No tickets yet.</p>
-          <Link href="/tickets/new">Create your first ticket</Link>
+        <div className="empty-state empty-state--centered">
+          <p className="empty-state__eyebrow">Get started</p>
+          <h2 className="empty-state__title">No tickets yet</h2>
+          <p className="empty-state__body">
+            Create a ticket to track support work, add comments, and try grounded search on the Ask
+            page.
+          </p>
+          <div className="empty-state__actions">
+            <Link href="/tickets/new" className="button">
+              Create your first ticket
+            </Link>
+          </div>
         </div>
       ) : null}
 
       {!loadError && tickets.length === 0 && hasFilters ? (
-        <div className="empty-state">
-          <p>{buildNoMatchesMessage(q, status)}</p>
-          <Link href="/tickets">Clear filters</Link>
+        <div className="empty-state empty-state--centered">
+          <h2 className="empty-state__title">No matching tickets</h2>
+          <p className="empty-state__body">{buildNoMatchesMessage(q, status)}</p>
+          <div className="empty-state__actions">
+            <Link href="/tickets" className="button button--secondary">
+              Clear filters
+            </Link>
+          </div>
         </div>
       ) : null}
 
       {!loadError && tickets.length > 0 && meta ? (
         <>
           <TicketTable tickets={tickets} />
-          <TicketListPagination meta={meta} q={q} status={status} size={size} />
+          <TicketListPagination
+            meta={meta}
+            q={q}
+            status={status}
+            size={size}
+            sort={DEFAULT_TICKETS_LIST_SORT}
+          />
         </>
       ) : null}
     </div>

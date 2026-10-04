@@ -87,7 +87,10 @@ class TicketIngestionServiceTest {
         VectorChunkStore.StoredChunk stored = captor.getValue().getFirst();
         ChunkMetadataAssertions.assertPdfAndTechnicalMetadataKeys(stored.metadataJson(), "TKT-1");
         assertThat(stored.metadataJson()).contains("\"category\"");
-        assertThat(stored.content()).contains("Need a refund");
+        assertThat(captor.getValue().stream().map(VectorChunkStore.StoredChunk::content))
+                .anyMatch(content -> content.contains("Need a refund"));
+        assertThat(captor.getValue().stream().map(VectorChunkStore.StoredChunk::content))
+                .anyMatch(content -> content.contains("Ticket TKT-1") && content.contains("Status: OPEN"));
     }
 
     @Test

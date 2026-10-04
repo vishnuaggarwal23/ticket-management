@@ -4,7 +4,7 @@
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code roots:** `backend/` (Spring Boot) and `frontend/` (Next.js + Vite + JavaScript). **Do not** put Java at repo root or under a second backend app.  
 > **Backend status:** Phases **A–F** and stack upgrade **G** complete. Live Ollama/Spring AI optional for local ask demos.  
-> **Frontend status:** **UI-L complete** — Part II **FG4**; manual demo [`spec/requirements.md`](spec/requirements.md) **§8.7** + [`frontend/README.md`](frontend/README.md) demo section.  
+> **Frontend status:** **UI-L complete** — Part II **FG4**; **2026-10-04 follow-up:** code review fixes + UX polish (documented in [`frontend/README.md`](frontend/README.md) **Changelog**). Demo: [`spec/requirements.md`](spec/requirements.md) **§8.7** + frontend README **Demo walkthrough**.  
 > **Date:** 2026-10-04 (frontend plan added).
 
 ---
@@ -74,7 +74,7 @@ Deliver a **single Spring Boot 4 monolith** under `backend/` that:
 - Tests: JUnit 5, Mockito, MockMvc slice, PostgreSQL Testcontainers + Liquibase.
 - RAG **design and later implementation** as Phase D–F (gated).
 
-**Part II — `frontend/` (§20, not started)**
+**Part II — `frontend/` (§20, complete)**
 
 - React + Next.js (App Router) + Vite + JavaScript under `frontend/` per **DEC-15** / **DEC-20**.
 - Ticket list/create/detail, search/filter, comments, status UX (guidance only), grounded ask UI.
@@ -842,7 +842,7 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 
 1. **UI-A** — `frontend/` scaffold (Node 24, Next + Vite, env names, `next dev` / build).
 2. **UI-B** — HTTP client + envelope/`ApiError` (no screen logic).
-3. **UI-C** — App shell, layout, nav, route stubs (**DEC-20** routes).
+3. **UI-C** — App shell, layout, nav, routes (**DEC-20**).
 4. **UI-D** — Ticket list (default `GET`, loading/empty).
 5. **UI-E** — List search `q`, status filter, pagination from `meta` (**DEC-20** Apply + Enter).
 6. **UI-F** — Create ticket form → **201** → detail (**parallel** with D/E after **UI-C** if desired).
@@ -1213,6 +1213,23 @@ UI-A (scaffold)
 
 ---
 
+### 20.15b Post UI-L polish and review fixes (2026-10-04)
+
+**Convention:** Does not change agreed `spec/` behaviour; documents repo deltas after **UI-L** and [`commands/review-frontend.md`](commands/review-frontend.md) / [`commands/review-code.md`](commands/review-code.md).
+
+| Area | Summary | Doc |
+|------|---------|-----|
+| Backend test | `AskApiIT` unknown ask property → `VALIDATION_ERROR` + field `details` | [`backend/README.md`](backend/README.md) |
+| Frontend cleanup | Remove dead stub; explicit list `sort`; pagination page links; Ask timeout copy | [`frontend/README.md`](frontend/README.md) **Changelog** |
+| Frontend UX | Inter font, design tokens, breadcrumbs, status chips, clickable rows, sticky save bar, one-click Ask examples, skeleton loaders | [`frontend/README.md`](frontend/README.md) **UI architecture** / **UX patterns** |
+
+**Done criteria**
+
+- [x] `frontend/README.md` and root [`README.md`](README.md) point to UX/changelog sections.
+- [x] `npm run build` in `frontend/` succeeds after changes.
+
+---
+
 ### 20.16 Frontend acceptance map
 
 | Slice | Primary **AC-UI** | Hub **AC-CORE** (UI-facing) |
@@ -1286,3 +1303,4 @@ After each slice **UI-D** onward:
 | 2026-10-04 | Backend packages: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`, `service`, `rag`, `config` (replaced `api/` + `persistence/` split). |
 | 2026-10-04 | **Stack upgrade (G):** Backend migrated to Boot **4.1.1**, JDK **25**, Spring AI **2.0.1**, Jackson **3**, Testcontainers **2.x**; `./mvnw clean test` green with `JAVA_HOME` on JDK 25. |
 | 2026-10-04 | **Part II (§20):** Frontend plan under `frontend/` — phases **UI-A…UI-L**, gates **FG0–FG4**, aligned to **DEC-15**/**DEC-20**, **AC-UI-01…12**, `rules/frontend.md`, `commands/review-frontend.md`, assessment PDF capabilities. |
+| 2026-10-04 | **§20.15b:** Post UI-L review fixes + UX polish; changelog in [`frontend/README.md`](frontend/README.md); `AskApiIT` alignment in [`backend/README.md`](backend/README.md). |

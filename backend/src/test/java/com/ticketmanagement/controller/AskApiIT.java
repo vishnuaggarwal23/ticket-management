@@ -45,6 +45,25 @@ class AskApiIT extends AbstractPostgresIntegrationTest {
     }
 
     @Test
+    void askByExplicitTicketIdCitesTicketEvenWhenVectorMatchIsWeak() throws Exception {
+        TicketDetailResponse created = tickets.create(
+                new CreateTicketRequest(
+                        "Issue in submitting form",
+                        "User is not able to submit a new ticket",
+                        null,
+                        null,
+                        null));
+
+        mockMvc.perform(post("/api/v1/ai/ask")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"question\":\"What is the status of " + created.id() + "?\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.answer").value("Stubbed answer from retrieved tickets."))
+                .andExpect(jsonPath("$.data.citedTicketIds", hasItem(created.id())))
+                .andExpect(jsonPath("$.error").doesNotExist());
+    }
+
+    @Test
     void unmatchedQuestionIsNoMatchAndDoesNotCreateTickets() throws Exception {
         long before = tickets.list(0, 20, "createdAt,desc", null, null).meta().totalElements();
 
@@ -85,7 +104,8 @@ class AskApiIT extends AbstractPostgresIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"question\":\"hello\",\"confidence\":0.9}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error.code").value("BAD_REQUEST"));
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.error.details[0].field").value("confidence"));
     }
 
     @Test

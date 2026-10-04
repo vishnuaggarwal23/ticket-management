@@ -3,8 +3,9 @@
  */
 export default function Loading({ message = 'Loading…' }) {
   return (
-    <p className="loading" role="status" aria-live="polite">
-      {message}
-    </p>
+    <div className="loading-block" role="status" aria-live="polite">
+      <span className="loading-block__spinner" aria-hidden="true" />
+      <p className="loading-block__message">{message}</p>
+    </div>
   );
 }
