@@ -1,6 +1,8 @@
 # Ticket management backend
 
-Spring Boot 3 / Java 21 API under `com.ticketmanagement` with **type-based packages** for quick navigation:
+Spring Boot 4 / Java 25 API under `com.ticketmanagement` with **type-based packages** for quick navigation:
+
+**Build:** use **JDK 25** (`java.version` in `pom.xml`). With SDKMAN: `sdk use java 25.0.4-tem` (or set `JAVA_HOME`) before `./mvnw test`.
 
 | Package | Role |
 |---------|------|

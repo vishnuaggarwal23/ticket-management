@@ -1,6 +1,6 @@
 package com.ticketmanagement.rag;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.ticketmanagement.config.RagProperties;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
@@ -54,7 +54,7 @@ class TicketIngestionServiceTest {
                 embeddings,
                 store,
                 properties,
-                new ObjectMapper()
+                JsonMapper.builder().build()
         );
     }
 

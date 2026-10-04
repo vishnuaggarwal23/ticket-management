@@ -28,7 +28,7 @@ Tests prove **acceptance criteria** from `spec/` (start each file’s **§0** fo
 - **No CI** in this milestone — local, repeatable test runs only
 - Docker Compose is for **local infrastructure**, not a substitute for Testcontainers in the backend integration suite
 
-Do not assume unfinalized versions (Spring Boot 3 patch, JUnit/Mockito/Testcontainers patch, PostgreSQL image tag, embedding model).
+Do not assume unfinalized versions (Spring Boot 4 patch, Spring AI patch, JUnit/Mockito/Testcontainers patch, PostgreSQL image tag, embedding model).
 
 ## Tech stack (tests)
 

@@ -1,25 +1,24 @@
 package com.ticketmanagement.dto.serde;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.ticketmanagement.domain.TicketPriority;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.exc.InvalidFormatException;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TicketPriorityJsonDeserializerTest {
 
-    private ObjectMapper mapper;
+    private JsonMapper mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(TicketPriority.class, new TicketPriorityJsonDeserializer());
-        mapper.registerModule(module);
+        mapper = JsonMapper.builder().addModule(module).build();
     }
 
     @Test

@@ -1,16 +1,15 @@
 package com.ticketmanagement.dto.serde;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.ticketmanagement.domain.TicketPriority;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 
-import java.io.IOException;
-
-public class TicketPriorityJsonDeserializer extends JsonDeserializer<TicketPriority> {
+public class TicketPriorityJsonDeserializer extends ValueDeserializer<TicketPriority> {
 
     @Override
-    public TicketPriority deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    public TicketPriority deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
         String raw = parser.getValueAsString();
         if (raw == null || raw.isBlank()) {
             return null;

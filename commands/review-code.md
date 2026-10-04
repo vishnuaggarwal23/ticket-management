@@ -6,7 +6,7 @@ Review the current change set (or specified paths) as a senior Java / Spring Boo
 
 Do **not** apply fixes unless the user asks. Confirm before editing.
 
-**Java / Spring Boot bar:** A change that works but violates [`rules/java-springboot.md`](../rules/java-springboot.md) (coding guidelines, Spring Boot practices, naming, or packaging) is a **Fail**. Do not treat Boot 3, Maven Wrapper, Liquibase, or the package tree as PDF requirements — they are **project conventions**. For REST envelopes and list params, also use `rules/api-standards.md`. Do not invent extra libraries, layers, or naming schemes not in those files or an agreed spec.
+**Java / Spring Boot bar:** A change that works but violates [`rules/java-springboot.md`](../rules/java-springboot.md) (coding guidelines, Spring Boot practices, naming, or packaging) is a **Fail**. Do not treat Boot 4, Maven Wrapper, Liquibase, or the package tree as PDF requirements — they are **project conventions**. For REST envelopes and list params, also use `rules/api-standards.md`. Do not invent extra libraries, layers, or naming schemes not in those files or an agreed spec.
 
 **Quick routing**
 
@@ -112,7 +112,7 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 ### Coding guidelines
 
 - [ ] Constructor injection only; collaborators `final`; no field/`@Autowired` injection; no setter injection
-- [ ] `jakarta.*` not `javax.*`; Java 21 language features are fine (`record`, `switch`, text blocks); no `sun.*`
+- [ ] `jakarta.*` not `javax.*`; Java 25 language features are fine (`record`, `switch`, text blocks); no `sun.*`
 - [ ] Public application APIs do not return `null` — `Optional` for a missing ticket; empty `List`/`Page` for empty collections
 - [ ] Prefer `record` for API DTOs and small immutable values; no Lombok, MapStruct, QueryDSL, or extra web stacks unless a spec agrees
 - [ ] Methods stay focused; extract helpers when a method mixes orchestration, validation, and field mapping — no god class that both mutates tickets and inlines the transition table
@@ -166,7 +166,7 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 
 ### AI-generated code risks
 
-- [ ] Types, annotations, and Spring APIs exist on the agreed stack (Boot 3, Jakarta, no hallucinated libraries)
+- [ ] Types, annotations, and Spring APIs exist on the agreed stack (Boot 4, Spring AI 2.x, Jakarta, no hallucinated libraries)
 - [ ] No copied copyrighted dumps; no credentials in the diff
 - [ ] Meaningful AI mistakes proposed for [`docs/ai-error.md`](../docs/ai-error.md) (write via **`/update-ai-error`**; do not invent RAG fails)
 

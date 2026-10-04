@@ -21,7 +21,7 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 
 **This project’s approved conventions** (not PDF mandates):
 
-- JSON request/response; Spring Boot 3 as the HTTP server; Bean Validation at the API boundary
+- JSON request/response; Spring Boot 4 as the HTTP server; Bean Validation at the API boundary
 - URI versioning under `/api/v1` for ticket (and other versioned) resources
 - Shared **success** and **error** envelopes below
 - Offset pagination, `sort`, keyword `q`, and `status` filter on listing APIs

@@ -1008,7 +1008,7 @@ Build using (**PDF** exercise list):
 - **React / Next.js or equivalent** frontend
 - **Cursor / GitHub Copilot / Kiro** (tooling for assessed workflow)
 
-**Note:** Repository **project conventions** (e.g. Spring Boot 3, PostgreSQL + PgVector + Liquibase for persistence, React + Vite + TypeScript) may be recorded in `rules/*` and `architecture.md` where they exceed PDF mandates—those conventions must not contradict PDF requirements.
+**Note:** Repository **project conventions** (e.g. Spring Boot 4, Java 25, PostgreSQL + PgVector + Liquibase for persistence, React + Vite + TypeScript) may be recorded in `rules/*` and `architecture.md` where they exceed PDF mandates—those conventions must not contradict PDF requirements.
 
 ### 6.2 Spec artefacts before implementation (**PDF**)
 

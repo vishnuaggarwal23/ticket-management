@@ -51,7 +51,7 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 **Reference only — do not build** ([`spec/requirements.md`](../spec/requirements.md) **§2.3**): async ingest queues, versioned embedding history, ask **confidence** / extra `reason` fields, metadata-only ask filters, semantic chunking v1, agents/rerankers, vector admin APIs.
 - Numerical RAG quality scores, golden-answer sets
 
-Do not assume **versions** of Spring AI, PostgreSQL, PgVector, Ollama, or models until those are agreed.
+Do not assume **unpinned** versions of PostgreSQL, PgVector, Ollama, or models until those are agreed. **Spring Boot**, **JDK**, and **Spring AI BOM** versions are pinned in [`spec/architecture.md`](../spec/architecture.md) §7.3.
 
 ## PDF guidance slots (conventions — values in specs)
 

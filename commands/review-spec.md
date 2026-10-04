@@ -58,7 +58,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 ### Assessment vs conventions vs open
 
 - [ ] PDF requirements are not weakened (CRUD, comments, search/filter, backend validation, backend state machine, persistence, grounded ask + citations or no-match)
-- [ ] Project conventions (Boot 3, `/api/v1`, PgVector, JUnit, envelopes, PATCH) are **labeled** as conventions, **not** as PDF mandates
+- [ ] Project conventions (Boot 4, `/api/v1`, PgVector, JUnit, envelopes, PATCH) are **labeled** as conventions, **not** as PDF mandates
 - [ ] Open items remain in **Open questions** (or equivalent), not smuggled into requirements as decided facts
 - [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): **§0.4** coverage map — every PDF theme row has a capture path or explicit gap (**DEC-*** / demo evidence only)
 - [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): **§0.5** verbatim anchor table — no assignment bullet left unmapped to a spec home
@@ -97,7 +97,7 @@ When a child spec is **draft** or a section is **Open**, cross-check [`spec/requ
 
 Use `rules/documentation.md` section map for headings. Mark **N/A** for sections not yet written.
 
-- [ ] **PDF vs Convention vs Open** labels used; conventions (PgVector, `/api/v1`, Boot 3, React+Vite+TS) not presented as PDF mandates
+- [ ] **PDF vs Convention vs Open** labels used; conventions (PgVector, `/api/v1`, Boot 4, React+Vite+TS) not presented as PDF mandates
 - [ ] **Business modules** (§4) trace to `requirements.md` FEAT catalogue without inventing capabilities
 - [ ] **Ticket structure** (§5) stays conceptual — no smuggled field catalogs that belong in `data-model.md`
 - [ ] **Functional modules** (§8) map to **technical** packages (§9) consistently with `rules/java-springboot.md`

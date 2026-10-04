@@ -1,7 +1,7 @@
 package com.ticketmanagement.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import com.ticketmanagement.config.RagProperties;
 import com.ticketmanagement.entity.TicketEntity;
 import com.ticketmanagement.rag.EmbeddingPort;
@@ -33,7 +33,7 @@ public class TicketIngestionService {
     private final EmbeddingPort embeddings;
     private final VectorChunkStore store;
     private final RagProperties ragProperties;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     public TicketIngestionService(
             TicketRepository ticketRepository,
@@ -42,7 +42,7 @@ public class TicketIngestionService {
             EmbeddingPort embeddings,
             VectorChunkStore store,
             RagProperties ragProperties,
-            ObjectMapper objectMapper
+            JsonMapper jsonMapper
     ) {
         this.ticketRepository = ticketRepository;
         this.documents = documents;
@@ -50,7 +50,7 @@ public class TicketIngestionService {
         this.embeddings = embeddings;
         this.store = store;
         this.ragProperties = ragProperties;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
     }
 
     public void ingest(String ticketId) {
@@ -112,8 +112,8 @@ public class TicketIngestionService {
         json.put("chunkIndex", metadata.chunkIndex());
         json.put("ingestedAt", metadata.ingestedAt() == null ? null : metadata.ingestedAt().toString());
         try {
-            return objectMapper.writeValueAsString(json);
-        } catch (JsonProcessingException ex) {
+            return jsonMapper.writeValueAsString(json);
+        } catch (JacksonException ex) {
             throw new IllegalStateException("Failed to serialize chunk metadata", ex);
         }
     }

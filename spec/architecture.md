@@ -95,7 +95,7 @@ Support Tickets
 |----|-------------|
 | IR-ARCH-01 | Maven Wrapper; Liquibase; Testcontainers for integration tests |
 | IR-ARCH-02 | Layering: domain / service / persistence / api / rag per `rules/java-springboot.md`; relational I/O via **Spring Data JPA** (**C-06**) |
-| IR-ARCH-03 | Spring AI for embed + chat; Ollama `nomic-embed-text` + local chat model via config (**DEC-09**) |
+| IR-ARCH-03 | Spring AI **2.x** for embed + chat; Ollama `nomic-embed-text` + local chat model via config (**DEC-09**); BOM per §7.3 |
 
 ### 0.3 Independent reading units
 
@@ -367,8 +367,8 @@ flowchart LR
 
 | Layer | Choice | Label |
 |-------|--------|-------|
-| Language | Java 21 | **PDF** |
-| Backend | Spring Boot 3 | **Convention** (PDF names Spring Boot, not major version) |
+| Language | Java 25 | **Convention** (PDF exercise lists Java 21) |
+| Backend | Spring Boot 4 | **Convention** (PDF names Spring Boot, not major version) |
 | Build | Maven Wrapper (`./mvnw`) | **Convention** |
 | AI | Spring AI (embed, vector store, chat) | **PDF** |
 | Ticket DB | PostgreSQL + Liquibase | **Convention** (PDF allows PostgreSQL/H2) |
@@ -377,6 +377,19 @@ flowchart LR
 | API | REST, JSON | **PDF** |
 | Frontend | React + Vite + TypeScript | **Convention** (PDF: React/Next or equivalent) |
 | Tests | JUnit 5, Mockito, PostgreSQL Testcontainers | **Convention** (`rules/testing.md`) |
+
+### 7.3 Pinned backend dependency versions (**Convention**)
+
+Use these in `backend/pom.xml` unless a spec/plan decision supersedes them. Patch bumps follow **C-03** (latest Boot **4** GA) and Spring AI release notes for Boot 4 compatibility.
+
+| Artifact / property | Version (2026-10-04 stack upgrade) | Notes |
+|---------------------|-------------------------------------|-------|
+| `spring-boot-starter-parent` | **4.1.1** | Spring Boot 4 GA line; Spring Framework 7 baseline |
+| `java.version` | **25** | JDK for compile, test, and run |
+| `spring-ai-bom` (`spring-ai.version`) | **2.0.1** | Spring AI 2.x for Boot 4.x ([Spring AI getting started](https://docs.spring.io/spring-ai/reference/getting-started.html)) |
+| Liquibase | `spring-boot-starter-liquibase` (Boot 4 — not `liquibase-core` alone) | Do not override without a recorded decision |
+
+**Follow-up (implementation):** After these pins land, migrate backend/tests for Boot 4 / Spring AI 2 breaking changes and prove `./mvnw test` green — tracked in [`plan.md`](../plan.md) §19.
 
 ### 7.2 Deployment topology (logical)
 
@@ -1061,3 +1074,4 @@ Architecture supports verification of:
 | 2026-10-04 | FEAT-23 evidence: [`docs/ai-error.md`](../docs/ai-error.md); `ai-mistakes.md` pointer. |
 | 2026-10-04 | §13.1 / §9: **Spring Data JPA primary** for tickets/comments (**C-06**); vector writer JDBC/Spring AI exception. |
 | 2026-10-04 | §9.1: type-based packages (`controller`, `dto`, `entity`, `repository`, `exception`, `util`, `advice`). |
+| 2026-10-04 | §7.1–§7.3: project JDK **25**, Spring Boot **4**, Spring AI **2.x** pins; PDF still lists Java 21 / Spring Boot without major. |

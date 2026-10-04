@@ -16,11 +16,11 @@ Backend coding standards for the support ticket management application.
 
 ## Assessment vs project conventions
 
-**Assessment PDF** names Java 21, Spring Boot, Spring AI, PostgreSQL/H2, an embedding model, and a vector store (examples include PGVector or Chroma). It requires REST APIs, backend validation, backend-enforced ticket status rules, persistence that survives restart, and no secrets in the repository. It does **not** mandate Spring Boot 3, Maven, Liquibase, PgVector over Chroma, Ollama, a package tree, JPA mapping style, or a test database.
+**Assessment PDF** names Java 21, Spring Boot, Spring AI, PostgreSQL/H2, an embedding model, and a vector store (examples include PGVector or Chroma). It requires REST APIs, backend validation, backend-enforced ticket status rules, persistence that survives restart, and no secrets in the repository. It does **not** mandate a Spring Boot major version, Maven, Liquibase, PgVector over Chroma, Ollama, a package tree, JPA mapping style, or a test database.
 
 **This project’s approved conventions** (use these when implementing; do not describe them as PDF requirements):
 
-- Java **21**, Spring Boot **3** (major version only — do not pin a patch)
+- Java **25**, Spring Boot **4** (major version only in rules — pin compatible patch/BOM versions in `backend/pom.xml` per [`plan.md`](../plan.md) **C-03** / **C-08** and [`spec/architecture.md`](../spec/architecture.md) §7.3)
 - **Maven Wrapper** — run `./mvnw` (or `mvnw.cmd`); do not rely on a locally installed Maven
 - **PostgreSQL** as the ticket system of record; **Spring Data JPA** as the primary relational access layer; **PgVector** in the same instance for embeddings; **Liquibase** for all schema
 - **Spring AI** for embeddings and chat; **Ollama** as the initial provider **via configuration only**
@@ -32,14 +32,15 @@ Do not assume a finalized Spring Boot patch, Spring AI version, PostgreSQL/PgVec
 
 | Concern | Convention |
 |---------|------------|
-| Language | Java 21 |
-| App | Single Spring Boot 3 monolith (`@SpringBootApplication`) |
+| Language | Java 25 |
+| App | Single Spring Boot 4 monolith (`@SpringBootApplication`) |
 | HTTP | Spring Web MVC, JSON REST |
 | Persistence | **Spring Data JPA** (primary) on **PostgreSQL** — derived queries first, then `JpaSpecificationExecutor`, then `@EntityGraph`; `@Query` (native/JPQL) only when unavoidable; **no** hand-built JPQL in `*CustomImpl` + `EntityManager` |
 | Schema | Liquibase changelogs; Hibernate DDL is **not** the source of truth (`ddl-auto` `validate` or `none`) |
 | Non-JPA I/O | **Narrow exception:** `ticket_vector_chunk` cosine search/upsert may use `JdbcTemplate` or Spring AI behind a `rag` port — not a second persistence style for tickets/comments |
 | Validation | Bean Validation on API DTOs (`jakarta.validation`) |
 | Config | `application.yml` + environment variables; typed `@ConfigurationProperties` for RAG |
+| AI integration | **Spring AI 2.x** (BOM import in `backend/pom.xml`; Ollama via starters/properties) |
 | Time | `java.time` (`Instant` for stored timestamps); no `java.util.Date` |
 
 Do not add MapStruct, Lombok, QueryDSL, or extra web stacks unless a spec agrees. Do not add Spring Security unless authentication is an agreed spec.
@@ -108,7 +109,7 @@ Keep HTTP adapters thin. Repositories must not apply ad-hoc status updates.
 - Public application APIs must not return `null`. Use `Optional` for a missing ticket; empty `List`/`Page` for empty collections.
 - Prefer `final` on injected collaborators. Name them by role (`ticketService`, `ticketRepository`), not as if they were collections (`tickets` for a single repository or service).
 - Keep methods short; extract patch application, after-commit scheduling, and ingest chunk assembly into focused types or private methods when orchestration grows.
-- Java 21 is fine (`record`, `switch`, text blocks for JPQL or prompts held in config/code as agreed). Do not use `sun.*` APIs.
+- Java 25 is fine (`record`, `switch`, text blocks for JPQL or prompts held in config/code as agreed). Do not use `sun.*` APIs.
 - Log with SLF4J. Include ticket id when known. Never log secrets, passwords, API keys, raw prompts, or full model output by default.
 
 ```java
@@ -266,3 +267,4 @@ Ticket and comment **read/write paths go through Spring Data JPA** unless a spec
 | 2026-10-04 | **Spring Data JPA primary** for tickets/comments; custom repository fragments; vector chunk I/O exception in `rag/`. |
 | 2026-10-04 | **C-06** preference ladder: derived → `Specification` → `@EntityGraph` → minimal `@Query`; no `*CustomImpl` JPQL. |
 | 2026-10-04 | Package layout: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`, `service`, `rag`, `config`. |
+| 2026-10-04 | Stack conventions: **Java 25**, **Spring Boot 4**, **Spring AI 2.x** (BOM aligned in `backend/pom.xml`); PDF still names Java 21 / Spring Boot without major. |

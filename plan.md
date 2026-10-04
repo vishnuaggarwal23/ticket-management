@@ -50,7 +50,7 @@ RAG sections (Phase D+) are written in full so they are not invented later. They
 
 ### 1.1 Purpose
 
-Deliver a **single Spring Boot 3 monolith** under `backend/` that:
+Deliver a **single Spring Boot 4 monolith** under `backend/` that:
 
 1. Persists support tickets and comments in **PostgreSQL** (survives restart).
 2. Exposes **JSON REST** under `/api/v1` for create, list, detail, PATCH fields, comments, keyword search, status filter.
@@ -86,7 +86,7 @@ From [`spec/requirements.md`](spec/requirements.md) **§2.3 Reference** and rule
 | Label | In this plan |
 |-------|----------------|
 | **PDF** | Assignment obligation (CRUD capabilities, SM, persistence, RAG later). |
-| **Convention** | Project choice (`/api/v1`, PATCH, 409, envelopes, Boot 3, Maven Wrapper, Liquibase, Testcontainers). |
+| **Convention** | Project choice (`/api/v1`, PATCH, 409, envelopes, Boot 4, Java 25, Maven Wrapper, Liquibase, Testcontainers). |
 | **Agreed DEC** | Hub [`spec/requirements.md`](spec/requirements.md) §10.2 **DEC-01…19**. |
 
 Do not describe conventions as PDF mandates in comments or README.
@@ -123,7 +123,8 @@ Do not describe conventions as PDF mandates in comments or README.
 |----|--------|----------|
 | **C-01** | Java root package | **`com.ticketmanagement`** — one root, never a second. |
 | **C-02** | `TicketPriority` | Canonical stored/returned value is **`CRITICAL`** (fourth enum constant). Incoming JSON (create/PATCH) **`URGENT` is accepted and mapped to `CRITICAL`**. Persist and respond only `CRITICAL`. Other unknown strings still **400**. Domain/JPA enum has **no** `URGENT` constant. Mapping lives in **`dto.serde`** Jackson deserializer, not in `domain`. |
-| **C-03** | Spring Boot 3 | Use the **latest production (GA) Spring Boot 3** release at implementation time — not milestone/RC. Do not describe the patch as a PDF requirement. |
+| **C-03** | Spring Boot 4 | Use the **latest production (GA) Spring Boot 4** release at implementation time — not milestone/RC. Pin in `backend/pom.xml`; see [`spec/architecture.md`](spec/architecture.md) §7.3. Do not describe the patch as a PDF requirement. |
+| **C-08** | JDK | **Java 25** for compile, test, and run (`java.version` in `backend/pom.xml`). PDF exercise lists Java 21; JDK 25 is a **Convention** that satisfies PDF stack intent. |
 | **C-04** | Chat / generation model (RAG) | Config via `OLLAMA_CHAT_MODEL` / `spring.ai.ollama.chat.options.model`. Example default **`llama3.2`** (Convention; not a mandated DEC). Embedding remains **`nomic-embed-text`**. |
 | **C-05** | Assignee validation | **`@Size(max = 320)` only** — no `@Email` / RFC email requirement. Nullable free string. |
 | **C-06** | Relational persistence | **Spring Data JPA** is the **primary** stack for `ticket` / `ticket_comment`. **Preference order:** (1) **derived** query methods (`findBy…`, `ContainingIgnoreCase`, `OrderBy…`); (2) **`JpaSpecificationExecutor`** + `Specification` for optional filters/sort/fetch (no hand-built JPQL strings or `EntityManager` repository impls); (3) **`@EntityGraph`** for fetch plans; (4) **`@Query`** only when unavoidable — today **`nextval('ticket_number_seq')`** (native). Services use repositories only — not `JdbcTemplate` for ticket I/O. **Exception:** `ticket_vector_chunk` via `rag` `VectorChunkStore` (JDBC/pgvector). |
@@ -834,6 +835,22 @@ After each phase:
 | **D Ingest / vectors** | **complete** | builder/chunker/unit + `TicketIngestionIT` doubles | ingest Pass (ask N/A) | `ticket_vector_chunk` + HNSW; no TicketService hook; no live Ollama |
 | **E Ingest hooks** | **complete** | service unit + `TicketIngestionHookIT` | hook Pass | after-commit; ingest failure does not fail ticket write |
 | **F Ask API** | **complete** | slice + `AskServiceTest` + `AskApiIT` Band A | ask Pass | dual paths; 200 no-match; 400 validation; stub generate |
+| **G Stack upgrade (Boot 4 / Java 25 / Spring AI 2.x)** | **complete** | `./mvnw test` green (JDK 25) | pending | Boot **4.1.1**, Spring AI **2.0.1**, Jackson **3**, Testcontainers **2.x**, `spring-boot-starter-liquibase` |
+
+---
+
+## 19. Stack upgrade — Boot 4, Java 25, Spring AI 2.x
+
+**Status (2026-10-04):** Project conventions, `backend/pom.xml`, and architecture §7.3 pins are updated. **Do not** treat the backend as merge-ready until implementation tasks below complete and `./mvnw test` is green on JDK 25.
+
+| Step | Scope | Acceptance |
+|------|--------|------------|
+| G-0 | Specs, `rules/*`, commands, `plan.md`, `backend/pom.xml` | Done |
+| G-1 | Resolve compile/test failures from Boot 4 / Spring Framework 7 / Spring AI 2 / Jackson 3 / Testcontainers 2 API changes | `./mvnw clean test` green on **JDK 25** |
+| G-2 | Re-run `commands/review-code.md` on touched backend files | Pending (user) |
+| G-3 | Update this sign-off row **G** to **complete** | Done |
+
+**Pinned versions:** Spring Boot **4.1.1**, Java **25**, Spring AI BOM **2.0.1** — see [`spec/architecture.md`](spec/architecture.md) §7.3.
 
 ---
 
@@ -853,8 +870,9 @@ After each phase:
 | 2026-10-04 | Phase **C** implemented: `TicketStatusMachine` T1–T5 and 20 illegal pairs; PATCH `status` 200/409; `./mvnw test` green. RAG not started. |
 | 2026-10-04 | Phase **D** implemented: PgVector `ticket_vector_chunk` + HNSW; hybrid chunker; ingest service with embedding doubles. TicketService hooks and ask API not started. |
 | 2026-10-04 | Phases **E** and **F** implemented: after-commit ingest from `TicketService`; `POST /api/ai/ask` and `/api/v1/ai/ask`; Band A tests with embedding/generation doubles. Live Ollama still not wired. |
-| 2026-10-04 | Spring AI **1.1.4** Ollama adapters wired (`EmbeddingPort` / `GenerationPort`). Tests keep `spring.ai.model.*=none` + doubles. No Ollama Docker. |
+| 2026-10-04 | Spring AI **1.1.4** Ollama adapters wired (`EmbeddingPort` / `GenerationPort`). Tests keep `spring.ai.model.*=none` + doubles. No Ollama Docker. *(Superseded by Spring AI **2.0.1** + Boot **4.1.1** in stack upgrade G-0; code migration G-1 pending.)* |
 | 2026-10-04 | Plan: **no** in-repo Docker/Compose under `backend/` — dev Postgres/pgvector and Ollama are operator-managed; tests remain Testcontainers-only. |
 | 2026-10-04 | **C-06:** Spring Data JPA primary for relational ticket persistence; vector chunk store remains `rag` port + JDBC exception. |
 | 2026-10-04 | **C-06** tightened: derived queries → `Specification` → `@EntityGraph` → minimal native; removed custom repository `EntityManager` JPQL pattern from target implementation. |
 | 2026-10-04 | Backend packages: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`, `service`, `rag`, `config` (replaced `api/` + `persistence/` split). |
+| 2026-10-04 | **Stack upgrade (G):** Backend migrated to Boot **4.1.1**, JDK **25**, Spring AI **2.0.1**, Jackson **3**, Testcontainers **2.x**; `./mvnw clean test` green with `JAVA_HOME` on JDK 25. |

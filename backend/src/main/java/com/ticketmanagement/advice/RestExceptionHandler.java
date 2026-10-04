@@ -1,7 +1,7 @@
 package com.ticketmanagement.advice;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import tools.jackson.databind.exc.InvalidFormatException;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 import com.ticketmanagement.dto.common.ErrorResponse;
 import com.ticketmanagement.dto.common.ErrorResponse.ErrorBody;
 import com.ticketmanagement.dto.common.ErrorResponse.ErrorDetail;
@@ -86,7 +86,7 @@ public class RestExceptionHandler {
                     request);
         }
         if (ex.getMostSpecificCause() instanceof InvalidFormatException invalid) {
-            String field = invalid.getPath().isEmpty() ? "body" : invalid.getPath().getLast().getFieldName();
+            String field = invalid.getPath().isEmpty() ? "body" : invalid.getPath().getLast().getPropertyName();
             return error(
                     HttpStatus.BAD_REQUEST,
                     "VALIDATION_ERROR",

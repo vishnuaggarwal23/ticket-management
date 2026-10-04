@@ -146,8 +146,8 @@ assessment PDF mandates every specific technology or version.
 
 | Area | Convention |
 |------|------------|
-| Language | Java 21 |
-| Backend | Spring Boot 3 |
+| Language | Java 25 |
+| Backend | Spring Boot 4 |
 | Build | Maven with Maven Wrapper (`./mvnw`) |
 | Database / vectors | PostgreSQL with PgVector |
 | Schema | Liquibase migrations |
