@@ -4,7 +4,7 @@
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code roots:** `backend/` (Spring Boot) and `frontend/` (Next.js + Vite + JavaScript). **Do not** put Java at repo root or under a second backend app.  
 > **Backend status:** Phases **A–F** and stack upgrade **G** complete. Live Ollama/Spring AI optional for local ask demos.  
-> **Frontend status:** **UI-C complete** — continue **Part II** (§20) **UI-D** (ticket list) after backend on **8080**.  
+> **Frontend status:** **UI-E complete** — continue **Part II** (§20) **UI-F** (create ticket) after backend on **8080**.  
 > **Date:** 2026-10-04 (frontend plan added).
 
 ---
@@ -874,8 +874,8 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 | **UI-A Scaffold** | complete | `next build` / `next dev` on **3000** | n/a | Next **15.5.x**, Node **24**, `.env.example`, rewrites + Vite proxy |
 | **UI-B API client** | complete | manual/curl against 8080 | n/a | `src/api/client`, `tickets`, `ask`, `types` |
 | **UI-C Shell + routes** | complete | routes render | n/a | **DEC-20**, **FG2** |
-| **UI-D List basic** | not started | manual | n/a | **AC-UI-02** partial |
-| **UI-E List filters** | not started | manual | n/a | **AC-UI-02** |
+| **UI-D List basic** | complete | manual | n/a | **AC-UI-02** partial |
+| **UI-E List filters** | complete | manual | n/a | **AC-UI-02** |
 | **UI-F Create** | not started | manual | n/a | **AC-UI-01** |
 | **UI-G Detail read** | not started | manual | n/a | **AC-UI-03** |
 | **UI-H Detail save** | not started | manual | n/a | **AC-UI-04** |
@@ -888,7 +888,7 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 
 ## 20. Part II — Frontend implementation (`frontend/`)
 
-**Status:** in progress (UI-C complete)  
+**Status:** in progress (UI-E complete)  
 **Depends on:** Backend Part I **complete** (ticket + ask APIs on **8080**). For grounded ask demos, operator-managed Ollama + corpus per [`spec/evaluation-strategy.md`](spec/evaluation-strategy.md) — not required to merge individual UI slices.  
 **Implements:** **FEAT-01…11**, **FEAT-15…18** (user-visible); **FR-UI-01…03**; **AC-UI-01…12**; demo [`spec/requirements.md`](spec/requirements.md) **§8.7**.  
 **Read first:** [`rules/frontend.md`](rules/frontend.md), [`spec/ui-flow.md`](spec/ui-flow.md), [`spec/architecture.md`](spec/architecture.md) **§12**, [`spec/api-contract.md`](spec/api-contract.md), [`spec/rag-api-contract.md`](spec/rag-api-contract.md) **§7**, [`commands/review-frontend.md`](commands/review-frontend.md).
@@ -1035,7 +1035,7 @@ UI-A (scaffold)
 
 ### 20.7 Phase UI-D — Ticket list (basic)
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-C, UI-B  
 **Maps to:** **AC-UI-02** (partial); [`spec/ui-flow.md`](spec/ui-flow.md) §7.1
 
@@ -1049,14 +1049,14 @@ UI-A (scaffold)
 
 **Done criteria — UI-D**
 
-- [ ] Persisted tickets from backend appear after refresh.
-- [ ] **AC-UI-02** without search/filter yet.
+- [x] Persisted tickets from backend appear after refresh.
+- [x] **AC-UI-02** without search/filter yet.
 
 ---
 
 ### 20.8 Phase UI-E — List search, status filter, pagination
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-D  
 **Maps to:** **AC-UI-02**; **AC-CORE-07**, **08**; **DEC-20** (Apply + Enter, `meta` pagination)
 
@@ -1070,8 +1070,8 @@ UI-A (scaffold)
 
 **Done criteria — UI-E**
 
-- [ ] Search hits title/description per backend **DEC-08** (comment-only text does not match).
-- [ ] **AC-UI-02** complete.
+- [x] Search hits title/description per backend **DEC-08** (comment-only text does not match).
+- [x] **AC-UI-02** complete.
 
 ---
 

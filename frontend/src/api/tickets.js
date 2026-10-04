@@ -42,7 +42,7 @@ function toQueryString(params) {
  */
 export async function listTickets({ page, size, sort, q, status } = {}) {
   const path = `/api/v1/tickets${toQueryString({ page, size, sort, q, status })}`;
-  const body = await requestJson(path);
+  const body = await requestJson(path, { cache: 'no-store' });
   return unwrapListEnvelope(body);
 }
 

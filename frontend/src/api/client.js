@@ -47,16 +47,34 @@ export function getBaseUrl() {
 }
 
 /**
+ * Origin used for fetch when no explicit API base is configured.
+ * Browser: relative paths (Next rewrites). SSR: loop back through the Next server.
+ * @returns {string}
+ */
+function getFetchBaseUrl() {
+  const configured = getBaseUrl();
+  if (configured) {
+    return configured;
+  }
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+  const port = process.env.PORT || '3000';
+  const host = process.env.HOSTNAME || '127.0.0.1';
+  return `http://${host}:${port}`;
+}
+
+/**
  * @param {string} path
  * @returns {string}
  */
 function resolveUrl(path) {
-  const base = getBaseUrl();
+  const base = getFetchBaseUrl();
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   if (!base) {
-    return path.startsWith('/') ? path : `/${path}`;
+    return normalizedPath;
   }
   const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${normalizedBase}${normalizedPath}`;
 }
 

@@ -76,3 +76,148 @@ main {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
 }
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.page-header h1 {
+  margin: 0;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.5rem 0.875rem;
+  border-radius: 4px;
+  border: 1px solid #1a56db;
+  background: #1a56db;
+  color: #fff;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:hover,
+.button:focus-visible {
+  background: #1348c4;
+}
+
+.button--secondary {
+  background: #fff;
+  color: #1a56db;
+}
+
+.button--secondary:hover,
+.button--secondary:focus-visible {
+  background: #eef4ff;
+}
+
+.button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ticket-list-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.ticket-list-toolbar__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 12rem;
+}
+
+.ticket-list-toolbar__field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.ticket-list-toolbar__field input,
+.ticket-list-toolbar__field select {
+  padding: 0.4rem 0.5rem;
+  font: inherit;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.ticket-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.ticket-table th,
+.ticket-table td {
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.ticket-table th {
+  font-size: 0.875rem;
+  background: #f5f5f5;
+}
+
+.ticket-table__link {
+  color: #1a56db;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ticket-table__link:hover,
+.ticket-table__link:focus-visible {
+  text-decoration: underline;
+}
+
+.ticket-table__row:hover {
+  background: #f9fbff;
+}
+
+.ticket-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ticket-pagination__summary {
+  margin: 0;
+  color: #555;
+}
+
+.ticket-pagination__controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.empty-state {
+  padding: 1.25rem;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.empty-state p {
+  margin: 0 0 0.5rem;
+}
