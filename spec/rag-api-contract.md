@@ -375,6 +375,23 @@ Manual / demo proof: `commands/review-rag-output.md` (every claim traceable to c
 
 Retrieval quality (right tickets in top-K): [`evaluation-strategy.md`](evaluation-strategy.md) — separate from HTTP shape tests.
 
+### 9.4 Hybrid retrieval for explicit ticket ids (**DEC-21**)
+
+When the user names a public id in `question` (pattern `TKT-{n}` per **DEC-04**):
+
+| Step | Behaviour |
+|------|-----------|
+| Parse | Collect ids in **first-mention order**; dedupe |
+| Load | `VectorChunkStore.findByTicketId(id)` for each |
+| Rank | Prepend loaded chunks **before** vector-similarity hits; assign rank so explicit-id chunks precede semantic hits (**DEC-17** ordering) |
+| Threshold | Explicit-id chunks are **not** discarded by `similarity-threshold`; vector hits still are |
+| Merge | Dedupe on `(ticketId, content)`; if merged set empty → no-match §10 |
+| Generate | Unchanged — single pass, excerpts only (**G-04**) |
+
+**Maps to PDF illustrative question:** “What was the resolution for ticket TKT-1001?” — must retrieve that ticket even when the question embedding is weak against description-only chunks ([`evaluation-strategy.md`](evaluation-strategy.md) §5.2 Q2).
+
+**Implementation (2026-10-04):** `AskQuestionTicketIds.extractInOrder`; `AskService.mergeRetrieval()`; Band A — `AskServiceTest`, `AskApiIT.askByExplicitTicketIdCitesTicketEvenWhenVectorMatchIsWeak`.
+
 ---
 
 ## 10. No-match and out-of-scope · unit **ASK-D**
@@ -481,6 +498,7 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 | **AC-RAG-API-05** | Ask handler performs no ticket or comment mutations (**PDF**). |
 | **AC-RAG-API-06** | `question` over 2000 chars or unknown JSON properties → **400** (**DEC-17**). |
 | **AC-RAG-API-07** | Non-empty `citedTicketIds` follow retrieval relevance order, deduped (**DEC-17**). |
+| **AC-RAG-API-08** | Given question containing `TKT-{n}` and stored chunks for that id, when ask runs, then retrieval includes those chunks even if vector similarity alone is below threshold (**DEC-21**). |
 
 **Also maps to:** **AC-CORE-16…18**, **AC-API-06/07** in [`api-contract.md`](api-contract.md) §9.
 
@@ -493,6 +511,7 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 | **DEC-11** | No-match wording; optional `reason` / codes | **Agreed 2026-10-04** | Phrase §7.4; no `reason` field in v1 |
 | **DEC-09** | Embedding model affects retrieval only — not response fields | **Agreed 2026-10-04** | [`rag-ingestion.md`](rag-ingestion.md) §12 — `nomic-embed-text` / 768 |
 | **DEC-17** | Ask request + citations | **Agreed 2026-10-04** | §6, §9.2 |
+| **DEC-21** | Ask hybrid retrieval for explicit `TKT-{n}` in question | **Agreed + implemented 2026-10-04** | §9.4; ingest header chunk [`rag-ingestion.md`](rag-ingestion.md) §6.1 |
 | Extra properties on `AskResponseData` | e.g. `confidence` | **Reference** | Not in **PDF** — do not implement ([`requirements.md`](requirements.md) §2.3) |
 
 ---
@@ -503,6 +522,7 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 |------|------|
 | 2026-10-04 | Initial **PDF** `rag-api-contract.md`: endpoints, AskRequest/AskResponseData, grounding, no-match, guardrails, AC-RAG-API-01…05. |
 | 2026-10-04 | **DEC-17:** question max 2000, strict unknown properties, citation order + dedupe; AC-RAG-API-06/07. |
+| 2026-10-04 | **DEC-21:** §9.4 hybrid retrieval for explicit `TKT-{n}`; **AC-RAG-API-08**. |
 | 2026-10-04 | Cross-linked across `spec/`, `rules/`, `commands/`, `docs/` as authoritative ask contract. |
 | 2026-10-04 | §0 document guide: PDF ask themes; business/functional/implementation triad. |
 | 2026-10-04 | §0.3 **ASK-*** independent reading units + PDF `/api/ai/ask` quote. |

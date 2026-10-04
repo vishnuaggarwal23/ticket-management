@@ -276,6 +276,8 @@ Use **Mockito doubles** for embedding, vector search, and generation — **no** 
 | Empty retrieval | Search returns `[]` | **200**; no-match inside `data`; **no** `error` | AC-CORE-18, Flow E1 |
 | Stubbed hit | Fixed chunks + ticket ids | **200**; `citedTicketIds` ⊆ stub ids; ids exist in DB if integration | AC-CORE-17 |
 | Both ask paths | Same case | `/api/ai/ask` ≡ `/api/v1/ai/ask` | AC-API-07 |
+| Explicit `TKT-{n}` in question | Stored chunks for id; vector search returns `[]` | **200** grounded stub; cited id present (**DEC-21**, **AC-RAG-API-08**) | `AskServiceTest`, `AskApiIT` |
+| Header chunk ingest | Ticket with description after ingest | At least one chunk contains `TKT-{n}` + `Status:` (**AC-RAG-ING-10**) | `TicketChunkerTest`, `TicketIngestionServiceTest` |
 | Orchestration | Verify prompt/context built from stub excerpts only | Mockito verify on generate port | AC-FEAT-16-02 |
 
 **Do not** assert exact `answer` prose against a golden string — wording is **probabilistic** ([`requirements.md`](requirements.md) §2.5).
@@ -468,3 +470,4 @@ Detail: [`data-model.md`](data-model.md) §18.
 | 2026-10-04 | Major `##` headings tagged with **TS-*** unit ids. |
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
 | 2026-10-04 | Ungrounded output → [`docs/ai-error.md`](../docs/ai-error.md). |
+| 2026-10-04 | **DEC-21:** Band A rows + JUnit for explicit `TKT-{n}` ask and **AC-RAG-ING-10** header chunk. |

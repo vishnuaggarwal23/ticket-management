@@ -837,8 +837,15 @@ Hook placement: ticket **service** after successful commit; exact mechanism → 
 1. Embed **question** (same model as ingest).
 2. Vector **similarity search** with **top-K** (config).
 3. Drop hits below **similarity threshold** (config).
-4. If none remain → return **no relevant tickets** without LLM (**PDF** grounding).
-5. Else pass chunks + ticket ids into prompt.
+4. **Hybrid explicit-id merge (Agreed DEC-21):** parse public ids `TKT-{n}` from the question (first-mention order, deduped). For each id, load all `ticket_vector_chunk` rows via `findByTicketId`. Treat each as a retrieval hit with **rank above** vector results (similarity score **1.0** or equivalent bypass of §3 threshold). Merge with vector hits; dedupe by `(ticketId, content)`; **explicit-id chunks first**, then vector hits in similarity order.
+5. If none remain after merge → return **no relevant tickets** without LLM (**PDF** grounding).
+6. Else pass chunks + ticket ids into prompt.
+
+| **Notes:**
+
+- Explicit-id merge does **not** require a ticket row lookup beyond existing chunk rows; empty `findByTicketId` for a mentioned id contributes nothing (unknown or never-ingested ticket).
+- **DEC-19:** no metadata pre-filter on ask — id hybrid uses stored chunk text only, not a separate SQL filter on ticket columns.
+- **Implementation:** `AskQuestionTicketIds`, `AskService.mergeRetrieval()` (2026-10-04).
 
 **Optional** metadata pre-filter (e.g. high-priority only) is **not** PDF-required — **Reference** only ([`requirements.md`](requirements.md) §2.3); satisfy illustrative questions via retrieval over text/metadata in chunks, not a new ask filter API.
 
@@ -1077,3 +1084,4 @@ Architecture supports verification of:
 | 2026-10-04 | §13.1 / §9: **Spring Data JPA primary** for tickets/comments (**C-06**); vector writer JDBC/Spring AI exception. |
 | 2026-10-04 | §9.1: type-based packages (`controller`, `dto`, `entity`, `repository`, `exception`, `util`, `advice`). |
 | 2026-10-04 | §7.1–§7.3: project JDK **25**, Spring Boot **4**, Spring AI **2.x** pins; PDF still lists Java 21 / Spring Boot without major. |
+| 2026-10-04 | **DEC-21:** §15.5 hybrid ask retrieval (explicit `TKT-{n}` + vector merge); pairs with ingest header chunk in [`rag-ingestion.md`](rag-ingestion.md). |

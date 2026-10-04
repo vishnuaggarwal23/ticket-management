@@ -1260,24 +1260,60 @@ yeah, do it
 
 _**Agent (composer-2.5)**_
 
+<think><details><summary>Thought Process</summary>
+Implementing hybrid retrieval in AskService. The system will detect TKT-#### ticket IDs in questions and fetch those tickets' chunks alongside vector search. Existing code and specs will be reviewed before writing the implementation and tests.
+
+Reading the rag-api-contract, AskServiceTest, and AskApiIT. Then implementing hybrid retrieval, adding tests, and updating graphify.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Implementing hybrid retrieval for explicit ticket IDs in ask questions. Reviewing specs and current ask flow.
+
+
+
+
+_**Agent (composer-2.5)**_
+
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify query &#34;AskService searchSimilar hybrid ticket id retrieval&#34;</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify query "AskService searchSimilar hybrid ticket id retrieval"
+```
+
+```
+Graph: graphify-out/graph.json (2496 nodes) | Traversal: BFS depth=2 | Start: ['AskService', 'Retrieval', '9.1 Chosen strategy: **hybrid primary**', '.searchSimilar()', '.ticket()'] | 223 nodes found
+
+[!] TRUNCATED: showing 45 of 223 nodes (~2000-token budget). The answer may be among the 178 cut nodes — raise the token budget (CLI: --budget) or narrow the query (e.g. context_filter=['call'], or get_node for a specific symbol).
+
+NODE AskService [src=backend/src/main/java/com/ticketmanagement/service/AskService.java loc=L13 community=AskServiceTest]
+NODE Retrieval [src=backend/src/main/java/com/ticketmanagement/config/RagProperties.java loc=L11 community=.rag]
+NODE 9.1 Chosen strategy: **hybrid primary** [src=spec/rag-ingestion.md loc=L302 community=9. Recommendation (project default) · unit **ING-G**]
+NODE .searchSimilar() [src=backend/src/main/java/com/ticketmanagement/rag/VectorChunkStore.java loc=L12 community=AskServiceTest]
+NODE .ticket() [src=backend/src/test/java/com/ticketmanagement/rag/KnowledgeDocumentBuilderTest.java loc=L54 community=.updateFields]
+NODE TicketEntity [src=backend/src/main/java/com/ticketmanagement/entity/TicketEntity.java loc=L21 community=TicketEntity]
+NODE EmbeddingPort [src=backend/src/main/java/com/ticketmanagement/rag/EmbeddingPort.java loc=L5 community=EmbeddingPort]
+NODE VectorChunkStore [src=backend/src/main/java/com/ticketmanagement/rag/VectorChunkStore.java loc=L6 community=VectorChunkStore]
+NODE .rag() [src=backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java loc=L99 community=.rag]
+NODE RagProperties [src=backend/src/main/java/com/ticketmanagement/config/RagProperties.java loc=L5 community=.rag]
+NODE AiAskControllerSliceTest [src=backend/src/test/java/com/ticketmanagement/controller/AiAskControllerSliceTest.java loc=L26 community=AskApiIT]
+NODE AiAskControllerSliceTest.java [src=backend/src/test/java/com/ticketmanagement/controller/AiAskControllerSliceTest.java loc=L1 community=TicketControllerSliceTest.java]
+
+… (output truncated)
 ```
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/main/java/com/ticketmanagement/service/AskService.java</summary>
 
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java</summary>
 
 </details></tool-use>
 
@@ -1285,6 +1321,2182 @@ _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
-Status: **loading**
 
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*rag*",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "hybrid|ticketId|TKT-"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "hybrid|ticketId|TKT-",
+  "topFiles": [
+    {
+      "matchCount": 7,
+      "uri": "spec/rag-api-contract.md"
+    },
+    {
+      "matchCount": 13,
+      "uri": "spec/rag-ingestion.md"
+    }
+  ],
+  "totalFiles": 2,
+  "totalMatches": 20
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Reading the RAG API contract to understand ask-time retrieval semantics and hybrid retrieval architecture.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*architecture*",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "explicit|ticket id|TKT-|lookup|retrieval"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "explicit|ticket id|TKT-|lookup|retrieval",
+  "topFiles": [
+    {
+      "matchCount": 21,
+      "uri": "spec/architecture.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 21
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "retrieval|retrieve"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "retrieval|retrieve",
+  "topFiles": [
+    {
+      "matchCount": 21,
+      "uri": "spec/rag-api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 21
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Planning to implement hybrid retrieval by parsing questions for TKT-{n} patterns in DEC-04 format.
+
+Will deduplicate ticket IDs while preserving their first appearance order. Each extracted ID will load chunks via findByTicketId and merge with vector search results. Explicit ID hits will receive a high similarity score or be prepended to ensure they rank above vector hits.
+
+Explicit ticket hits will carry a fixed similarity score of 1.0. Each matched ticket ID will contribute all its chunks in original chunk index order. Vector search results will follow, with deduplication applied across tickets and content.
+
+Non-existent or uningested tickets will be skipped entirely rather than boosting empty results. The merge follows the spec: vector hits first, then explicit IDs in question order, with deduplication applied.
+
+Explicit ID chunks will be prepended before vector hits so those tickets rank first. Deduplication will use ticket ID plus content to avoid duplicate excerpts in generation. These direct lookup chunks bypass the similarity threshold filter. If the merged list is empty, the system returns no match. Tickets with stored chunks were already ingested, satisfying the spec requirement that cited IDs exist in the database.
+
+The extraction utility will be a package-private `AskQuestionTicketIds` class in the rag package. It uses a regex pattern to find `TKT-{n}` matches and preserves their first appearance order.
+
+The merge logic adds explicit ID chunks first, then appends vector hits while deduplicating by ticket ID and content. A helper method builds a composite key for this check. Citation deduplication will rely solely on ticket IDs from the ordered hits list.
+
+Unit tests will cover AskServiceTest for explicit ID citations against empty vector search, and AskQuestionTicketIdsTest for order and deduplication. An integration test will create a ticket and ask by ID alone, expecting a stubbed answer with the cited ticket ID.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test",
+  "pattern": "Stubbed answer|GenerationPort|EmbeddingPort"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test",
+  "pattern": "Stubbed answer|GenerationPort|EmbeddingPort",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": "backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java"
+    },
+    {
+      "matchCount": 1,
+      "uri": "backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java"
+    },
+    {
+      "matchCount": 3,
+      "uri": "backend/src/test/java/com/ticketmanagement/rag/TicketIngestionIT.java"
+    },
+    {
+      "matchCount": 2,
+      "uri": "backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java"
+    },
+    {
+      "matchCount": 7,
+      "uri": "backend/src/test/java/com/ticketmanagement/support/TestRagDoublesConfig.java"
+    },
+    {
+      "matchCount": 2,
+      "uri": "backend/src/test/java/com/ticketmanagement/rag/HashEmbeddingPort.java"
+    },
+    {
+      "matchCount": 2,
+      "uri": "backend/src/test/java/com/ticketmanagement/rag/OllamaAiPortTest.java"
+    }
+  ],
+  "totalFiles": 7,
+  "totalMatches": 19
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+HashEmbeddingPort may mismatch for unrelated vector searches. Hybrid lookup via findByTicketId will work after ticket creation and ingestion. Implementing AskQuestionTicketIds.java.
+
+Updating AskService and adding tests. Empty retrieval correctly yields no matches. A new test checks that ticket IDs in questions bypass vector search and use stored chunks instead. Mocking findByTicketId to return a single StoredChunk.
+
+Mocking a StoredChunk with UUID, Instant, and a dummy embedding. Imports needed for UUID and Instant. The test verifies that explicit ticket ID chunks appear first in merged results even when vector search returns another ticket first. Adding AskApiIT for status-by-ID. Running the full ask-related test suite.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Implementing ticket-ID parsing and merging explicit chunk lookups with vector search.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/main/java/com/ticketmanagement/service/AskService.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/main/java/com/ticketmanagement/service/AskService.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+I suspect I broke AskServiceTest with an extra closing brace.
+
+Reading the end of the file to verify the brace.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding an AskApiIT test for explicit ticket ID questions. Removing a redundant import from AskService.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend &amp;&amp; ./mvnw -q test -Dtest=AskServiceTest,AskQuestionTicketIdsTest,AskApiIT 2&gt;&amp;1 | tail -25</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend && ./mvnw -q test -Dtest=AskServiceTest,AskQuestionTicketIdsTest,AskApiIT 2>&1 | tail -25
+```
+
+```
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:compile (default-compile) on project ticket-management: Fatal error compiling: error: release version 25 not supported -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Java 25 is unavailable in this shell. Earlier Maven tests likely succeeded because a different JAVA_HOME was set.
+
+Checking JAVA_HOME to locate Java 25 or reuse the previous version.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend &amp;&amp; (echo &#34;JAVA_HOME=$JAVA_HOME&#34;; java -version 2&gt;&amp;1; ./mvnw -version 2&gt;&amp;1 | head -3)</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend && (echo "JAVA_HOME=$JAVA_HOME"; java -version 2>&1; ./mvnw -version 2>&1 | head -3)
+```
+
+```
+JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/current
+openjdk version "21.0.4" 2024-07-16 LTS
+OpenJDK Runtime Environment Temurin-21.0.4+7 (build 21.0.4+7-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.4+7 (build 21.0.4+7-LTS, mixed mode)
+Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)
+Maven home: /Users/vishnuaggarwal/.m2/wrapper/dists/apache-maven-3.9.11/a2d47e15
+Java version: 21.0.4, vendor: Eclipse Adoptium, runtime: /Users/vishnuaggarwal/.sdkman/candidates/java/21.0.4-tem
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The project requires Java 25. Tests passed previously, suggesting Java 25 may already be available elsewhere.
+
+I'll try sdkman to get Java 25.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: ls /Users/vishnuaggarwal/.sdkman/candidates/java/ 2&gt;/dev/null | head -10</summary>
+```bash
+ls /Users/vishnuaggarwal/.sdkman/candidates/java/ 2>/dev/null | head -10
+```
+
+```
+11
+11.0.32-tem
+17
+17.0.20+1.1-tem
+21
+21.0.12+1.1-tem
+21.0.4-tem
+25
+25.0.4+1.1-tem
+8
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Running with JAVA_HOME set to Java 25.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem &amp;&amp; cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend &amp;&amp; ./mvnw -q test -Dtest=AskServiceTest,AskQuestionTicketIdsTest,AskApiIT 2&gt;&amp;1 | tail -30</summary>
+```bash
+export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem && cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend && ./mvnw -q test -Dtest=AskServiceTest,AskQuestionTicketIdsTest,AskApiIT 2>&1 | tail -30
+```
+
+```
+2026-10-04T23:48:43.599+05:30  INFO 41326 --- [           main] liquibase.util                           : Filtered out:                 0
+2026-10-04T23:48:43.599+05:30  INFO 41326 --- [           main] liquibase.util                           : -------------------------------
+2026-10-04T23:48:43.599+05:30  INFO 41326 --- [           main] liquibase.util                           : Total change sets:            6
+2026-10-04T23:48:43.600+05:30  INFO 41326 --- [           main] liquibase.util                           : Update summary generated
+2026-10-04T23:48:43.603+05:30  INFO 41326 --- [           main] liquibase.command                        : Update command completed successfully.
+2026-10-04T23:48:43.603+05:30  INFO 41326 --- [           main] liquibase.ui                             : Liquibase: Update has been successful. Rows affected: 0
+2026-10-04T23:48:43.610+05:30  INFO 41326 --- [           main] liquibase.lockservice                    : Successfully released change log lock
+2026-10-04T23:48:43.613+05:30  INFO 41326 --- [           main] liquibase.command                        : Command execution complete
+2026-10-04T23:48:43.789+05:30  INFO 41326 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-04T23:48:43.932+05:30  INFO 41326 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-04T23:48:44.377+05:30  INFO 41326 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-04T23:48:44.503+05:30  INFO 41326 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:53761/tickets?loggerLevel=OFF]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.15
+	Default catalog/schema: tickets/public
+	Autocommit mode: und
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify update . 2&gt;&amp;1 | tail -3</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify update . 2>&1 | tail -3
+```
+
+```
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Tests passed. Removing a redundant import in AskService.
+
+Hybrid retrieval is complete. Restart the backend. Re-ingesting is optional for header chunks, but hybrid queries still work with existing chunks via ticket ID. For TKT-1006, hybrid loads the description-only chunk directly without a similarity threshold. This means old chunks work immediately without re-ingestion. The main benefit of hybrid for ID questions is direct retrieval by ticket ID.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Hybrid retrieval is in place. Here is what changed and how to use it.
+
+## Behavior
+
+When the question contains a public id (`TKT-\d+`), `AskService` now:
+
+1. Runs normal vector search (unchanged threshold **0.72**).
+2. Loads **all stored chunks** for each mentioned id via `findByTicketId` (bypasses the threshold).
+3. Merges results: **explicit-id chunks first**, then vector hits, deduped by ticket + content.
+
+New helper: `AskQuestionTicketIds.java`.
+
+## Tests added
+
+- `AskQuestionTicketIdsTest` — parse order and dedupe  
+- `AskServiceTest` — id-only path when vector search is empty; citation order  
+- `AskApiIT.askByExplicitTicketIdCitesTicketEvenWhenVectorMatchIsWeak` — end-to-end  
+
+All passed with Java 25.
+
+## What you should do
+
+1. **Restart the backend** with the new code.  
+2. Retry:
+
+```bash
+curl -s 'http://localhost:8080/api/v1/ai/ask' \
+  -H 'Content-Type: application/json' \
+  --data-raw '{"question":"What is the status of TKT-1006?"}'
+```
+
+For questions that **name the ticket id**, this should work **even without re-ingest**, because chunks are loaded by id. Re-ingest is still worth doing so the **header chunk** (status in embedded text) improves non–id questions and generation quality.
+
+**Note:** If the id is wrong or the ticket was never ingested (no vector rows), you still get the honest no-match response.
+
+---
+
+_**User**_
+
+backtrack the changes and update the md files
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Backtracking recent changes—header chunking in TicketChunker, hybrid retrieval in AskService, and tests—to update the markdown documentation. Need to decide whether to revise the specs directly or document the approach differently.
+
+Will revert the implemented code changes and update the markdown files to document the hybrid retrieval and header chunking approach as specifications.
+
+Running git status and diff to map out the exact scope of changes and identify which markdown files need updating.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Reviewing changed files, reverting code changes, and updating documentation to reflect the intended approach.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status -sb &amp;&amp; git diff --stat HEAD</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status -sb && git diff --stat HEAD
+```
+
+```
+## main...origin/main [ahead 1]
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "header|explicit|TKT-|hybrid.*retrieval|AskQuestion"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "header|explicit|TKT-|hybrid.*retrieval|AskQuestion",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 6,
+      "uri": "spec/rag-ingestion.md"
+    },
+    {
+      "matchCount": 37,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "spec/ui-flow.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "spec/rag-api-contract.md"
+    },
+    {
+      "matchCount": 28,
+      "uri": "spec/evaluation-strategy.md"
+    },
+    {
+      "matchCount": 12,
+      "uri": "spec/data-model.md"
+    },
+    {
+      "matchCount": 51,
+      "uri": "spec/api-contract.md"
+    },
+    {
+      "matchCount": 6,
+      "uri": "spec/test-strategy.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "spec/state-machine.md"
+    }
+  ],
+  "totalFiles": 10,
+  "totalMatches": 161
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Git status shows main is one commit ahead with no unstaged changes. The changes may have already been committed.
+
+Checking git log and the latest commit contents to identify the modified files.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git log -2 --oneline &amp;&amp; git show --stat HEAD &amp;&amp; git diff origin/main --stat</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git log -2 --oneline && git show --stat HEAD && git diff origin/main --stat
+```
+
+```
+80cd437 Improve frontend UX and align ask/RAG with review feedback.
+eefd526 docs: add root README and refresh prompt-history index
+commit 80cd437f4f9e6fcc6e7d92eebb6261c49045057d
+Author: Vishnu Aggarwal <vishnuaggarwal23@gmail.com>
+Date:   Sun Oct 4 23:49:12 2026 +0530
+
+    Improve frontend UX and align ask/RAG with review feedback.
+    
+    Polish ticket UI flows (navigation, loaders, cohesive styling), fix AskApiIT strict-body expectations, merge ticket-id-aware retrieval with vector search, and document changes in README/plan/frontend README.
+    
+    Co-authored-by: Cursor <cursoragent@cursor.com>
+
+ .../2026-10-04_17-55-41Z-code-review-discussion.md |   27 +
+ ...10-04_18-11-25Z-ticket-status-response-issue.md | 1290 ++++++++++++++++++++
+ README.md                                          |    4 +-
+ backend/README.md                                  |    6 +
+ .../ticketmanagement/rag/AskQuestionTicketIds.java |   30 +
+ .../com/ticketmanagement/rag/TicketChunker.java    |   13 +
+ .../com/ticketmanagement/service/AskService.java   |   34 +-
+ .../com/ticketmanagement/controller/AskApiIT.java  |   22 +-
+ .../rag/AskQuestionTicketIdsTest.java              |   20 +
+ .../com/ticketmanagement/rag/AskServiceTest.java   |   50 +
+ .../ticketmanagement/rag/TicketChunkerTest.java    |   20 +
+ .../rag/TicketIngestionServiceTest.java            |    5 +-
+ frontend/README.md                                 |   71 +-
+ frontend/app/ask/loading.js                        |    5 +
+ frontend/app/ask/page.js                           |   23 +-
+ frontend/app/globals.css                           |  972 +++++++++++++--
+ frontend/app/layout.js                             |    9 +-
+ frontend/app/tickets/[id]/loading.js               |    4 +-
+ frontend/app/tickets/loading.js                    |    4 +-
+ frontend/app/tickets/page.js                       |   51 +-
+ frontend/src/components/AskPanel.jsx               |  141 ++-
+ frontend/src/components/Breadcrumbs.jsx            |   29 +
+ fr
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **2** results in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (2 files)
+
+| File |
+|------|
+| `backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java` |
+| `backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java` |
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Reverting the RAG code changes. Documenting the fix in the spec files instead.
+
+The commit contains frontend changes too. I will revert only the RAG backend code while preserving the frontend. The spec files will capture the agreed design: header chunking and hybrid retrieval.
+
+Identified the exact files to revert. AskQuestionTicketIds.java and its test will be deleted. TicketChunker.java will lose its header block logic. AskService.java will revert to merge retrieval. AskApiIT.java will drop the explicit ID test. AskServiceTest.java, TicketChunkerTest.java, and TicketIngestionServiceTest.java will have their added assertions removed.
+
+Mapping out the spec updates. The ingestion spec will require embedding header blocks as chunks. The API contract or architecture spec will define hybrid retrieval for ticket IDs. The test strategy will gain cases for ID questions. The backend README and plan will be updated to reference the specs. Now reading the current backend files and plan.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git show eefd526:backend/src/main/java/com/ticketmanagement/service/AskService.java | head -55</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git show eefd526:backend/src/main/java/com/ticketmanagement/service/AskService.java | head -55
+```
+
+```
+package com.ticketmanagement.service;
+
+import com.ticketmanagement.config.RagProperties;
+import com.ticketmanagement.rag.EmbeddingPort;
+import com.ticketmanagement.rag.GenerationPort;
+import com.ticketmanagement.rag.VectorChunkStore;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+@Service
+public class AskService {
+
+    public static final String NO_MATCH_ANSWER = "No relevant tickets found.";
+
+    private final EmbeddingPort embeddings;
+    private final VectorChunkStore store;
+    private final GenerationPort generation;
+    private final RagProperties ragProperties;
+
+    public AskService(
+            EmbeddingPort embeddings,
+            VectorChunkStore store,
+            GenerationPort generation,
+            RagProperties ragProperties
+    ) {
+        this.embeddings = embeddings;
+        this.store = store;
+        this.generation = generation;
+        this.ragProperties = ragProperties;
+    }
+
+    public AskResult ask(String question) {
+        List<float[]> queryVectors = embeddings.embedAll(List.of(question));
+        if (queryVectors.size() != 1) {
+            throw new IllegalStateException("Expected one query embedding");
+        }
+        RagProperties.Retrieval retrieval = ragProperties.retrieval();
+        List<VectorChunkStore.RetrievedChunk> hits = store.searchSimilar(
+                queryVectors.getFirst(),
+                retrieval.topK(),
+                retrieval.similarityThreshold()
+        );
+        if (hits.isEmpty()) {
+            return new AskResult(NO_MATCH_ANSWER, List.of());
+        }
+        List<String> citedTicketIds = dedupeInOrder(hits);
+        String answer = generation.generate(question, hits);
+        return new AskResult(answer, citedTicketIds);
+    }
+
+    private static List<String> dedupeInOrder(List<VectorChunkStore.RetrievedChunk> hits) {
+        LinkedHashSet<String> ids = new LinkedHashSet<>();
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "header|AskQuestion|hybrid|ticket.id"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "header|AskQuestion|hybrid|ticket.id",
+  "topFiles": [
+    {
+      "matchCount": 9,
+      "uri": "plan.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 9
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/README.md",
+  "pattern": "ask|RAG|retrieval"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/README.md",
+  "pattern": "ask|RAG|retrieval",
+  "topFiles": [
+    {
+      "matchCount": 5,
+      "uri": "backend/README.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 5
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/README.md",
+  "pattern": "ask|RAG"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/README.md",
+  "pattern": "ask|RAG",
+  "topFiles": [
+    {
+      "matchCount": 9,
+      "uri": "README.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 9
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing the commit diff for plan.md, the backend README, and AskApiIT changes to identify RAG-specific additions and fixes worth keeping.
+
+Restoring backend RAG code to its pre-implementation state. Deleting the new AskQuestionTicketIds files. Updating the markdown files with the documented fix approach.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff eefd526..HEAD -- backend/ plan.md README.md backend/README.md | head -200</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff eefd526..HEAD -- backend/ plan.md README.md backend/README.md | head -200
+```
+
+````
+diff --git a/README.md b/README.md
+index 42a43af..d20733b 100644
+--- a/README.md
++++ b/README.md
+@@ -26,7 +26,7 @@ The assessment PDF names Java 21 and allows H2; this repo standardizes on the ve
+ | Path | Purpose |
+ |------|---------|
+ | [`backend/`](backend/) | Spring Boot REST API, domain state machine, RAG ingest/ask |
+-| [`frontend/`](frontend/) | Ticket list/detail UI and Ask screen |
++| [`frontend/`](frontend/) | Ticket list/detail UI, Ask screen — see [`frontend/README.md`](frontend/README.md) (UX patterns + changelog) |
+ | [`spec/`](spec/) | **Source of truth** — ten agreed specs (requirements, architecture, APIs, RAG, UI, tests, etc.) |
+ | [`rules/`](rules/) | Engineering standards (Java, API, RAG, frontend, testing, documentation) |
+ | [`commands/`](commands/) | Review and workflow commands used from Cursor (`.cursor/commands/` are pointers) |
+@@ -46,7 +46,7 @@ Before coding a slice, read the relevant `spec/*.md` files and the matching `rul
+ You need **PostgreSQL with the pgvector extension**, **Ollama** (embed + chat models pulled), and env vars for the backend. Step-by-step setup is in the module READMEs:
+ 
+ - **API:** [`backend/README.md`](backend/README.md) — `./mvnw spring-boot:run` (default port **8080**)
+-- **UI:** [`frontend/README.md`](frontend/README.md) — `npm run dev` (default port **3000**)
++- **UI:** [`frontend/README.md`](frontend/README.md) — `npm run dev` (default port **3000**); includes **UI architecture**, **UX patterns**, and a **changelog** of post-review frontend work (2026-10-04)
+ 
+ Copy `backend/.env.example` and `frontend/.env.example` to local env files; do not commit secrets.
+ 
+diff --git a/backend/README.md b/backend/README.md
+index b710505..def0fd1 100644
+--- a/backend/README.md
++++ b/backend/README.md
+@@ -40,3 +40,9 @@ Do not commit a `.env` file.
+ ```bash
+ ./mvnw test
+ ```
++
++Requires **JDK 25** (see `java.version` in `pom.xml`). Integration tests use Testcontainers PostgreSQL only; RAG ports are stubbed in ITs (no real Oll
+… (output truncated)
+````
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md",
+  "pattern": "Ask|RAG|AC-RAG"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md",
+  "pattern": "Ask|RAG|AC-RAG",
+  "topFiles": [
+    {
+      "matchCount": 17,
+      "uri": "spec/test-strategy.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 17
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Restoring backend files from commit eefd526 for RAG changes while preserving unrelated AskApiIT modifications. Reviewing the full AskApiIT diff for unknownAskPropertyIs400.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff eefd526..HEAD -- backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff eefd526..HEAD -- backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+```
+
+```
+diff --git a/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java b/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+index 96b7c1d..3b7ffdf 100644
+--- a/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
++++ b/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+@@ -44,6 +44,25 @@ class AskApiIT extends AbstractPostgresIntegrationTest {
+                 .andExpect(jsonPath("$.error").doesNotExist());
+     }
+ 
++    @Test
++    void askByExplicitTicketIdCitesTicketEvenWhenVectorMatchIsWeak() throws Exception {
++        TicketDetailResponse created = tickets.create(
++                new CreateTicketRequest(
++                        "Issue in submitting form",
++                        "User is not able to submit a new ticket",
++                        null,
++                        null,
++                        null));
++
++        mockMvc.perform(post("/api/v1/ai/ask")
++                        .contentType(MediaType.APPLICATION_JSON)
++                        .content("{\"question\":\"What is the status of " + created.id() + "?\"}"))
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.data.answer").value("Stubbed answer from retrieved tickets."))
++                .andExpect(jsonPath("$.data.citedTicketIds", hasItem(created.id())))
++                .andExpect(jsonPath("$.error").doesNotExist());
++    }
++
+     @Test
+     void unmatchedQuestionIsNoMatchAndDoesNotCreateTickets() throws Exception {
+         long before = tickets.list(0, 20, "createdAt,desc", null, null).meta().totalElements();
+@@ -85,7 +104,8 @@ class AskApiIT extends AbstractPostgresIntegrationTest {
+                         .contentType(MediaType.APPLICATION_JSON)
+                         .content("{\"question\":\"hello\",\"confidence\":0.9}"))
+                 .andExpect(status().isBadRequest())
+-                .andExpect(jsonPath("$.error.code").value("BAD_REQUEST"));
++                .andExpect(jsonPath("$.
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Restoring backend RAG code from commit eefd526. Deleting new files. Keeping the AskApiIT validation fix. Removing the askByExplicitTicketId test. Updating the markdown files.
+
+Restoring TicketChunker.java, AskService.java, and their tests. Deleting AskQuestionTicketIds.java and its test. Updating spec/rag-ingestion.md to add the header block as an embeddable chunk and revise the history.
+
+Updating architecture.md to add hybrid retrieval for explicit ticket IDs. Adjusting rag-api-contract.md, test-strategy.md, rag-vector-store.md, plan.md, and backend README.md to reflect the restored state and known gaps. Checking requirements for DEC-21 documentation. Noting that evaluation-strategy.md already expects id-specific queries to rank TKT-1001 highest.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Restoring code and updating specs comprehensively. Adding DEC-21: header chunk embeddable plus explicit ticket ID hybrid retrieval at ask time.
+
+Updating rag-ingestion.md with the header block embeddable rule, DEC-21 section, and revision history. Updating architecture.md §15.5 to add ticket ID retrieval merging chunks before vector search and deduplication. Beginning updates to rag-api-contract.md.
+
+Expanding rag-api-contract.md with retrieval merge rules and AC-RAG-API-08. Updating test-strategy §6.2 for Band A cases. Adding implementation notes to rules/rag-vector-store.md. Revising plan.md §12.2 orchestration steps. Updating backend/README.md to reference the pending DEC-21 fix. Reverting code with git checkout.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Reverting RAG code changes and documenting the fix in the spec files.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git checkout eefd526 -- \
+  backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java \
+  backend/src/main/java/com/ticketmanagement/service/AskService.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java &amp;&amp; \
+  rm -f backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java \
+        backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git checkout eefd526 -- \
+  backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java \
+  backend/src/main/java/com/ticketmanagement/service/AskService.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java && \
+  rm -f backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java \
+        backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The askByExplicitTicketId test was removed from AskApiIT because the implementation was reverted.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating all markdown files. Checking requirements.md to add DEC-21 to the DEC table.
+
+Searching requirements.md for DEC-20 to find the correct pattern.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "^\\| \\*\\*DEC-20"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "^\\| \\*\\*DEC-20",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding DEC-21 content across specifications.
+
+DEC-21 fixes a RAG retrieval gap where tickets with IDs or statuses return no-match. ING headers must be embeddable chunks rather than metadata-only. ASK hybrid retrieval merges `findByTicketId` results for `TKT-{n}` queries before vector hits, deduplicates, and preserves explicit ID order. New acceptance criteria added: AC-RAG-ING-10 and AC-RAG-API-08. Evaluation strategy notes the F-01 fix for question 2.
+
+Checking documentation.md for DEC list updates. Applying patches to multiple files.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Updating spec and rules documentation for DEC-21 (header chunking + hybrid ask retrieval).
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Checking the rag-ingestion section for a duplicate `---` separator.
+
+Updating architecture, rag-api-contract, test-strategy, rules, plan, backend README, and requirements DEC-21.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md",
+  "pattern": "Revision history|## 17\\. Open"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md",
+  "pattern": "Revision history|## 17\\. Open",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "spec/architecture.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding a revision history line to architecture.md.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding a revision to the RAG API contract, architecture, test strategy, rules, plan, backend README, and requirements DEC-21 row.
+
+Reading the end of the RAG API contract revision history.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding revision lines to the architecture and rag-api-contract markdown files.
+
+Updating test-strategy, rules, plan, backend README, and requirements.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/README.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Checking plan.md for a broken 12.3 section. Adding revisions to rag-api-contract and test-strategy if needed. Then running tests.
+
+Also checking rag-ingestion for duplicate markdown separators.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md",
+  "pattern": "Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md",
+  "pattern": "Revision history",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "spec/test-strategy.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding a test-strategy revision line. Running Maven tests with Java 25. Updating graphify. Checking documentation.md for the DEC list.
+
+Fixing potential section numbering conflicts in the rag-ingestion section after inserting 14.1.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Renaming section 14.1 would avoid confusion with the AC table. A "Known gap" subsection under 14 is one option. Another is a separate "## 14." heading.
+
+14.1 will remain as an addendum. Next steps are updating test-strategy, running tests, and refreshing the shell graphify.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem &amp;&amp; cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend &amp;&amp; ./mvnw -q test -Dtest=AskServiceTest,AskApiIT,TicketChunkerTest,TicketIngestionServiceTest 2&gt;&amp;1 | tail -5</summary>
+```bash
+export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem && cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend && ./mvnw -q test -Dtest=AskServiceTest,AskApiIT,TicketChunkerTest,TicketIngestionServiceTest 2>&1 | tail -5
+```
+
+```
+2026-10-04T23:53:56.764+05:30  INFO 48177 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-04T23:53:58.491+05:30  INFO 48177 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-04T23:53:58.492+05:30  INFO 48177 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-04T23:53:58.495+05:30  INFO 48177 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-10-04T23:53:58.540+05:30  INFO 48177 --- [           main] c.ticketmanagement.controller.AskApiIT   : Started AskApiIT in 17.496 seconds (process running for 26.075)
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding a test-strategy revision for DEC-21.
+
+Updating graphify for markdown changes.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify update . 2&gt;&amp;1 | tail -3</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify update . 2>&1 | tail -3
+```
+
+```
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status -sb</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status -sb
+```
+
+```
+## main...origin/main
+ M .specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md
+ M backend/README.md
+ D backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java
+M  backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java
+M  backend/src/main/java/com/ticketmanagement/service/AskService.java
+ M backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+ D backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java
+M  backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java
+M  backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java
+M  backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java
+ M plan.md
+ M rules/rag-vector-store.md
+ M spec/architecture.md
+ M spec/rag-api-contract.md
+ M spec/rag-ingestion.md
+ M spec/requirements.md
+ M spec/test-strategy.md
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Staged files show "M " in the first column. Checkout files show " M". TicketChunker correctly identifies staged changes.
+
+Backtracked the code. Updated specs with DEC-21. Tests pass. The frontend was unchanged in this session. The working tree was reverted. Commit 80cd437 still exists on disk. I will not commit unless asked.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+## Code backtracked
+
+Reverted the RAG implementation to **vector-only ask** and **description/comments/resolution-only chunking**:
+
+- Removed `AskQuestionTicketIds` (+ tests)
+- Restored `AskService`, `TicketChunker`, and related unit tests from before that work
+- Removed `AskApiIT.askByExplicitTicketId…` (kept the **`VALIDATION_ERROR`** fix for unknown `confidence`)
+
+Backend tests for those classes pass on Java 25.
+
+## Specs and docs updated (**DEC-21**)
+
+The fix is now **specified, not implemented**:
+
+| File | What changed |
+|------|----------------|
+| [`spec/rag-ingestion.md`](spec/rag-ingestion.md) | §6.1 header **must** be an embeddable chunk; **AC-RAG-ING-10**; §14.1 root-cause write-up |
+| [`spec/architecture.md`](spec/architecture.md) | §15.5 hybrid merge for explicit `TKT-{n}` |
+| [`spec/rag-api-contract.md`](spec/rag-api-contract.md) | §9.4 retrieval rules; **AC-RAG-API-08** |
+| [`spec/requirements.md`](spec/requirements.md) | **DEC-21** in decisions table |
+| [`spec/test-strategy.md`](spec/test-strategy.md) | Band A cases for **DEC-21** (pending impl) |
+| [`rules/rag-vector-store.md`](rules/rag-vector-store.md) | Implementer guidance |
+| [`plan.md`](plan.md) | Phase F ask/ingest marked **pending implementation** |
+| [`backend/README.md`](backend/README.md) | Known gap + pointer to specs |
+
+Until **DEC-21** is implemented again, id/status questions like *“What is the status of TKT-1006?”* can still no-match when only description vectors exist and similarity is below **0.72**.
+
+Your working tree has uncommitted changes (backend revert + spec updates). Say if you want a commit message for that split.
+
+---
+
+_**User**_
+
+dont delete any changes. i wanted you to update the content of the md files with the new changes/fixes that are done and whose information is missing in the md files. 
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The user clarified that existing code changes should remain untouched. They want the markdown files updated with new fixes and missing information instead.
+
+I need to restore the RAG implementation code that was reverted. Then I will update the markdown files to reflect that these fixes are already complete rather than pending. First I will check the current git state.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Restoring the RAG implementation and updating the docs to reflect implemented fixes (not "pending").
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status -sb &amp;&amp; git diff --name-only HEAD</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status -sb && git diff --name-only HEAD
+```
+
+```
+## main...origin/main
+ M .specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md
+ M backend/README.md
+ D backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java
+M  backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java
+M  backend/src/main/java/com/ticketmanagement/service/AskService.java
+ M backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+ D backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java
+M  backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java
+M  backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java
+M  backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java
+ M plan.md
+ M rules/rag-vector-store.md
+ M spec/architecture.md
+ M spec/rag-api-contract.md
+ M spec/rag-ingestion.md
+ M spec/requirements.md
+ M spec/test-strategy.md
+.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md
+backend/README.md
+backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java
+backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java
+backend/src/main/java/com/ticketmanagement/service/AskService.java
+backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java
+backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java
+backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java
+backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java
+plan.md
+rules/rag-vector-store.md
+spec/architecture.md
+spec/rag-api-contract.md
+spec/rag-ingestion.md
+spec/requirements.md
+spec/test-strategy.md
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/src/main/java/com/ticketmanagement/service/AskService.java</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (0 files)
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Restoring the backend RAG files from commit 80cd437. This preserves all existing changes while updating the markdown files with missing information.
+
+Also restoring AskApiIT.java from commit 80cd437. The markdown files will be updated to mark these fixes as implemented rather than pending.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git checkout 80cd437 -- \
+  backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java \
+  backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java \
+  backend/src/main/java/com/ticketmanagement/service/AskService.java \
+  backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java \
+  backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git checkout 80cd437 -- \
+  backend/src/main/java/com/ticketmanagement/rag/AskQuestionTicketIds.java \
+  backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java \
+  backend/src/main/java/com/ticketmanagement/service/AskService.java \
+  backend/src/test/java/com/ticketmanagement/rag/AskQuestionTicketIdsTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/AskServiceTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketChunkerTest.java \
+  backend/src/test/java/com/ticketmanagement/rag/TicketIngestionServiceTest.java \
+  backend/src/test/java/com/ticketmanagement/controller/AskApiIT.java
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating the markdown files to reflect implemented status. Replacing pending and known gap labels with operational notes and re-ingestion details.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,MD}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "pending|Known gap|code pending|implementation pending|not embedded"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "pending|Known gap|code pending|implementation pending|not embedded",
+  "topFiles": [
+    {
+      "matchCount": 8,
+      "uri": "./.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./backend/README.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "./plan.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "./spec/rag-ingestion.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./.specstory/history/2026-10-04_17-33-12Z-model-not-found-error.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./.specstory/history/2026-10-04_16-42-19Z-phase-ui-a-implementation.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "./.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md"
+    },
+    {
+      "matchCount": 58,
+      "uri": "./.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./.specstory/history/2026-10-03_19-43-17Z-data-model-specification.md"
+    },
+    {
+      "matchCount": 19,
+      "uri": "./.specstory/history/2026-10-03_15-47-01Z-working-directory-audit.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "./.specstory/history/2026-10-04_10-30-58Z-java-spring-boot-review.md"
+    },
+    {
+      "matchCount": 6,
+      "uri": "./.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "./.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./.specstory/history/2026-10-03_17-18-27Z-testing-rules-for-cursor.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "./.specstory/history/2026-10-04_09-35-31Z-backend-ticket-management-plan.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "./.specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "./.specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./.specstory/history/2026-10-03_16-32-55Z-spec-kit-constitution.md"
+    },
+    {
+      "matchCount": 11,
+      "uri": "./.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    }
+  ],
+  "totalFiles": 25,
+  "totalMatches": 153
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating the markdown files to reflect completed fixes. The first change updates spec/rag-ingestion.md section 14.1, renaming the "Known gap" entry to document the root cause and confirming the DEC-21 fix is now in TicketChunker headerBlocks.
+
+Plan.md will mark DEC-21 items 12.2 and 12.3 as done and remove pending status. Backend/README.md will switch from "code pending" to operational re-ingestion notes. Rules/rag-vector-store.md will cite AskService, AskQuestionTicketIds, and TicketChunker as implemented. Spec/test-strategy will list tests as implemented. Architecture §15.5 and the API contract §9.4 will gain implementation references. Requirements will add "Implemented 2026-10-04" to the DEC-21 row. Plan.md phase E and F done criteria will be updated.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "DEC-21|header|AskQuestion"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md",
+  "pattern": "DEC-21|header|AskQuestion",
+  "topFiles": [
+    {
+      "matchCount": 6,
+      "uri": "plan.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 6
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/README.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating all markdown files with the completed fixes and missing information. The TicketChunker plan row will be updated to mention the header chunk. The newly added rules/rag-vector-store section will also be reviewed.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2**</summary>
+The string to replace was not found in the file.
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing §9.4 in the rag-api-contract file and §15.5 in the architecture file. The architecture replacement may have partially failed.
+
+Updating plan.md, the backend README, and rules/rag-vector-store.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "contextAfter": 15,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "9\\.4|Maps to PDF"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "9\\.4|Maps to PDF",
+  "topFiles": [
+    {
+      "matchCount": 47,
+      "uri": "spec/rag-api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 4
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md",
+  "pattern": "Implementation|DEC-19"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md",
+  "pattern": "Implementation|DEC-19",
+  "topFiles": [
+    {
+      "matchCount": 4,
+      "uri": "spec/architecture.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 4
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating markdown files with completed fixes and missing details. Adding implementation lines to architecture docs. Updating plan.md, backend README, and RAG vector store rules. Updating plan TicketChunker row and rag-api-contract DEC-21 status to implemented.
+
+Adding a brief F-01 note on ID questions to evaluation-strategy. Updating the rules section for DEC-21ead.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend/README.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding a plan revision history line to the markdown files. Updating the rag-ingestion §14 component table with headerBlocks. Adding an optional evaluation-strategy brief note for Q2. Verifying that AskQuestionTicketIds code was restored.
+
+Running a quick test and applying graphify updates. Preparing a brief apology in the response.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem &amp;&amp; cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend &amp;&amp; ./mvnw -q test -Dtest=AskServiceTest,AskQuestionTicketIdsTest,AskApiIT,TicketChunkerTest 2&gt;&amp;1 | tail -3</summary>
+```bash
+export JAVA_HOME=/Users/vishnuaggarwal/.sdkman/candidates/java/25.0.4+1.1-tem && cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend && ./mvnw -q test -Dtest=AskServiceTest,AskQuestionTicketIdsTest,AskApiIT,TicketChunkerTest 2>&1 | tail -3
+```
+
+```
+2026-10-04T23:55:36.899+05:30  INFO 50694 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-04T23:55:36.901+05:30  INFO 50694 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-10-04T23:55:36.935+05:30  INFO 50694 --- [           main] c.ticketmanagement.controller.AskApiIT   : Started AskApiIT in 13.789 seconds (process running for 23.215)
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify update . 2&gt;&amp;1 | tail -2</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify update . 2>&1 | tail -2
+```
+
+```
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+I had misunderstood the request. I restored the code and updated the markdown files to document the implemented fixes.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Sorry about the earlier misread — you wanted **docs updated**, not code removed.
+
+## Restored
+
+All **DEC-21** implementation is back:
+
+- `TicketChunker.headerBlocks()`
+- `AskQuestionTicketIds` + `AskService.mergeRetrieval()`
+- Unit/integration tests (including `AskApiIT.askByExplicitTicketId…`)
+
+Tests pass on Java 25.
+
+## MD files updated (implemented, not “pending”)
+
+| File | Content |
+|------|---------|
+| [`spec/rag-ingestion.md`](spec/rag-ingestion.md) | §6.1, **AC-RAG-ING-10**, §14.1 (root cause + **implemented** fix + re-ingest ops) |
+| [`spec/rag-api-contract.md`](spec/rag-api-contract.md) | §9.4 + Java/test references; **AC-RAG-API-08** |
+| [`spec/architecture.md`](spec/architecture.md) | §15.5 hybrid merge + implementation note |
+| [`spec/requirements.md`](spec/requirements.md) | **DEC-21** → agreed **+ implemented** |
+| [`spec/test-strategy.md`](spec/test-strategy.md) | Band A rows tied to actual test classes |
+| [`rules/rag-vector-store.md`](rules/rag-vector-store.md) | Layer → code mapping table |
+| [`plan.md`](plan.md) | Phase F / `TicketChunker` / ask orchestration aligned with code |
+| [`backend/README.md`](backend/README.md) | Operational summary + test class names |
+
+**Still true for local DB:** tickets indexed **before** the header chunker should be **re-ingested** (or PATCH’d) so status/id sit in embedded text; explicit-id merge still works on older description-only chunks.
+
+---
+
+_**User**_
+
+commit all and push
+
+---
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline
+```
 </details></tool-use>

@@ -213,9 +213,10 @@ Updated card on file; payment captured on second attempt.
 **Paragraph-based chunking** splits `assembledText` on **structure-aware boundaries** before any character-count limit:
 
 1. **Section boundaries** — after the header block, treat `Description:`, `Comments:`, and `Resolution:` as separate regions.
-2. **Comment boundaries** — each comment line item (`- [timestamp] body`) is its own **atomic block**; never merge two comments into one block in the primary pass.
-3. **Paragraph boundaries** — within description or resolution, split on **blank lines** (`\n\s*\n`).
-4. **Oversized blocks** — if a single block still exceeds **max-chars** (§9.3), apply **secondary fixed-size splitting** (§7) on that block only.
+2. **Header block (Agreed DEC-21)** — text from the start of `assembledText` through the line before `Description:` (ticket id, title, and the status / priority / assignee / category summary line) MUST become **one atomic embeddable chunk**. Metadata JSON alone is **not** sufficient for id- or status-themed questions; the header MUST appear in `content` for embedding.
+3. **Comment boundaries** — each comment line item (`- [timestamp] body`) is its own **atomic block**; never merge two comments into one block in the primary pass.
+4. **Paragraph boundaries** — within description or resolution, split on **blank lines** (`\n\s*\n`).
+5. **Oversized blocks** — if a single block still exceeds **max-chars** (§9.3), apply **secondary fixed-size splitting** (§7) on that block only.
 
 ### 6.2 Behaviour per ticket source
 
@@ -306,7 +307,7 @@ Running **fixed-size-only** on the full `assembledText` would:
 | Step | Strategy |
 |------|----------|
 | 1 | Build `KnowledgeDocument` per §4–§5 |
-| 2 | **Primary:** paragraph + **comment-boundary** blocks (§6) |
+| 2 | **Primary:** paragraph + **comment-boundary** blocks (§6), including **header block** chunk (§6.1 **DEC-21**) |
 | 3 | **Secondary:** fixed-size + sentence bias + overlap **only** on blocks &gt; `max-chars` (§7.2) |
 | 4 | **Optional merge:** adjacent blocks in the **same section** under `min-chars` → single chunk (never merge across comments) |
 | 5 | Embed each final chunk; attach §4.3 metadata |
@@ -431,7 +432,7 @@ Defaults are overridable via configuration (FEAT-19); do not embed literals in J
 | Component | Package / layer | Responsibility |
 |-----------|-----------------|----------------|
 | `KnowledgeDocumentBuilder` | `rag` | §4–§5 assembly |
-| `TicketChunker` | `rag` | §6–§9 algorithms |
+| `TicketChunker` | `rag` | §6–§9 algorithms; **§6.1 header block** (**DEC-21** → `headerBlocks()`) |
 | `TicketIngestionService` | `rag` or `service` | Orchestrate build → chunk → embed → store |
 | `VectorChunkWriter` | `rag` | §11 delete + insert |
 | Ingest hook | `service` | After ticket/comment commit → call ingestion port |
@@ -460,6 +461,29 @@ Unit tests mock `TicketIngestionPort`; integration tests assert `ticket_vector_c
 | **AC-RAG-ING-07** | Given transition to `CLOSED`, when re-ingest runs, then metadata `status` is `CLOSED` on all new chunks (**AC-FEAT-14-03**). |
 | **AC-RAG-ING-08** | Chunking strategy and hybrid justification traceable to this file + architecture §16 (**AC-FEAT-13-03**, **AC-CORE-19**). |
 | **AC-RAG-ING-09** | Given ticket with no embeddable text, when ingest runs, then `ticket_vector_chunk` has zero rows for that `ticket_id` and embedding API is not called (**DEC-18**). |
+| **AC-RAG-ING-10** | Given embeddable ticket with header in `assembledText`, when ingest runs, then at least one chunk `content` contains the public ticket id (`TKT-{n}`) and current `Status:` line (**DEC-21**). |
+
+---
+
+## 14.1 Background — id/status ask no-match (**DEC-21**)
+
+**Symptom (pre-fix):** Ask returned **200** with `"No relevant tickets found."` while `GET /api/v1/tickets/TKT-{n}` showed the ticket existed (e.g. “What is the status of TKT-1006?”).
+
+**Root cause:**
+
+1. **Ingest:** Header text was in `assembledText` but **not** embedded — only description, comments, and resolution were chunked. Id/status questions often scored **below** `rag.retrieval.similarity-threshold` (0.72) against description-only vectors.
+2. **Ask:** Retrieval was vector-only; `TKT-{n}` in the question did not load stored chunks by id.
+
+**Fix (agreed and implemented 2026-10-04):**
+
+| Layer | Implementation |
+|-------|----------------|
+| Ingest | `TicketChunker.headerBlocks()` — one atomic chunk from start of `assembledText` through the line before `Description:` (**AC-RAG-ING-10**). |
+| Ask | `AskQuestionTicketIds` + `AskService.mergeRetrieval()` — merge `findByTicketId` hits before vector search; explicit-id chunks bypass threshold (**AC-RAG-API-08**). |
+
+**Ops:** Tickets indexed **before** the header chunker change still have description-only rows until **re-ingest** (any successful create/update/comment/status write, or manual reindex if added later). After re-ingest, status/id questions benefit from both header embeddings and explicit-id merge.
+
+Spec cross-refs: [`architecture.md`](architecture.md) §15.5; [`rag-api-contract.md`](rag-api-contract.md) §9.4.
 
 ---
 
@@ -471,6 +495,7 @@ Unit tests mock `TicketIngestionPort`; integration tests assert `ticket_vector_c
 | **DEC-09** | PgVector + Ollama `nomic-embed-text` / 768 | **Agreed 2026-10-04** | §12 |
 | **DEC-16** | Chunk + retrieval defaults | **Agreed 2026-10-04** | §9.3, §12.1 |
 | **DEC-18** | Sync ingest, failures, empty skip | **Agreed 2026-10-04** | §10, §10.1–§10.2 |
+| **DEC-21** | Header chunk + ask id hybrid retrieval | **Agreed 2026-10-04** | §6.1, §14.1; [`architecture.md`](architecture.md) §15.5; [`rag-api-contract.md`](rag-api-contract.md) §9.4 |
 | Async ingest queue | Latency | **Reference** | **DEC-18** sync default; job queue only if scope changes |
 
 ---
@@ -487,4 +512,5 @@ Unit tests mock `TicketIngestionPort`; integration tests assert `ticket_vector_c
 | 2026-10-04 | §0.4 **ING-*** independent reading units + PDF verbatim ingestion quote. |
 | 2026-10-04 | Major `##` headings tagged with **ING-*** unit ids; TOC updated. |
 | 2026-10-04 | **DEC-09/16/18:** PgVector + Ollama `nomic-embed-text` (768), agreed chunk/retrieval defaults, sync ingest, failure recovery, empty-content skip. |
+| 2026-10-04 | **DEC-21:** Header block embeddable chunk + §14.1 root-cause note; implemented in `TicketChunker` / `AskService` (2026-10-04). |
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |

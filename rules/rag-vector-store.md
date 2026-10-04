@@ -98,6 +98,18 @@ spring.ai.ollama.embedding.options.model: nomic-embed-text  # 768-dim vectors
 - **Similarity threshold:** discard hits below this; if none remain → **no relevant tickets found** (no LLM call on empty context).
 - **Distance metric** (cosine vs inner product): [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12.1 so threshold comparisons are meaningful.
 
+### Explicit ticket id in the question (**DEC-21** — agreed and implemented)
+
+Vector-only retrieval returned no-match when the user named `TKT-{n}` but embedding similarity to description-only chunks was below threshold ([`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §14.1).
+
+| Layer | Requirement | Code (2026-10-04) |
+|-------|-------------|-------------------|
+| **Ingest (`TicketChunker`)** | Embed header block (id, title, status line) as its own chunk — not metadata-only (**AC-RAG-ING-10**). | `headerBlocks()` |
+| **Ask (`AskService`)** | Parse `TKT-\d+` from `question`; merge `findByTicketId` chunks **before** vector hits; bypass threshold for those chunks (**AC-RAG-API-08**). | `AskQuestionTicketIds`, `mergeRetrieval()` |
+| **Ops** | Re-ingest existing tickets after deploy so header text is indexed (id merge works on old rows without re-ingest). | Ticket write hooks |
+
+Do **not** lower `similarity-threshold` as the primary fix — it increases false positives.
+
 ### Illustrative ask questions (PDF — for eval and manual review)
 
 Use these in `commands/review-rag-output.md` and [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md); they are **not** golden answers:

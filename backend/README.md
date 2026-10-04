@@ -46,3 +46,14 @@ Requires **JDK 25** (see `java.version` in `pom.xml`). Integration tests use Tes
 ### Recent test alignment (2026-10-04)
 
 - **`AskApiIT.unknownAskPropertyIs400`** — Asserts HTTP **400** with `error.code` **`VALIDATION_ERROR`** and `details` for unknown ask body fields (e.g. `confidence`), consistent with `RestExceptionHandler`, `AiAskControllerSliceTest`, and [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) **DEC-17** / **AC-RAG-API-01**.
+
+### Ask retrieval (**DEC-21** — implemented 2026-10-04)
+
+Id/status questions (e.g. “What is the status of TKT-1006?”) previously no-matched when vector similarity to description-only chunks was below **0.72**. **Fix in code:**
+
+- **Ingest:** `TicketChunker.headerBlocks()` — embed ticket id, title, and status line as its own chunk.
+- **Ask:** `AskQuestionTicketIds` + `AskService.mergeRetrieval()` — load chunks for each `TKT-{n}` mentioned in the question before vector hits (threshold bypass for those chunks).
+
+**Ops:** Re-ingest or PATCH tickets that were indexed **before** the header chunker so status/id appear in embedded text (explicit-id merge still retrieves description-only rows). Spec detail: [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §14.1, [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §9.4.
+
+**Tests:** `AskServiceTest`, `AskQuestionTicketIdsTest`, `AskApiIT.askByExplicitTicketIdCitesTicketEvenWhenVectorMatchIsWeak`, `TicketChunkerTest.headerLineIsItsOwnChunkForIdAndStatusRetrieval`.

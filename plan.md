@@ -654,7 +654,7 @@ Ollama **base URL** from env only. Chat model id = **C-04**.
 |------|------|
 | `KnowledgeDocument` / builder | Assemble text per data-model §9.1 template (title header **Convention**; PDF sources = description, comments, resolution). |
 | `RagChunkMetadata` | PDF keys `ticketId`, `status`, `priority`, `assignee`, `category` + technical `chunkIndex`, `ingestedAt`. |
-| `TicketChunker` | Hybrid: section + comment-atomic blocks; overflow fixed-size + overlap; min-chars merge **within section only**, never across comments. |
+| `TicketChunker` | Hybrid: **header block** chunk (**DEC-21**); section + comment-atomic blocks; overflow fixed-size + overlap; min-chars merge **within section only**, never across comments. |
 | `EmbeddingPort` | Spring AI embedding; **same model** as ask query. |
 | `VectorChunkStore` | Delete-all-for-ticket then insert (**DEC** re-ingest). **Not** Spring Data JPA — JDBC/pgvector (or Spring AI adapter) behind this port per **C-06**. Ticket loads for ingest still use `TicketRepository`. |
 | `TicketIngestionService` | Orchestrate load → assemble → chunk → embed → write. |
@@ -730,10 +730,13 @@ Ollama **base URL** from env only. Chat model id = **C-04**.
 
 1. Embed question (**same** `nomic-embed-text`).
 2. Similarity search top-K from config; drop below similarity threshold (**cosine**).
-3. **DEC-19:** **no** metadata pre-filter on ask.
-4. If no remaining hits → **no LLM call**; return no-match.
-5. Else: generate **only** from retrieved excerpts + ticket ids; citations = ids from **retrieval**, deduped, **relevance order** (**DEC-17**). Strip model-guessed ids.
-6. **Non-agentic:** no ticket writes, no tools, no notify.
+3. **DEC-21:** parse `TKT-{n}` from question; merge `findByTicketId` chunks ahead of vector hits; explicit-id chunks bypass threshold; dedupe by `(ticketId, content)`. See [`spec/rag-api-contract.md`](spec/rag-api-contract.md) §9.4 (`AskQuestionTicketIds`, `AskService.mergeRetrieval`).
+4. **DEC-19:** **no** metadata pre-filter on ask.
+5. If no remaining hits after merge → **no LLM call**; return no-match.
+6. Else: generate **only** from retrieved excerpts + ticket ids; citations = ids from **retrieval**, deduped, **relevance order** (**DEC-17**). Strip model-guessed ids.
+7. **Non-agentic:** no ticket writes, no tools, no notify.
+
+**Ingest (DEC-21):** `TicketChunker.headerBlocks()` embeds header per [`spec/rag-ingestion.md`](spec/rag-ingestion.md) §6.1. **Re-ingest** tickets created before this change so header text is in the vector index (explicit-id merge still works on existing description-only chunks).
 
 Thin `AiAskController` in `controller`.
 
@@ -743,8 +746,9 @@ Thin `AiAskController` in `controller`.
 - Empty retrieval → 200 no-match; generate port **not** called.
 - 400 blank / missing / too long / unknown property.
 - Citations subset of retrieval ids.
+- **DEC-21:** explicit `TKT-{n}` in question + stored chunks → grounded 200 even when vector stub empty (`AskApiIT`); header chunk **AC-RAG-ING-10** (`TicketChunkerTest`, `TicketIngestionServiceTest`).
 
-**Do not** assert a golden LLM paragraph as quality.
+**Do not** assert exact `answer` prose against a golden string — wording is **probabilistic** ([`spec/test-strategy.md`](spec/test-strategy.md) §6.2).
 
 ### 12.4 After code is correct (manual / eval — not a reason to skip Band A)
 
