@@ -334,7 +334,7 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 | Severity | Action |
 |----------|--------|
 | **Demo blocker** | Retrieval `poor` on PDF Q1–Q5 with §5.1 seed — fix before grading script step 9 ([`requirements.md`](requirements.md) §8.7) |
-| **Grounding fail** | Treat as AC-CORE-18 risk; consider `docs/ai-mistakes.md` entry (**PDF** FEAT-23) |
+| **Grounding fail** | Treat as AC-CORE-18 risk; log [`docs/ai-error.md`](../docs/ai-error.md) (**PDF** FEAT-23) |
 | **Flaky prose** | Do **not** add golden string tests; tune retrieval or prompt, re-run §6 |
 
 ---
@@ -364,7 +364,7 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 | **AC-EVAL-01** | Retrieval quality is defined separately from grounding (§3–§4). | This spec + `commands/review-rag-output.md` |
 | **AC-EVAL-02** | Eval uses **Example** corpus §5 and five **PDF** questions §5.2. | Checklist run recorded §9 |
 | **AC-EVAL-03** | Results are **reviewable** without a single golden LLM string. | Verdicts `good`/`partial`/`poor` + notes |
-| **AC-EVAL-04** | Failure modes §8 are used to classify at least one miss during development (**Example**). | Eval log or `docs/ai-mistakes.md` |
+| **AC-EVAL-04** | Failure modes §8 are used to classify at least one miss during development (**Example**). | Eval log or [`docs/ai-error.md`](../docs/ai-error.md) |
 | **AC-EVAL-05** | Procedure satisfies **AC-FEAT-22-01/02** and supports demo script AC-CORE-16…18. | Requirements §8.7 steps 9–10, **17** |
 
 ---
@@ -413,3 +413,4 @@ Numeric K/threshold defaults: **DEC-16** in [`rag-ingestion.md`](rag-ingestion.m
 | 2026-10-04 | §0.3 **EVAL-*** units; §5 chunk callouts for corpus + PDF question map. |
 | 2026-10-04 | Major `##` headings tagged with **EVAL-*** unit ids. |
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off); **DEC-19** cross-ref in header. |
+| 2026-10-04 | Grounding fail / AC-EVAL-04 evidence: [`docs/ai-error.md`](../docs/ai-error.md). |

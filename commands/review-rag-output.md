@@ -146,7 +146,7 @@ Use this section only when the user asked to review a **coding** assistant, not 
    - `partially grounded`: some claims traceable; at least one fail in 1–3
    - `ungrounded`: fabricated answer, fake citations, or no-match used wrongly
 6. **Recommended user-visible answer** — corrected grounded text **or** honest no-match **or** **reject**
-7. **Log?** — If this was a meaningful AI mistake, propose `docs/ai-mistakes.md` (confirm before writing)
+7. **Log?** — If this was a meaningful AI mistake, propose [`docs/ai-error.md`](../docs/ai-error.md) and run **`/update-ai-error`** (do not invent a hallucination)
 
 **Pass/fail of the ask answer:** fail unless verdict is `grounded` (or situation A with correct no-match and no citations).
 
@@ -192,3 +192,4 @@ Same triggers as [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md)
 | 2026-10-04 | Retrieval quality section defers to [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §3–§9; AC-EVAL / F-* taxonomy. |
 | 2026-10-04 | Cross-refs to spec **§0** guides and requirements **§0.5**. |
 | 2026-10-04 | **DEC-11** agreed; ignore **Reference** ask fields §2.3. |
+| 2026-10-04 | Ungrounded ask: log via `/update-ai-error` → [`docs/ai-error.md`](../docs/ai-error.md). |

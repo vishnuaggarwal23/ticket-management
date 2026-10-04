@@ -298,7 +298,7 @@ Not fully automatable without flaking. Run when:
 | **AC-CORE-17** | Cited ids real and in retrieved set |
 | **AC-CORE-18** | Empty retrieval / out-of-scope → no fabrication; no world-knowledge leak (Flow E2) |
 
-Meaningful ungrounded output → consider `docs/ai-mistakes.md` (FEAT-23).
+Meaningful ungrounded output → [`docs/ai-error.md`](../docs/ai-error.md) via **`/update-ai-error`** (FEAT-23).
 
 ### 6.4 Band C — retrieval quality (probabilistic)
 
@@ -467,3 +467,4 @@ Detail: [`data-model.md`](data-model.md) §18.
 | 2026-10-04 | §0.3 **TS-*** independent reading units (SM JUnit vs eval bands). |
 | 2026-10-04 | Major `##` headings tagged with **TS-*** unit ids. |
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
+| 2026-10-04 | Ungrounded output → [`docs/ai-error.md`](../docs/ai-error.md). |

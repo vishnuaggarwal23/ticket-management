@@ -1,0 +1,105 @@
+# AI error log
+
+Chronological record of **meaningful** AI mistakes caught in this project (wrong code, wrong specs/docs, or ungrounded / hallucinated answers). Required by the assessment (**AC-CORE-23** / **FEAT-23**): do not accept AI output blindly.
+
+**Canonical file:** this document (`docs/ai-error.md`).  
+**PDF path alias:** [`docs/ai-mistakes.md`](ai-mistakes.md) is a pointer here (demo step 15 still works).  
+**Maintain:** run **`/update-ai-error`** ([`commands/update-ai-error.md`](../commands/update-ai-error.md)) when a new error is caught.
+
+Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **When** (UTC), then id.
+
+| Kind | Meaning |
+|------|---------|
+| **spec / docs** | Wrong artefact vs PDF, agreed spec, or another file |
+| **process** | Wrong workflow, index, or steering (rules/commands) |
+| **code** | Wrong Java / Spring / tests |
+| **RAG** | Ungrounded ask answer, fake citations, or invented retrieval |
+
+**As of 2026-10-04:** no **RAG** ungrounded-answer entry yet (ask path not delivered). Do not invent one.
+
+## Index
+
+| Id | When (UTC) | Kind | Title |
+|----|------------|------|-------|
+| [AE-001](#ae-001) | 2026-10-03 17:18 | process | Cursor documentation rule duplicated the full body |
+| [AE-002](#ae-002) | 2026-10-03 20:10 | spec / docs | State-machine draft cited resolved **OQ-13** |
+| [AE-003](#ae-003) | 2026-10-04 07:40 | spec / docs | UI spec named `ui-model.md` instead of PDF `ui-flow.md` |
+| [AE-004](#ae-004) | 2026-10-04 07:40 | process | Prompt-history index: wrong session order and missing rows |
+| [AE-005](#ae-005) | 2026-10-04 08:30 | spec / docs | `"URGENT"` treated as invalid priority |
+| [AE-006](#ae-006) | 2026-10-04 08:30 | spec / docs | Project conventions described as PDF requirements |
+| [AE-007](#ae-007) | 2026-10-04 08:51 | spec / docs | Stale “interim” / async ingest after **DEC-06** / **DEC-18** |
+| [AE-008](#ae-008) | 2026-10-04 08:51 | spec / docs | Glossary still pointed at **OQ-05** after **DEC-11** |
+
+---
+
+## AE-001
+
+- **When:** 2026-10-03 17:18 UTC
+- **Kind:** process
+- **What was wrong:** `.cursor/rules/documentation.mdc` contained a full copy of `rules/documentation.md`. Other rules used pointer-only `.mdc` files. Two bodies would drift.
+- **How detected:** Gap analysis while expanding `rules/testing.md` ([`.specstory/history/2026-10-03_17-18-27Z-testing-rules-for-cursor.md`](../.specstory/history/2026-10-03_17-18-27Z-testing-rules-for-cursor.md)).
+- **How resolved:** Replaced the `.mdc` with a pointer to [`rules/documentation.md`](../rules/documentation.md). Bodies stay in `rules/`; `.cursor/rules/*.mdc` stay pointers.
+
+## AE-002
+
+- **When:** 2026-10-03 20:10 UTC
+- **Kind:** spec / docs
+- **What was wrong:** Draft state-machine text referenced **OQ-13**, already resolved in the agreed data model (ticket id / sequence). Wrong open-question id.
+- **How detected:** While drafting [`spec/state-machine.md`](../spec/state-machine.md) ([`.specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md`](../.specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md)).
+- **How resolved:** Dropped the stale **OQ-13** cite. Remaining SM open items mapped to the correct **OQ-*** / **DEC-*** owners; `state-machine.md` became the transition-table source of truth.
+
+## AE-003
+
+- **When:** 2026-10-04 07:40 UTC
+- **Kind:** spec / docs
+- **What was wrong:** The PDF lists the UI spec as **`ui-flow`**. The assistant created `spec/ui-model.md` and linked the ten-file set to that name.
+- **How detected:** Spec completeness vs `docs/Assessments.docx` (filename list on p.1–2); follow-on `/review-spec` and user sign-off to rename.
+- **How resolved:** Renamed to [`spec/ui-flow.md`](../spec/ui-flow.md) and retargeted `spec/`, `rules/`, `commands/`, and `docs/` links (hub revision 2026-10-04).
+
+## AE-004
+
+- **When:** 2026-10-04 07:40 UTC
+- **Kind:** process
+- **What was wrong:** [`docs/prompt-history.md`](prompt-history.md) listed 17 of 19 SpecStory files. Two sessions share `2026-09-24_17-36-50Z`; the index put `lets-go-to-the` before `architecture-md-specification`, against lexicographic tie-break.
+- **How detected:** `/update-prompt-history` vs files on disk ([`.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md`](../.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md)).
+- **How resolved:** Rebuilt the chronological table from `.specstory/history/`. Command [`commands/update-prompt-history.md`](../commands/update-prompt-history.md) requires oldest-first sort and filename lexicographic tie-break; re-runs update existing rows.
+
+## AE-005
+
+- **When:** 2026-10-04 08:30 UTC
+- **Kind:** spec / docs
+- **What was wrong:** [`spec/api-contract.md`](../spec/api-contract.md) showed `"priority": "URGENT"` as an **invalid** create example. [`spec/data-model.md`](../spec/data-model.md) §5.2 and UI copy treated **URGENT** / **CRITICAL** as agreed catalog values (**DEC-13** / later **C-02**).
+- **How detected:** `/review-spec` consistency pass ([`.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md`](../.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md)).
+- **How resolved:** Domain enum is **`CRITICAL`** (not `URGENT`). JSON `"URGENT"` maps to `CRITICAL` in the **api** layer only. Invalid example is a true unknown (e.g. `P1`). Locked as **C-02** in `api-contract.md` and `rules/java-springboot.md`.
+
+## AE-006
+
+- **When:** 2026-10-04 08:30 UTC (pattern called out earlier; corrected in steering on this date)
+- **Kind:** spec / docs
+- **What was wrong:** Assistant text treated **Spring Boot 3**, Maven Wrapper, Liquibase, PgVector-over-Chroma, and the `api`/`domain`/`service` package tree as **PDF requirements**. The assignment names Java 21, Spring Boot, Spring AI, PostgreSQL/H2, and a vector store — not those conventions.
+- **How detected:** Working-tree vs PDF audit and later `/review-spec` / review-code bar ([`.specstory/history/2026-10-03_15-47-01Z-working-directory-audit.md`](../.specstory/history/2026-10-03_15-47-01Z-working-directory-audit.md)).
+- **How resolved:** “Assessment vs project conventions” sections in `rules/*`. [`commands/review-code.md`](../commands/review-code.md) **Fails** convention violations but must not label them PDF mandates.
+
+## AE-007
+
+- **When:** 2026-10-04 08:51 UTC
+- **Kind:** spec / docs
+- **What was wrong:** After **DEC-06** (PATCH `status`) and **DEC-18** (sync ingest after commit), child specs still said **interim** or implied **async** ingest / open DEC-06.
+- **How detected:** Second `/review-spec` after DEC-09…19 ([`.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md`](../.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md)).
+- **How resolved:** Scrubbed stale labels in `api-contract.md`, `state-machine.md`, `architecture.md`, `data-model.md`, and the UI spec. Hub §10.2 lists **DEC-01…19** as agreed.
+
+## AE-008
+
+- **When:** 2026-10-04 08:51 UTC
+- **Kind:** spec / docs
+- **What was wrong:** Hub glossary still cited **OQ-05** for no-match after **DEC-11** (honest no-match in `data.answer`) was agreed; owner is [`spec/rag-api-contract.md`](../spec/rag-api-contract.md).
+- **How detected:** Same `/review-spec` pass as AE-007.
+- **How resolved:** Glossary and OQ catalogue point at **DEC-11** / `rag-api-contract.md`, not a still-open **OQ-05**.
+
+---
+
+## Revision history
+
+| Date | Note |
+|------|------|
+| 2026-10-04 | Initial chronological log AE-001…008 from SpecStory and spec/review fixes; no RAG ungrounded-answer row yet. |

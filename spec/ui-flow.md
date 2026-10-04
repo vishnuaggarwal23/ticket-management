@@ -183,7 +183,7 @@ Ask may alternatively be a **persistent panel** on list and detail (drawer or sp
 | Artefact | Purpose |
 |----------|---------|
 | `.specstory/history/`, [`docs/prompt-history.md`](../docs/prompt-history.md) | Process evidence (**FEAT-23**, **AC-CORE-23**) — not in-app UI |
-| `docs/ai-mistakes.md` | Documented AI mistake — file or doc viewer, not a ticket feature |
+| [`docs/ai-error.md`](../docs/ai-error.md) (`docs/ai-mistakes.md` pointer) | Documented AI mistake — file or doc viewer, not a ticket feature |
 | Backend logs / eval harness | **FEAT-22** retrieval quality — see [`evaluation-strategy.md`](evaluation-strategy.md) |
 
 ---
@@ -654,3 +654,4 @@ Do not close **Open** items in implementation without updating [`requirements.md
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
 | 2026-10-04 | Renamed from `ui-model.md` to PDF filename `ui-flow.md`. |
 | 2026-10-04 | Priority select **`CRITICAL`**; assignee max 320 without email validation (**C-02**, **C-05**). |
+| 2026-10-04 | Demo evidence path: [`docs/ai-error.md`](../docs/ai-error.md). |

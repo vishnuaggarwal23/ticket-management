@@ -76,7 +76,7 @@ Use this table to confirm nothing from the assignment is “lost” between the 
 
 | PDF theme (typical page) | Captured in | Gap / owner if not implementable yet |
 |--------------------------|-------------|--------------------------------------|
-| Process: spec-driven workflow, hygiene rules/commands, prompt history, AI mistake evidence (p.1–2) | §3.4, §6.8, §7 NFR-01…05, FEAT-23 | Mistake log file `docs/ai-mistakes.md` when first entry exists |
+| Process: spec-driven workflow, hygiene rules/commands, prompt history, AI mistake evidence (p.1–2) | §3.4, §6.8, §7 NFR-01…05, FEAT-23 | Log [`docs/ai-error.md`](../docs/ai-error.md); alias `docs/ai-mistakes.md` |
 | Learning goals: specs for AI-native feature; test deterministic + probabilistic (p.2) | §1.3, §2.5, FEAT-22, §6.7 | [`evaluation-strategy.md`](evaluation-strategy.md), [`test-strategy.md`](test-strategy.md) |
 | Token optimisation plugins + prompt caching (p.2) | §7 NFR-11, `rules/documentation.md` | Optional tooling — not product behaviour |
 | Stack: Java 21, Spring Boot, Spring AI, PostgreSQL/H2, embedding, vector store, REST, React/Next or equivalent (p.2–3) | §2.1, §6.1 | **DEC-09** (PgVector + Ollama), **DEC-10** (PostgreSQL everywhere; no H2) in `architecture.md` / `rag-ingestion.md` / `test-strategy.md` |
@@ -90,7 +90,7 @@ Use this table to confirm nothing from the assignment is “lost” between the 
 | Configurable top-K and similarity threshold (p.5) | FEAT-19, AC-CORE-21 | Property names/values → `rag-ingestion.md` |
 | Document chunking + embedding justification (p.5–6) | FEAT-20, AC-CORE-19 | Narrative in `architecture.md` §16; numbers in `rag-ingestion.md` |
 | Core acceptance checklist (p.6) | §8 **AC-CORE-01…23**, §8.7 demo script | Sign-off uses §8.6 checklist |
-| Process artefacts + token optimisation (p.1–2) | §6.8, §7 NFR-01…11, FEAT-23 | Demo steps 15, 18; `docs/ai-mistakes.md` when first entry |
+| Process artefacts + token optimisation (p.1–2) | §6.8, §7 NFR-01…11, FEAT-23 | Demo steps 15, 18; [`docs/ai-error.md`](../docs/ai-error.md) |
 | `POST /api/ai/ask` request `{ "question": "..." }` (p.5) | FEAT-15, §2.6 | Response shape **Agreed** → **DEC-11**; request limits → [`rag-api-contract.md`](rag-api-contract.md) §6 |
 | PDF spec file list (ten names, p.1–2) | Child-spec table (top); §6.8; [`docs/assessment-brief.md`](../docs/assessment-brief.md) §4 | **Ten** files on disk; PDF filename [`ui-flow.md`](ui-flow.md) |
 
@@ -106,7 +106,7 @@ Use this checklist during sign-off: every bullet below appears **verbatim or res
 | Hygiene: Java Spring Boot, testing, API standards, documentation skills, RAG/vector guidelines; review code/spec/tests; **review RAG output for hallucination** | §6.8 | `rules/*.md`, `commands/review-*.md` |
 | Spec set: `requirements`, `architecture`, `data-model`, `api-contract`, `state-machine`, `rag-ingestion`, `rag-api-contract`, `evaluation-strategy`, `ui-flow`, `test-strategy` | Child-spec table (header) | `ui-flow` → [`ui-flow.md`](ui-flow.md) |
 | Prompt history: `.specstory/history/` + `docs/prompt-history.md` | §6.8, NFR-01 | `commands/update-prompt-history.md` |
-| Document ≥1 meaningful AI mistake (wrong code **or** ungrounded RAG answer) | AC-CORE-23, §8.7 step 18 | `docs/ai-mistakes.md` (when first entry exists) |
+| Document ≥1 meaningful AI mistake (wrong code **or** ungrounded RAG answer) | AC-CORE-23, §8.7 step 18 | [`docs/ai-error.md`](../docs/ai-error.md) (alias `docs/ai-mistakes.md`) |
 | Token optimisation: Graphify, Caveman, Codebase-memory MCP; prompt caching for static instructions | NFR-11, §6.8 | `.cursor/rules/graphify.mdc` |
 | Stack: Java 21, Spring Boot, Spring AI, PostgreSQL/H2, embedding model, vector store (PGVector/Chroma), REST, React/Next or equivalent, Cursor/Copilot/Kiro | §2.1, §6.1, IR-* | [`architecture.md`](architecture.md) §7 |
 | Learning goals: specs for AI-native feature; SDD for CRUD **and** RAG; validate AI code **and** answers; test deterministic SM **and** probabilistic retrieval | §1.3, §2.5, FEAT-22 | [`test-strategy.md`](test-strategy.md), [`evaluation-strategy.md`](evaluation-strategy.md) |
@@ -1088,7 +1088,8 @@ Maintain steering artefacts including at minimum (**PDF**). Repo paths (edit `ru
 | Review AI output (hallucination / ungrounded answers) | `commands/review-rag-output.md` |
 | *(Convention)* Review frontend | `commands/review-frontend.md` — not named in PDF |
 | *(Convention)* Refresh prompt-history index | `commands/update-prompt-history.md` — rebuild `docs/prompt-history.md` from `.specstory/history/` |
-| *(Convention)* Re-align existing specs/rules/docs with assignment | `commands/improve-from-assessment-pdf.md` — `docs/Assessments.docx`; edit-only; skips `docs/prompt-history.md` |
+| *(Convention)* Update AI error log | `commands/update-ai-error.md` — chronological [`docs/ai-error.md`](../docs/ai-error.md); `docs/ai-mistakes.md` is a pointer |
+| *(Convention)* Re-align existing specs/rules/docs with assignment | `commands/improve-from-assessment-pdf.md` — `docs/Assessments.docx`; edit-only; skips `docs/prompt-history.md` and `docs/ai-error.md` |
 | PDF spec file list before implementation (p.1–2; ten names; `ui-flow.md` → `ui-flow.md`) | Ten `spec/*.md` files — index in [`rules/documentation.md`](../rules/documentation.md); child-spec table (top) |
 
 Demonstrate **reusable AI instructions** across the project (**PDF**).
@@ -1102,7 +1103,7 @@ Demonstrate **reusable AI instructions** across the project (**PDF**).
 
 **Secrets (**PDF** acceptance):** No secrets committed to the repository.
 
-**AI mistake log (**PDF** acceptance):** Document ≥1 meaningful mistake (wrong code and/or ungrounded RAG answer).
+**AI mistake log (**PDF** acceptance):** Document ≥1 meaningful mistake (wrong code and/or ungrounded RAG answer) in [`docs/ai-error.md`](../docs/ai-error.md) (chronological; include how it was resolved). [`docs/ai-mistakes.md`](../docs/ai-mistakes.md) is a pointer for this path. Maintain with `commands/update-ai-error.md`.
 
 ### 6.9 Implementation requirements index
 
@@ -1201,7 +1202,7 @@ The solution is complete when every item below passes. Each item expands the PDF
 | PDF checklist | Detailed acceptance criteria | Feature / flow |
 |---------------|------------------------------|----------------|
 | No secrets committed | **AC-CORE-22:** Secret scan / manual review finds no keys in repo (**AC-FEAT-23-04**) | FEAT-23 |
-| ≥1 meaningful AI mistake documented | **AC-CORE-23:** `docs/ai-mistakes.md` or agreed log contains substantive entry (**AC-FEAT-23-03**) | FEAT-23 |
+| ≥1 meaningful AI mistake documented | **AC-CORE-23:** [`docs/ai-error.md`](../docs/ai-error.md) contains a substantive entry (**AC-FEAT-23-03**); `docs/ai-mistakes.md` points there | FEAT-23 |
 
 ### 8.6 Master checklist (sign-off)
 
@@ -1253,7 +1254,7 @@ Repeatable path to demonstrate **AC-CORE-01…23** and **FEAT-22** (retrieval qu
 | 12 | Change top-K/threshold in config; show effect (**Example** observation) | AC-CORE-21 |
 | 13 | Edit ticket text; verify ask reflects update (after re-ingest) | AC-CORE-20; note DEC-01 for close-only |
 | 14 | Run state-machine integration tests (CI or local) | AC-CORE-14 |
-| 15 | Show prompt history + `docs/ai-mistakes.md` entry | AC-CORE-23; process **PDF** |
+| 15 | Show prompt history + [`docs/ai-error.md`](../docs/ai-error.md) entry (`docs/ai-mistakes.md` alias) | AC-CORE-23; process **PDF** |
 | 16 | Confirm no secrets in repo (scan or review) | AC-CORE-22 |
 | 17 | Run retrieval-quality eval on five PDF questions (§4.3 corpus); record verdicts per [`evaluation-strategy.md`](evaluation-strategy.md) §6–§9 | **FEAT-22**, **AC-EVAL-***; learning goal p.2 |
 | 18 | Show hygiene artefacts: `rules/*`, `commands/*`, SpecStory / `docs/prompt-history.md` | **FEAT-23**, NFR-03…05 |
@@ -1463,3 +1464,4 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | Doc sync: hub header **DEC-16–19**; comment/resolution/ask validation traceability → `api-contract.md` / **DEC-17**. |
 | 2026-10-04 | Promoted hub + child spec index to **agreed** (user sign-off; **DEC-01…19** complete). |
 | 2026-10-04 | UI spec filename `ui-model.md` → [`ui-flow.md`](ui-flow.md). |
+| 2026-10-04 | AI error log [`docs/ai-error.md`](../docs/ai-error.md); `update-ai-error` command; `ai-mistakes.md` pointer. |

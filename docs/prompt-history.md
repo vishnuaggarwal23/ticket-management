@@ -51,7 +51,7 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 - Assessment hygiene also expects this index file at `docs/prompt-history.md`.
 - PDF themes and spec coverage: [`spec/requirements.md`](../spec/requirements.md) §0.4 and [`docs/assessment-brief.md`](assessment-brief.md) §13.
 - Human assessment summary: [`docs/assessment-brief.md`](assessment-brief.md).
-- Significant AI mistakes caught during development are logged in `docs/ai-mistakes.md` (create when the first entry exists — **AC-CORE-23**).
+- Significant AI mistakes are logged in [`docs/ai-error.md`](ai-error.md) (chronological; **AC-CORE-23**). Alias [`docs/ai-mistakes.md`](ai-mistakes.md) is a pointer. Refresh with **`/update-ai-error`**.
 
 ## Revision history
 
@@ -66,3 +66,4 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (19 sessions; added 2, updated 2, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (19 sessions; added 0, updated 1, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (23 sessions; added 4, updated 0, removed 0). |
+| 2026-10-04 | Related: canonical AI error log `docs/ai-error.md`; `ai-mistakes.md` pointer. |

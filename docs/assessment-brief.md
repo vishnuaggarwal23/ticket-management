@@ -54,6 +54,7 @@ Regardless of IDE, the PDF requires steering files for standards and review. Thi
 | Review RAG output (hallucination / grounding) | [`commands/review-rag-output.md`](../commands/review-rag-output.md) |
 | Review frontend | [`commands/review-frontend.md`](../commands/review-frontend.md) |
 | Refresh prompt-history index | [`commands/update-prompt-history.md`](../commands/update-prompt-history.md) |
+| Update AI error log | [`commands/update-ai-error.md`](../commands/update-ai-error.md) |
 | Re-align docs with assignment (existing files only) | [`commands/improve-from-assessment-pdf.md`](../commands/improve-from-assessment-pdf.md) — `docs/Assessments.docx` |
 | Reusable AI instructions (Cursor) | `.cursor/rules/*.mdc`, `.cursor/commands/*.md`, `.cursor/skills/` |
 
@@ -105,7 +106,7 @@ Ten standalone files under `spec/`. Ten files include [`ui-flow.md`](../spec/ui-
 | Layer | Location | Notes |
 |-------|----------|--------|
 | Rules (source of truth) | [`rules/`](../rules/) | `java-springboot`, `api-standards`, `testing`, `rag-vector-store`, `frontend`, `documentation` |
-| Commands | [`commands/`](../commands/) | `review-spec`, `generate-tests`, `review-code`, `review-frontend`, `review-rag-output`, `update-prompt-history`, `improve-from-assessment-pdf` |
+| Commands | [`commands/`](../commands/) | `review-spec`, `generate-tests`, `review-code`, `review-frontend`, `review-rag-output`, `update-prompt-history`, `update-ai-error`, `improve-from-assessment-pdf` |
 | Cursor pointers | `.cursor/rules/*.mdc`, `.cursor/commands/*.md` | Do not duplicate rule bodies |
 | Documentation skill | [`skills/documentation/SKILL.md`](../skills/documentation/SKILL.md) | Spec template, artefact index, workflow |
 
@@ -118,7 +119,7 @@ Ten standalone files under `spec/`. Ten files include [`ui-flow.md`](../spec/ui-
 - [`.specstory/history/`](../.specstory/history/) — tracked session history (SpecStory).
 - [`docs/prompt-history.md`](prompt-history.md) — index and expectations.
 
-**AI mistake (PDF p.3, acceptance p.6):** Identify at least one **meaningful** mistake—wrong code **and/or** ungrounded or hallucinated assistant answers. Log in `docs/ai-mistakes.md` when the first entry exists (**not** in repo yet as of 2026-10-04).
+**AI mistake (PDF p.3, acceptance p.6):** Identify at least one **meaningful** mistake—wrong code **and/or** ungrounded or hallucinated assistant answers. Canonical log: [`docs/ai-error.md`](ai-error.md) (chronological; includes how each was resolved). Alias [`docs/ai-mistakes.md`](ai-mistakes.md) for **AC-CORE-23**. Maintain with **`/update-ai-error`**.
 
 ---
 
@@ -356,7 +357,7 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 
 **PDF spec filenames (p.1–2, ten names → ten repo files):** includes [`ui-flow.md`](../spec/ui-flow.md).
 
-**Outstanding PDF delivery (not missing from specs — evidence at demo time):** `docs/ai-mistakes.md` first entry (**AC-CORE-23**); local verify Ollama `nomic-embed-text` → **768** dims; runnable app + demo §8.7.
+**Outstanding PDF delivery (not missing from specs — evidence at demo time):** [`docs/ai-error.md`](ai-error.md) (**AC-CORE-23**); local verify Ollama `nomic-embed-text` → **768** dims; runnable app + demo §8.7.
 
 ---
 
@@ -410,3 +411,4 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 | 2026-10-04 | §4 spec table + §13: requirements §0.5 and per-spec §0 maps; steering sync with `rules/` / `commands/` / `skills/`. |
 | 2026-10-04 | §14: hub §0.8 heading unit suffix; in-spec search `· unit **` for chunk jump. |
 | 2026-10-04 | **DEC-01…19** agreed; §7 conventions, §10 RAG, §12 decision table; steering sync with `rules/` / `commands/` / `skills/`. |
+| 2026-10-04 | AI error log [`docs/ai-error.md`](ai-error.md); `/update-ai-error`; `ai-mistakes.md` pointer. |

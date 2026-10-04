@@ -22,10 +22,10 @@ alwaysApply: true
 | Commands | `commands/*.md`; `.cursor/commands/*.md` pointers only |
 | Specs before code | `spec/` — see `rules/documentation.md` for the full list and `architecture.md` section map |
 | Prompt history | SpecStory → `.specstory/history/`; index `docs/prompt-history.md` |
-| AI mistakes (PDF) | `docs/ai-mistakes.md` when at least one meaningful mistake is caught |
+| AI mistakes (PDF) | `docs/ai-error.md` (chronological); `docs/ai-mistakes.md` is a pointer |
 | RAG eval approach | `spec/evaluation-strategy.md` (retrieval quality — not unit golden strings) |
 
-**Commands:** `review-code`, `review-frontend`, `review-spec`, `generate-tests`, `review-rag-output`, `update-prompt-history`, `improve-from-assessment-pdf` (edit existing `spec/` / `rules/` / `commands/` / `skills/` / `docs/` from `docs/Assessments.docx`; no new files; skip `docs/prompt-history.md`).
+**Commands:** `review-code`, `review-frontend`, `review-spec`, `generate-tests`, `review-rag-output`, `update-prompt-history`, `update-ai-error`, `improve-from-assessment-pdf` (edit existing `spec/` / `rules/` / `commands/` / `skills/` / `docs/` from `docs/Assessments.docx`; no new files; skip `docs/prompt-history.md` and `docs/ai-error.md`).
 
 ## When reviewing AI output
 
@@ -35,6 +35,7 @@ alwaysApply: true
 - **Ask answers:** `commands/review-rag-output.md` — every claim traceable to cited ticket ids from retrieval; honest no-match when nothing relevant.
 - **Tests:** `commands/generate-tests.md` — backend only.
 - **Prompt index:** `commands/update-prompt-history.md` — rebuild `docs/prompt-history.md` from `.specstory/history/`.
+- **AI error log:** `commands/update-ai-error.md` — chronological [`docs/ai-error.md`](../../docs/ai-error.md).
 - Prefer these commands over ad-hoc “looks fine”.
 - Document meaningful mistakes per `rules/documentation.md`.
 

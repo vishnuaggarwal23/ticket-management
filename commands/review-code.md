@@ -164,7 +164,7 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 
 - [ ] Types, annotations, and Spring APIs exist on the agreed stack (Boot 3, Jakarta, no hallucinated libraries)
 - [ ] No copied copyrighted dumps; no credentials in the diff
-- [ ] Meaningful AI mistakes noted for `docs/ai-mistakes.md` (propose; do not write unless asked)
+- [ ] Meaningful AI mistakes proposed for [`docs/ai-error.md`](../docs/ai-error.md) (write via **`/update-ai-error`**; do not invent RAG fails)
 
 ---
 
@@ -196,3 +196,4 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 | 2026-10-04 | **DEC-01…19** agreed; review checklist updated. |
 | 2026-10-04 | Java/Spring Boot review bar: coding guidelines, practices, naming, and packaging (`rules/java-springboot.md`). |
 | 2026-10-04 | Packaging: group/split by layer and logical concern; reject a single dump package. |
+| 2026-10-04 | AI mistakes: propose [`docs/ai-error.md`](../docs/ai-error.md); `/update-ai-error` writes the log. |

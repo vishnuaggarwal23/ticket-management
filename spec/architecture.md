@@ -669,7 +669,7 @@ Citations satisfy **AC-CORE-17** in UI; grounding review still uses `commands/re
 
 ### 12.6 Process UI evidence (**PDF** p.1–2)
 
-Not product screens — demo evidence for **FEAT-23**: SpecStory / `.specstory/history/`, [`docs/prompt-history.md`](../docs/prompt-history.md), and `docs/ai-mistakes.md` when populated (**AC-CORE-23**).
+Not product screens — demo evidence for **FEAT-23**: SpecStory / `.specstory/history/`, [`docs/prompt-history.md`](../docs/prompt-history.md), and [`docs/ai-error.md`](../docs/ai-error.md) (**AC-CORE-23**; `docs/ai-mistakes.md` is a pointer).
 
 ---
 
@@ -1050,3 +1050,4 @@ Architecture supports verification of:
 | 2026-10-04 | §0 guide: verbatim PDF RAG flow diagram; PDF theme map; BRF/FRI/IRI at architecture level. |
 | 2026-10-04 | §0.3 **ARCH-*** independent reading units for modular architecture review. |
 | 2026-10-04 | Major `##` headings tagged with **ARCH-*** unit ids. |
+| 2026-10-04 | FEAT-23 evidence: [`docs/ai-error.md`](../docs/ai-error.md); `ai-mistakes.md` pointer. |

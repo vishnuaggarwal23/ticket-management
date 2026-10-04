@@ -11,6 +11,7 @@ Use these during implementation and review. **Edit `rules/` and `commands/`**; `
 | Topic | Rule | Command(s) |
 |-------|------|------------|
 | Backend Java / Spring | `rules/java-springboot.md` | `commands/review-code.md` |
+| AI error log (chronological) | `rules/documentation.md` (this section) | `commands/update-ai-error.md` |
 | REST envelopes, `/api/v1`, list params, agreed ticket JSON fields | `rules/api-standards.md` (+ [`spec/data-model.md`](../spec/data-model.md)) | `commands/review-code.md` |
 | Tests (backend only) | `rules/testing.md` | `commands/generate-tests.md`, `commands/review-code.md` |
 | RAG ingest / ask / grounding | `rules/rag-vector-store.md` | `commands/review-rag-output.md`, `commands/review-code.md` |
@@ -30,7 +31,7 @@ Authoritative assignment: [`docs/Assessments.docx`](../docs/Assessments.docx). E
 | React / Vite / TypeScript UI diff before merge | `commands/review-frontend.md` |
 | Manual or demo check of an `/api/ai/ask` answer | `commands/review-rag-output.md` |
 | Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md); hub [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 |
-| Caught wrong AI code or ungrounded answer | Note in `docs/ai-mistakes.md` (see below) |
+| Caught wrong AI code or ungrounded answer | `commands/update-ai-error.md` → [`docs/ai-error.md`](../docs/ai-error.md) (see below) |
 | SpecStory saved new session(s); index stale | `commands/update-prompt-history.md` |
 | Assignment drift; tighten docs without new files | `commands/improve-from-assessment-pdf.md` (`docs/Assessments.docx`) |
 
@@ -42,7 +43,7 @@ Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks
 |----------|----------|
 | Assessment (authoritative assignment) | [`docs/Assessments.docx`](../docs/Assessments.docx); restated in [`spec/requirements.md`](../spec/requirements.md) |
 | Implementable specs | `spec/` (see list below) |
-| Human docs / notes | `docs/` (e.g. `docs/assessment-brief.md`, `docs/prompt-history.md`, `docs/ai-mistakes.md`) |
+| Human docs / notes | `docs/` (e.g. `docs/assessment-brief.md`, `docs/prompt-history.md`, [`docs/ai-error.md`](../docs/ai-error.md); `docs/ai-mistakes.md` is a pointer) |
 | Prompt / session history | `.specstory/history/` |
 | Engineering rules | `rules/` → `.cursor/rules/*.mdc` pointers |
 | Slash commands | `commands/` → `.cursor/commands/*.md` pointers |
@@ -254,17 +255,19 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 
 The assessment requires **at least one meaningful mistake** caught (wrong code **or** ungrounded RAG answer), documented to show AI is not blindly trusted.
 
-When that happens, add an entry to **`docs/ai-mistakes.md`** (create the file on first entry):
+**Canonical log:** [`docs/ai-error.md`](../docs/ai-error.md) — chronological, oldest first; each entry includes what was wrong, how it was detected, and **how it was resolved**. **AC-CORE-23** filename alias: [`docs/ai-mistakes.md`](../docs/ai-mistakes.md) (pointer only).
+
+When a new mistake is caught, run **`commands/update-ai-error.md`** (slash **`/update-ai-error`**). Do not invent RAG hallucinations. Review commands may **propose** an entry; writing the log is that command (or an explicit user ask).
 
 ```markdown
-## YYYY-MM-DD — short title
+## AE-NNN
 
+- **When:** YYYY-MM-DD HH:MM UTC
+- **Kind:** spec / docs | process | code | RAG
 - **What was wrong:** …
 - **How detected:** review command / test / manual check …
-- **Fix:** …
+- **How resolved:** …
 ```
-
-Review commands may **propose** an entry; confirm with the user before writing.
 
 ## Token optimisation (PDF)
 
@@ -315,3 +318,4 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Doc sync: architecture §13.2 **DEC-18**; api/rag reviewer maps **DEC-17**. |
 | 2026-10-04 | Ten-file spec set promoted to **agreed**; index table updated. |
 | 2026-10-04 | UI spec filename `ui-model.md` → [`ui-flow.md`](../spec/ui-flow.md) (PDF name). |
+| 2026-10-04 | Canonical AI error log [`docs/ai-error.md`](../docs/ai-error.md); command `update-ai-error`; `ai-mistakes.md` pointer. |

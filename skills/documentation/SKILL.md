@@ -75,7 +75,8 @@ Implement from these; **draft** unless header says **agreed**. PDF themes: [`req
 | [`review-frontend.md`](../../commands/review-frontend.md) | UI diffs |
 | [`review-rag-output.md`](../../commands/review-rag-output.md) | Manual ask answer / retrieval review |
 | [`update-prompt-history.md`](../../commands/update-prompt-history.md) | Rebuild `docs/prompt-history.md` from `.specstory/history/` |
-| [`improve-from-assessment-pdf.md`](../../commands/improve-from-assessment-pdf.md) | Assignment sync from `docs/Assessments.docx`; improve **existing** artefacts only (not `prompt-history.md`; **no new files**) |
+| [`update-ai-error.md`](../../commands/update-ai-error.md) | Append/insert chronological AI errors in [`docs/ai-error.md`](../../docs/ai-error.md) |
+| [`improve-from-assessment-pdf.md`](../../commands/improve-from-assessment-pdf.md) | Assignment sync from `docs/Assessments.docx`; improve **existing** artefacts only (not `prompt-history.md` or `ai-error.md`; **no new files**) |
 
 ## Spec template (minimum sections)
 
@@ -133,7 +134,7 @@ Map backend tests through [`test-strategy.md`](../../spec/test-strategy.md) firs
 
 ## AI mistake log
 
-When a meaningful AI mistake is caught (bad code or ungrounded answer), add an entry under [`docs/ai-mistakes.md`](../../docs/ai-mistakes.md) with: date, what was wrong, how it was detected, fix.
+When a meaningful AI mistake is caught (bad code or ungrounded answer), run [`commands/update-ai-error.md`](../../commands/update-ai-error.md) so [`docs/ai-error.md`](../../docs/ai-error.md) gets a chronological entry: id, when, kind, what was wrong, how detected, **how resolved**. [`docs/ai-mistakes.md`](../../docs/ai-mistakes.md) is a pointer for **AC-CORE-23**.
 
 ## Revision history
 
@@ -152,3 +153,4 @@ When a meaningful AI mistake is caught (bad code or ungrounded answer), add an e
 | 2026-10-04 | Spec template: **`##` heading unit suffix**; search `· unit **` to jump chunks. |
 | 2026-10-04 | **Reference** label + §2.3; rules/commands sync for out-of-PDF scope. |
 | 2026-10-04 | **DEC-01…19** agreed; RAG/ingest/ask pointers updated; chunk defaults **DEC-16**. |
+| 2026-10-04 | AI error log [`docs/ai-error.md`](../../docs/ai-error.md); command `update-ai-error`. |
