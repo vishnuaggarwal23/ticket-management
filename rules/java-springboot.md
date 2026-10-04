@@ -60,7 +60,13 @@ Layout is **by layer**, matching [`spec/architecture.md`](../spec/architecture.m
   config/         # @Configuration, @ConfigurationProperties, Spring AI wiring
 ```
 
-Use subpackages only when a type set grows (`api.ticket`, `persistence.ticket`). Keep the **ask** path in `rag/` + a thin controller in `api/` — not a second microservice.
+Do **not** put all types in `{root}` or in a single layer package. Group files by **layer first**, then by **logical concern** when more than one concern exists in that layer:
+
+- Ticket HTTP vs ask HTTP: `api.ticket` vs `api.ask` (or equivalent); shared advice stays in `api`
+- Ticket vs comment persistence: `persistence` subpackages when both entity sets exist
+- RAG ingest vs retrieve/ask types: subpackages under `rag/` when those type sets grow
+
+Use subpackages when a type set grows (`api.ticket`, `persistence.ticket`). Do not invent `web`, `dao`, `manager`, or a parallel `controller` tree. Do not over-split (one class per package with no extra types coming). Keep the **ask** path in `rag/` + a thin controller in `api/` — not a second microservice.
 
 The main class stays empty of business logic.
 
@@ -231,3 +237,4 @@ Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machin
 | 2026-10-04 | Pointers to child spec **§0** maps (SM, RAG, architecture); steering sync with `rules/documentation.md`. |
 | 2026-10-04 | **DEC-02** agreed; **Reference** ask fields per requirements §2.3. |
 | 2026-10-04 | `TicketPriority` **CRITICAL**; JSON `URGENT` mapped in `api`; assignee `@Size(max=320)`. |
+| 2026-10-04 | Packaging: group by layer then logical concern; do not dump all types in one package. |
