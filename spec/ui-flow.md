@@ -290,8 +290,8 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 |-------|---------|----------|-------|
 | `title` | Text | **Yes** | **Agreed** — non-blank (DEC-13 / validation) |
 | `description` | Textarea | No | Default empty string allowed |
-| `priority` | Select | No | `LOW` \| `MEDIUM` \| `HIGH` \| `URGENT` (**Agreed** DEC-13); default `MEDIUM` |
-| `assignee` | Text / email input | No | Max 320; email format if present |
+| `priority` | Select | No | `LOW` \| `MEDIUM` \| `HIGH` \| `CRITICAL` (**C-02**); default `MEDIUM`. If a client sends `URGENT`, backend stores `CRITICAL`. |
+| `assignee` | Text | No | Max 320; **not** required to be an email |
 | `category` | Select | No | **Agreed** enum (DEC-03); optional |
 | `status` | — | **Forbidden** | Must not appear on form — server sets **OPEN** (DEC-07) |
 
@@ -653,3 +653,4 @@ Do not close **Open** items in implementation without updating [`requirements.md
 | 2026-10-04 | Doc sync: **DEC-06** agreed; **DEC-18** sync re-ingest UX; **DEC-11** no-match wording. |
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
 | 2026-10-04 | Renamed from `ui-model.md` to PDF filename `ui-flow.md`. |
+| 2026-10-04 | Priority select **`CRITICAL`**; assignee max 320 without email validation (**C-02**, **C-05**). |

@@ -33,7 +33,7 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 - Ticket **id:** public string `TKT-{n}` (`n` from `ticket_number_seq`, start 1001); path param `{id}` uses this value
 - **Create:** `title` required (`@NotBlank`); `description`, `assignee`, `category`, `priority` optional; `priority` defaults `MEDIUM`; `description` defaults empty; **`status` not** on create — server sets `OPEN` (DEC-07)
 - **JSON properties:** camelCase — `resolutionNotes`, `createdAt`, `updatedAt`, `comments`; comment create field **`body`**; enums uppercase (`OPEN`, `HIGH`, `PAYMENTS`, …)
-- **Priority:** `LOW` | `MEDIUM` | `HIGH` | `URGENT` (**DEC-13**)
+- **Priority:** `LOW` | `MEDIUM` | `HIGH` | `CRITICAL` (**DEC-13** / **C-02**). Inbound `"URGENT"` maps to `CRITICAL`; responses never emit `URGENT`.
 - **Category (optional):** `PAYMENTS` | `SHIPMENT` | `BILLING` | `LOGIN` | `OTHER`
 - **Keyword `q`:** case-insensitive match on **`title` and `description` only** (DEC-08); not comments
 - **Status transition:** PATCH `status` with **target** enum per [`spec/state-machine.md`](../spec/state-machine.md) §6.1 (**DEC-06** agreed for assessment scope); illegal → **409** `ILLEGAL_TRANSITION`
@@ -301,7 +301,7 @@ Examples use agreed field names; `spec/api-contract.md` may add narrative only.
 | REST request/response records | [`spec/api-contract.md`](../spec/api-contract.md) §3; DTO names in [`spec/data-model.md`](../spec/data-model.md) §10 |
 | Ask `data` JSON | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**AC-RAG-API-***); URI catalog → [`api-contract.md`](../spec/api-contract.md) §6 |
 
-Do not invent fields beyond these specs. **Assignee** is a nullable string (email-like), not a user FK.
+Do not invent fields beyond these specs. **Assignee** is a nullable string (max 320, **C-05** — not `@Email`), not a user FK.
 
 ## RAG API
 
@@ -388,4 +388,5 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Cross-refs to spec **§0** guides (`api-contract`, `rag-api-contract`, `data-model`). |
 | 2026-10-04 | **Reference** §2.3: out-of-PDF items not API work; DEC register sync. |
 | 2026-10-04 | **DEC-01…19** agreed; priority enum **URGENT** (**DEC-13**); ask **DEC-17**; removed stale open DEC-09/10 text. |
+| 2026-10-04 | Priority canonical **`CRITICAL`**; inbound **`URGENT` → `CRITICAL`**. Assignee `@Size(max=320)` only. |
 | 2026-10-04 | Doc sync: explicit **DEC-17** / **DEC-18** in agreed block; **DEC-06** PATCH unchanged. |

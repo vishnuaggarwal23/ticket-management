@@ -86,7 +86,7 @@ Keep HTTP adapters thin. Repositories must not apply ad-hoc status updates.
 
 - Constructor injection only. Prefer a single `final` constructor (or one compact constructor). No field/`@Autowired` injection, no setter injection.
 - Readable names: `TicketService`, `TicketStatus`, `IllegalTicketTransitionException`. No opaque abbreviations (`TktSvc`, `SM`).
-- Prefer `record` for API DTOs and small immutable values. Use `enum` for `TicketStatus`, `TicketPriority`, `TicketCategory` per [`spec/data-model.md`](../spec/data-model.md) §5. Do not use `String` for those in domain or persistence.
+- Prefer `record` for API DTOs and small immutable values. Use `enum` for `TicketStatus`, `TicketPriority`, `TicketCategory` per [`spec/data-model.md`](../spec/data-model.md) §5. Do not use `String` for those in domain or persistence. `TicketPriority` has **`CRITICAL`** (not `URGENT`); accept JSON `"URGENT"` only via an **API-layer** deserializer that maps it to `CRITICAL`.
 - Public application APIs must not return `null`. Use `Optional` for a missing ticket; empty `List`/`Page` for empty collections.
 - Prefer `final` on injected collaborators. Keep methods short; extract when a service method both mutates a ticket and implements transition tables.
 - Java 21 is fine (`record`, `switch`, text blocks for JPQL or prompts held in config/code as agreed). Do not use `sun.*` APIs.
@@ -141,7 +141,7 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 ## DTOs
 
 - Request and response types are **records** in `api` (or `api.dto`). They are the HTTP contract, not JPA entities.
-- Put Bean Validation on **request** records to match [`spec/data-model.md`](../spec/data-model.md) §16 (e.g. `@NotBlank` on create `title`, `@Size` limits). Do not add required fields beyond that spec.
+- Put Bean Validation on **request** records to match [`spec/data-model.md`](../spec/data-model.md) §16 (e.g. `@NotBlank` on create `title`, `@Size` limits). Assignee: `@Size(max = 320)` only — **not** `@Email`. Do not add required fields beyond that spec.
 - Map explicitly in the service or a dedicated mapper type in `api`/`service`. No bidirectional JPA graphs in JSON.
 - Ask response must represent grounded answer + cited ticket ids **or** honest no-match per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** agreed). Do not add **confidence** or other **Reference** ask fields ([`spec/requirements.md`](../spec/requirements.md) **§2.3**).
 - Do not return persistence entities from controllers. Do not put Jackson annotations on entities to “make the API work.”
@@ -230,3 +230,4 @@ Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machin
 | 2026-10-04 | HTTP payloads: draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | Pointers to child spec **§0** maps (SM, RAG, architecture); steering sync with `rules/documentation.md`. |
 | 2026-10-04 | **DEC-02** agreed; **Reference** ask fields per requirements §2.3. |
+| 2026-10-04 | `TicketPriority` **CRITICAL**; JSON `URGENT` mapped in `api`; assignee `@Size(max=320)`. |

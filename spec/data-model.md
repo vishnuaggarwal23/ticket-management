@@ -225,7 +225,7 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 
 ### 5.2 `TicketPriority` (**PDF** requires priority field; values **Agreed DEC-13**)
 
-**Agreed (DEC-13):** Closed set:
+**Agreed (DEC-13 + C-02, 2026-10-04):** Closed set stored and returned:
 
 | Constant | Sort order (for `sort=priority`) |
 |----------|----------------------------------|
@@ -233,6 +233,8 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 | `MEDIUM` | 2 |
 | `HIGH` | 3 |
 | `CRITICAL` | 4 |
+
+**Inbound alias:** JSON `"URGENT"` on create/PATCH is **accepted** and **mapped to `CRITICAL`**. Persistence and responses use only `CRITICAL`. The Java/domain enum **must not** include `URGENT`. Mapping is an API Jackson deserializer (not a second stored value). Unknown strings remain **400** `VALIDATION_ERROR`.
 
 **Agreed:** Create default `MEDIUM` if omitted.
 
@@ -252,7 +254,7 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 
 ### 5.4 `Assignee` (value object, **Convention**)
 
-**Convention:** `assignee` is a nullable `VARCHAR(320)` holding an **email-like** identifier (e.g. `sam@example.com`). No user directory or FK.
+**Convention:** `assignee` is a nullable `VARCHAR(320)` identifier (examples may look like `sam@example.com`). No user directory or FK. Validation is **`@Size(max = 320)` only** — not `@Email` (**C-05**, 2026-10-04).
 
 ### 5.5 `TicketId` (value object, **Agreed DEC-04**)
 
@@ -487,7 +489,7 @@ Field names below are **Agreed** with this data model; HTTP paths, scenarios, an
 | `title` | `String` | `@NotBlank`, `@Size(max = 500)` |
 | `description` | `String` | `@Size(max = 100_000)` optional |
 | `priority` | `TicketPriority` | optional → default `MEDIUM` |
-| `assignee` | `String` | `@Email` optional (or `@Size` if email too strict) |
+| `assignee` | `String` | `@Size(max = 320)` optional (**C-05** — not `@Email`) |
 | `category` | `TicketCategory` | optional |
 
 **`UpdateTicketRequest`** (PATCH — partial)
@@ -958,3 +960,4 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | Major `##` headings tagged with **DM-*** unit ids. |
 | 2026-10-04 | **DEC-09/10/18:** `vector(768)`, PostgreSQL-only note, empty-ticket ingest skip cross-ref. |
 | 2026-10-04 | Doc sync: vector consistency row aligned with **DEC-18** (no async ingest). |
+| 2026-10-04 | **C-02:** `CRITICAL` canonical; inbound JSON `URGENT` → `CRITICAL`. **C-05:** assignee `@Size(max=320)` only. |

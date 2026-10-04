@@ -192,10 +192,10 @@ From [`data-model.md`](data-model.md) §5:
 | Enum | Values |
 |------|--------|
 | `status` | `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED` |
-| `priority` | `LOW`, `MEDIUM`, `HIGH`, `CRITICAL` |
+| `priority` | `LOW`, `MEDIUM`, `HIGH`, `CRITICAL` (inbound `"URGENT"` maps to `CRITICAL`) |
 | `category` | `PAYMENTS`, `SHIPMENT`, `BILLING`, `LOGIN`, `OTHER` |
 
-Invalid enum on write or query → **400** `VALIDATION_ERROR`.
+Invalid enum on write or query → **400** `VALIDATION_ERROR`. Exception: request `"priority": "URGENT"` is **not** invalid — it is stored and returned as **`CRITICAL`** ([`data-model.md`](data-model.md) §5.2 **C-02**).
 
 ### 2.7 Ticket identifier
 
@@ -453,8 +453,8 @@ Extends summary fields plus:
 |----------|------|----------|------------|
 | `title` | string | yes | Non-blank, max 500 |
 | `description` | string | no | Max 100_000; default `""` |
-| `priority` | string | no | Enum; default `MEDIUM` |
-| `assignee` | string | no | Max 320; email format if present |
+| `priority` | string | no | Enum; default `MEDIUM`. `"URGENT"` → `CRITICAL` |
+| `assignee` | string | no | Max 320 (`@Size` only; not email-format required) |
 | `category` | string | no | Enum |
 | `status` | — | **forbidden** | **DEC-07** — if sent → **400** `VALIDATION_ERROR` |
 
@@ -464,7 +464,7 @@ Extends summary fields plus:
 |----------|------|----------|-------|
 | `title` | string | no | Max 500 |
 | `description` | string | no | Max 100_000 |
-| `priority` | string | no | Enum |
+| `priority` | string | no | Enum. `"URGENT"` → `CRITICAL` |
 | `assignee` | string | no | Max 320 |
 | `category` | string | no | Enum |
 | `resolutionNotes` | string | no | Max 100_000 |
@@ -582,7 +582,8 @@ curl -sS -D - -X POST 'http://localhost:8080/api/v1/tickets' \
 | Missing `title` | 400 | `VALIDATION_ERROR` | `details` on `title` (see §2.10) |
 | Blank `title` `"   "` | 400 | `VALIDATION_ERROR` | Treated as blank after trim |
 | `title` over 500 chars | 400 | `VALIDATION_ERROR` | |
-| Invalid `priority` / `category` | 400 | `VALIDATION_ERROR` | e.g. `"priority": "CRITICAL"` |
+| Invalid `priority` / `category` | 400 | `VALIDATION_ERROR` | e.g. `"priority": "P1"` |
+| `"priority": "URGENT"` | 201 | — | Stored and returned as **`CRITICAL`** (**C-02**) |
 | Client sends `status` | 400 | `VALIDATION_ERROR` | Field `status` rejected on create (**DEC-07**) |
 | Malformed JSON | 400 | `BAD_REQUEST` | §2.10 |
 | Unknown JSON properties | 201 | — | **Convention:** ignore unknown keys (e.g. `"foo": 1`) |
@@ -1354,3 +1355,4 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | 2026-10-04 | §0 document guide: PDF→endpoint map; business/functional/implementation triad; label legend. |
 | 2026-10-04 | §0.3 **API-*** independent reading units (envelopes → CRUD → ask boundary). |
 | 2026-10-04 | Major `##` headings tagged with **API-*** unit ids. |
+| 2026-10-04 | **C-02:** inbound `URGENT` → `CRITICAL`; invalid priority example `P1`. **C-05:** assignee max 320, not email-required. |
