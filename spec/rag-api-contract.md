@@ -2,7 +2,7 @@
 
 > **Status:** agreed (2026-10-04) — **PDF**-named spec for natural-language Q&A over ingested ticket text. HTTP envelopes and shared REST rules → `rules/api-standards.md`. Ticket REST → [`api-contract.md`](api-contract.md) §4–§5. Ingestion → [`rag-ingestion.md`](rag-ingestion.md); pipeline → [`architecture.md`](architecture.md) §15. **DEC-11**, **DEC-17**.  
 > **Primary source:** `docs/Assessments.docx` (RAG & Assistant Requirements, Core Acceptance Criteria p.5–6).  
-> **Related:** [`requirements.md`](requirements.md) FEAT-15…18, Flows B/E, **AC-CORE-16…18**; UI display → [`ui-model.md`](ui-model.md) §10; grounding review → `commands/review-rag-output.md`; retrieval quality → [`evaluation-strategy.md`](evaluation-strategy.md).
+> **Related:** [`requirements.md`](requirements.md) FEAT-15…18, Flows B/E, **AC-CORE-16…18**; UI display → [`ui-flow.md`](ui-flow.md) §10; grounding review → `commands/review-rag-output.md`; retrieval quality → [`evaluation-strategy.md`](evaluation-strategy.md).
 
 **Label legend**
 
@@ -129,7 +129,7 @@ This document defines the **public RAG API contract**: paths, request/response J
 | Ticket CRUD REST | [`api-contract.md`](api-contract.md) |
 | Ingest, chunk, embed, re-ingest | [`rag-ingestion.md`](rag-ingestion.md) |
 | Retrieval quality eval procedure | [`evaluation-strategy.md`](evaluation-strategy.md) |
-| Ask UI layout | [`ui-model.md`](ui-model.md) |
+| Ask UI layout | [`ui-flow.md`](ui-flow.md) |
 | Auth, rate limits, streaming SSE | **Open** — not in **PDF** |
 | Confidence scores, retrieved chunk bodies in JSON | **PDF** does not require |
 | Agent tools, multi-turn threads, follow-up actions | **PDF** explicitly out of scope |
@@ -367,7 +367,7 @@ Content-Type: application/json;charset=UTF-8
 | **Granularity** | Ticket-level ids (**PDF** “cite specific ticket(s)”) — not comment uuid or chunk uuid in v1 |
 | **Ordering** | **Agreed (DEC-17):** preserve **retrieval relevance order** (highest similarity first); map from ranked chunks to ticket ids without reordering by lexicographic id |
 | **Duplicates** | **Agreed (DEC-17):** dedupe ticket ids while **preserving first occurrence** order |
-| **UI** | Clients link each id to ticket detail ([`ui-model.md`](ui-model.md) §10.2) |
+| **UI** | Clients link each id to ticket detail ([`ui-flow.md`](ui-flow.md) §10.2) |
 
 ### 9.3 Review
 

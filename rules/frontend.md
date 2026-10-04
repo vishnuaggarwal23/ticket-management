@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-model.md`](../spec/ui-model.md) (**§0** PDF ui-flow map; **AC-UI-***). Stack **agreed** **DEC-15** (React+Vite+TS); transition API **agreed** **DEC-06** (PATCH `status`). Out-of-PDF UI (**Reference** — do not build): [`spec/requirements.md`](../spec/requirements.md) **§2.3**. UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E, **§0.5**, and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-flow.md`](../spec/ui-flow.md) (**§0** PDF ui-flow map; **AC-UI-***). Stack **agreed** **DEC-15** (React+Vite+TS); transition API **agreed** **DEC-06** (PATCH `status`). Out-of-PDF UI (**Reference** — do not build): [`spec/requirements.md`](../spec/requirements.md) **§2.3**. UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E, **§0.5**, and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
 
 **This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
 
@@ -12,7 +12,7 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows:
 | [`spec/architecture.md`](../spec/architecture.md) | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
 | [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client types |
-| [`spec/ui-model.md`](../spec/ui-model.md) | Screens, CRUD flows, ask/RAG UX, **AC-UI-*** |
+| [`spec/ui-flow.md`](../spec/ui-flow.md) | Screens, CRUD flows, ask/RAG UX, **AC-UI-*** |
 | [`spec/architecture.md`](../spec/architecture.md) §12 | Frontend architecture summary |
 | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Citation / no-match fields inside ask `data` (**DEC-11** agreed) |
 
@@ -118,7 +118,7 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 - Ask: POST JSON `{ "question" }` to `/api/v1/ai/ask`. Loading + result. Citations = ticket ids from `data` (per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md)). No-match: show API text honestly — e.g. “No relevant tickets found” — not a dressed-up model essay.
 - Do not hardcode machine hosts. Do not commit secrets.
 
-## Capabilities the UI must support (when `ui-model.md` agrees how)
+## Capabilities the UI must support (when `ui-flow.md` agrees how)
 
 | Capability | Notes |
 |------------|--------|
@@ -152,7 +152,7 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 
 ## Spec-driven implementation
 
-- Implement behaviour from [`spec/ui-model.md`](../spec/ui-model.md) plus API/RAG contracts. For screens or flows not covered there, **stop and confirm** rather than inventing.
+- Implement behaviour from [`spec/ui-flow.md`](../spec/ui-flow.md) plus API/RAG contracts. For screens or flows not covered there, **stop and confirm** rather than inventing.
 - Do not add auth screens unless a spec agrees.
 
 ## Do not
@@ -176,7 +176,7 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 | 2026-10-04 | Ticket id, category, resolutionNotes, create requiredness from agreed [`spec/data-model.md`](../spec/data-model.md). |
 | 2026-10-04 | API client types: draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | UI flows: requirements §4.1 / §8.7 + architecture §12.3–§12.6 (consolidated PDF `ui-flow` themes). |
-| 2026-10-04 | Product UI detail → [`spec/ui-model.md`](../spec/ui-model.md); architecture §12 summary. |
-| 2026-10-04 | `improve-from-assessment-pdf`: PDF `ui-flow.md` → `ui-model.md` (not `spec/ui-flow.md`). |
-| 2026-10-04 | Pointers to [`ui-model.md`](../spec/ui-model.md) **§0** and requirements **§0.5**. |
+| 2026-10-04 | Product UI detail → [`spec/ui-flow.md`](../spec/ui-flow.md); architecture §12 summary. |
+| 2026-10-04 | `improve-from-assessment-pdf`: PDF UI spec is [`spec/ui-flow.md`](../spec/ui-flow.md). |
+| 2026-10-04 | Pointers to [`ui-flow.md`](../spec/ui-flow.md) **§0** and requirements **§0.5**. |
 | 2026-10-04 | **DEC-15**/**DEC-11** agreed; **Reference** §2.3 — no UI for out-of-PDF features. |

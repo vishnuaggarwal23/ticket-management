@@ -6976,23 +6976,59 @@ promote, commit, push
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Promoting all specs from draft to agreed.
+
+Committing and pushing the changes now. Reading spec headers and revision history first to patch consistently.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Promoting remaining specs to agreed, then committing and pushing. Gathering current headers and git state.
+
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "^\\\u003e \\*\\*Status:\\*\\*"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "^\\\u003e \\*\\*Status:\\*\\*",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
 
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
 
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
 
 </details></tool-use>
 
@@ -7002,5 +7038,2743 @@ _**Agent (auto-smart)**_
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git log -3 --oneline &amp;&amp; git branch -vv</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git log -3 --oneline && git branch -vv
+```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md
+	modified:   commands/generate-tests.md
+	modified:   commands/review-code.md
+	modified:   commands/review-frontend.md
+	modified:   commands/review-spec.md
+	modified:   docs/assessment-brief.md
+	modified:   rules/api-standards.md
+	modified:   rules/documentation.md
+	modified:   rules/frontend.md
+	modified:   rules/java-springboot.md
+	modified:   rules/rag-vector-store.md
+	modified:   rules/testing.md
+	modified:   skills/documentation/SKILL.md
+	modified:   spec/api-contract.md
+	modified:   spec/architecture.md
+	modified:   spec/data-model.md
+	modified:   spec/evaluation-strategy.md
+	modified:   spec/rag-api-contract.md
+	modified:   spec/rag-ingestion.md
+	modified:   spec/requirements.md
+	modified:   spec/state-machine.md
+	modified:   spec/test-strategy.md
+	modified:   spec/ui-model.md
+
+7e72d73 Agree PDF-backed DECs and document Reference-only out-of-scope items.
+cdf471b Enrich specs with §0 units, PDF traceability, and aligned steering docs.
+7a1d160 Add rag-api-contract spec and align ten-file PDF traceability.
+* main 7e72d73 [origin/main] Agree PDF-backed DECs and document Reference-only out-of-scope items.
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Grep failed due to regex issues. I'll read the status lines directly from each spec file instead.
+
+Reading the first ten lines of each spec file. I'll update the requirements and architecture headers, revision histories, and documentation tables. I'll check review-spec.md for draft references too.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/evaluation-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.md",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "Revision history"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "Revision history",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": "spec/ui-model.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/state-machine.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/rag-api-contract.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/data-model.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/api-contract.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/evaluation-strategy.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/test-strategy.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/rag-ingestion.md"
+    }
+  ],
+  "totalFiles": 10,
+  "totalMatches": 16
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Applying all status updates and revision history rows.
+
+Updating rules/api-standards.md if it still shows draft api-contract. Changing requirements child table "Present (draft)" to "Present (agreed)". Updating documentation.md line 80 about "Still Open". Reading last revision history lines to append. Grepping rules for remaining "draft" references.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "draft"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "draft",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "rules/testing.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "rules/java-springboot.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "rules/rag-vector-store.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "rules/api-standards.md"
+    },
+    {
+      "matchCount": 13,
+      "uri": "rules/documentation.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/frontend.md"
+    }
+  ],
+  "totalFiles": 6,
+  "totalMatches": 26
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Batch updating spec headers, child tables, revision histories, and rules files to change "draft" to "agreed" where appropriate.
+
+Fixing evaluation-strategy header to DEC-16 and updating rag-vector-store line 58. Applying patches, staging all modified files plus the new specstory, then committing and pushing. Commit message: promote ten-file spec set to agreed after DEC-01…19 and doc sync.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Promoting spec headers and syncing rules references, then committing and pushing.
+
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/evaluation-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Adding revision history to the remaining five specifications: rag-ingestion, rag-api-contract, evaluation-strategy, test-strategy, and ui-model.
+
+Updating rules files. Reviewing draft child specs in commands/review-spec. Grepping review-spec for draft.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/evaluation-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md",
+  "pattern": "draft"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md",
+  "pattern": "draft",
+  "topFiles": [
+    {
+      "matchCount": 6,
+      "uri": "commands/review-spec.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 6
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Updating review-spec line 20 to state that all ten specs agreed.
+
+Adding revision history rows to rag-ingestion,ation, test, and ui-model. Updating rules files and documentation.md.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-ingestion.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/evaluation-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/test-strategy.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/api-standards.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/testing.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/java-springboot.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/rag-vector-store.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Staging all changes, committing, and pushing. Running git status, diff, and log in parallel.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline
+```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md
+	modified:   commands/generate-tests.md
+	modified:   commands/review-code.md
+	modified:   commands/review-frontend.md
+	modified:   commands/review-spec.md
+	modified:   docs/assessment-brief.md
+	modified:   rules/api-standards.md
+	modified:   rules/documentation.md
+	modified:   rules/frontend.md
+	modified:   rules/java-springboot.md
+	modified:   rules/rag-vector-store.md
+	modified:   rules/testing.md
+	modified:   skills/documentation/SKILL.md
+	modified:   spec/api-contract.md
+	modified:   spec/architecture.md
+	modified:   spec/data-model.md
+	modified:   spec/evaluation-strategy.md
+	modified:   spec/rag-api-contract.md
+	modified:   spec/rag-ingestion.md
+	modified:   spec/requirements.md
+	modified:   spec/state-machine.md
+	modified:   spec/test-strategy.md
+	modified:   spec/ui-model.md
+
+ .../2026-10-04_08-51-55Z-spec-review-gaps.md       | 5087 ++++++++++++++++++++
+ commands/generate-tests.md                         |    2 +-
+ commands/review-code.md                            |    5 +-
+ commands/review-frontend.md                        |    4 +-
+ commands/review-spec.md                            |    7 +-
+ docs/assessment-brief.md                           |   82 +-
+ rules/api-standards.md                             |   21 +-
+ rules/documentation.md                             |   47 +-
+ rules/frontend.md                                  |    2 +-
+ rules/java-springboot.md                           |    9 +-
+ rules/rag-vector-store.md                          |   28 +-
+ rules/testing.md                                   |  
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Staging all modified files, committing with a heredoc message, and pushing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add .specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md commands/ docs/assessment-brief.md rules/ skills/documentation/SKILL.md spec/ &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Promote ten-file spec set to agreed and sync DEC-01…19 docs.
+
+Record user sign-off on hub and child specs, align rules/commands with agreed contracts (DEC-06/09/10/14/16–19), and capture spec-review session history.
+EOF
+)&#34; &amp;&amp; git status &amp;&amp; git push origin main</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add .specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md commands/ docs/assessment-brief.md rules/ skills/documentation/SKILL.md spec/ && git commit -m "$(cat <<'EOF'
+Promote ten-file spec set to agreed and sync DEC-01…19 docs.
+
+Record user sign-off on hub and child specs, align rules/commands with agreed contracts (DEC-06/09/10/14/16–19), and capture spec-review session history.
+EOF
+)" && git status && git push origin main
+```
+
+```
+[main 47f3ffc] Promote ten-file spec set to agreed and sync DEC-01…19 docs.
+ 23 files changed, 7343 insertions(+), 255 deletions(-)
+ create mode 100644 .specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+To github-personal:vishnuaggarwal23/ticket-management.git
+   7e72d73..47f3ffc  main -> main
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Promoted, committed, and pushed successfully.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+### Promoted to **agreed**
+
+All ten `spec/*.md` files now have `Status: agreed (2026-10-04)` in their headers (including the hub). `spec/requirements.md` child-spec table and `rules/documentation.md` index match.
+
+### Commit & push
+
+- **Commit:** `47f3ffc` — *Promote ten-file spec set to agreed and sync DEC-01…19 docs.*
+- **Branch:** `main` → pushed to `origin/main`
+- **23 files** in that commit: full `spec/` set, `rules/*`, `commands/*`, `skills/documentation/SKILL.md`, `docs/assessment-brief.md`, and SpecStory history for the spec-review session.
+
+Working tree is clean. You can start implementation against the agreed spec set and **DEC-01…19**.
+
+---
+
+_**User**_
+
+rename @spec/ui-model.md to ui-flow.md and update references everywhere
+
+---
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Renaming spec/ui-model.md to spec/ui-flow.md and updating all references.
+
+Starting with a graphify check, then grepping for ui-model references.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+I'll rename `spec/ui-model.md` to `spec/ui-flow.md` and update every reference in the repo. First I'll find all usages, including graph and spec aliases.
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 7,
+      "uri": "rules/frontend.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "commands/review-spec.md"
+    },
+    {
+      "matchCount": 15,
+      "uri": ".specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/ui-model.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "docs/prompt-history.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "spec/test-strategy.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "spec/rag-api-contract.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/review-code.md"
+    },
+    {
+      "matchCount": 68,
+      "uri": ".specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 100,
+      "uri": ".specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "commands/review-frontend.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "spec/api-contract.md"
+    },
+    {
+      "matchCount": 8,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/state-machine.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 9,
+      "uri": "rules/documentation.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".cursor/rules/java-tech-lead-sdd.mdc"
+    },
+    {
+      "matchCount": 41,
+      "uri": ".specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specify/memory/constitution.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "skills/documentation/SKILL.md"
+    }
+  ],
+  "totalFiles": 22,
+  "totalMatches": 321
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-flow"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-flow",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "spec/state-machine.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "rules/documentation.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specify/memory/constitution.md"
+    },
+    {
+      "matchCount": 67,
+      "uri": ".specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": ".specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md"
+    },
+    {
+      "matchCount": 35,
+      "uri": ".specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "spec/ui-model.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "docs/prompt-history.md"
+    },
+    {
+      "matchCount": 9,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 10,
+      "uri": ".specstory/history/2026-10-03_20-00-04Z-assessment-spec-completeness-review.md"
+    },
+    {
+      "matchCount": 16,
+      "uri": ".specstory/history/2026-10-03_15-47-01Z-working-directory-audit.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".specstory/history/2026-10-03_19-43-17Z-data-model-specification.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 21,
+      "uri": ".specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": ".specstory/history/2026-10-03_17-18-27Z-testing-rules-for-cursor.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-09-24_05-40-01Z-project-directory-creation.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md"
+    }
+  ],
+  "totalFiles": 27,
+  "totalMatches": 224
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.claude/skills/graphify/SKILL.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Renaming spec/ui-model.md to spec/ui-flow.md.
+
+Updating references across spec/, rules/, commands/, skills/, docs/, .cursor/, .specify/, and docs/prompt-history.md. Leaving specstory history files untouched.
+
+Will run graphify update afterward to refresh any related references.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+I'll rename the file with git, then update live spec/rules/commands/docs references. SpecStory transcripts stay as historical records.
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc,json,yml,yaml}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 77,
+      "uri": "./.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "./commands/review-spec.md"
+    },
+    {
+      "matchCount": 9,
+      "uri": "./rules/documentation.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./spec/ui-model.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "./spec/test-strategy.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "./spec/rag-api-contract.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "./spec/state-machine.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "./spec/api-contract.md"
+    },
+    {
+      "matchCount": 8,
+      "uri": "./spec/architecture.md"
+    },
+    {
+      "matchCount": 24,
+      "uri": "./spec/requirements.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "./skills/documentation/SKILL.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "./docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "./commands/review-frontend.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./commands/review-code.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "./rules/frontend.md"
+    },
+    {
+      "matchCount": 41,
+      "uri": "./.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 6,
+      "uri": "./commands/improve-from-assessment-pdf.md"
+    },
+    {
+      "matchCount": 15,
+      "uri": "./.specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./docs/prompt-history.md"
+    },
+    {
+      "matchCount": 144,
+      "uri": "./.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    }
+  ],
+  "totalFiles": 22,
+  "totalMatches": 374
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-model.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **2** results in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (2 files)
+
+| File |
+|------|
+| `spec/ui-model.md` |
+| `.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md` |
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Renaming the file via git mv. A script will replace ui-model with ui-flow across live files.
+
+The title will change from "UI model" to "UI flow". The alias blocking spec/ui-flow.md will be removed. Remaining files will be found and updated with perl, excluding specstory and graphify-out.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Renaming the spec file, then bulk-updating live references (excluding SpecStory history).
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 3,
+      "uri": "spec/api-contract.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 6,
+      "uri": "commands/improve-from-assessment-pdf.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/review-code.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/ui-model.md"
+    },
+    {
+      "matchCount": 8,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "spec/rag-api-contract.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "commands/review-frontend.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".cursor/rules/java-tech-lead-sdd.mdc"
+    },
+    {
+      "matchCount": 7,
+      "uri": "commands/review-spec.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specify/memory/constitution.md"
+    },
+    {
+      "matchCount": 5,
+      "uri": "skills/documentation/SKILL.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "docs/prompt-history.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/state-machine.md"
+    },
+    {
+      "matchCount": 9,
+      "uri": "rules/documentation.md"
+    },
+    {
+      "matchCount": 7,
+      "uri": "rules/frontend.md"
+    },
+    {
+      "matchCount": 24,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "spec/test-strategy.md"
+    },
+    {
+      "matchCount": 77,
+      "uri": ".specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 41,
+      "uri": ".specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    }
+  ],
+  "totalFiles": 22,
+  "totalMatches": 330
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": ".cursor/rules/java-tech-lead-sdd.mdc"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 2
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 7,
+      "uri": "docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "docs/prompt-history.md"
+    }
+  ],
+  "totalFiles": 2,
+  "totalMatches": 8
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/skills",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/skills",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 5,
+      "uri": "skills/documentation/SKILL.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 5
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specify",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specify",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": ".specify/memory/constitution.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+First I'll rename the file with git mv. Then I'll run a script to update all references.
+
+The replacement script will target spec/, rules/, commands/, skills/, docs/, .cursor/, and .specify/. It will skip .specstory and graphify-out. The actual history filename in prompt-history must stay untouched. After updating references, the renamed file's title and alias paragraph will be revised.
+
+Remaining requirements.md occurrences will be checked after the bulk replace. The title will change to "UI flow — views, screens, and flows" to match the PDF. Notes about the PDF filename alias and the spec/ui-flow.md exclusion will be removed. The revision history row needs updating too. Other files like evaluation-strategy, data-model, test-strategy, generate-tests, and ai-project-instructions still need checking.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git mv spec/ui-model.md spec/ui-flow.md &amp;&amp; python3 &lt;&lt; &#39;PY&#39;
+from pathlib import Path
+
+roots = [
+    Path(&#34;spec&#34;),
+    Path(&#34;rules&#34;),
+    Path(&#34;commands&#34;),
+    Path(&#34;skills&#34;),
+    Path(&#34;docs&#34;),
+    Path(&#34;.cursor&#34;),
+    Path(&#34;.specify&#34;),
+]
+exts = {&#34;.md&#34;, &#34;.mdc&#34;}
+skip_parts = {&#34;.specstory&#34;, &#34;graphify-out&#34;, &#34;node_modules&#34;}
+
+replacements = [
+    (&#34;spec/ui-model.md&#34;, &#34;spec/ui-flow.md&#34;),
+    (&#34;[`ui-model.md`]&#34;, &#34;[`ui-flow.md`]&#34;),
+    (&#34;(ui-model.md)&#34;, &#34;(ui-flow.md)&#34;),
+    (&#34;../spec/ui-flow.md)&#34;, &#34;../spec/ui-flow.md)&#34;),  # no-op guard
+    (&#34;`ui-model.md`&#34;, &#34;`ui-flow.md`&#34;),
+    (&#34;ui-model.md&#34;, &#34;ui-flow.md&#34;),
+]
+
+# Second pass for remaining alias phrases after filename swap
+phrase_fixes = [
+    (&#34;PDF `ui-flow.md` → `ui-flow.md` filename only&#34;, &#34;PDF filename `ui-flow.md`&#34;),
+    (&#34;PDF `ui-flow.md` → [`ui-flow.md`](ui-flow.md) filename only&#34;, &#34;PDF filename [`ui-flow.md`](ui-flow.md)&#34;),
+    (&#34;(`ui-flow.md` → `ui-flow.md` — see requirements child-spec table)&#34;, &#34;(see requirements child-spec table)&#34;),
+    (&#34;PDF filename alias: `ui-flow.md` → [`ui-flow.md`](../../spec/ui-flow.md)&#34;, &#34;PDF UI spec: [`ui-flow.md`](../../spec/ui-flow.md)&#34;),
+    (&#34;PDF filename alias: `ui-flow.md` → [`ui-flow.md`](../spec/ui-flow.md) only.&#34;, &#34;Ten files include [`ui-flow.md`](../spec/ui-flow.md) (PDF name).&#34;),
+    (&#34;Ten standalone files under `spec/`. PDF filename alias: `ui-flow.md` → [`ui-flow.md`](../spec/ui-flow.md) only.&#34;, &#34;Ten standalone files under `spec/`, including [`ui-flow.md`](../spec/ui-flow.md) (PDF name).&#34;),
+    (&#34;(ui-flow → ui-model)&#34;, &#34;(includes ui-flow.md)&#34;),
+    (&#34;# PDF ui-flow filename (screens, flows, AC-UI-*)&#34;, &#34;# screens, flows, AC-UI-*&#34;),
+    (&#34;`ui-flow.md` (filename alias → `ui-flow.md`), and `test-strategy.md`.&#34;, &#34;`ui-flow.md`, and `test-strategy.md`.&#34;),
+    (&#34;PDF lists `ui-flow.md` → `ui-flow.md` filename only; ten spec files — see `rules/documentation.md`.&#34;, &#34;Ten spec files including `spec/ui-flow.md` — see `rules/documentation.md`.&#34;),
+    (&#34;assignment lists `ui-flow.md` → implemented as [`ui-flow.md`](../spec/ui-flow.md) (do not add `spec/ui-flow.md`). &#34;, &#34;&#34;),
+    (&#34;**PDF filename aliases:** assignment lists `ui-flow.md` → implemented as [`ui-flow.md`](ui-flow.md) (do not add `spec/ui-flow.md`). Ten PDF spec names → **ten** `spec/*.md` files (see child-spec table).&#34;, &#34;Ten PDF spec names → **ten** `spec/*.md` files (see child-spec table), including [`ui-flow.md`](ui-flow.md).&#34;),
+    (&#34;(child-spec table (ten files; `ui-flow` → `ui-model` alias)&#34;, &#34;(child-spec table (ten files including `ui-flow.md`)&#34;),
+    (&#34;child-spec table (ten files; `ui-flow` → `ui-model` alias).&#34;, &#34;child-spec table (ten files including `ui-flow.md`).&#34;),
+    (&#34;no dead `spec/ui-flow.md` links (use `ui-flow.md`)&#34;, &#34;links to `ui-flow.md`&#34;),
+    (&#34;`ui-flow.md` → `ui-flow.md` only&#34;, &#34;`ui-flow.md`&#34;),
+    (&#34;PDF `ui-flow.md` → [`ui-flow.md`]&#34;, &#34;PDF/UI spec [`ui-flow.md`]&#34;),
+    (&#34;PDF `ui-flow.md` → `ui-flow.md` (not `spec/ui-flow.md`).&#34;, &#34;PDF UI spec is [`spec/ui-flow.md`](../spec/ui-flow.md).&#34;),
+    (&#34;do not add `spec/ui-flow.md`.&#34;, &#34;&#34;),
+    (&#34;Do not add `spec/ui-flow.md`.&#34;, &#34;&#34;),
+    (&#34;(do not add `spec/ui-flow.md`)&#34;, &#34;&#34;),
+    (&#34;no separate `ui-flow.md`&#34;, &#34;screen detail in `ui-flow.md`&#34;),
+]
+
+changed = []
+for root in roots:
+    if not root.exists():
+        continue
+    for p in root.rglob(&#34;*&#34;):
+        if not p.is_file() or p.suffix not in exts:
+            continue
+        if any(part in skip_parts for part in p.parts):
+            continue
+        text = p.read_text(encoding=&#34;utf-8&#34;)
+        orig = text
+        for a, b in replacements:
+            text = text.replace(a, b)
+        for a, b in phrase_fixes:
+            text = text.replace(a, b)
+        if text != orig:
+            p.write_text(text, encoding=&#34;utf-8&#34;)
+            changed.append(str(p))
+
+print(&#34;updated&#34;, len(changed), &#34;files&#34;)
+for c in changed:
+    print(c)
+PY</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git mv spec/ui-model.md spec/ui-flow.md && python3 << 'PY'
+from pathlib import Path
+
+roots = [
+    Path("spec"),
+    Path("rules"),
+    Path("commands"),
+    Path("skills"),
+    Path("docs"),
+    Path(".cursor"),
+    Path(".specify"),
+]
+exts = {".md", ".mdc"}
+skip_parts = {".specstory", "graphify-out", "node_modules"}
+
+replacements = [
+    ("spec/ui-model.md", "spec/ui-flow.md"),
+    ("[`ui-model.md`]", "[`ui-flow.md`]"),
+    ("(ui-model.md)", "(ui-flow.md)"),
+    ("../spec/ui-flow.md)", "../spec/ui-flow.md)"),  # no-op guard
+    ("`ui-model.md`", "`ui-flow.md`"),
+    ("ui-model.md", "ui-flow.md"),
+]
+
+# Second pass for remaining alias phrases after filename swap
+phrase_fixes = [
+    ("PDF `ui-flow.md` → `ui-flow.md` filename only", "PDF filename `ui-flow.md`"),
+    ("PDF `ui-flow.md` → [`ui-flow.md`](ui-flow.md) filename only", "PDF filename [`ui-flow.md`](ui-flow.md)"),
+    ("(`ui-flow.md` → `ui-flow.md` — see requirements child-spec table)", "(see requirements child-spec table)"),
+    ("PDF filename alias: `ui-flow.md` → [`ui-flow.md`](../../spec/ui-flow.md)", "PDF UI spec: [`ui-flow.md`](../../spec/ui-flow.md)"),
+    ("PDF filename alias: `ui-flow.md` → [`ui-flow.md`](../spec/ui-flow.md) only.", "Ten files include [`ui-flow.md`](../spec/ui-flow.md) (PDF name)."),
+    ("Ten standalone files under `spec/`. PDF filename alias: `ui-flow.md` → [`ui-flow.md`](../spec/ui-flow.md) only.", "Ten standalone files under `spec/`, including [`ui-flow.md`](../spec/ui-flow.md) (PDF name)."),
+    ("(ui-flow → ui-model)", "(includes ui-flow.md)"),
+    ("# PDF ui-flow filename (screens, flows, AC-UI-*)", "# screens, flows, AC-UI-*"),
+    ("`ui-flow.md` (filename alias → `ui-flow.md`), and `test-strategy.md`.", "`ui-flow.md`, and `test-strategy.md`."),
+    ("PDF lists `ui-flow.md` → `ui-flow.md` filename only; ten spec files — see `rules/documentation.md`.", "Ten spec files including `spec/ui-flow.md` — see `rules/documentation.md`."),
+    ("assignment lists `ui-flow.md` → implemented as [`ui-flow.md`](../spec/ui-flow.md) (do not add `spec/ui-flow.md`). ", ""),
+    ("**PDF filename aliases:** assignment lists `ui-flow.md` → implemented as [`ui-flow.md`](ui-flow.md) (do not add `spec/ui-flow.md`). Ten PDF spec names → **ten** `spec/*.md` files (see child-spec table).", "Ten PDF spec names → **ten** `spec/*.md` files (see child-spec table), including [`ui-flow.md`](ui-flow.md)."),
+    ("(child-spec table (ten files; `ui-flow` → `ui-model` alias)", "(child-spec table (ten files including `ui-flow.md`)"),
+    ("child-spec table (ten files; `ui-flow` → `ui-model` alias).", "child-spec table (ten files including `ui-flow.md`)."),
+    ("no dead `spec/ui-flow.md` links (use `ui-flow.md`)", "links to `ui-flow.md`"),
+    ("`ui-flow.md` → `ui-flow.md` only", "`ui-flow.md`"),
+    ("PDF `ui-flow.md` → [`ui-flow.md`]", "PDF/UI spec [`ui-flow.md`]"),
+    ("PDF `ui-flow.md` → `ui-flow.md` (not `spec/ui-flow.md`).", "PDF UI spec is [`spec/ui-flow.md`](../spec/ui-flow.md)."),
+    ("do not add `spec/ui-flow.md`.", ""),
+    ("Do not add `spec/ui-flow.md`.", ""),
+    ("(do not add `spec/ui-flow.md`)", ""),
+    ("no separate `ui-flow.md`", "screen detail in `ui-flow.md`"),
+]
+
+changed = []
+for root in roots:
+    if not root.exists():
+        continue
+    for p in root.rglob("*"):
+        if not p.is_file() or p.suffix not in exts:
+            continue
+        if any(part in skip_parts for part in p.parts):
+            continue
+        text = p.read_text(encoding="utf-8")
+        orig = text
+        for a, b in replacements:
+            text = text.replace(a, b)
+        for a, b in phrase_fixes:
+            text = text.replace(a, b)
+        if text != orig:
+            p.write_text(text, encoding="utf-8")
+            changed.append(str(p))
+
+print("updated", len(changed), "files")
+for c in changed:
+    print(c)
+PY
+```
+
+```
+updated 18 files
+spec/requirements.md
+spec/architecture.md
+spec/ui-flow.md
+spec/test-strategy.md
+spec/api-contract.md
+spec/rag-api-contract.md
+spec/state-machine.md
+rules/documentation.md
+rules/frontend.md
+commands/improve-from-assessment-pdf.md
+commands/review-spec.md
+commands/review-code.md
+commands/review-frontend.md
+skills/documentation/SKILL.md
+docs/assessment-brief.md
+docs/prompt-history.md
+.cursor/rules/java-tech-lead-sdd.mdc
+.specify/memory/constitution.md
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Remaining ui-model references outside specstory still need checking. The renamed file header needs fixing. Other specs and docs like evaluation-strategy, ai-project-instructions, cursor rules, and generate-tests also need review.
+
+Checking phrase_fixes for leftover awkward double spaces or alias language.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "./docs/prompt-history.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./commands/review-spec.md"
+    },
+    {
+      "matchCount": 77,
+      "uri": "./.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 41,
+      "uri": "./.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 15,
+      "uri": "./.specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md"
+    },
+    {
+      "matchCount": 144,
+      "uri": "./.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    }
+  ],
+  "totalFiles": 6,
+  "totalMatches": 279
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/rules/ai-project-instructions.mdc</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The ui-flow.md header needs cleanup. Remove the alias and update the title.
+
+Several files still reference the old alias. These include documentation.md, review-spec, prompt-history, architecture, requirements, cursor java-tech-lead, evaluation-strategy, generate-tests, data-model, .cursor/rules, revision histories, frontend.md capabilities, and requirements.md.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "do not add|filename alias|ui-model|→ `ui-flow|→ \\[`ui-flow"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "do not add|filename alias|ui-model|→ `ui-flow|→ \\[`ui-flow",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/api-contract.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "docs/prompt-history.md"
+    },
+    {
+      "matchCount": 41,
+      "uri": ".specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 77,
+      "uri": ".specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "rules/documentation.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/testing.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/evaluation-strategy.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/state-machine.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "commands/review-spec.md"
+    },
+    {
+      "matchCount": 8,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 100,
+      "uri": ".specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/rag-api-contract.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "skills/documentation/SKILL.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "commands/improve-from-assessment-pdf.md"
+    },
+    {
+      "matchCount": 15,
+      "uri": ".specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/ui-flow.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md"
+    }
+  ],
+  "totalFiles": 19,
+  "totalMatches": 262
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/rules/ai-project-instructions.mdc</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/rules/java-tech-lead-sdd.mdc</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "ui-model|filename alias|do not add spec/ui-flow"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "ui-model|filename alias|do not add spec/ui-flow",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "ui-model|filename alias"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "ui-model|filename alias",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "commands/improve-from-assessment-pdf.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/review-spec.md"
+    }
+  ],
+  "totalFiles": 2,
+  "totalMatches": 2
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "ui-model|filename alias"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "ui-model|filename alias",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "rules/documentation.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Checking remaining references to ui-flow.md across requirements, architecture, skills, tests, and evaluation.
+
+Reviewing .cursor/rules/ai-project-instructions.mdc and java-tech-lead. Fixing awkward copy. Updating graphify-out. Checking requirements §6.8 and DEC-06 rows.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.md",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "alias|ui-model|do not add"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "alias|ui-model|do not add",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": "spec/evaluation-strategy.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "spec/api-contract.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/ui-flow.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "spec/rag-api-contract.md"
+    }
+  ],
+  "totalFiles": 6,
+  "totalMatches": 13
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/skills",
+  "pattern": "alias|ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/skills",
+  "pattern": "alias|ui-model",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "alias|ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "alias|ui-model",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/improve-from-assessment-pdf.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/skills/documentation/SKILL.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specify/memory/constitution.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Fixing remaining awkward copy with targeted string replacements.
+
+Checking generate-tests, commands/review-code, and frontend pointer mdc for stale references. Grepping ai-project-instructions for leftover ui-model mentions.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/rules/ai-project-instructions.mdc",
+  "pattern": "ui-model|ui-flow"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/rules/ai-project-instructions.mdc",
+  "pattern": "ui-model|ui-flow",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/prompt-history.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/improve-from-assessment-pdf.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Revision rows need to be added to documentation.md and requirements.md.
+
+Checking remaining references to ui-model across live files, architecture docs, and skill tables. Will run graphify update and fix the UI flow reference in commands/review-spec.
+
+Checking spec/requirements for a leftover "ui-flow.md →" reference near line 95.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "ui-flow\\.md →|filename only|ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "ui-flow\\.md →|filename only|ui-model",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands",
+  "pattern": "ui-model",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/ui-flow.md"
+    }
+  ],
+  "totalFiles": 2,
+  "totalMatches": 2
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/rules/ai-project-instructions.mdc</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "ui-model|ui-flow"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "ui-model|ui-flow",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": ".cursor/rules/java-tech-lead-sdd.mdc"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 2
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Updating the review-spec "UI model" row to "UI flow".
+
+Adding revision rows. Grepping generate-tests for references. Checking documentation.mdc and ai-project-instructions for ui-model mentions. Scanning .cursor/skills for speckit references.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc,json}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "./spec/requirements.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./rules/documentation.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./docs/prompt-history.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./spec/architecture.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "./spec/ui-flow.md"
+    },
+    {
+      "matchCount": 77,
+      "uri": "./.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 41,
+      "uri": "./.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md"
+    },
+    {
+      "matchCount": 15,
+      "uri": "./.specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md"
+    },
+    {
+      "matchCount": 144,
+      "uri": "./.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    }
+  ],
+  "totalFiles": 9,
+  "totalMatches": 282
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/improve-from-assessment-pdf.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Live references updated successfully. The original file remains as historical documentation.
+
+Running graphify update to refresh generated outputs. Checking improve-from and generate-tests for stale mappings. Skipping commit per user request.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/improve-from-assessment-pdf.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/generate-tests.md",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/generate-tests.md",
+  "pattern": "ui-model",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.mdc",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor",
+  "pattern": "ui-model",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2**</summary>
+Cancelled
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Line 57 of improve-from still says no dead links to spec/ui-flow.md. That check is now wrong because links to spec/ui-flow.md are intended.
+
+I will fix the improve-from checklist line. Graphify update is blocked by a workspace rule and requires user approval.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/improve-from-assessment-pdf.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "docs/prompt-history.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules",
+  "pattern": "ui-model",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "rules/documentation.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/skills",
+  "pattern": "ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/skills",
+  "pattern": "ui-model",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **1** result in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (1 file)
+
+| File |
+|------|
+| `spec/ui-flow.md` |
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Renamed @spec/ui-model.md to ui-flow.md and updated all references throughout the project.
+
+No commit was made. SpecStory transcripts were left unchanged. graphify-out may still reference the old name until its own update.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Renamed the UI spec to the PDF filename and pointed live docs at it.
+
+**File:** `spec/ui-model.md` → `spec/ui-flow.md` (git mv). Title is now **UI flow**. The old “do not add `spec/ui-flow.md`” alias text is gone.
+
+**References updated in:**
+- All ten `spec/` files that linked to it (hub table, architecture, API, RAG ask, state machine, tests)
+- `rules/documentation.md`, `rules/frontend.md`
+- `commands/review-spec.md`, `review-frontend.md`, `review-code.md`, `improve-from-assessment-pdf.md`
+- `skills/documentation/SKILL.md`
+- `docs/assessment-brief.md`, `docs/prompt-history.md` (index row; history **filename** unchanged)
+- `.cursor/rules/java-tech-lead-sdd.mdc`
+- `.specify/memory/constitution.md`
+
+**Left unchanged on purpose:** `.specstory/history/` session transcripts (they record the old path as it was at the time). `graphify-out/` still has the old name until a `graphify update .` run.
+
+This is uncommitted. Say if you want it committed and pushed.
+
+---
+
+_**User**_
+
+commit and push
+
+---
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline
 ```
 </details></tool-use>

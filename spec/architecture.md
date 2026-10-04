@@ -14,7 +14,7 @@
 | **Open** | Underspecified; resolve in a child spec after confirmation. |
 | **Example** | Illustrative only (e.g. `TKT-1001`). |
 
-This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, components, and **frontend architecture** (**§12**). PDF `ui-flow` **screen and flow detail** lives in [`ui-model.md`](ui-model.md) (no separate `ui-flow.md`). It **does not** replace [`ui-model.md`](ui-model.md), [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md), [`rag-api-contract.md`](rag-api-contract.md) (ask `data` semantics), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
+This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, components, and **frontend architecture** (**§12**). PDF **screen and flow detail** lives in [`ui-flow.md`](ui-flow.md). It **does not** replace [`ui-flow.md`](ui-flow.md), [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md), [`rag-api-contract.md`](rag-api-contract.md) (ask `data` semantics), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
 
 ---
 
@@ -58,7 +58,7 @@ This document describes **system shape**: business capabilities, ticket and RAG 
 | Chunking + embedding **justification** (**AC-CORE-19**) | §16 |
 | Configurable top-K / threshold | §18 |
 | Non-agentic ask | §15.2 |
-| `ui-flow` summary | §12 → detail [`ui-model.md`](ui-model.md) |
+| `ui-flow` summary | §12 → detail [`ui-flow.md`](ui-flow.md) |
 
 **PDF basic RAG flow (p.4 — restated verbatim):**
 
@@ -106,7 +106,7 @@ Support Tickets
 | **ARCH-C** | §5 Ticket shape | Yes | **ARCH-A** | Aggregate + RAG text sources (conceptual) | [`data-model.md`](data-model.md) |
 | **ARCH-D** | §7–§8 Stack + modules | Yes | **ARCH-A** | Java/Spring/PG/React conventions | `rules/java-springboot.md` |
 | **ARCH-E** | §10–§11 Communication + API map | Yes | **ARCH-C** | REST sync; PDF ask path | [`api-contract.md`](api-contract.md) |
-| **ARCH-F** | §12 Frontend summary | Yes | **ARCH-E** | SPA architecture (**PDF** ui-flow themes) | [`ui-model.md`](ui-model.md) **UI-*** units |
+| **ARCH-F** | §12 Frontend summary | Yes | **ARCH-E** | SPA architecture (**PDF** ui-flow themes) | [`ui-flow.md`](ui-flow.md) **UI-*** units |
 | **ARCH-G** | §13–§14 Persistence + PgVector | Yes | **ARCH-C** | SoR vs vector index | [`data-model.md`](data-model.md) §8 |
 | **ARCH-H** | §15 RAG pipeline | Yes | **ARCH-G** | Ingest + ask stages (**PDF** ladder §0.1) | [`rag-ingestion.md`](rag-ingestion.md) **ING-*** |
 | **ARCH-I** | §16 Chunk/embed justification | Yes | **ARCH-H** | **AC-CORE-19** narrative | [`rag-ingestion.md`](rag-ingestion.md) §9 numbers |
@@ -608,7 +608,7 @@ Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not 
 
 ## 12. Frontend architecture · unit **ARCH-F**
 
-**Convention:** React + Vite + TypeScript (`rules/frontend.md`). **PDF** requires a web UI for ticket operations and ask. **§12.3–§12.6** below summarise UI architecture; **authoritative** screen catalog, CRUD flows, transition/ask UX, and **AC-UI-*** are in [`ui-model.md`](ui-model.md) (PDF `ui-flow` themes; see [`requirements.md`](requirements.md) child-spec table).
+**Convention:** React + Vite + TypeScript (`rules/frontend.md`). **PDF** requires a web UI for ticket operations and ask. **§12.3–§12.6** below summarise UI architecture; **authoritative** screen catalog, CRUD flows, transition/ask UX, and **AC-UI-*** are in [`ui-flow.md`](ui-flow.md) (PDF `ui-flow` themes; see [`requirements.md`](requirements.md) child-spec table).
 
 ### 12.1 UI functional areas
 
@@ -1002,7 +1002,7 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 | [`state-machine.md`](state-machine.md) | Transitions, errors |
 | [`rag-ingestion.md`](rag-ingestion.md) | Chunk numbers, models, re-ingest execution |
 | [`rag-api-contract.md`](rag-api-contract.md) | Ask `data`, grounding, no-match (**AC-RAG-API-***) |
-| [`ui-model.md`](ui-model.md) | Screens, CRUD, flows A–E, transition + ask UX, **AC-UI-*** |
+| [`ui-flow.md`](ui-flow.md) | Screens, CRUD, flows A–E, transition + ask UX, **AC-UI-*** |
 | §12.3–§12.6 (this file) | Frontend architecture summary; process evidence §12.6 |
 | [`test-strategy.md`](test-strategy.md) | Layered tests |
 | [`evaluation-strategy.md`](evaluation-strategy.md) | Retrieval quality |
@@ -1040,11 +1040,12 @@ Architecture supports verification of:
 | 2026-10-04 | §15.7 links to [`evaluation-strategy.md`](evaluation-strategy.md) (retrieval vs grounding, F-* failures, AC-EVAL). |
 | 2026-10-04 | §15.7 test proof → [`test-strategy.md`](test-strategy.md) §5–§6. |
 | 2026-10-04 | PDF audit: §12.3–§12.6 UI flows, transition/ask UX, process evidence (consolidated PDF `ui-flow` themes). |
-| 2026-10-04 | §12 intro: no separate `ui-flow.md`; interim consolidation in §12.3–§12.6 (superseded by `ui-model.md` for screen detail). |
-| 2026-10-04 | Screen/flow detail → [`ui-model.md`](ui-model.md); §12 remains UI architecture summary. |
+| 2026-10-04 | §12 intro: screen detail in `ui-flow.md`; interim consolidation in §12.3–§12.6 (superseded by `ui-flow.md` for screen detail). |
+| 2026-10-04 | Screen/flow detail → [`ui-flow.md`](ui-flow.md); §12 remains UI architecture summary. |
 | 2026-10-04 | Doc sync: **DEC-06/18** agreed wording; closed ingest sync/async **Open**; §14.6 consistency model. |
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
-| 2026-10-04 | `improve-from-assessment-pdf`: PDF ten-name spec list → nine repo files; `ui-flow` → `ui-model.md`. |
+| 2026-10-04 | `improve-from-assessment-pdf`: PDF ten-name spec list on disk. |
+| 2026-10-04 | UI spec filename `ui-model.md` → [`ui-flow.md`](ui-flow.md) (PDF name). |
 | 2026-10-04 | Ask semantics → [`rag-api-contract.md`](rag-api-contract.md); ten-file spec set. |
 | 2026-10-04 | §0 guide: verbatim PDF RAG flow diagram; PDF theme map; BRF/FRI/IRI at architecture level. |
 | 2026-10-04 | §0.3 **ARCH-*** independent reading units for modular architecture review. |

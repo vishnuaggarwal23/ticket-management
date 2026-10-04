@@ -1,6 +1,6 @@
-# UI model — views, screens, and flows
+# UI flow — views, screens, and flows
 
-> **Status:** agreed (2026-10-04) — product UI behaviour for ticket operations and grounded ask. **PDF** `ui-flow.md` themes are specified here in detail; [`architecture.md`](architecture.md) **§12** is the high-level frontend architecture summary. **DEC-06**, **DEC-11**, **DEC-15**.  
+> **Status:** agreed (2026-10-04) — product UI behaviour for ticket operations and grounded ask. This is the PDF-named [`ui-flow.md`](ui-flow.md) spec; [`architecture.md`](architecture.md) **§12** is the high-level frontend architecture summary. **DEC-06**, **DEC-11**, **DEC-15**.  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** [`data-model.md`](data-model.md) (field catalogs), [`api-contract.md`](api-contract.md) (HTTP + ask `data`), [`state-machine.md`](state-machine.md) (transition matrix), [`evaluation-strategy.md`](evaluation-strategy.md) (ask demo questions), `rules/frontend.md`, `commands/review-frontend.md`.
 
@@ -14,7 +14,7 @@
 | **Example** | Illustrative copy, labels, or routes — not mandated. |
 | **Open** | Unresolved; do not implement as fixed without user confirmation. |
 
-**PDF filename alias:** The assignment lists `ui-flow.md` under `spec/` (p.1–2). This repository implements those themes in **`ui-model.md`** — do **not** add `spec/ui-flow.md`. UI architecture summary: [`architecture.md`](architecture.md) **§12**.
+This file is the assignment’s **`ui-flow.md`**. UI architecture summary: [`architecture.md`](architecture.md) **§12**.
 
 ---
 
@@ -652,3 +652,4 @@ Do not close **Open** items in implementation without updating [`requirements.md
 | 2026-10-04 | Major `##` headings tagged with **UI-*** unit ids. |
 | 2026-10-04 | Doc sync: **DEC-06** agreed; **DEC-18** sync re-ingest UX; **DEC-11** no-match wording. |
 | 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
+| 2026-10-04 | Renamed from `ui-model.md` to PDF filename `ui-flow.md`. |

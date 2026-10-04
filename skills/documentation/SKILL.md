@@ -14,7 +14,7 @@ Use this skill whenever creating or revising specs, architecture notes, API docs
 
 ## PDF hygiene checklist (do not skip)
 
-All items from `docs/Assessments.docx` p.1–2 must exist in-repo before implementation sign-off — see [`requirements.md`](../../spec/requirements.md) **§6.8** (concrete paths to `rules/*` and `commands/*`). Spec list: ten names under `spec/` per assignment p.2 (`ui-flow.md` → `ui-model.md` — see requirements child-spec table). **Completeness index:** requirements **§0.4** (theme map) + **§0.5** (verbatim anchors); each child spec **§0** (file-local PDF map + BRF/FRI/IRI where applicable) — see [`rules/documentation.md`](../../rules/documentation.md) writing bar.
+All items from `docs/Assessments.docx` p.1–2 must exist in-repo before implementation sign-off — see [`requirements.md`](../../spec/requirements.md) **§6.8** (concrete paths to `rules/*` and `commands/*`). Spec list: ten names under `spec/` per assignment p.2 (see requirements child-spec table). **Completeness index:** requirements **§0.4** (theme map) + **§0.5** (verbatim anchors); each child spec **§0** (file-local PDF map + BRF/FRI/IRI where applicable) — see [`rules/documentation.md`](../../rules/documentation.md) writing bar.
 
 ## Before writing
 
@@ -39,13 +39,13 @@ Requirement → Specification → review-spec → Plan/Tasks → Implementation 
 
 ## Spec set (ten files on disk — 2026-10-04)
 
-Implement from these; **draft** unless header says **agreed**. PDF themes: [`requirements.md`](../../spec/requirements.md) **§0.4** + **§0.5**; per-file **§0** maps; summary [`assessment-brief.md`](../../docs/assessment-brief.md) **§4** and **§13**. PDF filename alias: `ui-flow.md` → [`ui-model.md`](../../spec/ui-model.md) (UI architecture summary: [`architecture.md`](../../spec/architecture.md) **§12**).
+Implement from these; **draft** unless header says **agreed**. PDF themes: [`requirements.md`](../../spec/requirements.md) **§0.4** + **§0.5**; per-file **§0** maps; summary [`assessment-brief.md`](../../docs/assessment-brief.md) **§4** and **§13**. PDF UI spec: [`ui-flow.md`](../../spec/ui-flow.md) (UI architecture summary: [`architecture.md`](../../spec/architecture.md) **§12**).
 
 | File | Status | Primary content | §0 (PDF map / triad) |
 |------|--------|-----------------|----------------------|
 | [`requirements.md`](../../spec/requirements.md) | draft hub | FEAT-*, AC-CORE-*, flows A–E, OQ/DEC §10, §0.4 + **§0.5** | Hub §0.1–0.5 |
 | [`architecture.md`](../../spec/architecture.md) | draft | Modules, APIs, RAG §15–16; frontend **§12**; verbatim RAG ladder | §0 |
-| [`ui-model.md`](../../spec/ui-model.md) | draft | PDF `ui-flow`: screens, flows, **AC-UI-*** | §0 |
+| [`ui-flow.md`](../../spec/ui-flow.md) | draft | PDF `ui-flow`: screens, flows, **AC-UI-*** | §0 |
 | [`data-model.md`](../../spec/data-model.md) | **agreed** | Entities, Liquibase §14, DTOs §10, AC-DM-* | §0 |
 | [`state-machine.md`](../../spec/state-machine.md) | draft | T1–T5, X1–X3, §5.6 illegal matrix, REST ex §6.5, AC-SM-* | §0 |
 | [`api-contract.md`](../../spec/api-contract.md) | draft | HTTP §2.11; ticket payloads §3–§5; ask §6 summary | §0 |
@@ -101,7 +101,7 @@ Implement from these; **draft** unless header says **agreed**. PDF themes: [`req
 | **AC-RAG-ING-*** | [`rag-ingestion.md`](../../spec/rag-ingestion.md) §14 |
 | **AC-RAG-API-*** | [`rag-api-contract.md`](../../spec/rag-api-contract.md) §17 |
 | **AC-EVAL-*** | [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) |
-| **AC-UI-*** | [`ui-model.md`](../../spec/ui-model.md) §13 |
+| **AC-UI-*** | [`ui-flow.md`](../../spec/ui-flow.md) §13 |
 | **AC-TS-*** | [`test-strategy.md`](../../spec/test-strategy.md) §12 |
 
 Map backend tests through [`test-strategy.md`](../../spec/test-strategy.md) first; details in `rules/testing.md`.
@@ -145,7 +145,7 @@ When a meaningful AI mistake is caught (bad code or ungrounded answer), add an e
 | 2026-10-04 | PDF hygiene checklist → requirements §6.8. |
 | 2026-10-04 | `update-prompt-history` command in commands index. |
 | 2026-10-04 | RAG eval pointer to [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) §3–§9 in RAG docs section. |
-| 2026-10-04 | Nine-file spec set; **AC-UI-*** owner → [`ui-model.md`](../../spec/ui-model.md). |
+| 2026-10-04 | Nine-file spec set; **AC-UI-*** owner → [`ui-flow.md`](../../spec/ui-flow.md). |
 | 2026-10-04 | Ten-file spec set; **AC-RAG-API-*** → [`rag-api-contract.md`](../../spec/rag-api-contract.md). |
 | 2026-10-04 | `improve-from-assessment-pdf`: hygiene checklist ten names / nine files wording. |
 | 2026-10-04 | Spec §0 pattern, requirements §0.5, updated spec-set table; aligned with `rules/documentation.md` reviewer maps. |

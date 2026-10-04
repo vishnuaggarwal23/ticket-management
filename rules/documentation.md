@@ -54,9 +54,9 @@ Maintain detailed specs as work proceeds:
 
 All PDF-listed files under `spec/` (paths relative to repo root):
 
-[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), [`rag-api-contract.md`](../spec/rag-api-contract.md), [`rag-ingestion.md`](../spec/rag-ingestion.md), [`evaluation-strategy.md`](../spec/evaluation-strategy.md), [`test-strategy.md`](../spec/test-strategy.md), [`ui-model.md`](../spec/ui-model.md).
+[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), [`rag-api-contract.md`](../spec/rag-api-contract.md), [`rag-ingestion.md`](../spec/rag-ingestion.md), [`evaluation-strategy.md`](../spec/evaluation-strategy.md), [`test-strategy.md`](../spec/test-strategy.md), [`ui-flow.md`](../spec/ui-flow.md).
 
-**PDF filename alias:** assignment lists `ui-flow.md` → implemented as [`ui-model.md`](../spec/ui-model.md) (do not add `spec/ui-flow.md`). Ten assignment spec names → **ten** files under `spec/` (see [`requirements.md`](../spec/requirements.md) child-spec table). [`architecture.md`](../spec/architecture.md) **§12** is the UI architecture summary.
+Ten assignment spec names → **ten** files under `spec/` (see [`requirements.md`](../spec/requirements.md) child-spec table), including [`ui-flow.md`](../spec/ui-flow.md). [`architecture.md`](../spec/architecture.md) **§12** is the UI architecture summary.
 
 ### Spec files in repo today (2026-10-04)
 
@@ -71,7 +71,7 @@ All PDF-listed files under `spec/` (paths relative to repo root):
 | [`rag-ingestion.md`](../spec/rag-ingestion.md) | **agreed** |
 | [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **agreed** |
 | [`test-strategy.md`](../spec/test-strategy.md) | **agreed** |
-| [`ui-model.md`](../spec/ui-model.md) | **agreed** |
+| [`ui-flow.md`](../spec/ui-flow.md) | **agreed** |
 
 PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **§0.4** and [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**.
 
@@ -90,8 +90,8 @@ PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **
 | [`rag-api-contract.md`](../spec/rag-api-contract.md) | Ask HTTP + `data` JSON; grounding, citations, no-match (**AC-RAG-API-***, **DEC-11**) |
 | [`state-machine.md`](../spec/state-machine.md) | Legal/illegal transitions (including skipped steps if any) |
 | [`rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking (**DEC-16**), ingest sources, sync ingest + failures (**DEC-18**), re-ingest (**DEC-01**); **DEC-09** `nomic-embed-text` / 768 |
-| [`ui-model.md`](../spec/ui-model.md) | Screens, CRUD flows, ask/RAG UX, flows A–E, **AC-UI-***; PDF `ui-flow` themes |
-| [`architecture.md`](../spec/architecture.md) §12 | Frontend architecture summary; defers screen detail to `ui-model.md` |
+| [`ui-flow.md`](../spec/ui-flow.md) | Screens, CRUD flows, ask/RAG UX, flows A–E, **AC-UI-***; PDF `ui-flow` themes |
+| [`architecture.md`](../spec/architecture.md) §12 | Frontend architecture summary; defers screen detail to `ui-flow.md` |
 | [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **Retrieval quality** vs grounding; **Example** corpus + PDF Q1–Q5; procedure §6–§7; failures **F-01…F-10**; **AC-EVAL-*** |
 | [`test-strategy.md`](../spec/test-strategy.md) | **§5** SM determinism; **§6** ask bands; map **AC-CORE** / **AC-SM** / **AC-API** / **AC-DM** (`rules/testing.md`) |
 
@@ -128,7 +128,7 @@ Use when running `commands/review-spec.md` or tracing implementation to layers �
 | §8–9 | **Functional** modules and **technical** packages (`api` / `domain` / `service` / `persistence` / `rag` / `config`) |
 | §10 | **Communication** — sync JSON REST, sequences, error vs ask no-match |
 | §11 | API capability map (PDF ask path + Convention `/api/v1`) |
-| §12 | Frontend architecture summary; screen/flow detail → [`ui-model.md`](../spec/ui-model.md) |
+| §12 | Frontend architecture summary; screen/flow detail → [`ui-flow.md`](../spec/ui-flow.md) |
 | §13–14 | Relational SoR vs **vector DB** (PgVector, chunk lifecycle); **§13.2** sync ingest (**DEC-18**) |
 | §15–16 | RAG pipeline, knowledge docs, **chunking justification**, **embedding tradeoffs** |
 | §17 | State machine placement in domain |
@@ -214,7 +214,7 @@ Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-con
 
 Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** — defers detail here).
 
-### [`spec/ui-model.md`](../spec/ui-model.md) structure (for reviewers)
+### [`spec/ui-flow.md`](../spec/ui-flow.md) structure (for reviewers)
 
 | Section | Use |
 |---------|-----|
@@ -237,7 +237,7 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 | §7 | **AC-CORE** → test layers (summary) |
 | §8 | **AC-SM-01…08** quick map (detail in §5) |
 | §9 | **AC-API-01…09** (§2.11 catalog) |
-| §11 | UI acceptance substitute (no frontend tests); manual demo → [`ui-model.md`](../spec/ui-model.md) §12 |
+| §11 | UI acceptance substitute (no frontend tests); manual demo → [`ui-flow.md`](../spec/ui-flow.md) §12 |
 | §13 | **AC-TS-01…06** (this spec’s own acceptance) |
 
 ## Writing bar
@@ -303,7 +303,7 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Reviewer map for [`evaluation-strategy.md`](../spec/evaluation-strategy.md); test-strategy §4.1 pointer. |
 | 2026-10-04 | [`test-strategy.md`](../spec/test-strategy.md) reviewer map: §5 state machine, §6 retrieval/AI bands. |
 | 2026-10-04 | Eight-file `spec/` index; `rag-api-contract` / `ui-flow` → `api-contract` §6, `architecture` §12. |
-| 2026-10-04 | Added [`ui-model.md`](../spec/ui-model.md); PDF `ui-flow` detail + **AC-UI-***; `architecture` §12 summary only. |
+| 2026-10-04 | Added [`ui-flow.md`](../spec/ui-flow.md); PDF `ui-flow` detail + **AC-UI-***; `architecture` §12 summary only. |
 | 2026-10-04 | `improve-from-assessment-pdf` pass: §6.8 spec-list row in requirements; assessment-brief §13 consolidation. |
 | 2026-10-04 | Ten-file `spec/` set; [`rag-api-contract.md`](../spec/rag-api-contract.md) reviewer map; **AC-RAG-API-*** owner. |
 | 2026-10-04 | Added `commands/improve-from-assessment-pdf.md` (edit-only assessment sync pass). |
@@ -314,3 +314,4 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | **Reference** §2.3 steering; DEC register + reviewer map sync. |
 | 2026-10-04 | Doc sync: architecture §13.2 **DEC-18**; api/rag reviewer maps **DEC-17**. |
 | 2026-10-04 | Ten-file spec set promoted to **agreed**; index table updated. |
+| 2026-10-04 | UI spec filename `ui-model.md` → [`ui-flow.md`](../spec/ui-flow.md) (PDF name). |

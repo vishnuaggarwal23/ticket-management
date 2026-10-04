@@ -37,8 +37,8 @@ Before judging content, **name every file** you used and its role. If a file is 
 | RAG ingestion | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | chunking §6–§9, ingest §10–§11, **AC-RAG-ING-*** |
 | RAG API / ask `data` | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | citations, grounding, no-match (**AC-RAG-API-***, **DEC-11**) |
 | Evaluation | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | Retrieval vs grounding §3–§4; corpus §5; procedure §6–§7; failures §8; **AC-EVAL-*** §10; FEAT-22 |
-| UI model | [`spec/ui-model.md`](../spec/ui-model.md) | screens, CRUD, flows A–E, ask/RAG UX, **AC-UI-*** |
-| UI architecture | [`spec/architecture.md`](../spec/architecture.md) §12 | frontend modules summary (detail in `ui-model.md`) |
+| UI flow | [`spec/ui-flow.md`](../spec/ui-flow.md) | screens, CRUD, flows A–E, ask/RAG UX, **AC-UI-*** |
+| UI architecture | [`spec/architecture.md`](../spec/architecture.md) §12 | frontend modules summary (detail in `ui-flow.md`) |
 | Test strategy | [`spec/test-strategy.md`](../spec/test-strategy.md) | **AC-SM** / **AC-API** / **AC-CORE** ↔ test layers |
 
 **Output must include:**
@@ -90,8 +90,8 @@ When a child spec is **draft** or a section is **Open**, cross-check [`spec/requ
 - [ ] [`data-model.md`](../spec/data-model.md) ↔ [`api-contract.md`](../spec/api-contract.md) — same fields, types, requiredness
 - [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities; no **DEC-*** closed in code but still **Open** in requirements
 - [ ] [`architecture.md`](../spec/architecture.md) ↔ [`rag-ingestion.md`](../spec/rag-ingestion.md) / [`api-contract.md`](../spec/api-contract.md) §6 — no conflicting pipeline or API story
-- [ ] [`ui-model.md`](../spec/ui-model.md) ↔ [`rag-api-contract.md`](../spec/rag-api-contract.md) / [`api-contract.md`](../spec/api-contract.md) / [`state-machine.md`](../spec/state-machine.md) — screens do not require impossible API shapes or illegal-only transitions
-- [ ] [`ui-model.md`](../spec/ui-model.md) ↔ [`architecture.md`](../spec/architecture.md) §12 — no contradictory screen/API story
+- [ ] [`ui-flow.md`](../spec/ui-flow.md) ↔ [`rag-api-contract.md`](../spec/rag-api-contract.md) / [`api-contract.md`](../spec/api-contract.md) / [`state-machine.md`](../spec/state-machine.md) — screens do not require impossible API shapes or illegal-only transitions
+- [ ] [`ui-flow.md`](../spec/ui-flow.md) ↔ [`architecture.md`](../spec/architecture.md) §12 — no contradictory screen/API story
 
 ### When [`spec/architecture.md`](../spec/architecture.md) is in scope (expanded checklist)
 
@@ -129,9 +129,9 @@ Use `rules/documentation.md` section map. Mark **N/A** only if the review topic 
 - [ ] **§12** — does not invent numeric K/threshold/model (points to [`rag-ingestion.md`](../spec/rag-ingestion.md) / **DEC-09**)
 - [ ] [`test-strategy.md`](../spec/test-strategy.md) **§5–§6** — state machine determinism vs ask Bands A/B/C consistent with [`evaluation-strategy.md`](../spec/evaluation-strategy.md)
 
-### When [`spec/ui-model.md`](../spec/ui-model.md) is in scope
+### When [`spec/ui-flow.md`](../spec/ui-flow.md) is in scope
 
-Use `rules/documentation.md` ui-model reviewer map. Mark **N/A** only if the review topic has no UI angle.
+Use `rules/documentation.md` ui-flow reviewer map. Mark **N/A** only if the review topic has no UI angle.
 
 - [ ] **PDF** capabilities only — no delete-ticket UI, auth, agent-from-ask, vector admin console (§2.2 non-goals)
 - [ ] **§7–§8** — screen catalog covers list, create, detail, comments; CRUD matrix matches [`api-contract.md`](../spec/api-contract.md) §2.11
@@ -284,7 +284,7 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Expanded checklist when [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) is in scope (AC-EVAL, §5 corpus). |
 | 2026-10-04 | Cross-check [`test-strategy.md`](../spec/test-strategy.md) §5–§6 when RAG or SM in scope. |
 | 2026-10-04 | Eight-file spec set: ask → `api-contract` §6.2–§6.5; UI → `architecture` §12.3–§12.6. |
-| 2026-10-04 | Nine-file set: UI detail → [`ui-model.md`](../spec/ui-model.md); **AC-UI-*** review section. |
+| 2026-10-04 | Nine-file set: UI detail → [`ui-flow.md`](../spec/ui-flow.md); **AC-UI-*** review section. |
 | 2026-10-04 | Ten-file set: ask detail → [`rag-api-contract.md`](../spec/rag-api-contract.md). |
 | 2026-10-04 | Checklist: requirements **§0.5**; child spec **§0** guides; file map **§0** columns. |
 | 2026-10-04 | Checklist: **`##` heading unit suffix** aligned with §0.3 independent reading units. |

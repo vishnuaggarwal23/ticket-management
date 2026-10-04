@@ -63,7 +63,7 @@
 | **TS-C** | §6.2 Band A | Yes | **TS-A** | JUnit-safe ask contract tests | [`rag-api-contract.md`](rag-api-contract.md) **ASK-H** |
 | **TS-D** | §6.3–§6.5 Bands B–C | Yes | **TS-C** | Grounding review + retrieval eval | [`evaluation-strategy.md`](evaluation-strategy.md) **EVAL-*** |
 | **TS-E** | §7–§10 AC maps | Yes | **TS-B**, **TS-C** | AC-CORE/SM/API/DM → layers | [`requirements.md`](requirements.md) §8 |
-| **TS-F** | §11 UI substitute | Yes | — | Manual demo replaces UI tests | [`ui-model.md`](ui-model.md) §12 |
+| **TS-F** | §11 UI substitute | Yes | — | Manual demo replaces UI tests | [`ui-flow.md`](ui-flow.md) §12 |
 | **TS-G** | §13 AC-TS | Yes | **TS-B…E** | This spec’s own acceptance | — |
 
 **PDF verbatim (p.6):** “State-machine integration tests pass.” → **TS-B** + **AC-CORE-14**.
@@ -423,7 +423,7 @@ Detail: [`data-model.md`](data-model.md) §18.
 
 ## 11. Frontend acceptance without UI tests · unit **TS-F**
 
-**PDF** UI expectations → backend substitutes where noted in §7. Screen/flow map for manual demo: [`ui-model.md`](ui-model.md) §12. Demo script: [`requirements.md`](requirements.md) §8.7 (steps 1–18). UI acceptance IDs: **AC-UI-*** in `ui-model.md` §13. UI code review: `commands/review-frontend.md`.
+**PDF** UI expectations → backend substitutes where noted in §7. Screen/flow map for manual demo: [`ui-flow.md`](ui-flow.md) §12. Demo script: [`requirements.md`](requirements.md) §8.7 (steps 1–18). UI acceptance IDs: **AC-UI-*** in `ui-flow.md` §13. UI code review: `commands/review-frontend.md`.
 
 ---
 
@@ -462,7 +462,7 @@ Detail: [`data-model.md`](data-model.md) §18.
 | 2026-10-04 | §4.1 FEAT-22 / AC-EVAL; AC-TS-05. |
 | 2026-10-04 | Major expansion: **§5** state machine deterministic logic (T1–T5, X1–X3, 20 illegal pairs, layers, lifecycle); **§6** retrieval quality + AI output (Bands A–C); **AC-TS-06**; renumbered sections. |
 | 2026-10-04 | §11 links UI demo to [`architecture.md`](architecture.md) §12.3–§12.6; requirements §8.7 steps 17–18. |
-| 2026-10-04 | §11 links UI demo to [`ui-model.md`](ui-model.md). |
+| 2026-10-04 | §11 links UI demo to [`ui-flow.md`](ui-flow.md). |
 | 2026-10-04 | §0 guide: PDF map, business/functional/implementation triad, TOC. |
 | 2026-10-04 | §0.3 **TS-*** independent reading units (SM JUnit vs eval bands). |
 | 2026-10-04 | Major `##` headings tagged with **TS-*** unit ids. |

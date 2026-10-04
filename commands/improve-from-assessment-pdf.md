@@ -14,7 +14,7 @@ Read via IDE, or extract text with `unzip -p docs/Assessments.docx word/document
 
 ## Hard constraints (non-negotiable)
 
-1. **Do not create any new files** — no new paths under `spec/`, `commands/`, `rules/`, `skills/`, or `docs/`. The assignment’s ten spec names are satisfied by **ten** existing `spec/*.md` files (`ui-flow.md` → `ui-model.md` only). Do not add `spec/ui-flow.md`.
+1. **Do not create any new files** — no new paths under `spec/`, `commands/`, `rules/`, `skills/`, or `docs/`. The assignment’s ten spec names are satisfied by **ten** existing `spec/*.md` files (`ui-flow.md`). 
 2. **In-scope directories only** — edit files that already exist under:
    - `spec/*.md`
    - `commands/*.md`
@@ -41,7 +41,7 @@ If DOCX cannot be read, continue with §0.4 + `assessment-brief.md` for **target
 | Assignment-listed name | Repo file |
 |------------------------|-----------|
 | `rag-api-contract.md` | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**AC-RAG-API-***) |
-| `ui-flow.md` | [`spec/ui-model.md`](../spec/ui-model.md) (**AC-UI-***); summary in [`spec/architecture.md`](../spec/architecture.md) **§12** |
+| `ui-flow.md` | [`spec/ui-flow.md`](../spec/ui-flow.md) (**AC-UI-***); summary in [`spec/architecture.md`](../spec/architecture.md) **§12** |
 | State machine test proof | [`spec/test-strategy.md`](../spec/test-strategy.md) **§5** (ask bands **§6**) |
 | Retrieval quality eval | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) |
 
@@ -51,10 +51,10 @@ Index: [`rules/documentation.md`](../rules/documentation.md).
 
 Work hub-first, then steering, then satellite docs.
 
-1. **`spec/requirements.md`** — §0.4 coverage map, FEAT / AC-CORE completeness vs p.6 checklist, §8.7 demo steps, §10 DEC register, child-spec table (ten files; `ui-flow` → `ui-model` alias).
-2. **`spec/architecture.md`**, **`ui-model.md`**, **`api-contract.md`**, **`rag-api-contract.md`**, **`data-model.md`**, **`state-machine.md`**, **`rag-ingestion.md`**, **`evaluation-strategy.md`**, **`test-strategy.md`** — assignment themes in the right sections; cross-links; acceptance IDs; revision history.
+1. **`spec/requirements.md`** — §0.4 coverage map, FEAT / AC-CORE completeness vs p.6 checklist, §8.7 demo steps, §10 DEC register, child-spec table (ten files including `ui-flow.md`).
+2. **`spec/architecture.md`**, **`ui-flow.md`**, **`api-contract.md`**, **`rag-api-contract.md`**, **`data-model.md`**, **`state-machine.md`**, **`rag-ingestion.md`**, **`evaluation-strategy.md`**, **`test-strategy.md`** — assignment themes in the right sections; cross-links; acceptance IDs; revision history.
 3. **`rules/*.md`** — opening **PDF vs Convention vs Open**; pointers to spec **§0** and section maps (no duplicate bodies); reviewer maps in `documentation.md`.
-4. **`commands/*.md`** — inputs/spec paths match the ten-file set; **§0.4–§0.5** / per-spec **§0** in review commands; no dead links to `spec/ui-flow.md`.
+4. **`commands/*.md`** — inputs/spec paths match the ten-file set; **§0.4–§0.5** / per-spec **§0** in review commands; UI spec path is `spec/ui-flow.md`.
 5. **`skills/documentation/SKILL.md`** — spec set table, §0 template, AC-ID owners aligned with `rules/documentation.md`.
 6. **`docs/assessment-brief.md`** — §4 spec table, **§13** traceability, **§14** index; match repo reality; do **not** grant new scope beyond the assignment.
 
@@ -66,7 +66,7 @@ For each file you touch, aim for:
 
 - [ ] **Assessment fidelity** — requirement text traceable to `Assessments.docx` or explicitly **Convention** / **Open**
 - [ ] **Traceability** — FEAT / AC-CORE / AC-* IDs referenced where the assignment expects testable proof
-- [ ] **Cross-links** — relative links to sibling specs and `rules/*`; no dead `spec/ui-flow.md` links (use `ui-model.md`); steering docs index spec **§0** / requirements **§0.5** without duplicating bodies
+- [ ] **Cross-links** — relative links to sibling specs and `rules/*`; links to `ui-flow.md`; steering docs index spec **§0** / requirements **§0.5** without duplicating bodies
 - [ ] **Consistency** — same DEC ids, enum names, and API paths as [`data-model.md`](../spec/data-model.md) (agreed) and `rules/api-standards.md`
 - [ ] **Revision history** — dated row describing what changed and why (if the file already has a revision section)
 - [ ] **Heading unit tags** — major `##` sections suffix ids from that file’s §0.3 independent reading units table (hub **§0.8**)
@@ -93,8 +93,8 @@ Do not start backend or frontend implementation in this command.
 | 2026-10-04 | Initial command: PDF-driven edit-only pass over `spec/`, `rules/`, `commands/`, `skills/`, `docs/` (excl. `prompt-history.md`). |
 | 2026-10-04 | Fallback: proceed with brief + §0.4 when PDF text extraction unavailable; report limitations. |
 | 2026-10-04 | Single authoritative file: `docs/Assessments.docx`. |
-| 2026-10-04 | Nine-file `spec/` set; PDF `ui-flow` → [`ui-model.md`](../spec/ui-model.md). |
-| 2026-10-04 | Ten-file `spec/` set incl. [`rag-api-contract.md`](../spec/rag-api-contract.md); only `ui-flow.md` filename alias remains. |
+| 2026-10-04 | Nine-file `spec/` set; PDF `ui-flow` → [`ui-flow.md`](../spec/ui-flow.md). |
+| 2026-10-04 | Ten-file `spec/` set incl. [`rag-api-contract.md`](../spec/rag-api-contract.md) and [`ui-flow.md`](../spec/ui-flow.md). |
 | 2026-10-04 | Steering pass: `rules/`, `commands/`, `skills/`, `assessment-brief.md` index spec **§0** + requirements **§0.5**. |
 | 2026-10-04 | Per-file checklist: **`##` heading unit suffix** per hub §0.8. |
 | 2026-10-04 | Pass note: hub **DEC-11** / **OQ-05** owner is `rag-api-contract.md` (not `api-contract` §6.3). |

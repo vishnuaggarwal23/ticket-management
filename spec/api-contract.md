@@ -2,7 +2,7 @@
 
 > **Status:** agreed (2026-10-04) — ticket REST paths and payloads align with **Convention** in [`rules/api-standards.md`](../rules/api-standards.md) and [`data-model.md`](data-model.md). **DEC-14**; ask limits **DEC-17** cross-ref [`rag-api-contract.md`](rag-api-contract.md).  
 > **Primary source:** `docs/Assessments.docx` (capabilities restated in [`requirements.md`](requirements.md)).  
-> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask / RAG HTTP semantics (**PDF** `rag-api-contract.md`) → [`rag-api-contract.md`](rag-api-contract.md) (authoritative); summary retained **§6.2–§6.5** (**DEC-11** agreed). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
+> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask / RAG HTTP semantics (**PDF** `rag-api-contract.md`) → [`rag-api-contract.md`](rag-api-contract.md) (authoritative); summary retained **§6.2–§6.5** (**DEC-11** agreed). UI screens and flows → [`ui-flow.md`](ui-flow.md). System map → [`architecture.md`](architecture.md) §11.
 
 **Label legend:** **PDF** | **Convention** | **Agreed** | **Example** | **Open**
 
@@ -48,7 +48,7 @@
 |------|---------|-------------|------------------------|----------|----------|
 | **API-A** | §2 Cross-cutting | Yes | — | Envelopes, `/api/v1`, list params | `rules/api-standards.md` |
 | **API-B** | §3 Resource models | Yes | **API-A** | Ticket/comment JSON shapes | [`data-model.md`](data-model.md) §10 |
-| **API-C** | §4.1–§4.3 CRUD/list/detail | Yes | **API-B** | Create, list, get, field PATCH | [`ui-model.md`](ui-model.md) §8 |
+| **API-C** | §4.1–§4.3 CRUD/list/detail | Yes | **API-B** | Create, list, get, field PATCH | [`ui-flow.md`](ui-flow.md) §8 |
 | **API-D** | §4.4 Status PATCH | Yes | **API-B**, **API-C** | T1–T5 + **409** scenarios | [`state-machine.md`](state-machine.md) §6 |
 | **API-E** | §4 search/filter | Yes | **API-C** | `q`, `status` query (**DEC-08**) | [`data-model.md`](data-model.md) §15 |
 | **API-F** | §5 Comments | Yes | **API-B** | Comment create/list on ticket | FEAT-05 |
@@ -1349,7 +1349,7 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | 2026-10-04 | §2.11 full endpoint catalog; §3.5 `AskResponseData`; §4.4.1 T1–T5 PATCH table; AC-API-08/09. |
 | 2026-10-04 | PDF `rag-api-contract` themes: §6.2–§6.5 grounding, no-match, **AC-RAG-API-***. |
 | 2026-10-04 | Related-spec UI pointer → architecture §12.3–§12.6. |
-| 2026-10-04 | Related-spec UI pointer → [`ui-model.md`](ui-model.md). |
+| 2026-10-04 | Related-spec UI pointer → [`ui-flow.md`](ui-flow.md). |
 | 2026-10-04 | Ask detail → [`rag-api-contract.md`](rag-api-contract.md); §6 remains combined-catalog summary. |
 | 2026-10-04 | §0 document guide: PDF→endpoint map; business/functional/implementation triad; label legend. |
 | 2026-10-04 | §0.3 **API-*** independent reading units (envelopes → CRUD → ask boundary). |

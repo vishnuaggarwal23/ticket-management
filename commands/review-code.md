@@ -17,7 +17,7 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 ## Inputs
 
 - Diff / named paths
-- Specs: [`spec/requirements.md`](../spec/requirements.md) (**§0.5**), [`spec/architecture.md`](../spec/architecture.md), [`spec/ui-model.md`](../spec/ui-model.md), [`spec/data-model.md`](../spec/data-model.md) (**agreed**); draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), [`spec/test-strategy.md`](../spec/test-strategy.md) (each **§0** + SM §5, ask §6); index [`rules/documentation.md`](../rules/documentation.md)
+- Specs: [`spec/requirements.md`](../spec/requirements.md) (**§0.5**), [`spec/architecture.md`](../spec/architecture.md), [`spec/ui-flow.md`](../spec/ui-flow.md), [`spec/data-model.md`](../spec/data-model.md) (**agreed**); draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), [`spec/test-strategy.md`](../spec/test-strategy.md) (each **§0** + SM §5, ask §6); index [`rules/documentation.md`](../rules/documentation.md)
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements

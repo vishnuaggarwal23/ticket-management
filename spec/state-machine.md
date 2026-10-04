@@ -455,7 +455,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | ID | Topic | Status | Owner spec |
 |----|-------|--------|------------|
 | **DEC-02** | Skipped hops / extra edges | **Agreed 2026-10-04** — **(A)** only T1–T5 | This file |
-| **DEC-06** | Dedicated transition API vs PATCH | **Agreed 2026-10-04** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | [`ui-model.md`](ui-model.md) §9 for UX |
+| **DEC-06** | Dedicated transition API vs PATCH | **Agreed 2026-10-04** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | [`ui-flow.md`](ui-flow.md) §9 for UX |
 | **DEC-07** | Initial `OPEN` on create | **Agreed** | [`data-model.md`](data-model.md) §5.1 |
 
 ---
@@ -466,7 +466,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 |------|------|
 | 2026-10-04 | Initial spec: PDF T1–T5 / X1–X3, full invalid matrix under DEC-02 default (A), API/domain placement, AC-SM-*. |
 | 2026-10-04 | Transition UX pointer → [`architecture.md`](architecture.md) §12.4 (PDF ui-flow themes). |
-| 2026-10-04 | Transition UX pointer → [`ui-model.md`](ui-model.md) §9 (**DEC-06**). |
+| 2026-10-04 | Transition UX pointer → [`ui-flow.md`](ui-flow.md) §9 (**DEC-06**). |
 | 2026-10-04 | **DEC-02** agreed **(A)** in hub §10.2 (PDF-backed). |
 | 2026-10-04 | **DEC-06** agreed — PATCH `status` final for assessment scope. |
 | 2026-10-04 | Doc sync: removed stale **interim** labels for **DEC-06**. |

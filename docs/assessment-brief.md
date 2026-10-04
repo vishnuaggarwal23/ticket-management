@@ -66,10 +66,10 @@ Regardless of IDE, the PDF requires steering files for standards and review. Thi
 Create specifications **before** implementation. PDF example set:
 
 ```
-spec/                          # PDF lists ten names; ten files on disk (ui-flow → ui-model)
+spec/                          # PDF lists ten names; ten files on disk (includes ui-flow.md)
 ├── requirements.md
 ├── architecture.md            # system design; UI summary §12
-├── ui-model.md                # PDF ui-flow filename (screens, flows, AC-UI-*)
+├── ui-flow.md                # screens, flows, AC-UI-*
 ├── data-model.md
 ├── api-contract.md            # ticket/comment REST + ask §6 summary
 ├── rag-api-contract.md        # PDF rag-api-contract (ask data, AC-RAG-API-*)
@@ -81,13 +81,13 @@ spec/                          # PDF lists ten names; ten files on disk (ui-flow
 
 ### Present in repo (2026-10-04)
 
-Ten standalone files under `spec/`. PDF filename alias: `ui-flow.md` → [`ui-model.md`](../spec/ui-model.md) only.
+Ten standalone files under `spec/`. Ten files include [`ui-flow.md`](../spec/ui-flow.md) (PDF name).
 
 | Spec | Status | Role | §0 guide |
 |------|--------|------|----------|
 | [`requirements.md`](../spec/requirements.md) | draft hub | PDF **§0.4** + **§0.5** anchors; FEAT-01…23; flows A–E; AC-CORE-01…23; demo §8.7; OQ/DEC | §0.1–0.5 |
 | [`architecture.md`](../spec/architecture.md) | draft | System design §16; RAG §15; frontend **§12**; verbatim PDF RAG ladder | §0 |
-| [`ui-model.md`](../spec/ui-model.md) | draft | PDF `ui-flow`: screens, CRUD, ask UX, flows A–E, **AC-UI-*** | §0 |
+| [`ui-flow.md`](../spec/ui-flow.md) | draft | PDF `ui-flow`: screens, CRUD, ask UX, flows A–E, **AC-UI-*** | §0 |
 | [`data-model.md`](../spec/data-model.md) | **agreed** | Entities, Liquibase §14.5, DTOs, **DEC-08** search, **DEC-04** id | §0 |
 | [`state-machine.md`](../spec/state-machine.md) | draft | T1–T5 / X1–X3; §5.6 matrix; PATCH + JSON ex §6.5; **AC-SM-*** | §0 |
 | [`api-contract.md`](../spec/api-contract.md) | draft | Tickets/comments HTTP; ask §6 summary | §0 |
@@ -354,7 +354,7 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 
 **Hygiene file map (PDF p.1–2):** same table as [`requirements.md`](../spec/requirements.md) **§6.8** (`rules/*`, `commands/*`, `skills/documentation/SKILL.md`).
 
-**PDF spec filenames (p.1–2, ten names → ten repo files):** `ui-flow.md` → [`ui-model.md`](../spec/ui-model.md) filename only; do not add `spec/ui-flow.md`.
+**PDF spec filenames (p.1–2, ten names → ten repo files):** includes [`ui-flow.md`](../spec/ui-flow.md).
 
 **Outstanding PDF delivery (not missing from specs — evidence at demo time):** `docs/ai-mistakes.md` first entry (**AC-CORE-23**); local verify Ollama `nomic-embed-text` → **768** dims; runnable app + demo §8.7.
 
@@ -372,7 +372,7 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 | AC → backend test layers | [`spec/test-strategy.md`](../spec/test-strategy.md) |
 | Ask `data` JSON, citations, no-match | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) |
 | Retrieval quality eval | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) |
-| UI screens and flows | [`spec/ui-model.md`](../spec/ui-model.md) |
+| UI screens and flows | [`spec/ui-flow.md`](../spec/ui-flow.md) |
 | PDF theme map (detailed) | [`spec/requirements.md`](../spec/requirements.md) **§0.4** |
 | PDF verbatim completeness checklist | [`spec/requirements.md`](../spec/requirements.md) **§0.5** |
 | Per-spec PDF maps + BRF/FRI/IRI | Each `spec/*.md` **§0** |
@@ -400,7 +400,7 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 | 2026-10-04 | `test-strategy.md` §5–§6: deterministic SM + retrieval/AI test bands. |
 | 2026-10-04 | §13 hygiene map pointer; §6.8-aligned audit note (no new doc files). |
 | 2026-10-04 | Spec audit: 8 files in `spec/`; `rag-api-contract` → `api-contract` §6; `ui-flow` → `architecture` §12; SM tests §5.4 not §6. |
-| 2026-10-04 | Added [`ui-model.md`](../spec/ui-model.md); PDF `ui-flow` detail; nine files in `spec/`. |
+| 2026-10-04 | Added [`ui-flow.md`](../spec/ui-flow.md); PDF `ui-flow` detail; nine files in `spec/`. |
 | 2026-10-04 | `improve-from-assessment-pdf`: §13 ten-name → nine-file consolidation note. |
 | 2026-10-04 | Added [`rag-api-contract.md`](../spec/rag-api-contract.md); ten-file spec set. |
 | 2026-10-04 | `improve-from-assessment-pdf`: requirements **DEC-11** / **OQ-05** → `rag-api-contract.md`. |
