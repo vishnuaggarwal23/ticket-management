@@ -1,11 +1,11 @@
-# Backend implementation plan — ticket CRUD, state machine, then RAG
+# Implementation plan — backend (`backend/`) + frontend (`frontend/`)
 
-> **Artefact:** backend-only implementation plan (Spec-Driven Development **Plan / Tasks** step).  
+> **Artefact:** Spec-Driven Development **Plan / Tasks** for the ticket-management monorepo.  
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
-> **Code root:** `backend/` under the repository working directory. **Do not** put Java sources at repo root or under a second application.  
-> **Frontend:** out of this plan. **RAG:** Phases **D–F** implemented (ingest pipeline, after-commit hooks, Band A ask). Live Ollama/Spring AI still a port + test doubles.  
-> **Status of this plan:** Phase **A–F complete**.  
-> **Date:** 2026-10-04.
+> **Code roots:** `backend/` (Spring Boot) and `frontend/` (Next.js + Vite + JavaScript). **Do not** put Java at repo root or under a second backend app.  
+> **Backend status:** Phases **A–F** and stack upgrade **G** complete. Live Ollama/Spring AI optional for local ask demos.  
+> **Frontend status:** **Not started** — implement **Part II** (§20) top to bottom after backend is runnable on **8080**.  
+> **Date:** 2026-10-04 (frontend plan added).
 
 ---
 
@@ -24,11 +24,15 @@ Requirement (PDF + spec/) → Specification (agreed) → THIS PLAN
   → Implementation (backend/) → Testing (JUnit / Testcontainers)
   → Review (commands/review-code.md, commands/generate-tests.md)
   → Fix → (only then) RAG after user confirmation
+  → Part II: frontend/ → Review (commands/review-frontend.md) → demo §8.7
 ```
 
 **Do not** start from “build the complete application.”
 
-### 0.2 Hard sequencing gate (mandatory)
+**Part I (§6–§19):** backend only — **complete**; gates **G0–G8** apply.  
+**Part II (§20):** frontend under `frontend/` — gates **FG0–FG4**; slices **UI-A…UI-L** map to [`spec/ui-flow.md`](spec/ui-flow.md) units **UI-A…UI-H** and **AC-UI-01…12**.
+
+### 0.2 Hard sequencing gate (mandatory) — backend
 
 | Gate | Meaning |
 |------|---------|
@@ -59,6 +63,8 @@ Deliver a **single Spring Boot 4 monolith** under `backend/` that:
 
 ### 1.2 In scope (this plan)
 
+**Part I — `backend/` (complete)**
+
 - Backend Java application only (`backend/`).
 - Ticket **CRUD** (create, list, get, PATCH fields — **no DELETE**, **no PUT**).
 - Comments (add + view on detail).
@@ -68,11 +74,17 @@ Deliver a **single Spring Boot 4 monolith** under `backend/` that:
 - Tests: JUnit 5, Mockito, MockMvc slice, PostgreSQL Testcontainers + Liquibase.
 - RAG **design and later implementation** as Phase D–F (gated).
 
+**Part II — `frontend/` (§20, not started)**
+
+- React + Next.js (App Router) + Vite + JavaScript under `frontend/` per **DEC-15** / **DEC-20**.
+- Ticket list/create/detail, search/filter, comments, status UX (guidance only), grounded ask UI.
+- Manual verification + [`commands/review-frontend.md`](commands/review-frontend.md); **no** frontend test suite.
+
 ### 1.3 Out of scope (do not implement)
 
 From [`spec/requirements.md`](spec/requirements.md) **§2.3 Reference** and rules:
 
-- Frontend / React / Next.js / Vite / JavaScript.
+- Frontend implementation (covered in **Part II**, §20 — not in Part I scope).
 - Authentication, authorization, roles, multi-tenancy (**DEC-12**).
 - `DELETE` ticket, `PUT` ticket, `/transition` sub-resource, bulk ops, attachments, webhooks.
 - Agents, tool chaining, notifications, ask creating tickets.
@@ -112,6 +124,11 @@ Do not describe conventions as PDF mandates in comments or README.
 | Propose tests | [`commands/generate-tests.md`](commands/generate-tests.md) |
 | Ask grounding (after RAG) | [`commands/review-rag-output.md`](commands/review-rag-output.md) |
 | Retrieval quality (after RAG) | [`spec/evaluation-strategy.md`](spec/evaluation-strategy.md) |
+| UI screens, routes, **AC-UI-*** | [`spec/ui-flow.md`](spec/ui-flow.md) (**DEC-20** §4, §7–§10, §13) |
+| Frontend stack, layout, client | [`rules/frontend.md`](rules/frontend.md) |
+| UI diff review | [`commands/review-frontend.md`](commands/review-frontend.md) |
+| Assessment PDF (capabilities) | [`docs/Assessments.docx`](docs/Assessments.docx), [`docs/assessment-brief.md`](docs/assessment-brief.md) |
+| Demo walkthrough | [`spec/requirements.md`](spec/requirements.md) **§8.7**, [`spec/ui-flow.md`](spec/ui-flow.md) §12 |
 
 **Precedence:** PDF → `spec/requirements.md` → agreed child specs → `rules/` → this plan. This plan must not invent fields, paths, or edges.
 
@@ -779,7 +796,7 @@ After each phase:
 
 1. `cd backend && ./mvnw test`
 2. [`commands/review-code.md`](commands/review-code.md) — Pass/Fail; **fix Failures** before the next phase.
-3. Do not run [`commands/review-frontend.md`](commands/review-frontend.md) for this plan.
+3. Part I: do not run [`commands/review-frontend.md`](commands/review-frontend.md). Part II (§20): use **review-frontend** after each UI slice.
 4. Do not treat [`commands/review-spec.md`](commands/review-spec.md) as a substitute for code review (specs already agreed).
 5. If AI generates illegal transitions or entity JSON: correct code; log [`docs/ai-error.md`](docs/ai-error.md) with **`/update-ai-error`**.
 6. `graphify update .` after Java file changes.
@@ -798,11 +815,12 @@ After each phase:
 - [ ] No hardcoded Ollama URL / top-K / threshold / chunk size in Java
 - [ ] No agents / tools from ask
 - [ ] No confidence field
-- [ ] No frontend work in this plan
+- [x] No frontend work in **Part I** (backend phases only)
+- [ ] Part II **§20** — `frontend/` not started until first **UI-A** slice
 
 ---
 
-## 16. Suggested implementation order (one-line index)
+## 16. Suggested implementation order (one-line index) — backend
 
 1. **C-01, C-02, C-03, C-05, C-06 agreed** (2026-10-04). **C-04** chat model is env/config (`OLLAMA_CHAT_MODEL`, example `llama3.2`). **C-06** Spring Data JPA primary for relational persistence.
 2. Phase **A** — Maven, yml, `.env.example`, Liquibase tickets, Testcontainers smoke (dev DB external).
@@ -817,6 +835,23 @@ After each phase:
 11. Phase **D** — vector schema, chunker, embed port, ingest service; **complete 2026-10-04**.
 12. Phase **E** — after-commit hooks from ticket service; **complete 2026-10-04**.
 13. Phase **F** — ask API both paths, Band A tests; **complete 2026-10-04**. Live models / Band B–C optional.
+
+### 16.1 Frontend implementation order (one-line index) — Part II
+
+Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000** and **5173**.
+
+1. **UI-A** — `frontend/` scaffold (Node 24, Next + Vite, env names, `next dev` / build).
+2. **UI-B** — HTTP client + envelope/`ApiError` (no screen logic).
+3. **UI-C** — App shell, layout, nav, route stubs (**DEC-20** routes).
+4. **UI-D** — Ticket list (default `GET`, loading/empty).
+5. **UI-E** — List search `q`, status filter, pagination from `meta` (**DEC-20** Apply + Enter).
+6. **UI-F** — Create ticket form → **201** → detail (**parallel** with D/E after **UI-C** if desired).
+7. **UI-G** — Ticket detail read-only + **404** handling.
+8. **UI-H** — Detail field **Save** (PATCH without `status`).
+9. **UI-I** — Comment composer + thread (**parallel** with **UI-H** after **UI-G**).
+10. **UI-J** — Status transition buttons + **409** UX.
+11. **UI-K** — `/ask` page (grounded answer, citations, no-match) — **parallel** with ticket slices after **UI-C** + **UI-B**.
+12. **UI-L** — Demo script §8.7 walkthrough + [`commands/review-frontend.md`](commands/review-frontend.md) Pass.
 
 ---
 
@@ -836,6 +871,380 @@ After each phase:
 | **E Ingest hooks** | **complete** | service unit + `TicketIngestionHookIT` | hook Pass | after-commit; ingest failure does not fail ticket write |
 | **F Ask API** | **complete** | slice + `AskServiceTest` + `AskApiIT` Band A | ask Pass | dual paths; 200 no-match; 400 validation; stub generate |
 | **G Stack upgrade (Boot 4 / Java 25 / Spring AI 2.x)** | **complete** | `./mvnw test` green (JDK 25) | pending | Boot **4.1.1**, Spring AI **2.0.1**, Jackson **3**, Testcontainers **2.x**, `spring-boot-starter-liquibase` |
+| **UI-A Scaffold** | not started | `next build` / `next dev` | n/a | See §20.2 |
+| **UI-B API client** | not started | manual/curl against 8080 | n/a | See §20.3 |
+| **UI-C Shell + routes** | not started | routes render | n/a | **DEC-20** |
+| **UI-D List basic** | not started | manual | n/a | **AC-UI-02** partial |
+| **UI-E List filters** | not started | manual | n/a | **AC-UI-02** |
+| **UI-F Create** | not started | manual | n/a | **AC-UI-01** |
+| **UI-G Detail read** | not started | manual | n/a | **AC-UI-03** |
+| **UI-H Detail save** | not started | manual | n/a | **AC-UI-04** |
+| **UI-I Comments** | not started | manual | n/a | **AC-UI-05** |
+| **UI-J Status** | not started | manual | n/a | **AC-UI-06** |
+| **UI-K Ask** | not started | manual (+ optional live RAG) | review-rag-output optional | **AC-UI-08…12** |
+| **UI-L Demo + review** | not started | §8.7 script | review-frontend | **AC-UI-07**, hub **§8.7** |
+
+---
+
+## 20. Part II — Frontend implementation (`frontend/`)
+
+**Status:** not started  
+**Depends on:** Backend Part I **complete** (ticket + ask APIs on **8080**). For grounded ask demos, operator-managed Ollama + corpus per [`spec/evaluation-strategy.md`](spec/evaluation-strategy.md) — not required to merge individual UI slices.  
+**Implements:** **FEAT-01…11**, **FEAT-15…18** (user-visible); **FR-UI-01…03**; **AC-UI-01…12**; demo [`spec/requirements.md`](spec/requirements.md) **§8.7**.  
+**Read first:** [`rules/frontend.md`](rules/frontend.md), [`spec/ui-flow.md`](spec/ui-flow.md), [`spec/architecture.md`](spec/architecture.md) **§12**, [`spec/api-contract.md`](spec/api-contract.md), [`spec/rag-api-contract.md`](spec/rag-api-contract.md) **§7**, [`commands/review-frontend.md`](commands/review-frontend.md).
+
+### 20.0 How to use Part II
+
+- Work **UI-A → UI-L** in the order in §16.1 unless a slice explicitly allows **parallel** work (noted below).
+- Each slice has **Done criteria** checkboxes; run [`commands/review-frontend.md`](commands/review-frontend.md) on the diff before marking **UI-L** complete.
+- **No frontend automated tests** this milestone ([`rules/frontend.md`](rules/frontend.md), [`spec/ui-flow.md`](spec/ui-flow.md) §2.2).
+- After material JS changes under `frontend/`, run `graphify update .`.
+- **Do not** add auth, delete ticket, agent-from-ask, confidence UI, or vector admin consoles ([`spec/requirements.md`](spec/requirements.md) **§2.3 Reference**).
+
+### 20.1 Frontend sequencing gates
+
+| Gate | Meaning |
+|------|---------|
+| **FG0** | `frontend/` package exists; Node **24.x** LTS; `next dev` serves on **3000**; `.env.example` has **names only**. |
+| **FG1** | Single HTTP module parses `{ data, meta? }` / `{ error }`; no duplicate `fetch` in screens. |
+| **FG2** | **DEC-20** routes exist (stubs OK): `/` → `/tickets`, `/tickets`, `/tickets/new`, `/tickets/[id]`, `/ask`; global nav list ↔ ask. |
+| **FG3** | **AC-UI-01…07** provable manually (CRUD, search/filter, comments, status, errors). |
+| **FG4** | **AC-UI-08…12** + demo **§8.7** + review-frontend **Pass**. |
+
+### 20.2 Target layout (`frontend/`)
+
+Per [`rules/frontend.md`](rules/frontend.md) and [`spec/ui-flow.md`](spec/ui-flow.md) §5:
+
+```text
+frontend/
+  .nvmrc                      # 24
+  package.json                  # engines.node >=24 <25; next, react, vite (dev)
+  .env.example                  # NEXT_PUBLIC_API_BASE_URL, VITE_API_BASE_URL — names only
+  app/                          # Next.js App Router
+    layout.js                   # shell + nav
+    page.js                     # redirect / → /tickets
+    tickets/
+      page.js                   # list
+      new/page.js               # create
+      [id]/page.js              # detail
+    ask/page.js                 # assistant
+  src/
+    api/
+      client.js                 # base URL, fetch wrapper, envelopes
+      tickets.js                # ticket + comment calls (optional split)
+      ask.js                    # POST ask (optional split)
+    components/                 # Loading, ErrorBanner, form controls, status buttons
+    lib/                        # optional: format dates, status labels
+  next.config.js                # rewrites/proxy to :8080 optional
+  vite.config.js                # port 5173; proxy /api for shared-module HMR
+```
+
+**Stack (**DEC-15**):** React function components; **JavaScript** only (no TypeScript). Plain CSS (global or CSS modules) — **no** Tailwind/MUI/Redux/Zustand unless user agrees later.
+
+**API base:** `NEXT_PUBLIC_API_BASE_URL` in browser; optional `VITE_API_BASE_URL` when exercising `src/` under Vite. Prefer relative `/api/v1/...` when Next rewrites proxy to backend.
+
+### 20.3 Slice dependency graph (independence)
+
+```text
+UI-A (scaffold)
+  └─ UI-B (API client)
+       ├─ UI-C (shell + routes)
+       │    ├─ UI-D (list basic) ── UI-E (search/filter/page)
+       │    ├─ UI-F (create)          [parallel with D/E after C]
+       │    ├─ UI-G (detail read) ──┬─ UI-H (field save)
+       │    │                         ├─ UI-I (comments)   [parallel after G]
+       │    │                         └─ UI-J (status)     [parallel after G]
+       │    └─ UI-K (ask)             [parallel after C; citations need G for links]
+       └─ UI-L (demo + review)       [after FG3 + FG4 slices]
+```
+
+---
+
+### 20.4 Phase UI-A — Scaffold and tooling
+
+**Status:** not started  
+**Depends on:** none (repo may have no `frontend/` yet)  
+**Maps to:** [`spec/ui-flow.md`](spec/ui-flow.md) **IR-UI-01**, **IR-UI-03**; [`rules/frontend.md`](rules/frontend.md) Stack §
+
+**Why:** Establishes the approved stack and dev ports before any product screen.
+
+**Work**
+
+- **UI-A.1** Create `frontend/` with `package.json`: `engines.node` `>=24 <25`; scripts `dev` (`next dev`), `build` (`next build`), `start` (`next start`); dependencies `next`, `react`, `react-dom`; devDependency `vite` for shared-module config.
+- **UI-A.2** Add `.nvmrc` with `24`.
+- **UI-A.3** Add `.env.example` with `NEXT_PUBLIC_API_BASE_URL=http://localhost:8080` and `VITE_API_BASE_URL=http://localhost:8080` (no secrets).
+- **UI-A.4** Minimal `next.config.js` (optional `rewrites` from `/api` → `http://localhost:8080`).
+- **UI-A.5** `vite.config.js` with `server.port` **5173** and optional `proxy` for `/api` ([`rules/frontend.md`](rules/frontend.md)).
+- **UI-A.6** Root `README` snippet or `frontend/README.md`: run backend on 8080, then `cd frontend && npm install && npm run dev`.
+
+**Done criteria — UI-A**
+
+- [ ] `npm run build` succeeds under Node 24.
+- [ ] `npm run dev` serves on **3000**.
+- [ ] No committed `.env` with secrets.
+
+---
+
+### 20.5 Phase UI-B — HTTP client and error model
+
+**Status:** not started  
+**Depends on:** UI-A  
+**Maps to:** [`spec/ui-flow.md`](spec/ui-flow.md) §5–§6, unit **UI-B**; [`rules/api-standards.md`](rules/api-standards.md)
+
+**Why:** One place for envelopes prevents drift and satisfies review-frontend API client checks.
+
+**Work**
+
+- **UI-B.1** `src/api/client.js`: `getBaseUrl()` from `process.env.NEXT_PUBLIC_API_BASE_URL` (and `import.meta.env.VITE_API_BASE_URL` when used from Vite-only entry).
+- **UI-B.2** `requestJson(path, options)` — parse JSON; on `!res.ok` throw `ApiError` with `error.message`, `error.details`, `status`, `code`.
+- **UI-B.3** Helpers: `unwrapData(body)` → `data`; list helper returns `{ data, meta }`.
+- **UI-B.4** JSDoc typedefs aligned to [`spec/api-contract.md`](spec/api-contract.md) §3 (`TicketSummary`, `TicketDetail`, `Comment`, etc.) and ask `AskResponseData` from [`spec/rag-api-contract.md`](spec/rag-api-contract.md).
+- **UI-B.5** `src/api/tickets.js`: `listTickets({ page, size, sort, q, status })`, `getTicket(id)`, `createTicket(body)`, `patchTicket(id, body)`, `addComment(id, body)` — paths under `/api/v1/tickets`.
+- **UI-B.6** `src/api/ask.js`: `askQuestion(question)` → `POST /api/v1/ai/ask` with `{ question }` (may also support `/api/ai/ask` if shared with backend dual path).
+
+**Verification (manual, no test files)**
+
+- With backend running: client `listTickets` returns array; forced 404 throws readable `ApiError`.
+
+**Done criteria — UI-B**
+
+- [ ] No raw `fetch` in `app/` route files (only via `src/api/*`).
+- [ ] Empty list response does not throw.
+
+---
+
+### 20.6 Phase UI-C — Application shell and routes
+
+**Status:** not started  
+**Depends on:** UI-A, UI-B (routes may render placeholders without API)  
+**Maps to:** [`spec/ui-flow.md`](spec/ui-flow.md) §4 **UI-A**, **DEC-20**
+
+**Work**
+
+- **UI-C.1** `app/layout.js`: site header with links **Tickets** (`/tickets`) and **Ask** (`/ask`); semantic `<main>`.
+- **UI-C.2** `app/page.js`: redirect to `/tickets`.
+- **UI-C.3** Stub pages for `/tickets`, `/tickets/new`, `/tickets/[id]`, `/ask` (title + “coming soon” OK until later slices).
+- **UI-C.4** Shared `src/components/Loading.jsx`, `ErrorBanner.jsx` (props: message, optional details).
+
+**Done criteria — UI-C**
+
+- [ ] All **DEC-20** routes reachable from nav.
+- [ ] **FG2** satisfied (stubs acceptable).
+
+---
+
+### 20.7 Phase UI-D — Ticket list (basic)
+
+**Status:** not started  
+**Depends on:** UI-C, UI-B  
+**Maps to:** **AC-UI-02** (partial); [`spec/ui-flow.md`](spec/ui-flow.md) §7.1
+
+**Work**
+
+- **UI-D.1** `app/tickets/page.js` (or thin page + `src/components/TicketList.jsx`): `GET` default `page=0`, `size=20`.
+- **UI-D.2** Table or list: `id`, `title`, `status`, `priority`, `assignee`, `updatedAt`.
+- **UI-D.3** Row click → `/tickets/[id]`.
+- **UI-D.4** Loading and empty states (“No tickets yet” + link to **New ticket**).
+- **UI-D.5** Button **New ticket** → `/tickets/new`.
+
+**Done criteria — UI-D**
+
+- [ ] Persisted tickets from backend appear after refresh.
+- [ ] **AC-UI-02** without search/filter yet.
+
+---
+
+### 20.8 Phase UI-E — List search, status filter, pagination
+
+**Status:** not started  
+**Depends on:** UI-D  
+**Maps to:** **AC-UI-02**; **AC-CORE-07**, **08**; **DEC-20** (Apply + Enter, `meta` pagination)
+
+**Work**
+
+- **UI-E.1** Keyword input bound to `q`; **Apply** button and **Enter** trigger refresh (do not debounce-every-keystroke as the only mode).
+- **UI-E.2** Status filter: “All” or enum value → `status` query param.
+- **UI-E.3** Combine `q` and `status` in one request.
+- **UI-E.4** Pagination UI from `meta.page`, `meta.totalPages`, `meta.totalElements`; prev/next.
+- **UI-E.5** Filtered empty copy: “No matches for …”.
+
+**Done criteria — UI-E**
+
+- [ ] Search hits title/description per backend **DEC-08** (comment-only text does not match).
+- [ ] **AC-UI-02** complete.
+
+---
+
+### 20.9 Phase UI-F — Create ticket
+
+**Status:** not started  
+**Depends on:** UI-C, UI-B (**parallel** with UI-D/E after UI-C)  
+**Maps to:** **AC-UI-01**, **AC-UI-07** (create validation); [`spec/ui-flow.md`](spec/ui-flow.md) §7.2
+
+**Work**
+
+- **UI-F.1** Form fields: `title` (required), `description`, `priority` select (`LOW`|`MEDIUM`|`HIGH`|`CRITICAL`), `assignee`, optional `category` — **no `status` field**.
+- **UI-F.2** Submit → `POST /api/v1/tickets`; on **201** navigate to `/tickets/{data.id}` (**DEC-20**).
+- **UI-F.3** **400** → show `error.message` and map `details[]` to fields; preserve user input.
+- **UI-F.4** Cancel → `/tickets` without submit.
+
+**Done criteria — UI-F**
+
+- [ ] New `TKT-{n}` visible on detail without DB tools.
+- [ ] Empty title shows readable validation (**demo §8.7** step 8 pattern).
+
+---
+
+### 20.10 Phase UI-G — Ticket detail (read)
+
+**Status:** not started  
+**Depends on:** UI-C, UI-B  
+**Maps to:** **AC-UI-03**; [`spec/ui-flow.md`](spec/ui-flow.md) §7.3
+
+**Work**
+
+- **UI-G.1** Load `GET /api/v1/tickets/{id}` from route param (`TKT-1001` style).
+- **UI-G.2** Display all detail fields + comments ascending by `createdAt`.
+- **UI-G.3** **404** → “Ticket not found” + link to list.
+- **UI-G.4** Link to `/ask` in detail footer (**DEC-20**).
+
+**Done criteria — UI-G**
+
+- [ ] **AC-UI-03**; citation deep-links from ask (UI-K) can land here.
+
+---
+
+### 20.11 Phase UI-H — Detail field update (Save)
+
+**Status:** not started  
+**Depends on:** UI-G  
+**Maps to:** **AC-UI-04**; **DEC-20** (Save separate from status)
+
+**Work**
+
+- **UI-H.1** Editable: `title`, `description`, `priority`, `assignee`, `category`, `resolutionNotes`.
+- **UI-H.2** **Save changes** sends `PATCH` with **only changed** fields — **omit `status`**.
+- **UI-H.3** Success: update view from response `data` or refetch GET.
+- **UI-H.4** **400** field errors; reload shows persisted values (**AC-CORE-09** with backend restart demo).
+
+**Done criteria — UI-H**
+
+- [ ] **AC-UI-04** after browser reload.
+
+---
+
+### 20.12 Phase UI-I — Comments
+
+**Status:** not started  
+**Depends on:** UI-G (**parallel** with UI-H after UI-G)  
+**Maps to:** **AC-UI-05**
+
+**Work**
+
+- **UI-I.1** Comment thread (read-only list from detail).
+- **UI-I.2** Composer: `body` required; `POST .../comments`.
+- **UI-I.3** On **201**, append or refetch; show **400** on blank body.
+
+**Done criteria — UI-I**
+
+- [ ] **AC-UI-05**.
+
+---
+
+### 20.13 Phase UI-J — Status transitions
+
+**Status:** not started  
+**Depends on:** UI-G (read status); UI-H recommended so field save is stable  
+**Maps to:** **AC-UI-06**; [`spec/state-machine.md`](spec/state-machine.md); [`spec/ui-flow.md`](spec/ui-flow.md) §9
+
+**Work**
+
+- **UI-J.1** Button group: legal targets only per current `status` (§9.1 matrix); hide/disable for `CLOSED` / `CANCELLED`.
+- **UI-J.2** Each action → `PATCH` with `{ "status": "<target>" }` only (or status-only body).
+- **UI-J.3** **409** `ILLEGAL_TRANSITION` → prominent message; refetch ticket so UI matches server.
+- **UI-J.4** Optional: offer illegal target for demo — backend must still reject (**AC-CORE-11**).
+
+**Done criteria — UI-J**
+
+- [ ] Happy path OPEN → IN_PROGRESS → RESOLVED → CLOSED in UI.
+- [ ] **409** readable on illegal attempt.
+
+---
+
+### 20.14 Phase UI-K — Ask / assistant page
+
+**Status:** not started  
+**Depends on:** UI-C, UI-B (**parallel** with ticket phases after UI-C); UI-G for citation links  
+**Maps to:** **AC-UI-08…12**; [`spec/rag-api-contract.md`](spec/rag-api-contract.md) **DEC-11**
+
+**Work**
+
+- **UI-K.1** `/ask`: textarea + submit; disable while loading.
+- **UI-K.2** Success **200**: show `data.answer` in a visually distinct **assistant** panel (**AC-UI-12**).
+- **UI-K.3** Render `data.citedTicketIds` as links to `/tickets/{id}` (**AC-UI-09**).
+- **UI-K.4** No-match **200**: show honest `data.answer` (e.g. “No relevant tickets found.”); empty citations — not an error banner (**AC-UI-10**).
+- **UI-K.5** **400** validation on blank/oversized question.
+- **UI-K.6** No buttons for create-ticket, notify, or tools (**AC-UI-11**).
+
+**Done criteria — UI-K**
+
+- [ ] Band A backend tests already green; UI manual check with stub or live RAG.
+- [ ] Optional: one [`commands/review-rag-output.md`](commands/review-rag-output.md) pass when Ollama corpus available.
+
+---
+
+### 20.15 Phase UI-L — Demo hardening and review
+
+**Status:** not started  
+**Depends on:** UI-E, UI-F, UI-H, UI-I, UI-J, UI-K (FG3 + FG4)  
+**Maps to:** [`spec/requirements.md`](spec/requirements.md) **§8.7**; [`spec/ui-flow.md`](spec/ui-flow.md) §11–§12
+
+**Work**
+
+- **UI-L.1** Walk demo script steps that touch UI (create, list/search, detail update, comment, transitions, restart persistence, ask with citations, no-match, validation errors).
+- **UI-L.2** Run [`commands/review-frontend.md`](commands/review-frontend.md) on full `frontend/` diff — fix **blocker** / **major** Failures.
+- **UI-L.3** Cross-check **AC-UI-01…12** table in [`spec/ui-flow.md`](spec/ui-flow.md) §13.
+- **UI-L.4** `graphify update .` after frontend files stabilize.
+
+**Done criteria — UI-L**
+
+- [ ] **FG4**; review-frontend **Pass**.
+- [ ] Demo **§8.7** UI steps repeatable without Postman.
+
+---
+
+### 20.16 Frontend acceptance map
+
+| Slice | Primary **AC-UI** | Hub **AC-CORE** (UI-facing) |
+|-------|-------------------|-----------------------------|
+| UI-F | 01 | 01, 10 |
+| UI-E | 02 | 02, 07, 08 |
+| UI-G | 03 | 03 |
+| UI-H | 04 | 04, 05, 09 |
+| UI-I | 05 | 06 |
+| UI-J | 06 | 11, 12, 13 |
+| UI-B…C | 07 | 10, 11 |
+| UI-K | 08–12 | 16, 17, 18 |
+
+### 20.17 Frontend explicit non-implement list
+
+- [ ] No TypeScript in `frontend/`
+- [ ] No Vitest/Playwright/Cypress or `*.test.jsx`
+- [ ] No auth/login screens
+- [ ] No delete-ticket UI
+- [ ] No `PUT` / `DELETE` ticket calls
+- [ ] No ask-side agent actions
+- [ ] No confidence badges or vector debug UI
+- [ ] No Tailwind/MUI/Redux/Zustand unless user agrees
+- [ ] No hardcoded `localhost:8080` in source (use env or Next rewrites)
+
+### 20.18 Frontend review hygiene
+
+After each slice **UI-D** onward:
+
+1. Manual smoke against running backend.
+2. For merge-ready UI: [`commands/review-frontend.md`](commands/review-frontend.md).
+3. Do **not** run [`commands/generate-tests.md`](commands/generate-tests.md) for frontend files.
 
 ---
 
@@ -876,3 +1285,4 @@ After each phase:
 | 2026-10-04 | **C-06** tightened: derived queries → `Specification` → `@EntityGraph` → minimal native; removed custom repository `EntityManager` JPQL pattern from target implementation. |
 | 2026-10-04 | Backend packages: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`, `service`, `rag`, `config` (replaced `api/` + `persistence/` split). |
 | 2026-10-04 | **Stack upgrade (G):** Backend migrated to Boot **4.1.1**, JDK **25**, Spring AI **2.0.1**, Jackson **3**, Testcontainers **2.x**; `./mvnw clean test` green with `JAVA_HOME` on JDK 25. |
+| 2026-10-04 | **Part II (§20):** Frontend plan under `frontend/` — phases **UI-A…UI-L**, gates **FG0–FG4**, aligned to **DEC-15**/**DEC-20**, **AC-UI-01…12**, `rules/frontend.md`, `commands/review-frontend.md`, assessment PDF capabilities. |
