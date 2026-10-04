@@ -39,20 +39,20 @@ Requirement → Specification → review-spec → Plan/Tasks → Implementation 
 
 ## Spec set (ten files on disk — 2026-10-04)
 
-Implement from these; **draft** unless header says **agreed**. PDF themes: [`requirements.md`](../../spec/requirements.md) **§0.4** + **§0.5**; per-file **§0** maps; summary [`assessment-brief.md`](../../docs/assessment-brief.md) **§4** and **§13**. PDF UI spec: [`ui-flow.md`](../../spec/ui-flow.md) (UI architecture summary: [`architecture.md`](../../spec/architecture.md) **§12**).
+Implement from these; all ten files are **agreed** (2026-10-04). PDF themes: [`requirements.md`](../../spec/requirements.md) **§0.4** + **§0.5**; per-file **§0** maps; summary [`assessment-brief.md`](../../docs/assessment-brief.md) **§4** and **§13**. PDF UI spec: [`ui-flow.md`](../../spec/ui-flow.md) (**DEC-20** UX); UI architecture summary: [`architecture.md`](../../spec/architecture.md) **§12**.
 
 | File | Status | Primary content | §0 (PDF map / triad) |
 |------|--------|-----------------|----------------------|
-| [`requirements.md`](../../spec/requirements.md) | draft hub | FEAT-*, AC-CORE-*, flows A–E, OQ/DEC §10, §0.4 + **§0.5** | Hub §0.1–0.5 |
-| [`architecture.md`](../../spec/architecture.md) | draft | Modules, APIs, RAG §15–16; frontend **§12**; verbatim RAG ladder | §0 |
-| [`ui-flow.md`](../../spec/ui-flow.md) | draft | PDF `ui-flow`: screens, flows, **AC-UI-*** | §0 |
+| [`requirements.md`](../../spec/requirements.md) | **agreed** hub | FEAT-*, AC-CORE-*, flows A–E, OQ/DEC §10, §0.4 + **§0.5** | Hub §0.1–0.5 |
+| [`architecture.md`](../../spec/architecture.md) | **agreed** | Modules, APIs, RAG §15–16; frontend **§12**; verbatim RAG ladder | §0 |
+| [`ui-flow.md`](../../spec/ui-flow.md) | **agreed** | PDF `ui-flow`: screens, flows, **AC-UI-***; **DEC-20** | §0 |
 | [`data-model.md`](../../spec/data-model.md) | **agreed** | Entities, Liquibase §14, DTOs §10, AC-DM-* | §0 |
-| [`state-machine.md`](../../spec/state-machine.md) | draft | T1–T5, X1–X3, §5.6 illegal matrix, REST ex §6.5, AC-SM-* | §0 |
-| [`api-contract.md`](../../spec/api-contract.md) | draft | HTTP §2.11; ticket payloads §3–§5; ask §6 summary | §0 |
-| [`rag-api-contract.md`](../../spec/rag-api-contract.md) | draft | Ask HTTP + `data`; **AC-RAG-API-*** | §0 |
-| [`rag-ingestion.md`](../../spec/rag-ingestion.md) | draft | Hybrid chunking **DEC-16**; **DEC-09** embed; sync ingest **DEC-18**; re-ingest **DEC-01** | §0 |
-| [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) | draft | Retrieval quality eval (FEAT-22), AC-EVAL-* | §0 |
-| [`test-strategy.md`](../../spec/test-strategy.md) | draft | **§5** SM determinism; **§6** ask bands; AC layer maps | §0 |
+| [`state-machine.md`](../../spec/state-machine.md) | **agreed** | T1–T5, X1–X3, §5.6 illegal matrix, REST ex §6.5, AC-SM-* | §0 |
+| [`api-contract.md`](../../spec/api-contract.md) | **agreed** | HTTP §2.11; ticket payloads §3–§5; ask §6 summary | §0 |
+| [`rag-api-contract.md`](../../spec/rag-api-contract.md) | **agreed** | Ask HTTP + `data`; **AC-RAG-API-*** | §0 |
+| [`rag-ingestion.md`](../../spec/rag-ingestion.md) | **agreed** | Hybrid chunking **DEC-16**; **DEC-09** embed; sync ingest **DEC-18**; re-ingest **DEC-01** | §0 |
+| [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) | **agreed** | Retrieval quality eval (FEAT-22), AC-EVAL-* | §0 |
+| [`test-strategy.md`](../../spec/test-strategy.md) | **agreed** | **§5** SM determinism; **§6** ask bands; AC layer maps | §0 |
 
 ## Engineering rules (`rules/` — edit these; `.cursor/rules/*.mdc` are pointers only)
 
@@ -62,7 +62,7 @@ Implement from these; **draft** unless header says **agreed**. PDF themes: [`req
 | [`api-standards.md`](../../rules/api-standards.md) | Envelopes, `/api/v1`, pagination, 409 transitions |
 | [`testing.md`](../../rules/testing.md) | JUnit, Mockito, Testcontainers, API integration |
 | [`rag-vector-store.md`](../../rules/rag-vector-store.md) | Ingest, PgVector, ask grounding (not numeric invention) |
-| [`frontend.md`](../../rules/frontend.md) | React + Vite + TS; no frontend tests this milestone |
+| [`frontend.md`](../../rules/frontend.md) | React + Next.js + Vite + JS; Node 24 LTS; no frontend tests this milestone |
 | [`documentation.md`](../../rules/documentation.md) | Where artefacts live; reviewer section maps |
 
 ## Commands (`commands/` — edit these; `.cursor/commands/*.md` are pointers only)
@@ -152,5 +152,5 @@ When a meaningful AI mistake is caught (bad code or ungrounded answer), run [`co
 | 2026-10-04 | Spec §0 pattern, requirements §0.5, updated spec-set table; aligned with `rules/documentation.md` reviewer maps. |
 | 2026-10-04 | Spec template: **`##` heading unit suffix**; search `· unit **` to jump chunks. |
 | 2026-10-04 | **Reference** label + §2.3; rules/commands sync for out-of-PDF scope. |
-| 2026-10-04 | **DEC-01…19** agreed; RAG/ingest/ask pointers updated; chunk defaults **DEC-16**. |
+| 2026-10-04 | **DEC-01…20** agreed; **DEC-20** UX; chunk defaults **DEC-16**. |
 | 2026-10-04 | AI error log [`docs/ai-error.md`](../../docs/ai-error.md); command `update-ai-error`. |

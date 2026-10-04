@@ -125,7 +125,7 @@ HTTP envelopes and paths remain in `rules/api-standards.md`. Ask `data` semantic
 
 ### 2.2 Non-goals
 
-- Authentication principals, roles, multi-tenancy (**Open** OQ-06).
+- Authentication principals, roles, multi-tenancy — **out of scope** (**Agreed** **DEC-12**).
 - Attachments, tags, custom fields, SLA, watchers.
 - Separate **status history** table (only **current** `status` on `ticket` unless a future spec adds audit).
 - Numeric chunk size, embedding model id, vector dimension, top-K — [`rag-ingestion.md`](rag-ingestion.md).

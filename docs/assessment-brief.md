@@ -2,7 +2,7 @@
 
 > **Primary source:** `docs/Assessments.docx` (6 pages, dated 2026-09-24 in file metadata).  
 > **Implementable hub:** [`spec/requirements.md`](../spec/requirements.md) (PDF-faithful requirements, FEAT catalogue, AC-CORE checklist, OQ/DEC register).  
-> **Status:** living summary of everything extracted and agreed in this repo through **2026-10-04**.  
+> **Status:** living summary of everything extracted and agreed in this repo through **2026-10-04** (ten-file **agreed** set; **DEC-01…20**).  
 > **Rule:** This brief restates and indexes; it does **not** grant permission to invent features. Behaviour not in the PDF stays **Open** until confirmed and recorded in `spec/` (see §12).
 
 ---
@@ -86,20 +86,20 @@ Ten standalone files under `spec/`. Ten files include [`ui-flow.md`](../spec/ui-
 
 | Spec | Status | Role | §0 guide |
 |------|--------|------|----------|
-| [`requirements.md`](../spec/requirements.md) | draft hub | PDF **§0.4** + **§0.5** anchors; FEAT-01…23; flows A–E; AC-CORE-01…23; demo §8.7; OQ/DEC | §0.1–0.5 |
-| [`architecture.md`](../spec/architecture.md) | draft | System design §16; RAG §15; frontend **§12**; verbatim PDF RAG ladder | §0 |
-| [`ui-flow.md`](../spec/ui-flow.md) | draft | PDF `ui-flow`: screens, CRUD, ask UX, flows A–E, **AC-UI-*** | §0 |
+| [`requirements.md`](../spec/requirements.md) | **agreed** hub | PDF **§0.4** + **§0.5** anchors; FEAT-01…23; flows A–E; AC-CORE-01…23; demo §8.7; OQ/DEC **§10.2** | §0.1–0.5 |
+| [`architecture.md`](../spec/architecture.md) | **agreed** | System design §16; RAG §15; frontend **§12**; verbatim PDF RAG ladder | §0 |
+| [`ui-flow.md`](../spec/ui-flow.md) | **agreed** | PDF `ui-flow`: screens, CRUD, ask UX, flows A–E, **AC-UI-***; **DEC-20** | §0 |
 | [`data-model.md`](../spec/data-model.md) | **agreed** | Entities, Liquibase §14.5, DTOs, **DEC-08** search, **DEC-04** id | §0 |
-| [`state-machine.md`](../spec/state-machine.md) | draft | T1–T5 / X1–X3; §5.6 matrix; PATCH + JSON ex §6.5; **AC-SM-*** | §0 |
-| [`api-contract.md`](../spec/api-contract.md) | draft | Tickets/comments HTTP; ask §6 summary | §0 |
-| [`rag-api-contract.md`](../spec/rag-api-contract.md) | draft | Grounded ask, citations, no-match (**AC-RAG-API-***) | §0 |
-| [`rag-ingestion.md`](../spec/rag-ingestion.md) | draft | Hybrid chunking; `application.yml` ex; re-ingest (**DEC-01**) | §0 |
-| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | draft | FEAT-22 / **AC-EVAL-***; corpus §5; **F-01…F-10** | §0 |
-| [`test-strategy.md`](../spec/test-strategy.md) | draft | **§5** SM; **§6** ask bands; AC maps | §0 |
+| [`state-machine.md`](../spec/state-machine.md) | **agreed** | T1–T5 / X1–X3; §5.6 matrix; PATCH + JSON ex §6.5; **AC-SM-*** | §0 |
+| [`api-contract.md`](../spec/api-contract.md) | **agreed** | Tickets/comments HTTP; ask §6 summary | §0 |
+| [`rag-api-contract.md`](../spec/rag-api-contract.md) | **agreed** | Grounded ask, citations, no-match (**AC-RAG-API-***) | §0 |
+| [`rag-ingestion.md`](../spec/rag-ingestion.md) | **agreed** | Hybrid chunking; `application.yml` ex; re-ingest (**DEC-01**) | §0 |
+| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **agreed** | FEAT-22 / **AC-EVAL-***; corpus §5; **F-01…F-10** | §0 |
+| [`test-strategy.md`](../spec/test-strategy.md) | **agreed** | **§5** SM; **§6** ask bands; AC maps | §0 |
 
 **PDF coverage:** theme → artefact map in [`requirements.md`](../spec/requirements.md) **§0.4**; **§0.5** completeness checklist; page summary **§13** below. Each spec **§0.3** lists **independent reading units**; major sections are titled `· unit **ID**` for in-file search/jump (hub **§0.8**). Steering (`rules/`, `commands/`, this skill) **indexes** specs — see [`rules/documentation.md`](../rules/documentation.md) reviewer maps.
 
-[`architecture.md`](../spec/architecture.md) holds **system design** (modules, APIs, RAG narrative). Entity tables and indexes: [`data-model.md`](../spec/data-model.md) (`vector(768)` per **DEC-09**). Chunking and retrieval **agreed defaults**: [`rag-ingestion.md`](../spec/rag-ingestion.md) §9.3, §12 (**DEC-16**). Ingest timing and failures: **DEC-18**. Ask limits: **DEC-17**. Full register: [`requirements.md`](../spec/requirements.md) §10.2 (**DEC-01…19**).
+[`architecture.md`](../spec/architecture.md) holds **system design** (modules, APIs, RAG narrative). Entity tables and indexes: [`data-model.md`](../spec/data-model.md) (`vector(768)` per **DEC-09**). Chunking and retrieval **agreed defaults**: [`rag-ingestion.md`](../spec/rag-ingestion.md) §9.3, §12 (**DEC-16**). Ingest timing and failures: **DEC-18**. Ask limits: **DEC-17**. Full register: [`requirements.md`](../spec/requirements.md) §10.2 (**DEC-01…20**).
 
 ### Engineering steering (rules + commands)
 
@@ -149,10 +149,11 @@ Use plugins such as **Graphify**, **Caveman**, **Codebase-memory MCP** to reduce
 
 | Choice | Convention |
 |--------|------------|
-| Spring Boot major version | **3** |
+| Spring Boot major version | **4** (**Convention** — PDF names Spring Boot, not major) |
+| Java version | **25** (**Convention** — PDF lists Java 21) |
 | Build | **Maven Wrapper** (`./mvnw`) |
 | Runtime persistence | **PostgreSQL** + **PgVector** + **Liquibase** (**DEC-10** — dev, runtime, Testcontainers tests; **no H2** in v1) |
-| Frontend | **React + Vite + TypeScript** (**DEC-15** agreed) |
+| Frontend | **React + Next.js + Vite + JavaScript** (Node.js **24.x** LTS; **DEC-15** agreed) |
 | Embeddings | **Ollama `nomic-embed-text`** on **PgVector** `vector(768)` (**DEC-09**) |
 | Chat LLM | **Ollama** via Spring AI config (model id env-specific — not fixed in DEC) |
 
@@ -253,7 +254,7 @@ User Question → Similarity Search → Relevant Tickets → LLM + Context → G
 
 ### Retrieval quality (PDF p.5)
 
-- Document and **justify** chunking strategy (paragraph vs fixed-size vs semantic) for ticket data → **`architecture.md`** §16 (PDF names this file); **mechanics and comparison** → [`rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9 (**hybrid** draft default).
+- Document and **justify** chunking strategy (paragraph vs fixed-size vs semantic) for ticket data → **`architecture.md`** §16 (PDF names this file); **mechanics and comparison** → [`rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9 (**Agreed** hybrid per **DEC-16**).
 - **top-K** and **similarity threshold** configurable (**DEC-16** defaults: top-k 8, threshold 0.72, cosine).
 - Document and **justify** embedding model choice (e.g. local Ollama vs cloud) and cost/latency/quality tradeoffs → **`architecture.md`**.
 
@@ -309,7 +310,7 @@ Demo walkthrough mapping: [`requirements.md`](../spec/requirements.md) §8.7.
 
 ## 12. Decisions (authoritative: [`requirements.md`](../spec/requirements.md) §10.2)
 
-**Status (2026-10-04):** **DEC-01…19** agreed. No blocking open rows in §10.2. Steering (`rules/`, `commands/`, this brief) indexes the hub — do not contradict it in code.
+**Status (2026-10-04):** **DEC-01…20** agreed. No blocking open rows in §10.2. Steering (`rules/`, `commands/`, this brief) indexes the hub — do not contradict it in code.
 
 | DEC | Topic | Summary |
 |-----|--------|---------|
@@ -327,7 +328,8 @@ Demo walkthrough mapping: [`requirements.md`](../spec/requirements.md) §8.7.
 | **DEC-12** | Auth | None in assessment scope |
 | **DEC-13** | Create fields | `title` required; defaults per data model |
 | **DEC-14** | Ticket REST | [`api-contract.md`](../spec/api-contract.md) + `rules/api-standards.md` |
-| **DEC-15** | Frontend | React + Vite + TypeScript |
+| **DEC-15** | Frontend stack | React + Next.js + Vite + JavaScript (Node.js 24.x LTS) |
+| **DEC-20** | UI routes & UX | Next routes §4; `/ask` page; list/detail interaction — [`ui-flow.md`](../spec/ui-flow.md) |
 | **DEC-16** | RAG defaults | Chunk 800/120/80 hybrid; top-k 8; threshold 0.72; cosine |
 | **DEC-17** | Ask request | `question` ≤ 2000; unknown JSON → 400; citation order + dedupe |
 | **DEC-18** | Ingest | Sync after commit; failure visibility; skip empty text; status-only re-ingest |
@@ -394,7 +396,8 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 | 2026-09-24 | Initial faithful restatement from `docs/Assessments.docx` (with `spec/requirements.md`). |
 | 2026-09-24 | State-machine summary clarified; status-transition gaps aligned with requirements. |
 | 2026-10-04 | `architecture.md` scope note; aligned with expanded system-design spec. |
-| 2026-10-04 | **Major update:** Merged PDF text (6 pages via extraction), all five `spec/` artefacts to date, agreed **DEC-03/04/05/07/08/13**, interim **DEC-02/06/14**, open **DEC** list, repo hygiene paths, conventions vs PDF, full acceptance checklist, RAG/ingestion reconciliation note. |
+| 2026-10-04 | Hygiene pass: **DEC-01…20**; steering docs synced to **agreed** ten-file set. |
+| 2026-10-04 | Early consolidation: partial **DEC** tranche and interim labels — superseded by §12 **DEC-01…20**. |
 | 2026-10-04 | Seven `spec/` files (added `rag-ingestion`, `test-strategy`); `rules/` + `commands/` index; AC-SM / AC-API / AC-RAG-ING pointers; hybrid chunking; links to documentation skill. |
 | 2026-10-04 | PDF lists ten spec names; `evaluation-strategy` added; §0.4 / §13 traceability (later: eight files on disk — see 2026-10-04 consolidation row). |
 | 2026-10-04 | `evaluation-strategy.md` detail: §5–§8 corpus, procedure, failure taxonomy; cross-links in rules/commands/test-strategy. |
@@ -410,5 +413,5 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 | 2026-10-04 | Primary source: `docs/Assessments.docx`. |
 | 2026-10-04 | §4 spec table + §13: requirements §0.5 and per-spec §0 maps; steering sync with `rules/` / `commands/` / `skills/`. |
 | 2026-10-04 | §14: hub §0.8 heading unit suffix; in-spec search `· unit **` for chunk jump. |
-| 2026-10-04 | **DEC-01…19** agreed; §7 conventions, §10 RAG, §12 decision table; steering sync with `rules/` / `commands/` / `skills/`. |
+| 2026-10-04 | **DEC-20** UI UX; §4 all specs **agreed**; §7 Boot 4 / Java 25 conventions. |
 | 2026-10-04 | AI error log [`docs/ai-error.md`](ai-error.md); `/update-ai-error`; `ai-mistakes.md` pointer. |

@@ -153,7 +153,7 @@ assessment PDF mandates every specific technology or version.
 | Schema | Liquibase migrations |
 | AI framework | Spring AI |
 | Initial AI provider | Ollama, via configuration |
-| Frontend | React with Vite and TypeScript (not Next.js) |
+| Frontend | React with Next.js, Vite, and JavaScript (Node.js 24.x Active LTS) |
 | Integration tests | Testcontainers with PostgreSQL |
 | Local infrastructure | Docker Compose |
 | CI | None initially |

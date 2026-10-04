@@ -33,6 +33,8 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | [AE-010](#ae-010) | 2026-10-04 11:56 | code | `TicketService` dual constructors failed Spring boot |
 | [AE-011](#ae-011) | 2026-10-04 13:15 | code | `DisabledEmbeddingPort` `@ConditionalOnMissingBean` left no `EmbeddingPort` |
 | [AE-012](#ae-012) | 2026-10-04 15:33 | code | `OllamaAiConfig` fallback won over live Ollama embeddings at runtime |
+| [AE-013](#ae-013) | 2026-10-04 15:51 | process | Created `frontend/` scaffold without user authorization |
+| [AE-014](#ae-014) | 2026-10-04 16:00 | spec / docs | Stale draft / SPA / interim labels after agreed specs and **DEC-20** |
 
 ---
 
@@ -90,7 +92,7 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 - **Kind:** spec / docs
 - **What was wrong:** After **DEC-06** (PATCH `status`) and **DEC-18** (sync ingest after commit), child specs still said **interim** or implied **async** ingest / open DEC-06.
 - **How detected:** Second `/review-spec` after DEC-09…19 ([`.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md`](../.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md)).
-- **How resolved:** Scrubbed stale labels in `api-contract.md`, `state-machine.md`, `architecture.md`, `data-model.md`, and the UI spec. Hub §10.2 lists **DEC-01…19** as agreed.
+- **How resolved:** Scrubbed stale labels in `api-contract.md`, `state-machine.md`, `architecture.md`, `data-model.md`, and the UI spec. Hub §10.2 lists **DEC-01…20** as agreed.
 
 ## AE-008
 
@@ -132,6 +134,22 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 - **How detected:** HTTP sanity on a running app with Ollama up ([`.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md`](../.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md)); server log `IllegalStateException: Embeddings are not configured…`.
 - **How resolved:** `@Lazy` `@Bean` factories in `OllamaAiConfig` that choose `OllamaEmbeddingPort` / `OllamaGenerationPort` via `ObjectProvider.getIfAvailable()` else disabled stubs; plain classes for disabled ports; corrected embedding property path. `./mvnw test` green; ask **200** in sanity. Commit `f37984c`.
 
+## AE-013
+
+- **When:** 2026-10-04 15:51 UTC
+- **Kind:** process
+- **What was wrong:** While updating steering for **DEC-15** (React + Next.js + Vite + JavaScript), the assistant added a `frontend/` tree (`.nvmrc`, `package.json`, `.env.example`) and implied implementation. The user had asked only to change relevant files, not to scaffold or build the UI.
+- **How detected:** User message: do not create the `frontend/` directory or implement anything there ([`.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md`](../.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md)).
+- **How resolved:** Deleted the scaffold; updated [`rules/frontend.md`](../rules/frontend.md) and related specs to document the stack without assuming a committed `frontend/` tree until explicitly authorized. Backend CORS for dev ports kept as optional prep.
+
+## AE-014
+
+- **When:** 2026-10-04 16:00 UTC
+- **Kind:** spec / docs
+- **What was wrong:** After specs were **agreed** and **DEC-09…19** closed, several steering files still said “draft spec”, static SPA-only frontend, or interim stack copy (`commands/review-code.md`, `generate-tests.md`, `rules/java-springboot.md`, `spec/architecture.md` §18/§21, `docs/assessment-brief.md`, etc.). That contradicted **DEC-15**, **DEC-20**, and hub §10.2 “no blocking open”.
+- **How detected:** Frontend readiness audit vs `docs/Assessments.docx`; user asked to close open/draft items, then a hygiene pass ([`.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md`](../.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md)).
+- **How resolved:** Added **DEC-20** (routes/UX); synced `spec/ui-flow.md`, `spec/requirements.md`, `spec/architecture.md`, `rules/`, `commands/`, `docs/assessment-brief.md`, and skills; removed stale draft/SPA/interim wording. `grep` hygiene on `commands/` + `rules/` for `draft \`spec/` → no matches.
+
 ---
 
 ## Revision history
@@ -142,3 +160,4 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | 2026-10-04 | Added AE-009…010 (2 new); skipped 0 duplicates; total 10 entries. |
 | 2026-10-04 | Added AE-011 (1 new); extended AE-010 resolution; skipped 0 duplicates; total 11 entries. |
 | 2026-10-04 | Added AE-012 (1 new); extended AE-011 resolution; skipped 0 duplicates; total 12 entries. |
+| 2026-10-04 | Added AE-013…014 (2 new); skipped 0 duplicates; total 14 entries. |

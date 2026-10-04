@@ -15,7 +15,7 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 
 ## Inputs
 
-- Specs: all ten PDF-listed files under `spec/` (see [`rules/documentation.md`](../rules/documentation.md)); each child spec **§0** for domain scope; hub **§0.4–§0.8**; use **`##` heading unit tags** (`· unit **TS-B**`) to locate test targets quickly; only [`data-model.md`](../spec/data-model.md) is **agreed**; others **draft**
+- Specs: all ten PDF-listed files under `spec/` (see [`rules/documentation.md`](../rules/documentation.md)); each child spec **§0** for domain scope; hub **§0.4–§0.8**; use **`##` heading unit tags** (`· unit **TS-B**`) to locate test targets quickly. All ten `spec/*.md` files are **agreed** (2026-10-04; **DEC-01…20**).
 - **[`spec/test-strategy.md`](../spec/test-strategy.md)** — primary map for **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-CORE-*** layers. **[`spec/requirements.md`](../spec/requirements.md)** — **`AC-FEAT-*`** (§4.2) and FR traceability (§9). **DEC-10:** Postgres Testcontainers only (no H2). **DEC-17:** ask validation tests. Do not invent tests for **Reference** §2.3 features.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
@@ -124,7 +124,8 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-10-04 | P0 assertions use agreed [`spec/data-model.md`](../spec/data-model.md) (id, title required, DEC-08 search). |
 | 2026-10-04 | Inputs limited to three present specs + documentation interim map. |
 | 2026-10-04 | [`spec/state-machine.md`](../spec/state-machine.md) drives transition test matrix. |
-| 2026-10-04 | HTTP contract tests use draft [`spec/api-contract.md`](../spec/api-contract.md). |
+| 2026-10-04 | HTTP contract tests use [`spec/api-contract.md`](../spec/api-contract.md) (**agreed**). |
+| 2026-10-04 | Hygiene: inputs list ten **agreed** specs; **DEC-01…20**. |
 | 2026-10-04 | Inputs: [`spec/test-strategy.md`](../spec/test-strategy.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). |
 | 2026-10-04 | RAG retrieval quality → [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §5.2–§8; **AC-TS-05**. |
 | 2026-10-04 | P0 maps to [`test-strategy.md`](../spec/test-strategy.md) **§5** (SM) and **§6** (ask bands). |

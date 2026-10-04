@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-flow.md`](../spec/ui-flow.md) (**§0** PDF ui-flow map; **AC-UI-***). Stack **agreed** **DEC-15** (React+Vite+TS); transition API **agreed** **DEC-06** (PATCH `status`). Out-of-PDF UI (**Reference** — do not build): [`spec/requirements.md`](../spec/requirements.md) **§2.3**. UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E, **§0.5**, and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-flow.md`](../spec/ui-flow.md) (**§0** PDF ui-flow map; **AC-UI-***). Stack **agreed** **DEC-15** (React + Next.js + Vite + JavaScript; Node.js **24.x** Active LTS); UX **DEC-20** ([`ui-flow.md`](../spec/ui-flow.md) §4, §7); transition API **agreed** **DEC-06** (PATCH `status`). Out-of-PDF UI (**Reference** — do not build): [`spec/requirements.md`](../spec/requirements.md) **§2.3**. UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E, **§0.5**, and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
 
 **This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
 
@@ -11,7 +11,7 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows:
 | [`spec/requirements.md`](../spec/requirements.md) | **AC-CORE-*** UI checklist (§8); demo walkthrough **§8.7**; journeys **§4.1** |
 | [`spec/architecture.md`](../spec/architecture.md) | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
-| [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client types |
+| [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client validation |
 | [`spec/ui-flow.md`](../spec/ui-flow.md) | Screens, CRUD flows, ask/RAG UX, **AC-UI-*** |
 | [`spec/architecture.md`](../spec/architecture.md) §12 | Frontend architecture summary |
 | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Citation / no-match fields inside ask `data` (**DEC-11** agreed) |
@@ -28,23 +28,26 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows:
 - Ask natural-language questions over ticket history; show a **grounded** answer with **ticket ID** citations, or an honest **no relevant tickets found** (or equivalent).
 - No agent UI from ask (no create-ticket / notify / tool-chain from the question box).
 
-The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, TypeScript, Next.js, a CSS kit, a router, or a frontend test tool.
+The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, JavaScript vs TypeScript, a CSS kit, or a frontend test tool.
 
 **This project’s approved conventions** (not PDF mandates):
 
-- **React** + **Vite** + **TypeScript**
-- **No Next.js**
-- API base URL via Vite env (`import.meta.env.VITE_*`) — committed examples list **variable names only**
+- **Node.js** **24.x** Active LTS (**Krypton**) — when a frontend package is added, pin in `.nvmrc` and `package.json` `engines` (e.g. **24.21.x**) compatible with the chosen Next.js GA release
+- **No `frontend/` tree in this repo** until an explicit user request or agreed plan/tasks item authorizes UI implementation — these rules describe conventions only
+- **React** + **Next.js** (App Router) + **Vite** + **JavaScript** (`.js`/`.jsx`; no TypeScript in frontend)
+- **Next.js** owns routing, pages, and production build (`next dev` on **3000** by default)
+- **Vite** owns fast dev/HMR and optional dev proxy for shared modules under `frontend/src/` (especially the HTTP client); default Vite dev port **5173**
+- API base URL via **`NEXT_PUBLIC_*`** in the Next app and **`VITE_*`** when running shared modules under Vite dev — committed examples list **variable names only**
 - Call versioned ticket APIs and envelopes from `rules/api-standards.md` (`/api/v1`, `{ data }`, `{ error }`, list `meta`)
 - Preserve `POST /api/ai/ask` with `{ "question": "..." }` (also `/api/v1/ai/ask`)
 
-**Agreed data shape — [`spec/data-model.md`](../spec/data-model.md) (types in API client):**
+**Agreed data shape — [`spec/data-model.md`](../spec/data-model.md) (shapes in API client JSDoc or inline validation):**
 
 - Ticket **id** display/link: `TKT-{n}` strings from API (DEC-04)
 - Optional **category** enum; optional **resolutionNotes** on detail/edit (DEC-03, DEC-05)
 - Create: **title** required; priority/assignee/category optional; no status on create form (DEC-07, DEC-13)
 
-**Implementer choice (in scope — not blocking DEC):** screen layout, navigation, transition control widget, ask page vs panel, CSS kit, router, client global store — must satisfy demo [`spec/requirements.md`](../spec/requirements.md) **§8.7** / Flow B.
+**Implementer choice (in scope — not blocking DEC):** screen layout, transition control widget, ask page vs panel, CSS kit, client global store — must satisfy demo [`spec/requirements.md`](../spec/requirements.md) **§8.7** / Flow B. Next.js App Router file routes replace a separate client-only router unless spec agrees otherwise.
 
 **Reference — do not build UI for:** auth screens, delete ticket, agent actions from ask, confidence badges, vector/chunk debug consoles ([`spec/requirements.md`](../spec/requirements.md) **§2.3**).
 
@@ -52,11 +55,14 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 
 ## Stack
 
-- SPA with Vite; React function components; TypeScript for props, API types, and state.
-- Avoid `any` and unsafe assertions where practical. Prefer types that match API DTO records (`data` payloads), not invented parallel models.
-- Do not add Next.js, Remix, or a second UI framework.
-- Do not add Tailwind, MUI, React Router, Redux, or Zustand unless the user or an agreed spec says so.
-- Do not add a frontend test runner or write `.test.tsx` / e2e UI tests.
+- **Runtime:** Node.js **24.x** Active LTS only for frontend tooling and `next dev` / `next build`.
+- **UX (**DEC-20**):** Routes `/`, `/tickets`, `/tickets/new`, `/tickets/[id]`, `/ask`; dedicated ask page; list search Apply+Enter; pagination from `meta`; detail Save vs status buttons — see [`ui-flow.md`](../spec/ui-flow.md).
+- **UI:** React function components; **JavaScript** (`.js`/`.jsx`). Prefer JSDoc on the API client for DTO shapes that match [`spec/api-contract.md`](../spec/api-contract.md); do not invent parallel field names.
+- **Application shell:** **Next.js** App Router (`frontend/app/`). Use **`next.config.js`** rewrites/proxy to backend when that is simpler than a Vite-only proxy for page routes.
+- **Shared modules:** **Vite** (`frontend/vite.config.js`) for developing/importing shared code under `frontend/src/` (HTTP client, presentational components). Next transpiles imports from `src/`; do not maintain a second competing SPA entry unless an agreed spec says so.
+- Do not add Remix, Angular, or a second UI framework.
+- Do not add Tailwind, MUI, Redux, or Zustand unless the user or an agreed spec says so.
+- Do not add a frontend test runner or write `.test.jsx` / e2e UI tests.
 
 ## Structure
 
@@ -64,48 +70,70 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 - **One** HTTP module (fetch or a thin wrapper) — no `fetch`/`axios` copied into every screen.
 - Map API success `{ data, meta? }` and error `{ error }` in that module. Surface `error.message` and field `details` on forms. Do not parse a second ad-hoc JSON shape.
 - Hold state at the screen that owns it. No required global store.
-- Do **not** freeze a folder tree here. Prefer a small Vite `src/` with screens + `api` client when implementing.
+- Do **not** freeze a folder tree here. When implementation is authorized, prefer `app/` (Next routes) plus `src/` (shared JS) under the chosen frontend root (often `frontend/`).
 
-### Suggested layout (convention, not mandatory)
+### Suggested layout (convention when implemented — not present in repo today)
 
 ```
-frontend/                 # or repo root if monorepo — pick one and document in README
+frontend/
+  .nvmrc                  # 24 — Active LTS major
+  package.json            # engines.node >=24 <25
+  app/                    # Next.js App Router (pages, layouts)
   src/
-    api/                  # fetch wrapper, types for envelopes
-    screens/              # route-level pages
+    api/                  # fetch wrapper, envelope parsing
     components/           # reusable UI
-    App.tsx
-  .env.example            # VITE_API_BASE_URL only — no secrets
+    lib/                  # optional helpers
+  next.config.js
+  vite.config.js          # shared-module dev / proxy (port 5173)
+  .env.example            # NEXT_PUBLIC_* and VITE_* names only — no secrets
 ```
 
 ### Environment and API base URL
 
-Committed **`.env.example`** (names only):
+When the frontend package exists, committed **`.env.example`** lists names only:
 
 ```bash
-# Backend origin for dev (Vite proxies or calls directly)
+# Next.js client (browser)
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+
+# Vite dev for shared src/ modules (optional local HMR)
 VITE_API_BASE_URL=http://localhost:8080
 ```
 
-Client usage:
+Next.js client usage:
 
-```typescript
-const base = import.meta.env.VITE_API_BASE_URL;
+```javascript
+const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
 const res = await fetch(`${base}/api/v1/tickets?page=0&size=20`);
 const body = await res.json();
 if (!res.ok) throw new ApiError(body.error);
 return body.data;
 ```
 
-Use **`POST /api/v1/ai/ask`** for ask (see `rules/api-standards.md`). Dev proxy in `vite.config.ts` is optional:
+Shared module under Vite dev:
 
-```typescript
-server: {
-  proxy: { '/api': { target: 'http://localhost:8080', changeOrigin: true } },
-},
+```javascript
+const base = import.meta.env.VITE_API_BASE_URL;
+const res = await fetch(`${base}/api/v1/tickets?page=0&size=20`);
 ```
 
-If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api/v1/...`.
+Use **`POST /api/v1/ai/ask`** for ask (see `rules/api-standards.md`). Dev proxy options:
+
+- **Next.js** `rewrites` in `next.config.js` to `http://localhost:8080`, or
+- **Vite** `server.proxy` in `vite.config.js` when exercising `src/` without Next:
+
+```javascript
+// vite.config.js — optional; adjust target to backend
+export default {
+  server: {
+    proxy: { '/api': { target: 'http://localhost:8080', changeOrigin: true } },
+  },
+};
+```
+
+If proxy is used, public base URL env vars can be empty and paths stay relative `/api/v1/...`.
+
+Backend CORS for local dev allows **`http://localhost:3000`** (Next) and **`http://localhost:5173`** (Vite) per `WebCorsConfig` — not `*` as a permanent default.
 
 ## API usage
 
@@ -157,8 +185,9 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 
 ## Do not
 
-- Do not treat React/Vite/TypeScript as PDF mandates.
-- Do not use Next.js.
+- Do not create, scaffold, or commit a `frontend/` directory (or other UI implementation) unless the user or an agreed spec/plan explicitly requests it.
+- Do not treat React/Next.js/Vite/JavaScript as PDF mandates.
+- Do not reintroduce TypeScript in the frontend without an agreed spec change.
 - Do not write frontend test files or pick a UI test framework.
 - Do not duplicate the state machine as the only enforcement.
 - Do not invent API fields, citation JSON, or agent actions from the ask box.
@@ -174,9 +203,12 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §12. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Ticket id, category, resolutionNotes, create requiredness from agreed [`spec/data-model.md`](../spec/data-model.md). |
-| 2026-10-04 | API client types: draft [`spec/api-contract.md`](../spec/api-contract.md). |
+| 2026-10-04 | API client shapes: [`spec/api-contract.md`](../spec/api-contract.md) (**agreed**). |
 | 2026-10-04 | UI flows: requirements §4.1 / §8.7 + architecture §12.3–§12.6 (consolidated PDF `ui-flow` themes). |
 | 2026-10-04 | Product UI detail → [`spec/ui-flow.md`](../spec/ui-flow.md); architecture §12 summary. |
 | 2026-10-04 | `improve-from-assessment-pdf`: PDF UI spec is [`spec/ui-flow.md`](../spec/ui-flow.md). |
 | 2026-10-04 | Pointers to [`ui-flow.md`](../spec/ui-flow.md) **§0** and requirements **§0.5**. |
 | 2026-10-04 | **DEC-15**/**DEC-11** agreed; **Reference** §2.3 — no UI for out-of-PDF features. |
+| 2026-10-04 | **DEC-15** revised: **React + Next.js + Vite + JavaScript**; Node.js **24.x** Active LTS; Next App Router + shared `src/` via Vite; CORS **3000** + **5173**. |
+| 2026-10-04 | Removed mistaken `frontend/` scaffold; stack rules are documentation-only until UI implementation is requested. |
+| 2026-10-04 | Hygiene: **DEC-20** UX; stale **draft** spec pointers removed from steering cross-links. |

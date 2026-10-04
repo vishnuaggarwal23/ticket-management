@@ -15,7 +15,7 @@ Use these during implementation and review. **Edit `rules/` and `commands/`**; `
 | REST envelopes, `/api/v1`, list params, agreed ticket JSON fields | `rules/api-standards.md` (+ [`spec/data-model.md`](../spec/data-model.md)) | `commands/review-code.md` |
 | Tests (backend only) | `rules/testing.md` | `commands/generate-tests.md`, `commands/review-code.md` |
 | RAG ingest / ask / grounding | `rules/rag-vector-store.md` | `commands/review-rag-output.md`, `commands/review-code.md` |
-| React / Vite / TypeScript UI | `rules/frontend.md` | `commands/review-frontend.md` |
+| React / Next.js / Vite / JavaScript UI | `rules/frontend.md` | `commands/review-frontend.md` |
 | Spec quality before coding | `rules/documentation.md` (architecture § map) | `commands/review-spec.md` |
 | This file (docs layout) | `rules/documentation.md` | — |
 
@@ -28,7 +28,7 @@ Authoritative assignment: [`docs/Assessments.docx`](../docs/Assessments.docx). E
 | New or changed `spec/*.md` before coding | `commands/review-spec.md` |
 | Starting a feature slice; need backend test ideas | `commands/generate-tests.md` |
 | Backend Java / API / RAG code diff before merge | `commands/review-code.md` |
-| React / Vite / TypeScript UI diff before merge | `commands/review-frontend.md` |
+| React / Next.js / Vite / JavaScript UI diff before merge | `commands/review-frontend.md` |
 | Manual or demo check of an `/api/ai/ask` answer | `commands/review-rag-output.md` |
 | Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md); hub [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 |
 | Caught wrong AI code or ungrounded answer | `commands/update-ai-error.md` → [`docs/ai-error.md`](../docs/ai-error.md) (see below) |
@@ -76,9 +76,9 @@ Ten assignment spec names → **ten** files under `spec/` (see [`requirements.md
 
 PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **§0.4** and [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**.
 
-**Agreed DEC (do not contradict):** **DEC-01…19** (see [`requirements.md`](../spec/requirements.md) §10.2) — including **DEC-06** (PATCH `status`), **DEC-09** (PgVector + Ollama `nomic-embed-text` / 768), **DEC-10** (PostgreSQL only), **DEC-14** (REST surface), **DEC-16–19** (RAG defaults, ask limits, ingest, eval). Data-model field DECs **DEC-03…08, 13** in [`data-model.md`](../spec/data-model.md).
+**Agreed DEC (do not contradict):** **DEC-01…20** (see [`requirements.md`](../spec/requirements.md) §10.2) — including **DEC-06** (PATCH `status`), **DEC-09** (PgVector + Ollama `nomic-embed-text` / 768), **DEC-10** (PostgreSQL only), **DEC-14** (REST surface), **DEC-15/20** (frontend stack + UX), **DEC-16–19** (RAG defaults, ask limits, ingest, eval). Data-model field DECs **DEC-03…08, 13** in [`data-model.md`](../spec/data-model.md).
 
-**Spec set status:** All ten `spec/*.md` files **agreed** (2026-10-04 user sign-off). **DEC-01…19** in hub §10.2. Re-run `commands/review-spec.md` after material spec edits.
+**Spec set status:** All ten `spec/*.md` files **agreed** (2026-10-04 user sign-off). **DEC-01…20** in hub §10.2. Re-run `commands/review-spec.md` after material spec edits.
 
 **Reference only (do not implement):** Topics listed in [`requirements.md`](../spec/requirements.md) **§2.3** — may appear in child specs for clarity; **exclude** from plans, tasks, and acceptance unless the assignment PDF changes.
 
@@ -96,7 +96,7 @@ PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **
 | [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **Retrieval quality** vs grounding; **Example** corpus + PDF Q1–Q5; procedure §6–§7; failures **F-01…F-10**; **AC-EVAL-*** |
 | [`test-strategy.md`](../spec/test-strategy.md) | **§5** SM determinism; **§6** ask bands; map **AC-CORE** / **AC-SM** / **AC-API** / **AC-DM** (`rules/testing.md`) |
 
-**Agreed spec:** status `agreed` (or equivalent) in the spec header, or explicit user confirmation in chat. Until then, treat as **draft** — implement only what rules already lock (envelopes, stack conventions) and stop for open payloads.
+**Agreed spec:** status `agreed` (or equivalent) in the spec header, or explicit user confirmation in chat. Until then, treat as **draft** — implement only what rules already lock (envelopes, stack conventions) and stop for open payloads. **Current repo (2026-10-04):** all ten `spec/*.md` files and the hub are **agreed**; **DEC-01…20** in [`requirements.md`](../spec/requirements.md) §10.2.
 
 ### [`spec/requirements.md`](../spec/requirements.md) structure (for reviewers)
 
@@ -301,7 +301,8 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | [`skills/documentation/SKILL.md`](../skills/documentation/SKILL.md) expanded; [`docs/assessment-brief.md`](../docs/assessment-brief.md) synced to full spec/rules/commands set. |
 | 2026-10-04 | `api-contract.md` reviewer map: URI catalog, HTTP examples, §7 demo sequence. |
 | 2026-10-04 | All ten PDF `spec/` files present; removed interim missing-spec map; PDF traceability via requirements §0.4 + assessment-brief §13. |
-| 2026-10-04 | Steering sync: **DEC-01…19** agreed in hub §10.2; reviewer maps updated (**DEC-09/10**, ingest **DEC-18**). |
+| 2026-10-04 | Steering sync: **DEC-01…20** agreed in hub §10.2; **DEC-20** UI UX; reviewer maps updated. |
+| 2026-10-04 | Hygiene: commands/rules no longer label child specs **draft**; ten-file set **agreed**. |
 | 2026-10-04 | Added `commands/update-prompt-history.md` for SpecStory index maintenance. |
 | 2026-10-04 | Reviewer map for [`evaluation-strategy.md`](../spec/evaluation-strategy.md); test-strategy §4.1 pointer. |
 | 2026-10-04 | [`test-strategy.md`](../spec/test-strategy.md) reviewer map: §5 state machine, §6 retrieval/AI bands. |

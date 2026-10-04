@@ -51,7 +51,7 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 **Reference only — do not build** ([`spec/requirements.md`](../spec/requirements.md) **§2.3**): async ingest queues, versioned embedding history, ask **confidence** / extra `reason` fields, metadata-only ask filters, semantic chunking v1, agents/rerankers, vector admin APIs.
 - Numerical RAG quality scores, golden-answer sets
 
-Do not assume **unpinned** versions of PostgreSQL, PgVector, Ollama, or models until those are agreed. **Spring Boot**, **JDK**, and **Spring AI BOM** versions are pinned in [`spec/architecture.md`](../spec/architecture.md) §7.3.
+Do not assume **unpinned** versions of PostgreSQL, PgVector, Ollama, or models outside [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12 and **DEC-09** / **DEC-16**. **Spring Boot**, **JDK**, and **Spring AI BOM** versions are pinned in [`spec/architecture.md`](../spec/architecture.md) §7.3.
 
 ## PDF guidance slots (conventions — values in specs)
 
@@ -197,7 +197,8 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 |------|------|
 | 2026-09-24 | Initial RAG ingest, PgVector, retrieve-then-generate ask, and grounding guidelines. |
 | 2026-10-03 | Aligned with approved stack; numeric chunk/K/model settings deferred to `spec/rag-ingestion.md`. |
-| 2026-10-04 | Linked draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); clarified open vs proposed defaults. |
+| 2026-10-04 | Linked [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**agreed**); **DEC-09** / **DEC-16** defaults. |
+| 2026-10-04 | Hygiene: removed “until agreed” for models when **DEC-09** is set. |
 | 2026-10-04 | SDD expansion: OQ/DEC pointers; cross-links to architecture RAG sections and evaluation strategy. |
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §13–16. |
 | 2026-10-04 | Added revision history section. |

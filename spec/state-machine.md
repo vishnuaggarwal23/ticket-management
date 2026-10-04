@@ -366,7 +366,7 @@ On **409**, the ticket row’s `status` **must not** change (integration tests).
 ### 6.4 Interaction with other fields
 
 - PATCH may update title, description, priority, assignee, category, `resolutionNotes` together with `status` only when each field is valid on its own ([`data-model.md`](data-model.md) §16).
-- Illegal `status` **fails the whole operation** — do not partially apply other fields in the same transaction unless a future spec defines split semantics (**Open**).
+- Illegal `status` **fails the whole PATCH** — do not partially apply other fields in the same request (**Agreed** **Convention**; aligns with [`api-contract.md`](api-contract.md) §4.4).
 
 ### 6.5 REST examples (**Example** — envelope per `rules/api-standards.md`)
 

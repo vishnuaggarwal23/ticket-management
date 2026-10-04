@@ -1,6 +1,6 @@
 # Architecture
 
-> **Status:** agreed (2026-10-04) — design for implementation; field-level contracts live in sibling specs. **DEC-01…19** per [`requirements.md`](requirements.md) §10.2.  
+> **Status:** agreed (2026-10-04) — design for implementation; field-level contracts live in sibling specs. **DEC-01…20** per [`requirements.md`](requirements.md) §10.2.  
 > **Requirements hub:** [`requirements.md`](requirements.md) (PDF-derived acceptance and FEAT catalogue).  
 > **Assessment source:** `docs/Assessments.docx` (via [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Audience:** implementers, reviewers, assessors.
@@ -175,7 +175,7 @@ Business architecture describes **who** uses the system, **what** business capab
 | **Operator / engineer** | Run and configure | Deploy app, configure DB and RAG parameters (no secrets in repo) |
 | **Assessor / reviewer** | Process evidence | Spec set, tests, grounding review, documented AI mistakes (**PDF** process) |
 
-No role-based access control is required by the PDF (**Open**).
+No role-based access control is required by the PDF (**Agreed** **DEC-12** — no auth in v1).
 
 ### 4.2 Business capabilities (capability map)
 
@@ -375,7 +375,7 @@ flowchart LR
 | Vector search | PgVector extension, same instance | **Convention** (PDF examples PGVector/Chroma) |
 | Models (initial) | Ollama via Spring AI properties | **DEC-09:** embed `nomic-embed-text`; chat model via `spring.ai.ollama.chat` (**Convention** — e.g. local LLM for demo) |
 | API | REST, JSON | **PDF** |
-| Frontend | React + Vite + TypeScript | **Convention** (PDF: React/Next or equivalent) |
+| Frontend | React + Next.js + Vite + JavaScript (Node.js 24.x LTS) | **Convention** (PDF: React/Next or equivalent) |
 | Tests | JUnit 5, Mockito, PostgreSQL Testcontainers | **Convention** (`rules/testing.md`) |
 
 ### 7.3 Pinned backend dependency versions (**Convention**)
@@ -562,7 +562,7 @@ sequenceDiagram
 
 ### 10.4 CORS and local dev
 
-**Convention:** allow Vite dev origin for `/api/**`; not an assessment requirement.
+**Convention:** allow Next.js (`http://localhost:3000`) and Vite (`http://localhost:5173`) dev origins for `/api/**`; not an assessment requirement.
 
 ### 10.5 What is not communicated
 
@@ -628,7 +628,7 @@ Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not 
 
 ## 12. Frontend architecture · unit **ARCH-F**
 
-**Convention:** React + Vite + TypeScript (`rules/frontend.md`). **PDF** requires a web UI for ticket operations and ask. **§12.3–§12.6** below summarise UI architecture; **authoritative** screen catalog, CRUD flows, transition/ask UX, and **AC-UI-*** are in [`ui-flow.md`](ui-flow.md) (PDF `ui-flow` themes; see [`requirements.md`](requirements.md) child-spec table).
+**Convention:** React + Next.js + Vite + JavaScript (`rules/frontend.md`; Node.js **24.x** Active LTS). **PDF** requires a web UI for ticket operations and ask. **§12.3–§12.6** below summarise UI architecture; **authoritative** screen catalog, CRUD flows, transition/ask UX, and **AC-UI-*** are in [`ui-flow.md`](ui-flow.md) (PDF `ui-flow` themes; see [`requirements.md`](requirements.md) child-spec table).
 
 ### 12.1 UI functional areas
 
@@ -645,7 +645,7 @@ Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not 
 
 | Module | Role |
 |--------|------|
-| **API client** | Base URL from `import.meta.env`; typed fetch wrappers |
+| **API client** | Base URL from `NEXT_PUBLIC_*` (Next) / `VITE_*` (shared modules under Vite dev); fetch wrappers |
 | **Ticket pages** | List, detail, forms |
 | **Ask panel** | Question input, answer, citation list, no-match state |
 | **Error display** | Map API error envelope to user-visible messages |
@@ -654,7 +654,7 @@ No secrets in the frontend bundle; LLM credentials stay server-side (**PDF** NFR
 
 ### 12.3 Screen map and flows A–E (**PDF** application + demo §8.7)
 
-Minimum surfaces to satisfy **AC-CORE-01…11** and demo script in [`requirements.md`](requirements.md) §8.7. Exact component names **Open**; behaviours are not.
+Minimum surfaces to satisfy **AC-CORE-01…11** and demo script in [`requirements.md`](requirements.md) §8.7. React component **file names** are implementer choice; **routes and behaviours** are **Agreed** per **DEC-20** and [`ui-flow.md`](ui-flow.md).
 
 | Screen / surface | Primary APIs | Flows | AC themes |
 |------------------|--------------|-------|-----------|
@@ -665,7 +665,7 @@ Minimum surfaces to satisfy **AC-CORE-01…11** and demo script in [`requirement
 | **Status actions** | `PATCH` with `status` | A5, A7, C2 | AC-CORE-12, 13, 11 |
 | **Ask / assistant panel** | `POST /api/v1/ai/ask` (or PDF path) | B3–B7, E | AC-CORE-16…18 |
 
-**Navigation (logical):** List ↔ Detail; Detail → Ask panel (drawer, tab, or route — **Open**); Create from list.
+**Navigation (**Agreed** **DEC-20**):** List ↔ Detail; global nav to **`/ask`**; Create from list → `/tickets/new`.
 
 ### 12.4 Status transition UX (**DEC-06** agreed)
 
@@ -737,7 +737,7 @@ Each **indexed unit** is a **chunk** of ticket knowledge with:
 | **Embedding vector** | **768** dimensions — Ollama `nomic-embed-text` (**DEC-09**) |
 | **Chunk text** | Text segment passed to LLM at ask time (or reconstructable reference) |
 | **Metadata** | **PDF** keys: `ticketId`, `status`, `priority`, `assignee`, `category` |
-| **Technical keys** | `chunkIndex`, `ingestedAt` — [`data-model.md`](data-model.md) §11.1; ingest version **Open** in `rag-ingestion.md` |
+| **Technical keys** | `chunkIndex`, `ingestedAt` — [`data-model.md`](data-model.md) §11.1; no separate ingest-version column in v1 (**Convention**) |
 
 ### 14.3 Operations
 
@@ -960,7 +960,7 @@ Externalized configuration (**PDF** NFR-06: no secrets in git).
 | Spring AI | Base URLs, API keys, model ids | Server-side only |
 | RAG retrieval | top-K, similarity threshold | **PDF** FR-18 |
 | RAG chunking | max/min chunk size | §16.2 |
-| Frontend | `VITE_*` API base URL | Names only in committed examples |
+| Frontend | `NEXT_PUBLIC_*` / `VITE_*` API base URL | Names only in committed examples |
 
 Profiles: `application.yml` + env; `.env.example` lists variable **names** only.
 
@@ -986,7 +986,7 @@ Align with `rules/api-standards.md` (**Convention**).
 
 - **Auth:** **Agreed DEC-12** — no authentication for assessment scope (PDF silent).
 - **Secrets:** DB and model credentials via environment only (**PDF**).
-- **Deployment:** one JVM + PostgreSQL; optional Ollama on dev host; static SPA or Vite dev server.
+- **Deployment:** one JVM + PostgreSQL; optional Ollama on dev host; Next.js frontend (`next dev` **3000**) + backend **8080** per **DEC-15** / **DEC-20**.
 
 ---
 
@@ -999,12 +999,13 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 | OQ-01 / DEC-04 | Ticket id format | [`data-model.md`](data-model.md) (agreed) |
 | OQ-02, OQ-03, OQ-10 / DEC-03, DEC-05, DEC-13 | Fields, category, resolution notes | [`data-model.md`](data-model.md) (agreed) |
 | OQ-04 / DEC-14 | REST details | [`api-contract.md`](api-contract.md) (**agreed**) |
-| OQ-05 / DEC-11 | Ask response schema | [`api-contract.md`](api-contract.md) §6.3 |
-| OQ-06 / DEC-12 | Authentication | This file if in scope |
+| OQ-05 / DEC-11 | Ask response schema | [`rag-api-contract.md`](rag-api-contract.md) §7 (**agreed**) |
+| OQ-06 / DEC-12 | Authentication | **Agreed** — none in assessment scope |
 | OQ-07 / DEC-09 | Store + embedding product | [`rag-ingestion.md`](rag-ingestion.md) §12 (**agreed** — PgVector + `nomic-embed-text` / 768) |
-| OQ-08 / DEC-10 | DB roles in test vs prod | `test-strategy.md` |
-| OQ-11, OQ-12 / DEC-02, DEC-06, DEC-07 | Transitions API and skipped hops | `state-machine.md`, `api-contract.md` |
-| OQ-14 / DEC-08 | Keyword search scope | [`data-model.md`](data-model.md) §15.2 (agreed); narrative in `api-contract.md` when written |
+| OQ-08 / DEC-10 | DB roles in test vs prod | `test-strategy.md` (**agreed** — Postgres Testcontainers) |
+| OQ-09 / DEC-15, **DEC-20** | Frontend stack + UX | [`ui-flow.md`](ui-flow.md), `rules/frontend.md` (**agreed**) |
+| OQ-11, OQ-12 / DEC-02, DEC-06, DEC-07 | Transitions API and skipped hops | `state-machine.md`, `api-contract.md` (**agreed**) |
+| OQ-14 / DEC-08 | Keyword search scope | [`data-model.md`](data-model.md) §15.2 (**agreed**); [`api-contract.md`](api-contract.md) §4.2 |
 | OQ-15 / DEC-01 | Re-ingest on close only | [`rag-ingestion.md`](rag-ingestion.md) (**agreed** (B)) |
 | — / **DEC-18** | Ingest timing + failure handling | [`rag-ingestion.md`](rag-ingestion.md) §10 (**agreed** — sync after commit) |
 | — / **DEC-16** | Chunk + retrieval defaults | [`rag-ingestion.md`](rag-ingestion.md) §9.3, §12 (**agreed**) |
@@ -1053,7 +1054,7 @@ Architecture supports verification of:
 |------|------|
 | 2026-09-24 | Initial architecture draft from `requirements.md`, `docs/assessment-brief.md`, and project `rules/`. |
 | 2026-09-24 | Review corrections: PgVector chosen; re-ingest execution deferred; HTTP details deferred to api-contract. |
-| 2026-10-03 | Aligned with engineering rules: PDF vs project stack; Maven Wrapper, Liquibase, Ollama-as-provider, React+Vite+TS, Testcontainers. |
+| 2026-10-03 | Aligned with engineering rules: PDF vs project stack; Maven Wrapper, Liquibase, Ollama-as-provider, frontend **DEC-15**, Testcontainers. |
 | 2026-10-03 | Backend package tree recorded as agreed convention (`rules/java-springboot.md`). |
 | 2026-10-04 | Major expansion: business vs functional modules, ticket conceptual structure, tech and communication architecture, API map, vector DB and RAG depth, knowledge/chunking/embedding justification; synced with `requirements.md` (2026-10-04). |
 | 2026-10-04 | Sync: resolution notes **Agreed** (DEC-05); keyword search **DEC-08**; DEC-07 agreed in §17. |
@@ -1071,7 +1072,8 @@ Architecture supports verification of:
 | 2026-10-04 | §0 guide: verbatim PDF RAG flow diagram; PDF theme map; BRF/FRI/IRI at architecture level. |
 | 2026-10-04 | §0.3 **ARCH-*** independent reading units for modular architecture review. |
 | 2026-10-04 | Major `##` headings tagged with **ARCH-*** unit ids. |
-| 2026-10-04 | FEAT-23 evidence: [`docs/ai-error.md`](../docs/ai-error.md); `ai-mistakes.md` pointer. |
+| 2026-10-04 | **DEC-20** frontend UX + §12 navigation aligned with [`ui-flow.md`](ui-flow.md); closed auth/ingest-version **Open** prose. |
+| 2026-10-04 | Hygiene: §21 handoff includes **DEC-15/20**; deployment line → Next.js (not “static SPA”). |
 | 2026-10-04 | §13.1 / §9: **Spring Data JPA primary** for tickets/comments (**C-06**); vector writer JDBC/Spring AI exception. |
 | 2026-10-04 | §9.1: type-based packages (`controller`, `dto`, `entity`, `repository`, `exception`, `util`, `advice`). |
 | 2026-10-04 | §7.1–§7.3: project JDK **25**, Spring Boot **4**, Spring AI **2.x** pins; PDF still lists Java 21 / Spring Boot without major. |

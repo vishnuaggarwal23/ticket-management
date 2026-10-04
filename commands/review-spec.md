@@ -17,7 +17,7 @@ Mark checklist items **Pass** / **Fail** / **N/A**. Failures are blocking for im
 
 ### When most of `spec/` does not exist yet
 
-Default **Ready for implementation?** → **yes** for slices covered by agreed **DEC-01…19** in hub §10.2 (2026-10-04) and the **agreed** ten-file `spec/` set, unless the review finds spec/rules **contradictions** or stale **interim/async** text. **Reference** ([`spec/requirements.md`](../spec/requirements.md) **§2.3**) is not delivery work.
+Default **Ready for implementation?** → **yes** for slices covered by agreed **DEC-01…20** in hub §10.2 (2026-10-04) and the **agreed** ten-file `spec/` set, unless the review finds spec/rules **contradictions** or stale **interim/async** text. **Reference** ([`spec/requirements.md`](../spec/requirements.md) **§2.3**) is not delivery work.
 
 You may still review **`requirements.md`** / **`architecture.md`** for PDF alignment (requirements **§0.4**, **§0.5**, [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**). List **blocking open decisions** explicitly — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
 
@@ -80,7 +80,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] State machine in domain/services, not UI or repository `UPDATE`
 - [ ] Test acceptance criteria can be implemented under `rules/testing.md`
 - [ ] RAG content does not contradict `rules/rag-vector-store.md` (chunking/ingest per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); no locked model/K/threshold unless **DEC-09** / §12 agreed)
-- [ ] UI spec does not require Next.js or frontend tests; **DEC-15** stack agreed; layout/ask placement is implementer choice; **DEC-06** agreed PATCH
+- [ ] UI spec aligns with **DEC-15** (stack) and **DEC-20** (routes/UX); no frontend tests; **DEC-06** agreed PATCH
 
 ### Cross-spec validity (name both files when flagging)
 
@@ -97,7 +97,7 @@ When a child spec is **draft** or a section is **Open**, cross-check [`spec/requ
 
 Use `rules/documentation.md` section map for headings. Mark **N/A** for sections not yet written.
 
-- [ ] **PDF vs Convention vs Open** labels used; conventions (PgVector, `/api/v1`, Boot 4, React+Vite+TS) not presented as PDF mandates
+- [ ] **PDF vs Convention vs Open** labels used; conventions (PgVector, `/api/v1`, Boot 4, React+Next.js+Vite+JS) not presented as PDF mandates
 - [ ] **Business modules** (§4) trace to `requirements.md` FEAT catalogue without inventing capabilities
 - [ ] **Ticket structure** (§5) stays conceptual — no smuggled field catalogs that belong in `data-model.md`
 - [ ] **Functional modules** (§8) map to **technical** packages (§9) consistently with `rules/java-springboot.md`
@@ -139,7 +139,7 @@ Use `rules/documentation.md` ui-flow reviewer map. Mark **N/A** only if the revi
 - [ ] **§10** — ask panel matches [`rag-api-contract.md`](../spec/rag-api-contract.md) (grounded **200**, no-match **200**, validation **400**); citations link to detail
 - [ ] **§11–§12** — flows A–E and demo §8.7 steps trace to [`requirements.md`](../spec/requirements.md)
 - [ ] **§13** — **AC-UI-01…12** trace to **AC-CORE-01…11** and **AC-CORE-16…18** without contradiction
-- [ ] **§14** — **DEC-06**, **DEC-11**, **DEC-15** agreed; no **Reference** UI requirements
+- [ ] **§14** — **DEC-06**, **DEC-11**, **DEC-15**, **DEC-20** agreed; no **Reference** UI requirements
 
 ---
 
@@ -289,4 +289,5 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Checklist: requirements **§0.5**; child spec **§0** guides; file map **§0** columns. |
 | 2026-10-04 | Checklist: **`##` heading unit suffix** aligned with §0.3 independent reading units. |
 | 2026-10-04 | **Reference** §2.3 checklist; DEC register sync (agreed vs open vs interim). |
-| 2026-10-04 | Readiness gate: **DEC-01…19** agreed; flag stale interim/async in child specs. |
+| 2026-10-04 | Readiness gate: **DEC-01…20** agreed; flag stale interim/async in child specs. |
+| 2026-10-04 | Hygiene: readiness assumes ten-file **agreed** set (not draft hub). |

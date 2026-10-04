@@ -361,7 +361,7 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 ## Do not
 
 - Do not treat `/api/v1`, PATCH, 409, or these envelopes as PDF requirements.
-- Do not silently contradict [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)** — authoritative register is **DEC-01…19** (agreed 2026-10-04). Do not invent model ids, dimensions, or DB products outside those specs. Index: [`rules/documentation.md`](documentation.md).
+- Do not silently contradict [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)** — authoritative register is **DEC-01…20** (agreed 2026-10-04). Do not invent model ids, dimensions, or DB products outside those specs. Index: [`rules/documentation.md`](documentation.md).
 - Do not implement **Reference** topics in requirements **§2.3** (auth, delete API, confidence on ask, etc.) — document only.
 - Do not prescribe Spring Security, API keys, or multi-tenancy for the assessment build (**DEC-12** agreed: no auth).
 - Do not return persistence entities or a second JSON error shape from one controller.
@@ -381,12 +381,13 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Locked ticket id, enums, create/PATCH fields, `q` scope from agreed [`spec/data-model.md`](../spec/data-model.md); trgm index pointer §14.5. |
 | 2026-10-04 | Ticket HTTP map: [`spec/architecture.md`](../spec/architecture.md) §11 until `api-contract.md` added. |
 | 2026-10-04 | Path catalog pointer: [`spec/api-contract.md`](../spec/api-contract.md) §2.11. |
-| 2026-10-04 | Status transitions point to draft [`spec/state-machine.md`](../spec/state-machine.md) §6.1. |
-| 2026-10-04 | Ticket HTTP payloads/scenarios defer to draft [`spec/api-contract.md`](../spec/api-contract.md). |
+| 2026-10-04 | Status transitions point to [`spec/state-machine.md`](../spec/state-machine.md) §6.1 (**agreed**). |
+| 2026-10-04 | Ticket HTTP payloads/scenarios defer to [`spec/api-contract.md`](../spec/api-contract.md) (**agreed**). |
+| 2026-10-04 | Hygiene: removed stale **draft** spec pointers in revision notes. |
 | 2026-10-04 | Ask `data` pointers → `api-contract` §6.2–§6.5 (consolidated PDF `rag-api-contract` themes). |
 | 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md) (authoritative). |
 | 2026-10-04 | Cross-refs to spec **§0** guides (`api-contract`, `rag-api-contract`, `data-model`). |
 | 2026-10-04 | **Reference** §2.3: out-of-PDF items not API work; DEC register sync. |
-| 2026-10-04 | **DEC-01…19** agreed; priority enum **URGENT** (**DEC-13**); ask **DEC-17**; removed stale open DEC-09/10 text. |
+| 2026-10-04 | **DEC-01…20** agreed; priority enum **URGENT** (**DEC-13**); ask **DEC-17**; removed stale open DEC-09/10 text. |
 | 2026-10-04 | Priority canonical **`CRITICAL`**; inbound **`URGENT` → `CRITICAL`**. Assignee `@Size(max=320)` only. |
 | 2026-10-04 | Doc sync: explicit **DEC-17** / **DEC-18** in agreed block; **DEC-06** PATCH unchanged. |

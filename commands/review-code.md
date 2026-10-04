@@ -13,13 +13,13 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 | Diff contains | Primary command |
 |---------------|----------------|
 | `src/main/java`, `src/test/java`, backend resources | This file |
-| `frontend/`, `src/**/*.tsx`, Vite app | `commands/review-frontend.md` (no UI tests required) |
+| `frontend/`, `src/**/*.jsx`, Next.js app | `commands/review-frontend.md` (no UI tests required) |
 | Only `spec/` | `commands/review-spec.md` |
 
 ## Inputs
 
 - Diff / named paths
-- Specs: [`spec/requirements.md`](../spec/requirements.md) (**§0.5**), [`spec/architecture.md`](../spec/architecture.md), [`spec/ui-flow.md`](../spec/ui-flow.md), [`spec/data-model.md`](../spec/data-model.md) (**agreed**); draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), [`spec/test-strategy.md`](../spec/test-strategy.md) (each **§0** + SM §5, ask §6); index [`rules/documentation.md`](../rules/documentation.md)
+- Specs: all ten PDF-listed files under `spec/` (**agreed** 2026-10-04; **DEC-01…20**): [`spec/requirements.md`](../spec/requirements.md) (**§0.5**), [`spec/architecture.md`](../spec/architecture.md), [`spec/ui-flow.md`](../spec/ui-flow.md), [`spec/data-model.md`](../spec/data-model.md), [`spec/api-contract.md`](../spec/api-contract.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), [`spec/test-strategy.md`](../spec/test-strategy.md) (each **§0** + SM §5, ask §6 where relevant); index [`rules/documentation.md`](../rules/documentation.md)
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements
@@ -33,7 +33,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### Spec and scope
 
 - [ ] Implements only **agreed** specs; no **Reference** features ([`spec/requirements.md`](../spec/requirements.md) **§2.3** — auth, delete API, agents, confidence on ask, rerankers, etc.)
-- [ ] Code matches **§10.2 (DEC-*)** — **DEC-01…19** agreed (hub 2026-10-04). Embedding: **DEC-09** (`nomic-embed-text`, 768). DB: **DEC-10** (Postgres + Testcontainers; no H2). Chunk/retrieval defaults: **DEC-16** via config. Ingest: **DEC-18** sync after commit. Ask limits: **DEC-17**. Index: [`rules/documentation.md`](../rules/documentation.md)
+- [ ] Code matches **§10.2 (DEC-*)** — **DEC-01…20** agreed (hub 2026-10-04). Embedding: **DEC-09** (`nomic-embed-text`, 768). DB: **DEC-10** (Postgres + Testcontainers; no H2). Chunk/retrieval defaults: **DEC-16** via config. Ingest: **DEC-18** sync after commit. Ask limits: **DEC-17**. Frontend UX: **DEC-20**. Index: [`rules/documentation.md`](../rules/documentation.md)
 - [ ] Domain status machine matches [`spec/state-machine.md`](../spec/state-machine.md) §5 (T1–T5, X1–X3, full invalid matrix)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
@@ -74,7 +74,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 
 ### Frontend
 
-- [ ] If UI files changed, run **`commands/review-frontend.md`** (React/Vite/TypeScript, envelopes, ask display). **No frontend tests.**
+- [ ] If UI files changed, run **`commands/review-frontend.md`** (React/Next.js/Vite/JavaScript, envelopes, ask display). **No frontend tests.**
 
 ---
 
@@ -193,13 +193,14 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 | 2026-10-04 | Packaging checklist: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`. |
 | 2026-10-04 | Agreed data-model DECs vs open DECs; Liquibase index catalog §14.5 check. |
 | 2026-10-04 | Three-spec interim map in `rules/documentation.md`; SM from requirements FEAT-11 until `state-machine.md`. |
-| 2026-10-04 | State machine checks use draft [`spec/state-machine.md`](../spec/state-machine.md). |
-| 2026-10-04 | HTTP contract checks use draft [`spec/api-contract.md`](../spec/api-contract.md). |
-| 2026-10-04 | RAG ingest checks use draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); tests map [`spec/test-strategy.md`](../spec/test-strategy.md). |
+| 2026-10-04 | State machine checks use [`spec/state-machine.md`](../spec/state-machine.md) (**agreed**). |
+| 2026-10-04 | HTTP contract checks use [`spec/api-contract.md`](../spec/api-contract.md) (**agreed**). |
+| 2026-10-04 | RAG ingest checks use [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**agreed**); tests map [`spec/test-strategy.md`](../spec/test-strategy.md). |
 | 2026-10-04 | Spec inputs: requirements **§0.5**; per-file **§0** via `rules/documentation.md`. |
 | 2026-10-04 | Ask: no golden retrieval tests; eval [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5–§8. |
-| 2026-10-04 | **Reference** §2.3 scope gate; **DEC** register sync (**DEC-09**/**DEC-10** open). |
-| 2026-10-04 | **DEC-01…19** agreed; review checklist updated. |
+| 2026-10-04 | **Reference** §2.3 scope gate; **DEC** register sync (**DEC-01…20** agreed). |
+| 2026-10-04 | **DEC-01…20** agreed; review checklist updated. |
+| 2026-10-04 | Hygiene: spec inputs list all ten child specs as **agreed** (removed stale **draft** labels). |
 | 2026-10-04 | Java/Spring Boot review bar: coding guidelines, practices, naming, and packaging (`rules/java-springboot.md`). |
 | 2026-10-04 | Packaging: group/split by layer and logical concern; reject a single dump package. |
 | 2026-10-04 | AI mistakes: propose [`docs/ai-error.md`](../docs/ai-error.md); `/update-ai-error` writes the log. |

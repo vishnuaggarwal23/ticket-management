@@ -129,12 +129,12 @@ public Optional<Ticket> findById(TicketId id) { return ticketRepository.findById
 - Committed examples list **environment variable names only** (`.env.example`). Never commit passwords, keys, or machine-specific absolute paths.
 - Spring profiles: `local` / default for operator-managed Postgres (env vars); tests use Testcontainers (see testing rules). Do not point the default test suite at a developer’s already-running database.
 - Set `spring.jpa.open-in-view=false`. Do not use Open Session in View to lazy-load in controllers.
-- CORS for the local Vite dev server is an implementation convenience, not an assessment requirement. Example (adjust port to your Vite config):
+- CORS for local Next.js (**3000**) and Vite (**5173**) dev origins is an implementation convenience, not an assessment requirement. Example (adjust ports to your configs):
 
 ```java
 // config/WebCorsConfig.java — dev-oriented; not *
 registry.addMapping("/api/**")
-    .allowedOrigins("http://localhost:5173")
+    .allowedOrigins("http://localhost:3000", "http://localhost:5173")
     .allowedMethods("GET", "POST", "PATCH", "OPTIONS")
     .allowedHeaders("*");
 ```
@@ -258,8 +258,9 @@ Ticket and comment **read/write paths go through Spring Data JPA** unless a spec
 | 2026-10-04 | Entities, enums, tables, and Liquibase index catalog aligned with agreed [`spec/data-model.md`](../spec/data-model.md). |
 | 2026-10-04 | State machine: requirements FEAT-11 + [`state-machine.md`](../spec/state-machine.md); **DEC-06** PATCH agreed. |
 | 2026-10-04 | **DEC-10:** PostgreSQL + Testcontainers; **DEC-09:** Ollama embed model per `rag-ingestion.md` §12. |
-| 2026-10-04 | Domain SM defers to draft [`spec/state-machine.md`](../spec/state-machine.md); removed duplicate edge table. |
-| 2026-10-04 | HTTP payloads: draft [`spec/api-contract.md`](../spec/api-contract.md). |
+| 2026-10-04 | Domain SM defers to [`spec/state-machine.md`](../spec/state-machine.md) (**agreed**); removed duplicate edge table. |
+| 2026-10-04 | HTTP payloads: [`spec/api-contract.md`](../spec/api-contract.md) (**agreed**). |
+| 2026-10-04 | Hygiene: revision pointers synced to **agreed** child specs. |
 | 2026-10-04 | Pointers to child spec **§0** maps (SM, RAG, architecture); steering sync with `rules/documentation.md`. |
 | 2026-10-04 | **DEC-02** agreed; **Reference** ask fields per requirements §2.3. |
 | 2026-10-04 | `TicketPriority` **CRITICAL**; JSON `URGENT` mapped in `api`; assignee `@Size(max=320)`. |

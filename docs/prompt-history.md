@@ -50,6 +50,7 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 26 | 2026-10-04 14:10:51 | Asked to recheck RAG re-ingest on ticket update/status change and to verify ask uses configured top-k/threshold, LLM prompt from chunks, and cited ticket ids or honest no-match. | [`.specstory/history/2026-10-04_14-10-51Z-rag-ingestion-and-ai.md`](../.specstory/history/2026-10-04_14-10-51Z-rag-ingestion-and-ai.md) |
 | 27 | 2026-10-04 14:33:33 | Upgraded backend to Java 25, Spring Boot 4.1.1, and Spring AI 2.0.1 (specs, rules, `plan.md` §19, then G-1 code/tests); `/review-code` and commit `f59efbc`; ran app with `.env`, HTTP sanity, fixed Ollama port wiring and Spring AI 2 embedding property; commit `f37984c`. | [`.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md`](../.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md) |
 | 28 | 2026-10-04 14:33:33 | Same Cursor session as row 27: user requested Java 25 / Spring Boot 4 docs-first upgrade scoped to `backend/`; short duplicate SpecStory export of the opening prompt. | [`.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade.md`](../.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade.md) |
+| 29 | 2026-10-04 15:51:31 | Locked **DEC-15** (React + Next.js + Vite + JavaScript, Node 24 LTS) and **DEC-20** (App Router routes/UX); removed mistaken `frontend/` scaffold; frontend readiness audit vs PDF; closed hub §10.2 opens; hygiene on stale draft/SPA text in `spec/`, `rules/`, `commands/`, and `docs/`. | [`.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md`](../.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md) |
 
 ## Related
 
@@ -75,3 +76,4 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (25 sessions; added 2, updated 0, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (25 sessions; added 0, updated 1, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (28 sessions; added 3, updated 0, removed 0). |
+| 2026-10-04 | Synced chronological index from `.specstory/history/` (29 sessions; added 1, updated 0, removed 0). |

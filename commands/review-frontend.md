@@ -29,14 +29,13 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 ### Spec and scope
 
 - [ ] Only agreed [`ui-flow.md`](../spec/ui-flow.md) screens/flows (or user-confirmed deltas). Use requirements **§4.1** / **§8.7** as hub — no invented auth, agent-from-ask, extra ticket resources, delete-ticket UI
-- [ ] **DEC-06** PATCH `status` UX; **DEC-15** stack agreed (layout/router is implementer choice); **do not** build **Reference** UI (§2.3); **do not** invent id/category (use [`spec/data-model.md`](../spec/data-model.md))
+- [ ] **DEC-06** PATCH `status` UX; **DEC-15** stack; **DEC-20** routes/UX agreed; **do not** build **Reference** UI (§2.3); **do not** invent id/category (use [`spec/data-model.md`](../spec/data-model.md))
 - [ ] PDF capabilities present or explicitly deferred; when implemented, mappable to **`AC-CORE-01…11`** (§8) and **`AC-UI-01…12`** ([`ui-flow.md`](../spec/ui-flow.md) §13): create, list, detail, update title/description/priority/assignee, comments, keyword search, status filter, status display, valid transitions, meaningful errors, ask with citations or no-match
 
 ### Stack (`rules/frontend.md`)
 
-- [ ] React + Vite + TypeScript; **no Next.js**
-- [ ] No frontend test files or new UI test dependencies
-- [ ] API base via `import.meta.env.VITE_*`; no machine-specific hosts or secrets
+- [ ] React + Next.js + Vite + JavaScript (**DEC-15**); Node.js **24.x** LTS; no frontend test files or new UI test dependencies
+- [ ] API base via `NEXT_PUBLIC_*` (Next) and/or `VITE_*` (shared modules); no machine-specific hosts or secrets
 
 ### API client
 
@@ -59,7 +58,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 
 - [ ] Presentation vs HTTP client vs view logic not all in one mega-file when that hurts maintenance
 - [ ] Single HTTP module (or equivalent), not fetch in every component
-- [ ] Types for props and API `data` payloads; `any` only if justified
+- [ ] JSDoc or clear prop validation for API `data` payloads; avoid untyped `any` unless justified
 - [ ] State owned by the screen that uses it; no unapproved global store library
 - [ ] No unapproved CSS/router/state libraries unless the user agreed
 
@@ -91,7 +90,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 
 | Date | Note |
 |------|------|
-| 2026-10-04 | Initial frontend review command (React/Vite/TS); no frontend tests required. |
+| 2026-10-04 | Initial frontend review command (React/Next/Vite/JS); no frontend tests required. |
 | 2026-10-04 | Aligned with `rules/frontend.md` and architecture §12 UI expectations. |
 | 2026-10-04 | Governance pass with expanded specs and rules index. |
 | 2026-10-04 | Added revision history section. |
@@ -100,3 +99,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 | 2026-10-04 | Primary UI spec: [`ui-flow.md`](../spec/ui-flow.md); **AC-UI-*** checklist. |
 | 2026-10-04 | Inputs reference [`ui-flow.md`](../spec/ui-flow.md) **§0** PDF map. |
 | 2026-10-04 | **Reference** §2.3; **DEC-11**/**DEC-15** agreed. |
+| 2026-10-04 | **DEC-15** stack: React + Next.js + Vite + JavaScript; Node 24 LTS. |

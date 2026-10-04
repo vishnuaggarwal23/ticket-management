@@ -1,6 +1,6 @@
 # UI flow — views, screens, and flows
 
-> **Status:** agreed (2026-10-04) — product UI behaviour for ticket operations and grounded ask. This is the PDF-named [`ui-flow.md`](ui-flow.md) spec; [`architecture.md`](architecture.md) **§12** is the high-level frontend architecture summary. **DEC-06**, **DEC-11**, **DEC-15**.  
+> **Status:** agreed (2026-10-04) — product UI behaviour for ticket operations and grounded ask. This is the PDF-named [`ui-flow.md`](ui-flow.md) spec; [`architecture.md`](architecture.md) **§12** is the high-level frontend architecture summary. **DEC-06**, **DEC-11**, **DEC-15**, **DEC-20**.  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** [`data-model.md`](data-model.md) (field catalogs), [`api-contract.md`](api-contract.md) (HTTP + ask `data`), [`state-machine.md`](state-machine.md) (transition matrix), [`evaluation-strategy.md`](evaluation-strategy.md) (ask demo questions), `rules/frontend.md`, `commands/review-frontend.md`.
 
@@ -64,13 +64,13 @@ This file is the assignment’s **`ui-flow.md`**. UI architecture summary: [`arc
 | FR-UI-02 | Ask shows answer + cited ticket links/ids | **AC-UI-09** |
 | FR-UI-03 | No-match copy visible (not blank) | **AC-UI-10** |
 
-**Implementation requirements (**Agreed** — **DEC-15**: React + Vite + TypeScript; layout/ask placement are implementer choice)**
+**Implementation requirements (**Agreed** — **DEC-15**: stack; **DEC-20**: routes/layout/interaction)**
 
 | ID | Requirement |
 |----|-------------|
-| IR-UI-01 | React + Vite + TypeScript; API client per `rules/frontend.md` |
+| IR-UI-01 | React + Next.js + Vite + JavaScript; API client per `rules/frontend.md` |
 | IR-UI-02 | No frontend automated tests this milestone |
-| IR-UI-03 | Route map in §5; env `VITE_API_BASE_URL` for backend |
+| IR-UI-03 | Next App Router routes per **DEC-20** §4; env `NEXT_PUBLIC_API_BASE_URL` (+ optional `VITE_*` for shared modules) |
 
 ### 0.3 Independent reading units
 
@@ -165,18 +165,19 @@ flowchart LR
 | **Ticket list** | Read many tickets; search; filter; open detail or create | App home / “Tickets” nav |
 | **Create ticket** | Create one ticket | “New ticket” from list |
 | **Ticket detail** | Read one ticket; update fields; comments; status | Row click / link from list or citation |
-| **Ask / assistant** | Natural-language Q&A over ticket corpus | Global nav item, list toolbar, or detail tab (placement — **DEC-15**) |
+| **Ask / assistant** | Natural-language Q&A over ticket corpus | **Agreed** — dedicated `/ask` + nav from list/detail (**DEC-20**) |
 
-**Convention:** One SPA with client-side routes is sufficient; exact path strings are **Open** until agreed. **Example** routes:
+**Agreed (**DEC-20**):** **Next.js App Router** file routes (not a client-only SPA router):
 
-| **Example** route | Screen |
-|-------------------|--------|
+| Route | Screen |
+|-------|--------|
+| `/` | Redirect to `/tickets` |
 | `/tickets` | Ticket list |
 | `/tickets/new` | Create ticket |
-| `/tickets/:id` | Ticket detail (`:id` = `TKT-{n}`) |
-| `/ask` | Ask panel (full page) |
+| `/tickets/[id]` | Ticket detail (`id` = `TKT-{n}`) |
+| `/ask` | Ask assistant (full page) |
 
-Ask may alternatively be a **persistent panel** on list and detail (drawer or split pane) instead of `/ask` (**DEC-15**).
+List and detail include a nav link to **`/ask`**. Drawer/split-pane-only ask is **not** used in v1 (**Reference** alternative).
 
 ### 4.2 What is not a product screen
 
@@ -194,22 +195,24 @@ Aligns with [`architecture.md`](architecture.md) §12.2 and `rules/frontend.md`.
 
 | Module / layer | Responsibility | Must not |
 |----------------|----------------|----------|
-| **API client** | `fetch` (or thin wrapper); base URL from `VITE_API_BASE_URL`; parse `{ data, meta? }` / `{ error }` | Duplicate envelope parsing in every screen |
+| **API client** | `fetch` (or thin wrapper); base URL from `NEXT_PUBLIC_*` / `VITE_*`; parse `{ data, meta? }` / `{ error }` | Duplicate envelope parsing in every screen |
 | **Ticket screens** | List, create, detail — forms and tables | Invent JSON fields not in [`api-contract.md`](api-contract.md) §3 |
 | **Ask view** | Question form; result area; citation links | Invent ticket ids; call LLM directly from browser |
-| **Shared presentation** | Buttons, inputs, alerts, loading spinners (**Open** component split) | Require a global store library unless user agrees |
+| **Shared presentation** | Buttons, inputs, alerts, loading spinners under `src/components/` (**Agreed** — plain CSS) | Require a global store library unless user agrees |
 | **Error mapper** | `error.message`, `error.details[]` → field-level or banner messages | Show stack traces, SQL, or raw JSON to users |
 
-**Convention:** React + Vite + TypeScript; function components; types derived from API DTOs (`TicketSummary`, `TicketDetail`, `AskResponseData`).
+**Convention:** React + Next.js + Vite + JavaScript; function components; JSDoc or runtime checks aligned to API DTOs (`TicketSummary`, `TicketDetail`, `AskResponseData`).
 
 **Suggested folder layout** (same as `rules/frontend.md` — not mandatory):
 
 ```text
-frontend/src/
-  api/           # client + types
-  screens/       # route-level views
-  components/    # reusable UI fragments
-  App.tsx
+frontend/
+  app/             # Next.js routes
+  src/
+    api/           # client + envelope helpers
+    components/    # reusable UI fragments
+  next.config.js
+  vite.config.js
 ```
 
 ---
@@ -260,7 +263,7 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 ### 6.5 Accessibility and usability (**PDF** implied + **Convention**)
 
 - Semantic HTML; visible labels on inputs; keyboard-operable primary actions.
-- Status and priority shown as text (badges optional — **Open**).
+- Status and priority shown as plain text labels (**Agreed** — optional simple badges with CSS only).
 - Do not prescribe colour theme or branding.
 
 ---
@@ -275,9 +278,9 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 |--------|----------------|
 | **API** | `GET /api/v1/tickets` with `page`, `size`, `sort`, `q`, `status` |
 | **Row content** | At minimum: `id`, `title`, `status`, `priority`, `assignee`, `updatedAt` (`TicketSummary` §3.1) |
-| **Search** | Text input bound to `q`; submit or debounced refresh (**Open** interaction) |
+| **Search** | Text input bound to `q`; **Apply** button and **Enter** submit refresh list (**DEC-20**) |
 | **Status filter** | Control for `TicketStatus` or “All”; maps to `status` query param |
-| **Pagination** | When `meta` present, show page controls or “load more” (**Open** — must not silently drop pages if API paginates) |
+| **Pagination** | When `meta` present, show prev/next and page numbers using `meta.page`, `meta.totalPages` (**DEC-20**) |
 | **Actions** | “New ticket” → create screen; row click → detail |
 | **Empty** | No rows and no filters → encourage create; filtered/search empty → explain no matches |
 | **AC** | **AC-CORE-02**, **07**, **08**; **AC-FEAT-02-***, **06-***, **07-*** |
@@ -297,7 +300,7 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 
 | Action | API | Success UI |
 |--------|-----|------------|
-| Submit | `POST /api/v1/tickets` | **201** — navigate to **detail** for new `data.id` or refresh list (**Open** preference) |
+| Submit | `POST /api/v1/tickets` | **201** — navigate to **detail** for new `data.id` (**DEC-20**) |
 | Cancel | — | Return to list without submit |
 
 | Failure | UI |
@@ -315,7 +318,7 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 | Display | `id`, `title`, `description`, `status`, `priority`, `assignee`, `category`, `resolutionNotes`, `comments[]`, `createdAt`, `updatedAt` |
 | Comments order | `createdAt` ascending per [`api-contract.md`](api-contract.md) §3.2 (**Convention**) |
 
-**Layout (logical regions — **Open** wireframe):**
+**Layout (**Agreed** — **DEC-20**; component names implementer choice):**
 
 ```text
 +--------------------------------------------------+
@@ -329,7 +332,7 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 |  Comments (list)                                 |
 |  [ Add comment composer ]                        |
 +--------------------------------------------------+
-|  [ Optional: Ask about tickets — link/panel ]    |
+|  [ Link to /ask ]                                |
 +--------------------------------------------------+
 ```
 
@@ -340,7 +343,7 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 | Pattern | Specification |
 |---------|----------------|
 | **API** | `PATCH /api/v1/tickets/{id}` with **partial** JSON — only changed fields |
-| **UX** | **Open**: single “Save” on detail vs per-field auto-save; must not send `status` accidentally when saving text fields |
+| **UX** | **Agreed (**DEC-20**):** single **Save changes** sends field PATCH **without** `status`; status uses separate legal-target buttons only |
 | **Success** | Replace local view with response `data` or refetch GET |
 | **Side effect** | Backend re-ingest for RAG (**FEAT-14**) — **no** progress UI required; freshness proven via ask (Flow D / demo step 13) |
 
@@ -413,7 +416,7 @@ Summary matrix for implementers and `commands/review-frontend.md`:
 
 ### 9.1 Legal targets by current state (guidance)
 
-UI **should** offer only these targets (buttons, dropdown, or stepper — **Open** control type):
+UI **should** offer only legal targets as a **button group** (one button per legal next status — **DEC-20**):
 
 | Current `status` | Offer transitions to |
 |------------------|----------------------|
@@ -633,10 +636,11 @@ Testable UI criteria for spec review (`commands/review-spec.md`) and frontend re
 |----|-------|--------|-------|
 | **DEC-06** | Transition API shape | **Agreed 2026-10-04** | UI sends `PATCH` with `status` (± other fields) per [`state-machine.md`](state-machine.md) §6 |
 | **DEC-11** | Ask no-match wording / extra fields | **Agreed 2026-10-04** | UI displays `data.answer` as returned — e.g. [`rag-api-contract.md`](rag-api-contract.md) §7.4 |
-| **DEC-15** | Layout, router, ask placement, CSS kit | **Agreed** (stack); placement Open | React+Vite+TS; §4.1 **Example** routes; panel vs page |
+| **DEC-15** | Frontend stack | **Agreed 2026-10-04** | React + Next.js + Vite + JavaScript; Node 24 LTS — `rules/frontend.md` |
+| **DEC-20** | Routes, layout, interaction | **Agreed 2026-10-04** | §4 route table; §7 list/detail/ask UX; supersedes former **Open** placement rows |
 | **DEC-02** | Skipped status hops | **Agreed 2026-10-04** | UI legal-target table follows §9.1 (**DEC-02 (A)**) |
 
-Do not close **Open** items in implementation without updating [`requirements.md`](requirements.md) §10.2 and user confirmation.
+Resolved **Open** UX items are recorded in [`requirements.md`](requirements.md) §10.2 **DEC-20**; do not reopen in implementation without a new **DEC-*** row and user confirmation.
 
 ---
 
@@ -651,7 +655,7 @@ Do not close **Open** items in implementation without updating [`requirements.md
 | 2026-10-04 | §0.3 **UI-*** independent reading units (screens → flows → demo). |
 | 2026-10-04 | Major `##` headings tagged with **UI-*** unit ids. |
 | 2026-10-04 | Doc sync: **DEC-06** agreed; **DEC-18** sync re-ingest UX; **DEC-11** no-match wording. |
-| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
+| 2026-10-04 | **DEC-20** closes UI **Open** items (routes, ask page, list/detail UX, styling). |
 | 2026-10-04 | Renamed from `ui-model.md` to PDF filename `ui-flow.md`. |
 | 2026-10-04 | Priority select **`CRITICAL`**; assignee max 320 without email validation (**C-02**, **C-05**). |
 | 2026-10-04 | Demo evidence path: [`docs/ai-error.md`](../docs/ai-error.md). |

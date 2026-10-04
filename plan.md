@@ -63,7 +63,7 @@ Deliver a **single Spring Boot 4 monolith** under `backend/` that:
 - Ticket **CRUD** (create, list, get, PATCH fields — **no DELETE**, **no PUT**).
 - Comments (add + view on detail).
 - Keyword `q` + status filter + pagination/sort.
-- Validation, error envelope, CORS for local Vite (convention).
+- Validation, error envelope, CORS for local Next.js (3000) and Vite (5173) (convention).
 - State machine and transitions.
 - Tests: JUnit 5, Mockito, MockMvc slice, PostgreSQL Testcontainers + Liquibase.
 - RAG **design and later implementation** as Phase D–F (gated).
@@ -72,7 +72,7 @@ Deliver a **single Spring Boot 4 monolith** under `backend/` that:
 
 From [`spec/requirements.md`](spec/requirements.md) **§2.3 Reference** and rules:
 
-- Frontend / React / Vite.
+- Frontend / React / Next.js / Vite / JavaScript.
 - Authentication, authorization, roles, multi-tenancy (**DEC-12**).
 - `DELETE` ticket, `PUT` ticket, `/transition` sub-resource, bulk ops, attachments, webhooks.
 - Agents, tool chaining, notifications, ask creating tickets.
@@ -87,7 +87,7 @@ From [`spec/requirements.md`](spec/requirements.md) **§2.3 Reference** and rule
 |-------|----------------|
 | **PDF** | Assignment obligation (CRUD capabilities, SM, persistence, RAG later). |
 | **Convention** | Project choice (`/api/v1`, PATCH, 409, envelopes, Boot 4, Java 25, Maven Wrapper, Liquibase, Testcontainers). |
-| **Agreed DEC** | Hub [`spec/requirements.md`](spec/requirements.md) §10.2 **DEC-01…19**. |
+| **Agreed DEC** | Hub [`spec/requirements.md`](spec/requirements.md) §10.2 **DEC-01…20**. |
 
 Do not describe conventions as PDF mandates in comments or README.
 
@@ -290,7 +290,7 @@ Without a runnable Boot app, Maven Wrapper, and a Postgres-backed schema, later 
   - Server port **8080** (matches api-contract examples) unless you confirm otherwise.
   - List defaults: document `app.api.page-size-default: 20`, `page-size-max: 100` as `@ConfigurationProperties` (not magic numbers in controllers).
 - **A.4 CORS (`config/WebCorsConfig`)**
-  - Map `/api/**` to `http://localhost:5173`; methods `GET, POST, PATCH, OPTIONS`; **not** `*` origin as a permanent default.
+  - Map `/api/**` to `http://localhost:3000` and `http://localhost:5173`; methods `GET, POST, PATCH, OPTIONS`; **not** `*` origin as a permanent default.
 - **A.5 Local database (operator-managed; not in `backend/`)**
   - **Do not** add `docker-compose.yml`, Dockerfiles, or other container orchestration under `backend/`. Postgres (with **pgvector** for Phase D+) and Ollama run in **your** existing containers or hosts.
   - Document required env names in `.env.example` (`SPRING_DATASOURCE_URL`, `USERNAME`, `PASSWORD`; later `OLLAMA_BASE_URL`, `OLLAMA_CHAT_MODEL`). Credentials **only** in env, not hardcoded in Java.

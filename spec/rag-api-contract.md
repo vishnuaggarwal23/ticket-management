@@ -130,7 +130,7 @@ This document defines the **public RAG API contract**: paths, request/response J
 | Ingest, chunk, embed, re-ingest | [`rag-ingestion.md`](rag-ingestion.md) |
 | Retrieval quality eval procedure | [`evaluation-strategy.md`](evaluation-strategy.md) |
 | Ask UI layout | [`ui-flow.md`](ui-flow.md) |
-| Auth, rate limits, streaming SSE | **Open** — not in **PDF** |
+| Auth, rate limits, streaming SSE | **Reference** — not in **PDF** assessment scope (**DEC-12** no auth) |
 | Confidence scores, retrieved chunk bodies in JSON | **PDF** does not require |
 | Agent tools, multi-turn threads, follow-up actions | **PDF** explicitly out of scope |
 

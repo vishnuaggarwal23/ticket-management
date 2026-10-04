@@ -1,5 +1,5 @@
 ---
-description: React + Vite + TypeScript UI guidelines
+description: React + Next.js + Vite + JavaScript UI guidelines
 alwaysApply: true
 ---
 
@@ -7,4 +7,4 @@ alwaysApply: true
 
 **Source of truth:** [`rules/frontend.md`](../../rules/frontend.md)
 
-Follow that file for React, Vite, TypeScript, ticket/ask UI capabilities, API client conventions, and RAG display. Do not duplicate or drift from it here. Do **not** generate frontend tests.
+Follow that file for React, Next.js, Vite, JavaScript, ticket/ask UI capabilities, API client conventions, and RAG display. Do not duplicate or drift from it here. Do **not** generate frontend tests.
