@@ -31,6 +31,7 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | [AE-008](#ae-008) | 2026-10-04 08:51 | spec / docs | Glossary still pointed at **OQ-05** after **DEC-11** |
 | [AE-009](#ae-009) | 2026-10-04 10:50 | code | Phase B review: page size, field `EntityManager`, silent 500 |
 | [AE-010](#ae-010) | 2026-10-04 11:56 | code | `TicketService` dual constructors failed Spring boot |
+| [AE-011](#ae-011) | 2026-10-04 13:15 | code | `DisabledEmbeddingPort` `@ConditionalOnMissingBean` left no `EmbeddingPort` |
 
 ---
 
@@ -112,7 +113,15 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 - **Kind:** code
 - **What was wrong:** Phase C added a package-private four-arg `TicketService` constructor for tests without `@Autowired` on the three-arg production constructor. Spring did not select it and failed with “No default constructor found”.
 - **How detected:** `./mvnw test` — `ApplicationSmokeTest.contextLoadsAndRelationalSchemaIsApplied` (`IllegalStateException` / `BeanInstantiationException`).
-- **How resolved:** Marked the three-arg constructor `@Autowired` (delegates to `new TicketStatusMachine()`). Context load and SM tests green. Commit `f74517a`.
+- **How resolved:** Marked the three-arg constructor `@Autowired` (delegates to `new TicketStatusMachine()`). Context load and SM tests green. Commit `f74517a`. Follow-up in `9614178`: `TicketDomainConfig` exposes `TicketStatusMachine` as a bean and `TicketService` uses one constructor (no `@Autowired`).
+
+## AE-011
+
+- **When:** 2026-10-04 13:15 UTC
+- **Kind:** code
+- **What was wrong:** Phase D put `@ConditionalOnMissingBean(EmbeddingPort)` on `DisabledEmbeddingPort`. With Spring AI wiring, no `EmbeddingPort` bean was registered and the context failed (`NoSuchBeanDefinitionException` for `TicketIngestionService`).
+- **How detected:** `./mvnw test` — `ApplicationSmokeTest` / full suite during Phase D ingest work ([`.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md`](../.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md)).
+- **How resolved:** Dropped the misplaced condition on the disabled fallback; `OllamaAiConfig` registers live ports when models exist, and `@ConditionalOnMissingBean` on the disabled beans keeps tests on hash/stub doubles. `./mvnw test` green before RAG commit `9614178`.
 
 ---
 
@@ -122,3 +131,4 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 |------|------|
 | 2026-10-04 | Initial chronological log AE-001…008 from SpecStory and spec/review fixes; no RAG ungrounded-answer row yet. |
 | 2026-10-04 | Added AE-009…010 (2 new); skipped 0 duplicates; total 10 entries. |
+| 2026-10-04 | Added AE-011 (1 new); extended AE-010 resolution; skipped 0 duplicates; total 11 entries. |
