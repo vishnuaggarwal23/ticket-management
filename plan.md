@@ -4,7 +4,7 @@
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code root:** `backend/` under the repository working directory. **Do not** put Java sources at repo root or under a second application.  
 > **Frontend:** out of this plan. **RAG (whole):** documented below, **blocked** until Phase C is marked complete **and** you explicitly confirm to start RAG.  
-> **Status of this plan:** draft for implementation — Phase C completion and RAG start require your sign-off in chat.  
+> **Status of this plan:** Phase **A–B complete** (CRUD in `backend/`, generate-tests **P0–P2 for ticket CRUD**, review-code **Pass** after minor fixes). Phase **C** and RAG start still require your sign-off in chat.  
 > **Date:** 2026-10-04.
 
 ---
@@ -255,6 +255,7 @@ Controller (api) → TicketService → Domain (status rules) / Repositories
 - Default suite: **no** live Ollama (RAG later uses doubles).
 - Run: `cd backend && ./mvnw test`.
 - After CRUD slices: follow [`commands/generate-tests.md`](commands/generate-tests.md) P0 order; review with [`commands/review-code.md`](commands/review-code.md).
+- **Phase B (2026-10-04):** generate-tests **P0–P2 for implemented ticket CRUD** written and `./mvnw test` green. **P0 status machine, ask, and RAG ingest** remain skipped (no production code). Review-code on Phase B: **no blocking Fail**; three **minor** findings **fixed** (list `size` from `ApiProperties.pageSizeDefault`, constructor-injected `EntityManager`, SLF4J log on unexpected 500). **Do not** start Phase C until you confirm.
 
 ### 5.5 RAG hook during Phase A–C
 
@@ -331,7 +332,7 @@ Without a runnable Boot app, Maven Wrapper, and a Postgres-backed schema, later 
 
 ## 7. Phase B — Ticket CRUD (no status transitions yet)
 
-**Status:** complete (B1–B5)  
+**Status:** complete (B1–B5) — generate-tests P0–P2 (CRUD) green; review-code Pass (minors fixed)  
 **Depends on:** Phase A complete; **C-01…C-03, C-05** agreed (this document §3)  
 **Implements:** FEAT-01…10 (except SM), AC-CORE-01…11 (API), AC-API create/list/get/patch-fields/comments, AC-DM-01/02/05
 
@@ -479,7 +480,7 @@ Include `timestamp` UTC, `path`, `status` matching HTTP. **No** stack traces, SQ
 **Done B4**
 
 - [x] Slice + integration tests green for endpoints 1–5 **except status PATCH**.
-- [x] [`commands/review-code.md`](commands/review-code.md) on the diff — fix Failures before Phase C.
+- [x] [`commands/review-code.md`](commands/review-code.md) on the Phase B diff — **Pass** after three minor Failures were fixed (see §17). No remaining Fail before Phase C.
 
 ### 7.5 Phase B5 — Persistence across “restart”
 
@@ -492,6 +493,7 @@ Include `timestamp` UTC, `path`, `status` matching HTTP. **No** stack traces, SQ
 
 - [x] Restart test green.
 - [x] CRUD capabilities FEAT-01…10 (minus SM) proven at API integration.
+- [x] generate-tests **P0–P2** for ticket CRUD (create/list/search/filter/get/PATCH/comments/restart, envelopes, 500 no leak, extra validation). **Not** T1–T5 / ask / ingest (no impl).
 
 ---
 
@@ -748,19 +750,20 @@ Follow [`commands/generate-tests.md`](commands/generate-tests.md). Map names to 
 
 ### 13.1 Phase B–C (implement with those phases)
 
-| Flow | Positive | Negative / empty | Layers |
-|------|----------|------------------|--------|
-| Create | 201, `TKT-{n}`, `OPEN`, Location | blank title 400; no row; `status` on create 400 | slice + API-int + service + repo |
-| List | default page meta | size 0/101; bad sort; bad status | slice + API-int + repo |
-| Search `q` | title or description hit | no hit 200 []; comment-only miss | API-int + repo |
-| Filter status | match | invalid enum 400; AND with `q` | API-int |
-| Get | 200 detail + comments | 404 | slice + API-int |
-| PATCH fields | partial update | 400; 404; `{}` 400 | slice + API-int |
-| Comment | 201; appears on GET | blank body 400; 404 ticket | API-int |
-| Restart | GET after new context | — | API-int |
-| T1–T5 | 200 persisted | — | domain + service + API-int |
-| Illegal 20 / X1–X3 / self | 409, row unchanged | — | domain + service + API-int |
-| PATCH no status | fields change | — | service + API-int |
+| Flow | Positive | Negative / empty | Layers | Status (2026-10-04) |
+|------|----------|------------------|--------|---------------------|
+| Create | 201, `TKT-{n}`, `OPEN`, Location | blank title 400; no row; `status` on create 400 | slice + API-int + service + repo | **done** (incl. `@Size` title/description, `URGENT`→`CRITICAL`) |
+| List | default page meta | size 0/101; bad sort; bad status | slice + API-int + repo | **done** (`size` 1 and 100; last page; omitted `size` uses `pageSizeDefault`) |
+| Search `q` | title or description hit | no hit 200 []; comment-only miss | API-int + repo | **done** (case-insensitive) |
+| Filter status | match | invalid enum 400; AND with `q` | API-int | **done** |
+| Get | 200 detail + comments | 404 | slice + API-int | **done** |
+| PATCH fields | partial update | 400; 404; `{}` 400 | slice + API-int | **done** |
+| Comment | 201; appears on GET | blank body 400; 404 ticket | API-int | **done** (body max length on slice) |
+| Restart | GET after new context | — | API-int | **done** (`TicketRestartIT`) |
+| Envelopes / 500 | `error` shape | unexpected exception does not leak cause | slice + unit | **done** (`unexpectedExceptionIs500WithoutLeak`, `RestExceptionHandlerTest`) |
+| T1–T5 | 200 persisted | — | domain + service + API-int | **not started** (Phase C) |
+| Illegal 20 / X1–X3 / self | 409, row unchanged | — | domain + service + API-int | **not started** (Phase C) |
+| PATCH no status | fields change | — | service + API-int | **not started** as SM gate (field PATCH already in B; AC-SM-08 with Phase C) |
 
 ### 13.2 Phase D–F (after confirmation)
 
@@ -809,11 +812,12 @@ After each phase:
 5. Phase **B3** — DTOs, mapper, `TicketService` CRUD, service tests.
 6. Phase **B4** — controllers, advice, slice + API integration.
 7. Phase **B5** — restart persistence test.
-8. Phase **C** — `TicketStatusMachine`, PATCH `status`, full SM tests, review, **mark complete**.
-9. **Stop.** User confirmation.
-10. Phase **D** — vector schema, chunker, embed port, ingest service.
-11. Phase **E** — after-commit hooks from ticket service.
-12. Phase **F** — ask API both paths, Band A tests, grounding review.
+8. **Phase B closeout** — generate-tests P0–P2 (CRUD) + review-code; **done 2026-10-04**.
+9. Phase **C** — `TicketStatusMachine`, PATCH `status`, full SM tests, review, **mark complete**.
+10. **Stop.** User confirmation.
+11. Phase **D** — vector schema, chunker, embed port, ingest service.
+12. Phase **E** — after-commit hooks from ticket service.
+13. Phase **F** — ask API both paths, Band A tests, grounding review.
 
 ---
 
@@ -821,13 +825,14 @@ After each phase:
 
 | Phase | Status | Tests | Review-code | Notes |
 |-------|--------|-------|-------------|-------|
-| A Setup | complete | smoke green | | Boot 3.5.16; Liquibase 001–003; pg_trgm only |
-| B1 Enums | complete | unit green | | C-02: `CRITICAL`; JSON `URGENT`→`CRITICAL` |
-| B2 Persistence | complete | IT green | | entities + search/filter; no HTTP |
-| B3 Service CRUD | complete | unit green | | no status PATCH |
-| B4 HTTP CRUD | complete | slice+IT green | self-review | no status PATCH |
-| B5 Restart | complete | IT green | | DirtiesContext + same Testcontainers DB |
-| **C State machine** | **not started** | | | **RAG blocked until `complete` + chat confirm** |
+| A Setup | complete | smoke green | n/a (scaffold) | Boot 3.5.16; Liquibase 001–003; pg_trgm only |
+| B1 Enums | complete | unit green | Pass (with B) | C-02: `CRITICAL`; JSON `URGENT`→`CRITICAL` |
+| B2 Persistence | complete | IT green | Pass (with B) | constructor `EntityManager`; search/filter; no HTTP |
+| B3 Service CRUD | complete | unit green | Pass (with B) | no status PATCH |
+| B4 HTTP CRUD | complete | slice+IT green; generate-tests P0–P2 CRUD | **Pass** | list `size` default from `ApiProperties`; 500 logged, body generic; no status PATCH |
+| B5 Restart | complete | IT green | Pass (with B) | DirtiesContext + same Testcontainers DB |
+| B generate-tests | complete for CRUD | `./mvnw test` green | — | P0 SM/ask/ingest **deferred**; P1 ingest-hook **N/A** until Phase E |
+| **C State machine** | **not started** | none | not run | **RAG blocked until `complete` + chat confirm** |
 | D Ingest / vectors | blocked | | | |
 | E Ingest hooks | blocked | | | |
 | F Ask API | blocked | | | |
@@ -846,3 +851,4 @@ After each phase:
 | 2026-10-04 | Phase **B3–B4** implemented: ticket CRUD service/DTOs, REST `/api/v1/tickets`, envelopes, MockMvc slice + API integration tests (no status PATCH). |
 | 2026-10-04 | Phase **B5** implemented: create ticket+comment, fresh Spring context, same Postgres container, GET still returns data. |
 | 2026-10-04 | AI error log [`docs/ai-error.md`](docs/ai-error.md); `/update-ai-error`. |
+| 2026-10-04 | Phase **B** closeout: generate-tests **P0–P2** for ticket CRUD (SM/ask/RAG skipped). Review-code **Pass** after fixing list page-size default, `EntityManager` constructor injection, and unexpected-500 logging. Phase **C** still not started. |
