@@ -17,3 +17,62 @@ main {
   margin: 0 auto;
   padding: 1.5rem;
 }
+
+.site-header {
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.site-header__inner {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-header__brand {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.site-nav__link {
+  color: #1a56db;
+  text-decoration: none;
+}
+
+.site-nav__link:hover,
+.site-nav__link:focus-visible {
+  text-decoration: underline;
+}
+
+.route-stub__soon,
+.loading {
+  color: #555;
+}
+
+.error-banner {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid #c62828;
+  border-radius: 4px;
+  background: #ffebee;
+}
+
+.error-banner__message {
+  margin: 0;
+  font-weight: 600;
+}
+
+.error-banner__details {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}

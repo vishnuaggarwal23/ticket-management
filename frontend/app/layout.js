@@ -1,3 +1,4 @@
+import SiteHeader from '@/components/SiteHeader';
 import './globals.css';
 
 export const metadata = {
@@ -8,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        <main id="main-content">{children}</main>
+      </body>
     </html>
   );
 }

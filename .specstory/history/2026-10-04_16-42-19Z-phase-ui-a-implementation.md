@@ -12,17 +12,32 @@ _**User**_
 
 _**Agent (composer-2.5)**_
 
+<think><details><summary>Thought Process</summary>
+Starting implementation of phase UI-A from plan.md.
+
+Reading plan.md and related files to understand UI-A requirements. Running graphify queries to explore the codebase.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Reading the plan for phase UI-A and orienting on the frontend codebase.
+
+
+
+
+_**Agent (composer-2.5)**_
+
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
 
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
-<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **0** directories</summary>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **1** directory</summary>
 
-No results found
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (0 files)
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
@@ -32,14 +47,3139 @@ _**Agent (composer-2.5)**_
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify query "frontend UI structure Next.js pages components"
 ```
+
+```
+Graph: graphify-out/graph.json (2191 nodes) | Traversal: BFS depth=2 | Start: ['Structure', '8. Functional modules and components · unit **ARCH-D**', 'Frontend guidelines', '.nextTicketNumber()'] | 144 nodes found
+
+[!] TRUNCATED: showing 50 of 144 nodes (~2000-token budget). The answer may be among the 94 cut nodes — raise the token budget (CLI: --budget) or narrow the query (e.g. context_filter=['call'], or get_node for a specific symbol).
+
+NODE Structure [src=rules/frontend.md loc=L67 community=Frontend guidelines]
+NODE 8. Functional modules and components · unit **ARCH-D** [src=spec/architecture.md loc=L427 community=8. Functional modules and components · unit **ARCH-D**]
+NODE Frontend guidelines [src=rules/frontend.md loc=L1 community=Frontend guidelines]
+NODE .nextTicketNumber() [src=backend/src/main/java/com/ticketmanagement/repository/TicketRepository.java loc=L21 community=.create]
+NODE .status() [src=backend/src/test/java/com/ticketmanagement/rag/TicketIngestionHookIT.java loc=L169 community=.status]
+NODE .create() [src=backend/src/main/java/com/ticketmanagement/service/TicketService.java loc=L57 community=.create]
+NODE Architecture [src=spec/architecture.md loc=L1 community=Architecture]
+NODE TicketRepository [src=backend/src/main/java/com/ticketmanagement/repository/TicketRepository.java loc=L16 community=VectorChunkStore]
+NODE .persistTicket() [src=backend/src/test/java/com/ticketmanagement/repository/TicketRepositoryIT.java loc=L193 community=.search]
+NODE .persist() [src=backend/src/test/java/com/ticketmanagement/rag/TicketIngestionIT.java loc=L86 community=.findWithCommentsById]
+NODE .createAppliesDefaults() [src=backend/src/test/java/com/ticketmanagement/service/TicketServiceTest.java loc=L64 community=TicketEntity]
+NODE frontend.md [src=rules/frontend.md loc=L1 community=Prompt History Index]
+NODE Files updated [src=.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md loc=L15943 community=TicketSpecifications]
+NODE .ingestFailureDoesNotFailTick
+… (output truncated)
+```
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
 
-<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
-<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **0** directories</summary>
+<think><details><summary>Thought Process</summary>
+Starting implementation of Phase UI-A from plan.md.
 
-No results found
+Creating the frontend scaffold per section 20.4. This covers package.json, .nvmrc, .env.example, next.config.js, vite.config.js, and a README snippet. The goal is a minimal Next.js app with Node 24 support. Full routes will come in UI-C.
+
+Next build requires a minimal app structure such as layout.age.js. Reading frontend rules and checking existing files.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Implementing UI-A scaffold per plan §20.4. Checking the repo and frontend rules.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (0 files)
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": ".gitignore",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "frontend"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "frontend",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+No frontend folder exists yet. I'll create the full scaffold first.
+
+The scaffold needs Next.js, React, Vite, and minimal layout files. I'll also add .nvmrc, .env.example, and check root .gitignore.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.gitignore</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: node -v 2&gt;/dev/null; which node</summary>
+```bash
+node -v 2>/dev/null; which node
+```
+
+```
+v24.19.0
+/Users/vishnuaggarwal/.nvm/versions/node/v24.19.0/bin/node
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Creating the frontend scaffold for phase UI-A.
+
+Mapping out the exact files for the minimal Next.js scaffold: config files, layout, page, and README. Skipping src/ placeholders since UI-A does not require them.
+
+Configuring next.config.js with API rewrites to localhost:8080. Vite.config.js will be ESM format. Package.json will set Node 24 engine constraints and standard build scripts. Ready to run npm install and next build.
+
+Next.js 15 is selected for the scaffold. The minimal page will remain a placeholder until UI-C. Plan.md will be updated to mark UI-A complete.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Creating the `frontend/` scaffold and verifying the build.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: npm view next version 2&gt;/dev/null; npm view react version 2&gt;/dev/null</summary>
+```bash
+npm view next version 2>/dev/null; npm view react version 2>/dev/null
+```
+
+```
+16.3.8
+19.3.0
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+React 19.3.0 and Next.js 16.3.8 will be used for UI-A compatibility.
+
+Next.js 15.5.x is being considered for stability over the latest 16.x release. The plan is to install next, react, react-dom, and vite together and let npm resolve dependencies.
+
+The root layout and page files are being scaffolded with basic HTML structure and a placeholder heading. Minimal global CSS may be added for styling.
+
+The placeholder page now includes a note that routes belong to UI-C. An empty vite.config.js will be created for future Vite integration. Extra .gitkeep and .gitignore files are unnecessary since the root .gitignore already covers node_modules and .next. The next step is to run npm install and build inside the frontend directory.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/package.json</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/.nvmrc</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/.env.example</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/next.config.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/vite.config.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/layout.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/globals.css</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/README.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Running npm install and npm run build in the frontend.
+
+Updating plan.md with UI-A status. Starting Next.js dev server on port 3000 to verify.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend &amp;&amp; npm install &amp;&amp; npm run build</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend && npm install && npm run build
+```
+
+```
+
+added 31 packages, and audited 32 packages in 1m
+
+10 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn allow-scripts   esbuild@0.25.12 (postinstall: node install.js)
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+
+> ticket-management-frontend@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.5.27
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 4.8s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/4) ...
+   Generating static pages (1/4) 
+   Generating static pages (2/4) 
+   Generating static pages (3/4) 
+ ✓ Generating static pages (4/4)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      123 B         103 kB
+└ ○ /_not-found                            995 B         104 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/255-ce8c7c75002f810b.js       46.5 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)           1.9 kB
+
+
+○  (Static)  prerendered as static content
+
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Build succeeded. Verifying the dev server on port 3000.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend &amp;&amp; npm run dev</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend && npm run dev
+```
+
+```
+]633;C]633;P;Cwd=/Users/vishnuaggarwal/Documents/projects/practice/ticket-management]633;P;HasRichCommandDetection=True]633;A$ ]633;B]633;E;cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend && npm run devcd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend && npm run dev
+]633;C
+> ticket-management-frontend@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.27
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.4:3000
+
+ ✓ Starting...
+ ✓ Ready in 2.7s
+ ○ Compiling / ...
+ ✓ Compiled /_not-found in 9.9s (540 modules)
+ GET / 200 in 10697ms
+ GET /json/version 404 in 108ms
+ GET / 200 in 251ms
+ GET / 200 in 55ms
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Waiting for the server to start before testing with curl.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/terminals/937059.txt</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Port 3000 is confirmed. Updating graphify and plan.md to mark UI-A as complete.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: curl -s -o /dev/null -w &#34;%{http_code}&#34; http://localhost:3000/</summary>
+```bash
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/
+```
+
+```
+200
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Running graphify update after JavaScript changes per plan.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify update .</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify update .
+```
+
+```
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 17 file(s) not classified (no supported extension or shebang), skipped: .env.example, .gitignore, .nvmrc, ai-project-instructions.mdc, api-standards.mdc, documentation.mdc (+11 more)
+  AST extraction: 19/19 uncached files (100%)
+[graphify watch] community set changed since labeling (158 saved labels, 169 communities now; renamed 63 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.
+[graphify] backed up curated graph (5 files) -> 2026-10-04/
+[graphify watch] Rebuilt: 2273 nodes, 4708 edges, 169 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Verifying that package-lock.json exists for reproducible builds.
+
+Checking for untracked files.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **9039** results in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend`** (9039 files)
+
+| File |
+|------|
+| `.next/trace` |
+| `.next/server/app/_not-found/page_client-reference-manifest.js` |
+| `.next/server/next-font-manifest.json` |
+| `.next/server/app/page_client-reference-manifest.js` |
+| `.next/server/next-font-manifest.js` |
+| `.next/server/middleware-react-loadable-manifest.js` |
+| `.next/static/development/_buildManifest.js` |
+| `.next/server/middleware-build-manifest.js` |
+| `.next/static/development/_ssgManifest.js` |
+| `.next/app-build-manifest.json` |
+| `.next/build-manifest.json` |
+| `.next/react-loadable-manifest.json` |
+| `.next/server/app/_not-found/page.js` |
+| `.next/types/cache-life.d.ts` |
+| `.next/types/app/layout.ts` |
+| `.next/types/package.json` |
+| `.next/types/app/page.ts` |
+| `.next/server/server-reference-manifest.json` |
+| `.next/server/server-reference-manifest.js` |
+| `.next/server/pages-manifest.json` |
+| `.next/server/app-paths-manifest.json` |
+| `.next/server/webpack-runtime.js` |
+| `.next/static/chunks/main-app.js` |
+| `.next/static/css/app/layout.css` |
+| `.next/static/webpack/633457081244afec._.hot-update.json` |
+| `.next/static/chunks/webpack.js` |
+| `.next/static/chunks/app/_not-found/page.js` |
+| `.next/static/chunks/app-pages-internals.js` |
+| `.next/static/chunks/app/page.js` |
+| `.next/static/chunks/app/layout.js` |
+| `.next/server/vendor-chunks/next.js` |
+| `.next/server/app/page.js` |
+| `.next/server/vendor-chunks/@swc.js` |
+| `.next/server/middleware-manifest.json` |
+| `.next/server/interception-route-rewrite-manifest.js` |
+| `.next/prerender-manifest.json` |
+| `.next/routes-manifest.json` |
+| `.next/types/routes.d.ts` |
+| `.next/static/chunks/polyfills.js` |
+| `.next/package.json` |
+| `.next/cache/next-devtools-config.json` |
+| `.next/cache/.previewinfo` |
+| `.next/cache/.rscinfo` |
+| `node_modules/.package-lock.json` |
+| `package-lock.json` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/load.js.LEGAL.txt` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/fetch.js.LEGAL.txt` |
+| `node_modules/next/dist/shared/lib/zod.d.ts` |
+| `node_modules/next/dist/lib/eslint/writeOutputFile.d.ts` |
+| `node_modules/next/dist/lib/eslint/writeDefaultConfig.d.ts` |
+| `node_modules/next/dist/lib/typescript/writeConfigurationDefaults.d.ts` |
+| `node_modules/next/dist/lib/typescript/writeAppTypeDeclarations.d.ts` |
+| `node_modules/next/dist/build/write-build-id.d.ts` |
+| `node_modules/next/dist/lib/fs/write-atomic.d.ts` |
+| `node_modules/next/dist/server/normalizers/wrap-normalizer-fn.d.ts` |
+| `node_modules/next/dist/lib/worker.d.ts` |
+| `node_modules/next/dist/export/worker.d.ts` |
+| `node_modules/next/dist/build/worker.d.ts` |
+| `node_modules/next/dist/server/lib/worker-utils.d.ts` |
+| `node_modules/next/dist/server/app-render/work-unit-async-storage.external.d.ts` |
+| `node_modules/next/dist/server/app-render/work-unit-async-storage-instance.d.ts` |
+| `node_modules/next/dist/server/async-storage/work-store.d.ts` |
+| `node_modules/next/dist/server/app-render/work-async-storage.external.d.ts` |
+| `node_modules/next/dist/server/app-render/work-async-storage-instance.d.ts` |
+| `node_modules/next/dist/server/async-storage/with-store.d.ts` |
+| `node_modules/next/dist/client/with-router.d.ts` |
+| `node_modules/next/dist/lib/with-promise-cache.d.ts` |
+| `node_modules/next/dist/client/dev/hot-reloader/pages/websocket.d.ts` |
+| `node_modules/next/dist/client/dev/error-overlay/websocket.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.d.ts` |
+| `node_modules/next/dist/compiled/webpack/webpack.d.ts` |
+| `node_modules/next/dist/client/webpack.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/webpack-module-path.d.ts` |
+| `node_modules/next/dist/build/webpack-config.d.ts` |
+| `node_modules/next/dist/server/response-cache/web.d.ts` |
+| `node_modules/next/dist/server/base-http/web.d.ts` |
+| `node_modules/next/dist/server/api-utils/web.d.ts` |
+| `node_modules/next/web-vitals.d.ts` |
+| `node_modules/next/dist/client/web-vitals.d.ts` |
+| `node_modules/next/dist/server/web/web-on-close.d.ts` |
+| `node_modules/next/dist/server/node-environment-extensions/web-crypto.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/warning.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/postcss-loader/src/Warning.d.ts` |
+| `node_modules/next/dist/shared/lib/utils/warn-once.d.ts` |
+| `node_modules/next/dist/server/app-render/walk-tree-with-flight-router-state.d.ts` |
+| `node_modules/next/dist/lib/wait.d.ts` |
+| `node_modules/next/dist/telemetry/events/version.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/version-staleness.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/version-staleness-info/version-staleness-info.d.ts` |
+| `node_modules/next/dist/lib/verifyAndLint.d.ts` |
+| `node_modules/next/dist/lib/verify-typescript-setup.d.ts` |
+| `node_modules/next/dist/lib/verify-root-layout.d.ts` |
+| `node_modules/next/dist/lib/verify-partytown-setup.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/resolve-url-loader/lib/value-processor.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/local/validate-local-font-function-call.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/validate-google-font-function-call.d.ts` |
+| `node_modules/next/dist/shared/lib/utils.d.ts` |
+| `node_modules/next/dist/shared/lib/turbopack/utils.d.ts` |
+| `node_modules/next/dist/server/web/utils.d.ts` |
+| `node_modules/next/dist/server/utils.d.ts` |
+| `node_modules/next/dist/server/typescript/utils.d.ts` |
+| `node_modules/next/dist/server/response-cache/utils.d.ts` |
+| `node_modules/next/dist/server/request/utils.d.ts` |
+| `node_modules/next/dist/server/node-environment-extensions/utils.d.ts` |
+| `node_modules/next/dist/server/lib/utils.d.ts` |
+| `node_modules/next/dist/server/lib/trace/utils.d.ts` |
+| `node_modules/next/dist/server/lib/server-ipc/utils.d.ts` |
+| `node_modules/next/dist/server/instrumentation/utils.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/utils.d.ts` |
+| `node_modules/next/dist/lib/metadata/generate/utils.d.ts` |
+| `node_modules/next/dist/export/utils.d.ts` |
+| `node_modules/next/dist/experimental/testing/server/utils.d.ts` |
+| `node_modules/next/dist/build/webpack/utils.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/utils.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/postcss-loader/src/utils.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/lightningcss-loader/src/utils.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/utils.d.ts` |
+| `node_modules/next/dist/build/webpack/config/utils.d.ts` |
+| `node_modules/next/dist/build/utils.d.ts` |
+| `node_modules/next/dist/build/static-paths/utils.d.ts` |
+| `node_modules/next/dist/build/babel/loader/util.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/dev-tools-info/user-preferences.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/user-agent.d.ts` |
+| `node_modules/next/dist/client/dev/hot-reloader/app/use-websocket.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/devtools-indicator/hooks/use-update-animation.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/hooks/use-shortcuts.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-toolbar/use-restart-server.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/use-open-in-editor.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/hooks/use-on-click-outside.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/devtools-indicator/hooks/use-minimum-loading-time-multiple.d.ts` |
+| `node_modules/next/dist/client/use-merged-ref.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/devtools-indicator/hooks/use-measure-width.d.ts` |
+| `node_modules/next/dist/client/use-intersection.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/use-forward-console-log.d.ts` |
+| `node_modules/next/dist/server/app-render/use-flight-response.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/use-error-handler.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/hooks/use-delayed-render.d.ts` |
+| `node_modules/next/dist/client/use-client-disallowed.d.ts` |
+| `node_modules/next/dist/server/use-cache/use-cache-wrapper.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/telemetry-plugin/use-cache-tracker-utils.d.ts` |
+| `node_modules/next/dist/server/use-cache/use-cache-errors.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/use-app-dev-rendering-indicator.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/hooks/use-active-runtime-error.d.ts` |
+| `node_modules/next/dist/client/components/use-action-queue.d.ts` |
+| `node_modules/next/dist/lib/url.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/url.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/url-pattern.d.ts` |
+| `node_modules/next/dist/trace/upload-trace.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/telemetry-plugin/update-telemetry-loader-context-from-swc.d.ts` |
+| `node_modules/next/dist/client/components/unstable-rethrow.server.d.ts` |
+| `node_modules/next/dist/client/components/unstable-rethrow.d.ts` |
+| `node_modules/next/dist/client/components/unstable-rethrow.browser.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/unstable-no-store.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/unstable-cache.d.ts` |
+| `node_modules/next/dist/client/components/unresolved-thenable.d.ts` |
+| `node_modules/next/dist/client/components/unrecognized-action-error.d.ts` |
+| `node_modules/next/dist/server/normalizers/underscore-normalizer.d.ts` |
+| `node_modules/next/dist/client/components/unauthorized.d.ts` |
+| `node_modules/next/dist/client/components/builtin/unauthorized.d.ts` |
+| `node_modules/next/dist/server/stream-utils/uint8array-helpers.d.ts` |
+| `node_modules/next/types.d.ts` |
+| `node_modules/next/dist/types.d.ts` |
+| `node_modules/next/dist/trace/types.d.ts` |
+| `node_modules/next/dist/trace/report/types.d.ts` |
+| `node_modules/next/dist/shared/lib/lazy-dynamic/types.d.ts` |
+| `node_modules/next/dist/server/web/types.d.ts` |
+| `node_modules/next/dist/server/response-cache/types.d.ts` |
+| `node_modules/next/dist/server/lib/types.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/types.d.ts` |
+| `node_modules/next/dist/server/lib/cache-handlers/types.d.ts` |
+| `node_modules/next/dist/server/instrumentation/types.d.ts` |
+| `node_modules/next/dist/server/app-render/types.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/types.d.ts` |
+| `node_modules/next/dist/export/types.d.ts` |
+| `node_modules/next/dist/export/routes/types.d.ts` |
+| `node_modules/next/dist/experimental/testmode/proxy/types.d.ts` |
+| `node_modules/next/dist/esm/build/babel/loader/types.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/types.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/types.d.ts` |
+| `node_modules/next/dist/client/components/metadata/types.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/metadata/types.d.ts` |
+| `node_modules/next/dist/build/turborepo-access-trace/types.d.ts` |
+| `node_modules/next/dist/build/swc/types.d.ts` |
+| `node_modules/next/dist/build/static-paths/types.d.ts` |
+| `node_modules/next/dist/build/babel/loader/types.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/typegen.d.ts` |
+| `node_modules/next/dist/build/type-check.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/twitter-types.d.ts` |
+| `node_modules/next/dist/lib/turbopack-warning.d.ts` |
+| `node_modules/next/dist/server/dev/turbopack-utils.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/dev-tools-info/turbopack-info.d.ts` |
+| `node_modules/next/dist/client/dev/hot-reloader/turbopack-hot-reloader-common.d.ts` |
+| `node_modules/next/dist/cli/internal/turbo-trace-server.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache-impl/tuple-map.d.ts` |
+| `node_modules/next/dist/lib/try-to-parse-path.d.ts` |
+| `node_modules/next/dist/server/api-utils/node/try-get-preview-data.d.ts` |
+| `node_modules/next/dist/client/trusted-types.d.ts` |
+| `node_modules/next/dist/build/next-config-ts/transpile-config.d.ts` |
+| `node_modules/next/dist/build/babel/loader/transform.d.ts` |
+| `node_modules/next/dist/server/app-render/module-loading/track-module-loading.instance.d.ts` |
+| `node_modules/next/dist/server/app-render/module-loading/track-module-loading.external.d.ts` |
+| `node_modules/next/dist/server/app-render/module-loading/track-dynamic-import.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/track-dynamic-import.d.ts` |
+| `node_modules/next/dist/server/lib/trace/tracer.d.ts` |
+| `node_modules/next/dist/client/tracing/tracer.d.ts` |
+| `node_modules/next/dist/trace/trace.d.ts` |
+| `node_modules/next/dist/lib/memory/trace.d.ts` |
+| `node_modules/next/dist/trace/trace-uploader.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/tooltip/tooltip.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/toast/toast.d.ts` |
+| `node_modules/next/dist/trace/report/to-telemetry.d.ts` |
+| `node_modules/next/dist/server/lib/to-route.d.ts` |
+| `node_modules/next/dist/trace/report/to-json.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/timers.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/thumbs/thumbs-up.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/thumbs/thumbs-down.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/terminal/terminal.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/terminal-logging-config.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/telemetry-plugin/telemetry-plugin.d.ts` |
+| `node_modules/next/dist/build/turborepo-access-trace/tcp.d.ts` |
+| `node_modules/next/dist/server/app-render/rsc/taint.d.ts` |
+| `node_modules/next/dist/server/lib/incremental-cache/tags-manifest.external.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/system-icon.d.ts` |
+| `node_modules/next/dist/telemetry/events/swc-plugins.d.ts` |
+| `node_modules/next/dist/telemetry/events/swc-load-failure.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/suffix.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/subresource-integrity-plugin.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overlay/styles.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/dialog/styles.d.ts` |
+| `node_modules/next/dist/shared/lib/styled-jsx.d.ts` |
+| `node_modules/next/dist/esm/shared/lib/styled-jsx.d.ts` |
+| `node_modules/next/dist/styled-jsx/types/style.d.ts` |
+| `node_modules/next/dist/server/app-render/strip-flight-headers.d.ts` |
+| `node_modules/next/dist/build/webpack/stringify-request.d.ts` |
+| `node_modules/next/dist/server/lib/streaming-metadata.d.ts` |
+| `node_modules/next/dist/build/output/store.d.ts` |
+| `node_modules/next/dist/telemetry/storage.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/stitched-error.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/step.d.ts` |
+| `node_modules/next/dist/server/dev/static-paths-worker.d.ts` |
+| `node_modules/next/dist/client/components/static-generation-bailout.d.ts` |
+| `node_modules/next/dist/lib/static-env.d.ts` |
+| `node_modules/next/dist/lib/memory/startup.d.ts` |
+| `node_modules/next/dist/server/lib/start-server.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/stack-frame.d.ts` |
+| `node_modules/next/dist/build/spinner.d.ts` |
+| `node_modules/next/dist/server/lib/source-maps.d.ts` |
+| `node_modules/next/dist/server/dev/browser-logs/source-map.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/sorted-routes.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/sortable-routes.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/sort-fonts-variant-values.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/slow-module-detection-plugin.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/simpleWebpackError.d.ts` |
+| `node_modules/next/dist/shared/lib/side-effect.d.ts` |
+| `node_modules/next/dist/lib/memory/shutdown.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/should-hard-navigate.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/dev-tools-info/shortcut-recorder.d.ts` |
+| `node_modules/next/dist/trace/shared.d.ts` |
+| `node_modules/next/dist/next-devtools/server/shared.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/shared.d.ts` |
+| `node_modules/next/dist/client/dev/hot-reloader/shared.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/next-types-plugin/shared.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/shared-modules.d.ts` |
+| `node_modules/next/dist/server/lib/incremental-cache/shared-cache-controls.external.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/shadow-portal.d.ts` |
+| `node_modules/next/dist/server/setup-http-agent-env.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/set-cache-busting-search-param.d.ts` |
+| `node_modules/next/dist/client/set-attributes-from-props.d.ts` |
+| `node_modules/next/dist/telemetry/events/session-stopped.d.ts` |
+| `node_modules/next/server.d.ts` |
+| `node_modules/next/experimental/testing/server.d.ts` |
+| `node_modules/next/dist/server/typescript/rules/server.d.ts` |
+| `node_modules/next/dist/experimental/testmode/server.d.ts` |
+| `node_modules/next/dist/experimental/testmode/proxy/server.d.ts` |
+| `node_modules/next/dist/api/server.d.ts` |
+| `node_modules/next/dist/server/server-utils.d.ts` |
+| `node_modules/next/dist/server/server-route-utils.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/server-reference.d.ts` |
+| `node_modules/next/dist/shared/lib/server-reference-info.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/server-patch-reducer.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/helpers/manifest-loaders/server-manifest-loader.d.ts` |
+| `node_modules/next/dist/shared/lib/server-inserted-html.shared-runtime.d.ts` |
+| `node_modules/next/dist/server/app-render/server-inserted-html.d.ts` |
+| `node_modules/next/dist/experimental/testmode/server-edge.d.ts` |
+| `node_modules/next/dist/server/typescript/rules/server-boundary.d.ts` |
+| `node_modules/next/dist/server/lib/server-action-request-meta.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/server-action-reducer.d.ts` |
+| `node_modules/next/dist/server/serve-static.d.ts` |
+| `node_modules/next/dist/server/send-response.d.ts` |
+| `node_modules/next/dist/server/send-payload.d.ts` |
+| `node_modules/next/dist/lib/semver-noop.d.ts` |
+| `node_modules/next/dist/shared/lib/segment.d.ts` |
+| `node_modules/next/dist/shared/lib/segment-cache/segment-value-encoding.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overview/segment-suggestion.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/segment-prefix-rsc.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overview/segment-explorer.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/segment-explorer-trie.d.ts` |
+| `node_modules/next/dist/server/app-render/segment-explorer-path.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overview/segment-boundary-trigger.d.ts` |
+| `node_modules/next/dist/server/request/search-params.d.ts` |
+| `node_modules/next/dist/client/request/search-params.browser.prod.d.ts` |
+| `node_modules/next/dist/client/request/search-params.browser.dev.d.ts` |
+| `node_modules/next/dist/client/request/search-params.browser.d.ts` |
+| `node_modules/next/script.d.ts` |
+| `node_modules/next/dist/client/script.d.ts` |
+| `node_modules/next/dist/api/script.d.ts` |
+| `node_modules/next/dist/lib/scheduler.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache-impl/scheduler.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/styles/scale-updater.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/save-devtools-config.d.ts` |
+| `node_modules/next/dist/server/web/sandbox/sandbox.d.ts` |
+| `node_modules/next/dist/lib/typescript/runTypeCheck.d.ts` |
+| `node_modules/next/dist/client/dev/runtime-error-handler.d.ts` |
+| `node_modules/next/dist/shared/lib/runtime-config.external.d.ts` |
+| `node_modules/next/dist/lib/eslint/runLintCheck.d.ts` |
+| `node_modules/next/dist/server/after/run-with-after.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/rspack-profiling-plugin.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/rspack-flight-client-entry-plugin.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/rsc.d.ts` |
+| `node_modules/next/router.d.ts` |
+| `node_modules/next/dist/shared/lib/router/router.d.ts` |
+| `node_modules/next/dist/client/router.d.ts` |
+| `node_modules/next/dist/client/compat/router.d.ts` |
+| `node_modules/next/dist/api/router.d.ts` |
+| `node_modules/next/compat/router.d.ts` |
+| `node_modules/next/dist/server/lib/router-server.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/router-server-context.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/router-reducer.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/router-reducer-types.d.ts` |
+| `node_modules/next/dist/shared/lib/router-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/route-types-utils.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/route-regex.d.ts` |
+| `node_modules/next/dist/lib/route-pattern-normalizer.d.ts` |
+| `node_modules/next/dist/client/route-params.d.ts` |
+| `node_modules/next/dist/server/route-modules/route-module.d.ts` |
+| `node_modules/next/dist/server/lib/module-loader/route-module-loader.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/route-matcher.d.ts` |
+| `node_modules/next/dist/server/route-matchers/route-matcher.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/route-matcher-provider.d.ts` |
+| `node_modules/next/dist/server/route-matcher-managers/route-matcher-manager.d.ts` |
+| `node_modules/next/dist/server/route-matches/route-match.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/route-match-utils.d.ts` |
+| `node_modules/next/dist/client/route-loader.d.ts` |
+| `node_modules/next/dist/server/route-kind.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/dev-tools-info/route-info.d.ts` |
+| `node_modules/next/dist/server/route-definitions/route-definition.d.ts` |
+| `node_modules/next/dist/server/lib/route-cache-key.d.ts` |
+| `node_modules/next/dist/client/route-announcer.d.ts` |
+| `node_modules/next/root-params.d.ts` |
+| `node_modules/next/dist/server/request/root-params.d.ts` |
+| `node_modules/next/dist/client/components/errors/root-error-boundary.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/right-arrow.d.ts` |
+| `node_modules/next/dist/server/revalidation-utils.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/revalidate.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/retry.d.ts` |
+| `node_modules/next/dist/server/resume-data-cache/resume-data-cache.d.ts` |
+| `node_modules/next/dist/build/turborepo-access-trace/result.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/restore-reducer.d.ts` |
+| `node_modules/next/dist/next-devtools/server/restart-dev-server-middleware.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/response.d.ts` |
+| `node_modules/next/dist/server/web/sandbox/resource-managers.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/resolvers.d.ts` |
+| `node_modules/next/dist/build/webpack-config-rules/resolve.d.ts` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-url.d.ts` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-title.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/resolve-routes.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/metadata/resolve-route-data.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/resolve-rewrites.d.ts` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-opengraph.d.ts` |
+| `node_modules/next/dist/lib/metadata/resolve-metadata.d.ts` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-icons.d.ts` |
+| `node_modules/next/dist/client/resolve-href.d.ts` |
+| `node_modules/next/dist/lib/resolve-from.d.ts` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-basics.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/devtools-panel/resize/resize-provider.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/devtools-panel/resize/resize-handle.d.ts` |
+| `node_modules/next/dist/server/app-render/required-scripts.d.ts` |
+| `node_modules/next/dist/lib/typescript/required-packages.d.ts` |
+| `node_modules/next/dist/server/require.d.ts` |
+| `node_modules/next/dist/server/require-hook.d.ts` |
+| `node_modules/next/dist/build/next-config-ts/require-hook.d.ts` |
+| `node_modules/next/dist/server/dev/require-cache.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/request.d.ts` |
+| `node_modules/next/dist/server/async-storage/request-store.d.ts` |
+| `node_modules/next/dist/server/request-meta.d.ts` |
+| `node_modules/next/dist/client/request-idle-callback.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/adapters/request-cookies.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/report.d.ts` |
+| `node_modules/next/dist/client/tracing/report-to-socket.d.ts` |
+| `node_modules/next/dist/client/dev/report-hmr-latency.d.ts` |
+| `node_modules/next/dist/client/react-client-callbacks/report-global-error.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/replay-ssr-only-errors.d.ts` |
+| `node_modules/next/dist/build/rendering-mode.d.ts` |
+| `node_modules/next/dist/server/render.d.ts` |
+| `node_modules/next/dist/server/lib/render-server.d.ts` |
+| `node_modules/next/dist/server/render-result.d.ts` |
+| `node_modules/next/dist/client/components/render-from-template-context.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/container/runtime-error/render-error.d.ts` |
+| `node_modules/next/dist/server/app-render/render-css-resource.d.ts` |
+| `node_modules/next/dist/lib/fs/rename.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/remove-trailing-slash.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/remove-path-prefix.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/remove-page-path-tail.d.ts` |
+| `node_modules/next/dist/client/remove-locale.d.ts` |
+| `node_modules/next/dist/client/remove-base-path.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/relativize-url.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/refresh-reducer.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/adapters/reflect.d.ts` |
+| `node_modules/next/dist/shared/lib/utils/reflect-utils.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/refetch-inactive-parallel-segments.d.ts` |
+| `node_modules/next/dist/client/components/redirect.d.ts` |
+| `node_modules/next/dist/lib/redirect-status.d.ts` |
+| `node_modules/next/dist/client/components/redirect-status-code.d.ts` |
+| `node_modules/next/dist/client/components/redirect-error.d.ts` |
+| `node_modules/next/dist/client/components/redirect-boundary.d.ts` |
+| `node_modules/next/dist/lib/recursive-readdir.d.ts` |
+| `node_modules/next/dist/lib/recursive-delete.d.ts` |
+| `node_modules/next/dist/lib/recursive-copy.d.ts` |
+| `node_modules/next/dist/server/dev/browser-logs/receive-logs.d.ts` |
+| `node_modules/next/dist/lib/realpath.d.ts` |
+| `node_modules/next/dist/server/ReactDOMServerPages.d.ts` |
+| `node_modules/next/dist/esm/server/ReactDOMServerPages.d.ts` |
+| `node_modules/next/dist/server/app-render/react-server.node.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/react-loadable-plugin.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/react-loadable-plugin.d.ts` |
+| `node_modules/next/dist/server/app-render/react-large-shell-error.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/react-19-hydration-error.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/react-18-hydration-error.d.ts` |
+| `node_modules/next/dist/server/node-environment-extensions/random.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/querystring.d.ts` |
+| `node_modules/next/experimental/testmode/proxy.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/proxy-request.d.ts` |
+| `node_modules/next/dist/server/app-render/prospective-render-utils.d.ts` |
+| `node_modules/next/dist/shared/lib/promise-with-resolvers.d.ts` |
+| `node_modules/next/dist/client/components/promise-queue.d.ts` |
+| `node_modules/next/dist/telemetry/project-id.d.ts` |
+| `node_modules/next/dist/build/progress.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/profiling-plugin.d.ts` |
+| `node_modules/next/dist/build/preview-key-utils.d.ts` |
+| `node_modules/next/dist/lib/pretty-bytes.d.ts` |
+| `node_modules/next/dist/build/babel/preset.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-page/helpers/prerender-manifest-matcher.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/prepare-destination.d.ts` |
+| `node_modules/next/dist/server/app-render/rsc/preloads.d.ts` |
+| `node_modules/next/dist/shared/lib/lazy-dynamic/preload-chunks.d.ts` |
+| `node_modules/next/dist/server/normalizers/prefixing-normalizer.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/prefix.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache-impl/prefetch.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/prefetch-rsc.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/prefetch-reducer.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/prefetch-cache-utils.d.ts` |
+| `node_modules/next/dist/server/lib/experimental/ppr.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/ppr-navigations.d.ts` |
+| `node_modules/next/dist/server/app-render/postponed-state.d.ts` |
+| `node_modules/next/dist/server/app-render/rsc/postpone.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/plugins/postcss-url-parser.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-font-loader/postcss-next-font.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/plugins/postcss-import-parser.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/plugins/postcss-icss-parser.d.ts` |
+| `node_modules/next/dist/telemetry/post-telemetry-payload.d.ts` |
+| `node_modules/next/dist/server/post-process.d.ts` |
+| `node_modules/next/dist/telemetry/events/plugins.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/plugins.d.ts` |
+| `node_modules/next/experimental/testmode/playwright.d.ts` |
+| `node_modules/next/dist/server/pipe-readable.d.ts` |
+| `node_modules/next/dist/lib/picocolors.d.ts` |
+| `node_modules/next/dist/lib/pick.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/local/pick-font-file-for-fallback-generation.d.ts` |
+| `node_modules/next/dist/server/request/pathname.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/pathname-normalizer.d.ts` |
+| `node_modules/next/dist/shared/lib/isomorphic/path.d.ts` |
+| `node_modules/next/dist/esm/shared/lib/isomorphic/path.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/path-match.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/path-has-prefix.d.ts` |
+| `node_modules/next/dist/server/lib/patch-set-header.d.ts` |
+| `node_modules/next/dist/lib/patch-incorrect-lockfile.d.ts` |
+| `node_modules/next/dist/server/lib/patch-fetch.d.ts` |
+| `node_modules/next/dist/server/patch-error-inspect.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseScss.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNotFoundError.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNextInvalidImportError.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNextFontError.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNextAppLoaderError.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/helpers/parsed-url-query-to-params.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseCss.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseBabel.d.ts` |
+| `node_modules/next/dist/server/dev/parse-version-info.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/parse-url.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/parse-url-from-text.d.ts` |
+| `node_modules/next/dist/server/lib/parse-stack.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/parse-relative-url.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/parse-path.d.ts` |
+| `node_modules/next/dist/build/analysis/parse-module.d.ts` |
+| `node_modules/next/dist/server/app-render/parse-loader-tree.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parse-dynamic-code-evaluation-error.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/code-frame/parse-code-frame.d.ts` |
+| `node_modules/next/dist/server/api-utils/node/parse-body.d.ts` |
+| `node_modules/next/dist/server/app-render/parse-and-validate-flight-router-state.d.ts` |
+| `node_modules/next/dist/server/request/params.d.ts` |
+| `node_modules/next/dist/client/request/params.browser.prod.d.ts` |
+| `node_modules/next/dist/client/request/params.browser.dev.d.ts` |
+| `node_modules/next/dist/client/request/params.browser.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/menu/panel-router.d.ts` |
+| `node_modules/next/dist/export/routes/pages.d.ts` |
+| `node_modules/next/dist/build/templates/pages.d.ts` |
+| `node_modules/next/dist/build/static-paths/pages.d.ts` |
+| `node_modules/next/dist/build/segment-config/pages/pages-segment-config.d.ts` |
+| `node_modules/next/dist/server/route-matchers/pages-route-matcher.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/pages-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/server/route-matches/pages-route-match.d.ts` |
+| `node_modules/next/dist/server/route-definitions/pages-route-definition.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/pages/pages-pathname-normalizer.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/pages/pages-page-normalizer.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/pages-manifest-plugin.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages/pages-handler.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/pages/pages-filename-normalizer.d.ts` |
+| `node_modules/next/dist/build/templates/pages-edge-api.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-error-boundary.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/pages/pages-bundle-path-normalizer.d.ts` |
+| `node_modules/next/dist/build/templates/pages-api.d.ts` |
+| `node_modules/next/dist/server/route-matchers/pages-api-route-matcher.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/pages-api-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/server/route-matches/pages-api-route-match.d.ts` |
+| `node_modules/next/dist/server/route-definitions/pages-api-route-definition.d.ts` |
+| `node_modules/next/dist/lib/page-types.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/page-route.d.ts` |
+| `node_modules/next/dist/client/page-loader.d.ts` |
+| `node_modules/next/dist/build/page-extensions-type.d.ts` |
+| `node_modules/next/dist/client/page-bootstrap.d.ts` |
+| `node_modules/next/dist/lib/oxford-comma-list.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overlay/overlay.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/overlay/overlay.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overlay/overlay-backdrop.d.ts` |
+| `node_modules/next/dist/shared/lib/segment-cache/output-export-prefetch-encoding.d.ts` |
+| `node_modules/next/dist/build/swc/options.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/optional-peer-dependency-resolve-plugin.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/optimize-hook-destructuring.d.ts` |
+| `node_modules/next/dist/server/optimize-amp.d.ts` |
+| `node_modules/next/dist/lib/metadata/generate/opengraph.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/opengraph-types.d.ts` |
+| `node_modules/next/dist/client/react-client-callbacks/on-recoverable-error.d.ts` |
+| `node_modules/next/dist/server/dev/on-demand-entry-handler.d.ts` |
+| `node_modules/next/dist/client/dev/on-demand-entries-client.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/omit.d.ts` |
+| `node_modules/next/og.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/og.d.ts` |
+| `node_modules/next/dist/api/og.d.ts` |
+| `node_modules/next/dist/build/jest/object-proxy.d.ts` |
+| `node_modules/next/dist/build/polyfills/object-assign.d.ts` |
+| `node_modules/next/dist/client/components/not-found.d.ts` |
+| `node_modules/next/dist/client/components/builtin/not-found.d.ts` |
+| `node_modules/next/dist/server/normalizers/normalizers.d.ts` |
+| `node_modules/next/dist/server/normalizers/normalizer.d.ts` |
+| `node_modules/next/dist/shared/lib/normalized-asset-prefix.d.ts` |
+| `node_modules/next/dist/client/normalize-trailing-slash.d.ts` |
+| `node_modules/next/dist/lib/normalize-path.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/normalize-path-sep.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/normalize-page-path.d.ts` |
+| `node_modules/next/dist/shared/lib/i18n/normalize-locale-path.d.ts` |
+| `node_modules/next/dist/client/normalize-locale-path.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/normalize-data-path.d.ts` |
+| `node_modules/next/dist/build/normalize-catchall-routes.d.ts` |
+| `node_modules/next/dist/client/dev/noop-turbopack-hmr.d.ts` |
+| `node_modules/next/dist/client/components/noop-head.d.ts` |
+| `node_modules/next/dist/lib/non-nullable.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-toolbar/nodejs-inspector-button.d.ts` |
+| `node_modules/next/dist/server/base-http/node.d.ts` |
+| `node_modules/next/dist/server/stream-utils/node-web-streams-helper.d.ts` |
+| `node_modules/next/dist/server/dev/node-stack-frames.d.ts` |
+| `node_modules/next/dist/server/lib/module-loader/node-module-loader.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/helpers/manifest-loaders/node-manifest-loader.d.ts` |
+| `node_modules/next/dist/server/lib/node-fs-methods.d.ts` |
+| `node_modules/next/dist/server/node-environment.d.ts` |
+| `node_modules/next/dist/server/node-environment-extensions/node-crypto.d.ts` |
+| `node_modules/next/dist/shared/lib/no-fallback-error.external.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/nextjs-require-cache-hot-reloader.d.ts` |
+| `node_modules/next/dist/server/next.d.ts` |
+| `node_modules/next/dist/client/next.d.ts` |
+| `node_modules/next/dist/bin/next.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/next-worker-fixture.d.ts` |
+| `node_modules/next/dist/server/web/next-url.d.ts` |
+| `node_modules/next/dist/server/next-typescript.d.ts` |
+| `node_modules/next/dist/cli/next-typegen.d.ts` |
+| `node_modules/next/dist/client/next-turbopack.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/next-trace-entrypoints-plugin.d.ts` |
+| `node_modules/next/dist/cli/next-test.d.ts` |
+| `node_modules/next/dist/cli/next-telemetry.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-swc-loader.d.ts` |
+| `node_modules/next/dist/cli/next-start.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/next-ssg-transform.d.ts` |
+| `node_modules/next/dist/server/next-server.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-root-params-loader.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/adapters/next-request.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/next-page-disallow-re-export-all-exports.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/next-page-config.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/next-options.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-middleware-wasm-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-middleware-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-middleware-asset-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-metadata-route-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-metadata-image-loader.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/devtools-indicator/next-logo.d.ts` |
+| `node_modules/next/dist/cli/next-lint.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-invalid-import-error-loader.d.ts` |
+| `node_modules/next/dist/cli/next-info.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/loaders/next-font.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/next-font-unsupported.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/next-font-manifest-plugin.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/next-font-error.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-server-reference-proxy-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-css-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-client-module-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/next-fixture.d.ts` |
+| `node_modules/next/dist/cli/next-export.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-error-browser-binary-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-edge-function-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/next-drop-client-page-plugin.d.ts` |
+| `node_modules/next/dist/build/next-dir-paths.d.ts` |
+| `node_modules/next/dist/client/next-dev.d.ts` |
+| `node_modules/next/dist/cli/next-dev.d.ts` |
+| `node_modules/next/dist/client/next-dev-turbopack.d.ts` |
+| `node_modules/next/dist/server/dev/next-dev-server.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/next-data.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.d.ts` |
+| `node_modules/next/dist/cli/next-build.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-barrel-loader.d.ts` |
+| `node_modules/next/dist/lib/needs-experimental-react.d.ts` |
+| `node_modules/next/dist/client/components/navigation.react-server.d.ts` |
+| `node_modules/next/dist/api/navigation.react-server.d.ts` |
+| `node_modules/next/navigation.d.ts` |
+| `node_modules/next/navigation-types/compat/navigation.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache-impl/navigation.d.ts` |
+| `node_modules/next/dist/client/components/navigation.d.ts` |
+| `node_modules/next/dist/api/navigation.d.ts` |
+| `node_modules/next/dist/client/components/navigation-untracked.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/navigate-reducer.d.ts` |
+| `node_modules/next/dist/client/components/nav-failure-handler.d.ts` |
+| `node_modules/next/dist/lib/multi-file-writer.d.ts` |
+| `node_modules/next/experimental/testmode/playwright/msw.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/msw.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/loaders/modules.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages/module.render.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-page/module.render.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages/module.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages-api/module.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/module.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-page/module.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages/module.compiled.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages-api/module.compiled.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/module.compiled.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-page/module.compiled.d.ts` |
+| `node_modules/next/dist/esm/server/route-modules/pages/module.compiled.d.ts` |
+| `node_modules/next/dist/esm/server/route-modules/pages-api/module.compiled.d.ts` |
+| `node_modules/next/dist/esm/server/route-modules/app-route/module.compiled.d.ts` |
+| `node_modules/next/dist/esm/server/route-modules/app-page/module.compiled.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/module-proxy.d.ts` |
+| `node_modules/next/dist/server/lib/module-loader/module-loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/modularize-import-loader.d.ts` |
+| `node_modules/next/dist/shared/lib/modern-browserslist-target.d.ts` |
+| `node_modules/next/dist/esm/shared/lib/modern-browserslist-target.d.ts` |
+| `node_modules/next/dist/server/lib/mock-request.d.ts` |
+| `node_modules/next/dist/lib/mkcert.d.ts` |
+| `node_modules/next/dist/shared/lib/mitt.d.ts` |
+| `node_modules/next/dist/lib/typescript/missingDependencyError.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/lightningcss-loader/src/minify.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/mini-css-extract-plugin.d.ts` |
+| `node_modules/next/dist/lib/mime-type.d.ts` |
+| `node_modules/next/dist/build/templates/middleware.d.ts` |
+| `node_modules/next/dist/server/dev/middleware-webpack.d.ts` |
+| `node_modules/next/dist/server/dev/middleware-turbopack.d.ts` |
+| `node_modules/next/dist/experimental/testing/server/middleware-testing-utils.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/middleware-route-matcher.d.ts` |
+| `node_modules/next/dist/next-devtools/server/middleware-response.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/middleware-plugin.d.ts` |
+| `node_modules/next/dist/build/segment-config/middleware/middleware-config.d.ts` |
+| `node_modules/next/dist/server/typescript/rules/metadata.d.ts` |
+| `node_modules/next/dist/lib/metadata/metadata.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/metadata-types.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/metadata-interface.d.ts` |
+| `node_modules/next/dist/lib/metadata/metadata-context.d.ts` |
+| `node_modules/next/dist/lib/metadata/generate/meta.d.ts` |
+| `node_modules/next/dist/server/dev/messages.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/images/messages.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/messages.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/memory-with-gc-cache-plugin.d.ts` |
+| `node_modules/next/dist/server/lib/incremental-cache/memory-cache.external.d.ts` |
+| `node_modules/next/dist/client/components/match-segments.d.ts` |
+| `node_modules/next/dist/shared/lib/match-remote-pattern.d.ts` |
+| `node_modules/next/dist/server/lib/match-next-data-pathname.d.ts` |
+| `node_modules/next/dist/shared/lib/match-local-pattern.d.ts` |
+| `node_modules/next/dist/server/match-bundle.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/manifest-types.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/manifest-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/shared/lib/turbopack/manifest-loader.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/helpers/manifest-loaders/manifest-loader.d.ts` |
+| `node_modules/next/dist/server/app-render/make-get-server-inserted-html.d.ts` |
+| `node_modules/next/dist/shared/lib/magic-identifier.d.ts` |
+| `node_modules/next/dist/styled-jsx/types/macro.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache-impl/lru.d.ts` |
+| `node_modules/next/dist/server/lib/lru-cache.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/lorem.d.ts` |
+| `node_modules/next/dist/build/output/log.d.ts` |
+| `node_modules/next/dist/server/dev/log-requests.d.ts` |
+| `node_modules/next/dist/server/normalizers/locale-route-normalizer.d.ts` |
+| `node_modules/next/dist/server/route-matchers/locale-route-matcher.d.ts` |
+| `node_modules/next/dist/server/route-matches/locale-route-match.d.ts` |
+| `node_modules/next/dist/server/route-definitions/locale-route-definition.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/local/loader.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/google/loader.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/local/loader.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/loader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/lightningcss-loader/src/loader.d.ts` |
+| `node_modules/next/dist/shared/lib/loadable.shared-runtime.d.ts` |
+| `node_modules/next/dist/shared/lib/lazy-dynamic/loadable.d.ts` |
+| `node_modules/next/dist/shared/lib/loadable-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/load.d.ts` |
+| `node_modules/next/dist/server/load-manifest.external.d.ts` |
+| `node_modules/next/dist/build/load-jsconfig.d.ts` |
+| `node_modules/next/dist/build/load-entrypoint.d.ts` |
+| `node_modules/next/dist/server/load-default-error-components.d.ts` |
+| `node_modules/next/dist/lib/load-custom-routes.d.ts` |
+| `node_modules/next/dist/server/load-components.d.ts` |
+| `node_modules/next/dist/client/components/links.d.ts` |
+| `node_modules/next/link.d.ts` |
+| `node_modules/next/dist/client/link.d.ts` |
+| `node_modules/next/dist/client/app-dir/link.d.ts` |
+| `node_modules/next/dist/api/link.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/light-icon.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/left-arrow.d.ts` |
+| `node_modules/next/dist/server/lib/lazy-result.d.ts` |
+| `node_modules/next/dist/client/components/builtin/layout.d.ts` |
+| `node_modules/next/dist/client/components/layout-router.d.ts` |
+| `node_modules/next/dist/next-devtools/server/launch-editor.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/jsx-pragma.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/jsconfig-paths-plugin.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/resolve-url-loader/lib/join-function.d.ts` |
+| `node_modules/next/jest.d.ts` |
+| `node_modules/next/dist/build/jest/jest.d.ts` |
+| `node_modules/next/dist/build/swc/jest-transformer.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-toolbar/issue-feedback-button.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-style-loader/runtime/isEqualLocals.d.ts` |
+| `node_modules/next/dist/build/is-writeable.d.ts` |
+| `node_modules/next/dist/shared/lib/is-thenable.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/helpers/is-static-gen-enabled.d.ts` |
+| `node_modules/next/dist/lib/is-serializable-props.d.ts` |
+| `node_modules/next/dist/server/lib/is-rsc-request.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/is-postpone.d.ts` |
+| `node_modules/next/dist/shared/lib/is-plain-object.d.ts` |
+| `node_modules/next/dist/client/components/is-next-router-error.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/is-navigating-to-new-root-layout.d.ts` |
+| `node_modules/next/dist/lib/metadata/is-metadata-route.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/is-local-url.d.ts` |
+| `node_modules/next/dist/server/lib/is-ipv6.d.ts` |
+| `node_modules/next/dist/shared/lib/is-internal.d.ts` |
+| `node_modules/next/dist/lib/is-internal-component.d.ts` |
+| `node_modules/next/dist/lib/is-error.d.ts` |
+| `node_modules/next/dist/lib/is-edge-runtime.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/is-dynamic.d.ts` |
+| `node_modules/next/dist/export/helpers/is-dynamic-usage-error.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/is-bot.d.ts` |
+| `node_modules/next/dist/lib/is-app-route-route.d.ts` |
+| `node_modules/next/dist/lib/is-app-page-route.d.ts` |
+| `node_modules/next/dist/lib/is-api-route.d.ts` |
+| `node_modules/next/dist/shared/lib/invariant-error.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/invalidate-cache-by-router-state.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/invalidate-cache-below-flight-segmentpath.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/interpolate-as.d.ts` |
+| `node_modules/next/dist/server/app-render/interop-default.d.ts` |
+| `node_modules/next/dist/lib/interop-default.d.ts` |
+| `node_modules/next/dist/server/internal-utils.d.ts` |
+| `node_modules/next/dist/shared/lib/turbopack/internal-error.d.ts` |
+| `node_modules/next/dist/server/web/internal-edge-wait-until.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/lightningcss-loader/src/interface.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/interception-routes.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/instrumentation-node-extensions.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/instrumentation-globals.external.d.ts` |
+| `node_modules/next/dist/lib/helpers/install.d.ts` |
+| `node_modules/next/dist/lib/install-dependencies.d.ts` |
+| `node_modules/next/dist/lib/inline-static-env.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-style-loader/runtime/injectStylesIntoStyleTag.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-style-loader/runtime/injectStylesIntoLinkTag.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/indicator-metrics.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/index.node.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/index.edge.d.ts` |
+| `node_modules/next/index.d.ts` |
+| `node_modules/next/font/local/index.d.ts` |
+| `node_modules/next/font/index.d.ts` |
+| `node_modules/next/font/google/index.d.ts` |
+| `node_modules/next/dist/trace/report/index.d.ts` |
+| `node_modules/next/dist/trace/index.d.ts` |
+| `node_modules/next/dist/telemetry/events/index.d.ts` |
+| `node_modules/next/dist/styled-jsx/types/index.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/index.d.ts` |
+| `node_modules/next/dist/server/web/sandbox/index.d.ts` |
+| `node_modules/next/dist/server/web/exports/index.d.ts` |
+| `node_modules/next/dist/server/typescript/index.d.ts` |
+| `node_modules/next/dist/server/response-cache/index.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/pages/index.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/app/index.d.ts` |
+| `node_modules/next/dist/server/lib/incremental-cache/index.d.ts` |
+| `node_modules/next/dist/server/base-http/index.d.ts` |
+| `node_modules/next/dist/server/api-utils/index.d.ts` |
+| `node_modules/next/dist/server/after/index.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/container/runtime-error/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/toast/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/terminal/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/resizer/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overlay/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/hot-linked-text/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/fader/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-bottom-stack/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/dialog/index.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/copy-button/index.d.ts` |
+| `node_modules/next/dist/export/index.d.ts` |
+| `node_modules/next/dist/experimental/testmode/proxy/index.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/index.d.ts` |
+| `node_modules/next/dist/experimental/testing/server/index.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/satori/index.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/language/index.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/figma/index.d.ts` |
+| `node_modules/next/dist/compiled/@vercel/og/emoji/index.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/local/index.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/google/index.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/local/index.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/index.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/index.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/ponyfill/index.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/cookies/index.d.ts` |
+| `node_modules/next/dist/client/portal/index.d.ts` |
+| `node_modules/next/dist/client/index.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/next-types-plugin/index.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/minify-webpack-plugin/src/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/resolve-url-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-style-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-route-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-image-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-font-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-edge-ssr-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-edge-app-route-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-app-loader/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/lightningcss-loader/src/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/plugins/index.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/index.d.ts` |
+| `node_modules/next/dist/build/webpack/config/index.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/images/index.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/loaders/index.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/index.d.ts` |
+| `node_modules/next/dist/build/webpack-build/index.d.ts` |
+| `node_modules/next/dist/build/turborepo-access-trace/index.d.ts` |
+| `node_modules/next/dist/build/turbopack-build/index.d.ts` |
+| `node_modules/next/dist/build/swc/index.d.ts` |
+| `node_modules/next/dist/build/polyfills/object.assign/index.d.ts` |
+| `node_modules/next/dist/build/polyfills/fetch/index.d.ts` |
+| `node_modules/next/dist/build/output/index.d.ts` |
+| `node_modules/next/dist/build/index.d.ts` |
+| `node_modules/next/dist/build/babel/loader/index.d.ts` |
+| `node_modules/next/dist/lib/import-next-warning.d.ts` |
+| `node_modules/next/dist/server/lib/implicit-tags.d.ts` |
+| `node_modules/next/dist/build/webpack-build/impl.d.ts` |
+| `node_modules/next/dist/build/turbopack-build/impl.d.ts` |
+| `node_modules/next/legacy/image.d.ts` |
+| `node_modules/next/image.d.ts` |
+| `node_modules/next/dist/client/legacy/image.d.ts` |
+| `node_modules/next/dist/api/image.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/image-response.d.ts` |
+| `node_modules/next/dist/server/og/image-response.d.ts` |
+| `node_modules/next/dist/server/image-optimizer.d.ts` |
+| `node_modules/next/dist/shared/lib/image-loader.d.ts` |
+| `node_modules/next/dist/shared/lib/image-external.d.ts` |
+| `node_modules/next/dist/shared/lib/image-config.d.ts` |
+| `node_modules/next/dist/shared/lib/image-config-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/client/image-component.d.ts` |
+| `node_modules/next/dist/shared/lib/image-blur-svg.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/icons.d.ts` |
+| `node_modules/next/dist/lib/metadata/generate/icons.d.ts` |
+| `node_modules/next/dist/lib/metadata/generate/icon-mark.d.ts` |
+| `node_modules/next/dist/server/lib/i18n-provider.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/hydration-error.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/pages/hydration-error-state.d.ts` |
+| `node_modules/next/dist/experimental/testmode/httpget.d.ts` |
+| `node_modules/next/dist/server/web/http.d.ts` |
+| `node_modules/next/dist/client/components/http-access-fallback/http-access-fallback.d.ts` |
+| `node_modules/next/dist/shared/lib/htmlescape.d.ts` |
+| `node_modules/next/dist/shared/lib/html-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/html-bots.d.ts` |
+| `node_modules/next/dist/server/dev/hot-reloader-webpack.d.ts` |
+| `node_modules/next/dist/server/dev/hot-reloader-types.d.ts` |
+| `node_modules/next/dist/server/dev/hot-reloader-turbopack.d.ts` |
+| `node_modules/next/dist/client/dev/hot-reloader/pages/hot-reloader-pages.d.ts` |
+| `node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.d.ts` |
+| `node_modules/next/dist/server/dev/hot-middleware.d.ts` |
+| `node_modules/next/dist/client/dev/hot-middleware-client.d.ts` |
+| `node_modules/next/dist/client/components/hooks-server-context.d.ts` |
+| `node_modules/next/dist/shared/lib/hooks-client-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/hmr-refresh-reducer.d.ts` |
+| `node_modules/next/dist/server/base-http/helpers.d.ts` |
+| `node_modules/next/dist/build/webpack/config/helpers.d.ts` |
+| `node_modules/next/dist/build/turborepo-access-trace/helpers.d.ts` |
+| `node_modules/next/dist/build/templates/helpers.d.ts` |
+| `node_modules/next/dist/build/swc/helpers.d.ts` |
+| `node_modules/next/headers.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts` |
+| `node_modules/next/dist/server/request/headers.d.ts` |
+| `node_modules/next/dist/api/headers.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dialog/header.d.ts` |
+| `node_modules/next/head.d.ts` |
+| `node_modules/next/dist/shared/lib/head.d.ts` |
+| `node_modules/next/dist/api/head.d.ts` |
+| `node_modules/next/dist/client/head-manager.d.ts` |
+| `node_modules/next/dist/shared/lib/head-manager-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/shared/lib/hash.d.ts` |
+| `node_modules/next/dist/lib/eslint/hasEslintConfiguration.d.ts` |
+| `node_modules/next/dist/lib/has-necessary-dependencies.d.ts` |
+| `node_modules/next/dist/server/app-render/has-loading-component-in-tree.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/has-interception-route-in-current-tree.d.ts` |
+| `node_modules/next/dist/client/has-base-path.d.ts` |
+| `node_modules/next/dist/server/use-cache/handlers.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/handle-segment-mismatch.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/handle-mutable.d.ts` |
+| `node_modules/next/dist/client/components/handle-isr-error.d.ts` |
+| `node_modules/next/dist/build/handle-externals.d.ts` |
+| `node_modules/next/dist/build/handle-entrypoints.d.ts` |
+| `node_modules/next/dist/client/components/errors/graceful-degrade-boundary.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/google-fonts-metadata.d.ts` |
+| `node_modules/next/dist/server/web/globals.d.ts` |
+| `node_modules/next/types/global.d.ts` |
+| `node_modules/next/image-types/global.d.ts` |
+| `node_modules/next/dist/styled-jsx/types/global.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/loaders/global.d.ts` |
+| `node_modules/next/dist/client/components/builtin/global-not-found.d.ts` |
+| `node_modules/next/dist/client/components/builtin/global-error.d.ts` |
+| `node_modules/next/dist/lib/typescript/getTypeScriptIntent.d.ts` |
+| `node_modules/next/dist/lib/typescript/getTypeScriptConfiguration.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/getModuleTrace.d.ts` |
+| `node_modules/next/dist/lib/eslint/getESLintPromptValues.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/loaders/getCssModuleLocalIdent.d.ts` |
+| `node_modules/next/dist/shared/lib/get-webpack-bundler.d.ts` |
+| `node_modules/next/dist/server/dev/get-source-map-from-file.d.ts` |
+| `node_modules/next/dist/client/dev/hot-reloader/get-socket-url.d.ts` |
+| `node_modules/next/dist/server/app-render/get-short-dynamic-param-type.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/get-segment-value.d.ts` |
+| `node_modules/next/dist/server/app-render/get-segment-param.d.ts` |
+| `node_modules/next/dist/server/app-render/get-script-nonce-from-header.d.ts` |
+| `node_modules/next/dist/shared/lib/get-rspack.d.ts` |
+| `node_modules/next/dist/server/get-route-from-entrypoint.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/get-route-from-asset-path.d.ts` |
+| `node_modules/next/dist/lib/helpers/get-reserved-port.d.ts` |
+| `node_modules/next/dist/lib/helpers/get-registry.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/get-proxy-agent.d.ts` |
+| `node_modules/next/dist/lib/get-project-dir.d.ts` |
+| `node_modules/next/dist/server/app-render/get-preloadable-fonts.d.ts` |
+| `node_modules/next/dist/lib/helpers/get-pkg-manager.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/helpers/get-pathname-from-absolute-path.d.ts` |
+| `node_modules/next/dist/export/helpers/get-params.d.ts` |
+| `node_modules/next/dist/build/analysis/get-page-static-info.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/get-page-paths.d.ts` |
+| `node_modules/next/dist/server/get-page-files.d.ts` |
+| `node_modules/next/dist/lib/get-package-version.d.ts` |
+| `node_modules/next/dist/lib/helpers/get-online.d.ts` |
+| `node_modules/next/dist/lib/helpers/get-npx-command.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/get-next-pathname-info.d.ts` |
+| `node_modules/next/dist/next-devtools/server/get-next-error-feedback-middleware.d.ts` |
+| `node_modules/next/dist/lib/get-network-host.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/get-module-build-info.d.ts` |
+| `node_modules/next/dist/lib/metadata/get-metadata-route.d.ts` |
+| `node_modules/next/dist/shared/lib/i18n/get-locale-redirect.d.ts` |
+| `node_modules/next/dist/server/app-render/get-layer-assets.d.ts` |
+| `node_modules/next/dist/shared/lib/get-img-props.d.ts` |
+| `node_modules/next/dist/shared/lib/get-hostname.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/get-google-fonts-url.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/get-font-axes.d.ts` |
+| `node_modules/next/dist/lib/get-files-in-dir.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/local/get-fallback-metrics-from-font-file.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/get-fallback-font-override-metrics.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/get-error-by-type.d.ts` |
+| `node_modules/next/dist/server/web/get-edge-preview-props.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/get-dynamic-param.d.ts` |
+| `node_modules/next/dist/client/get-domain-locale.d.ts` |
+| `node_modules/next/dist/next-devtools/server/font/get-dev-overlay-font-middleware.d.ts` |
+| `node_modules/next/dist/server/app-render/get-css-inlined-link-tags.d.ts` |
+| `node_modules/next/dist/server/api-utils/get-cookie-parser.d.ts` |
+| `node_modules/next/dist/build/babel/loader/get-config.d.ts` |
+| `node_modules/next/dist/lib/helpers/get-cache-directory.d.ts` |
+| `node_modules/next/dist/build/get-babel-loader-config.d.ts` |
+| `node_modules/next/dist/build/get-babel-config-file.d.ts` |
+| `node_modules/next/dist/server/app-render/get-asset-query-string.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/get-asset-path-from-route.d.ts` |
+| `node_modules/next/dist/server/get-app-route-from-entrypoint.d.ts` |
+| `node_modules/next/dist/export/helpers/get-amp-html-validator.d.ts` |
+| `node_modules/next/dist/esm/build/swc/generated-wasm.d.ts` |
+| `node_modules/next/dist/build/swc/generated-wasm.d.ts` |
+| `node_modules/next/dist/esm/build/swc/generated-native.d.ts` |
+| `node_modules/next/dist/build/swc/generated-native.d.ts` |
+| `node_modules/next/dist/lib/generate-interception-routes-rewrites.d.ts` |
+| `node_modules/next/dist/build/generate-build-id.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/gear-icon.d.ts` |
+| `node_modules/next/dist/lib/memory/gc-observer.d.ts` |
+| `node_modules/next/dist/client/dev/fouc.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/forward-logs.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/forward-logs-shared.d.ts` |
+| `node_modules/next/dist/build/output/format.d.ts` |
+| `node_modules/next/dist/shared/lib/format-webpack-messages.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/format-url.d.ts` |
+| `node_modules/next/dist/lib/format-server-error.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/format-next-pathname-info.d.ts` |
+| `node_modules/next/dist/build/manifests/formatter/format-manifest.d.ts` |
+| `node_modules/next/dist/server/lib/format-hostname.d.ts` |
+| `node_modules/next/dist/lib/format-dynamic-import-path.d.ts` |
+| `node_modules/next/dist/lib/format-cli-help-output.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/format-available-values.d.ts` |
+| `node_modules/next/form.d.ts` |
+| `node_modules/next/dist/client/form.d.ts` |
+| `node_modules/next/dist/client/app-dir/form.d.ts` |
+| `node_modules/next/dist/api/form.d.ts` |
+| `node_modules/next/dist/client/form-shared.d.ts` |
+| `node_modules/next/dist/client/components/forbidden.d.ts` |
+| `node_modules/next/dist/client/components/builtin/forbidden.d.ts` |
+| `node_modules/next/dist/server/font-utils.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/font/font-styles.d.ts` |
+| `node_modules/next/dist/shared/lib/fnv1a.d.ts` |
+| `node_modules/next/dist/telemetry/flush-and-exit.d.ts` |
+| `node_modules/next/dist/server/app-render/flight-render-result.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.d.ts` |
+| `node_modules/next/dist/client/flight-data-helpers.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.d.ts` |
+| `node_modules/next/dist/server/lib/fix-mojibake.d.ts` |
+| `node_modules/next/dist/lib/find-root.d.ts` |
+| `node_modules/next/dist/lib/find-pages-dir.d.ts` |
+| `node_modules/next/dist/server/lib/find-page-file.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/find-head-in-cache.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/find-font-files-in-css.d.ts` |
+| `node_modules/next/dist/lib/find-config.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/fill-lazy-items-till-leaf-with-head.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/fill-cache-with-new-subtree-data.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/filesystem.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/file.d.ts` |
+| `node_modules/next/dist/server/lib/incremental-cache/file-system-cache.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/loaders/file-resolve.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/helpers/file-reader/file-reader.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/resolve-url-loader/lib/file-protocol.d.ts` |
+| `node_modules/next/dist/lib/file-exists.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/file-cache-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/experimental/testmode/fetch.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/fetch.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/fetch-server-response.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/fetch-resource.d.ts` |
+| `node_modules/next/dist/server/web/sandbox/fetch-inline-assets.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/fetch-font-file.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/fetch-event.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/google/fetch-css-from-google-fonts.d.ts` |
+| `node_modules/next/dist/experimental/testmode/proxy/fetch-api.d.ts` |
+| `node_modules/next/dist/lib/fatal-error.d.ts` |
+| `node_modules/next/dist/lib/fallback.d.ts` |
+| `node_modules/next/dist/server/request/fallback-params.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/eye-icon.d.ts` |
+| `node_modules/next/dist/build/analysis/extract-const-value.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/extra-types.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/external.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/events.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/eval-source-map-dev-tool-plugin.d.ts` |
+| `node_modules/next/dist/server/lib/etag.d.ts` |
+| `node_modules/next/dist/shared/lib/escape-regexp.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/escape-path-delimiters.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/container/errors.d.ts` |
+| `node_modules/next/error.d.ts` |
+| `node_modules/next/dist/server/web/error.d.ts` |
+| `node_modules/next/dist/server/typescript/rules/error.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/postcss-loader/src/Error.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-type-label/error-type-label.d.ts` |
+| `node_modules/next/dist/lib/error-telemetry-utils.d.ts` |
+| `node_modules/next/dist/shared/lib/error-source.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay/error-overlay.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-toolbar/error-overlay-toolbar.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-pagination/error-overlay-pagination.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-nav/error-overlay-nav.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-layout/error-overlay-layout.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-footer/error-overlay-footer.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-call-stack/error-overlay-call-stack.d.ts` |
+| `node_modules/next/dist/shared/lib/utils/error-once.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-message/error-message.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/error-loader.d.ts` |
+| `node_modules/next/dist/server/node-environment-extensions/error-inspect.d.ts` |
+| `node_modules/next/dist/telemetry/events/error-feedback.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-footer/error-feedback/error-feedback.d.ts` |
+| `node_modules/next/dist/client/components/http-access-fallback/error-fallback.d.ts` |
+| `node_modules/next/dist/client/components/http-access-fallback/error-boundary.d.ts` |
+| `node_modules/next/dist/client/components/error-boundary.d.ts` |
+| `node_modules/next/dist/client/react-client-callbacks/error-boundary-callbacks.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/environment-name-label/environment-name-label.d.ts` |
+| `node_modules/next/dist/build/turborepo-access-trace/env.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages/vendored/contexts/entrypoints.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-page/vendored/ssr/entrypoints.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-page/vendored/rsc/entrypoints.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-page/vendored/contexts/entrypoints.d.ts` |
+| `node_modules/next/dist/next-devtools/entrypoint.d.ts` |
+| `node_modules/next/dist/server/typescript/rules/entry.d.ts` |
+| `node_modules/next/dist/shared/lib/turbopack/entry-key.d.ts` |
+| `node_modules/next/dist/server/app-render/entry-base.d.ts` |
+| `node_modules/next/dist/build/entries.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/ensure-leading-slash.d.ts` |
+| `node_modules/next/dist/server/app-render/encryption.d.ts` |
+| `node_modules/next/dist/server/app-render/encryption-utils.d.ts` |
+| `node_modules/next/dist/server/app-render/encryption-utils-server.d.ts` |
+| `node_modules/next/dist/server/stream-utils/encoded-tags.d.ts` |
+| `node_modules/next/dist/shared/lib/encode-uri-path.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/empty-loader.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/terminal/editor-link.d.ts` |
+| `node_modules/next/dist/build/templates/edge-ssr.d.ts` |
+| `node_modules/next/dist/build/templates/edge-ssr-app.d.ts` |
+| `node_modules/next/dist/server/web/edge-route-module-wrapper.d.ts` |
+| `node_modules/next/dist/build/templates/edge-app-route.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/eclipse.d.ts` |
+| `node_modules/next/dynamic.d.ts` |
+| `node_modules/next/dist/shared/lib/dynamic.d.ts` |
+| `node_modules/next/dist/api/dynamic.d.ts` |
+| `node_modules/next/dist/server/app-render/dynamic-rendering.d.ts` |
+| `node_modules/next/dist/server/dynamic-rendering-utils.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/panel/dynamic-panel.d.ts` |
+| `node_modules/next/dist/shared/lib/lazy-dynamic/dynamic-bailout-to-csr.d.ts` |
+| `node_modules/next/dist/server/app-render/dynamic-access-async-storage.external.d.ts` |
+| `node_modules/next/dist/server/app-render/dynamic-access-async-storage-instance.d.ts` |
+| `node_modules/next/dist/build/duration-to-string.d.ts` |
+| `node_modules/next/dist/shared/lib/dset.d.ts` |
+| `node_modules/next/dist/esm/shared/lib/dset.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/draggable.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/drag-context.d.ts` |
+| `node_modules/next/dist/server/request/draft-mode.d.ts` |
+| `node_modules/next/dist/server/async-storage/draft-mode-provider.d.ts` |
+| `node_modules/next/dist/lib/download-swc.d.ts` |
+| `node_modules/next/document.d.ts` |
+| `node_modules/next/dist/api/document.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-toolbar/docs-link-button.d.ts` |
+| `node_modules/next/dist/server/lib/disk-lru-cache.external.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/metadata/discover.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/disable-smooth-scroll.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/hydration-diff/diff-view.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dialog/dialog.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/dialog/dialog.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/dialog/dialog-header.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/dialog/dialog-content.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/dialog/dialog-body.d.ts` |
+| `node_modules/next/dist/lib/typescript/diagnosticFormatter.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/devtools-indicator/devtools-indicator.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/devtools-ignore-list-plugin.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/devtools-config-schema.d.ts` |
+| `node_modules/next/dist/next-devtools/server/devtools-config-middleware.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dev-tools-indicator/dev-tools-info/dev-tools-header.d.ts` |
+| `node_modules/next/dist/server/route-matcher-managers/dev-route-matcher-manager.d.ts` |
+| `node_modules/next/dist/client/components/dev-root-http-access-fallback-boundary.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/dev-pages-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/dev-pages-api-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay.shim.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/dev-overlay.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay.browser.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/menu/dev-overlay-menu.d.ts` |
+| `node_modules/next/dist/server/dev/dev-indicator-server-state.d.ts` |
+| `node_modules/next/dist/next-devtools/server/dev-indicator-middleware.d.ts` |
+| `node_modules/next/dist/server/lib/dev-bundler-service.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/dev-app-route-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/dev-app-page-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/lib/detect-typo.d.ts` |
+| `node_modules/next/dist/shared/lib/i18n/detect-domain-locale.d.ts` |
+| `node_modules/next/dist/client/detect-domain-locale.d.ts` |
+| `node_modules/next/dist/lib/detached-promise.d.ts` |
+| `node_modules/next/dist/telemetry/detached-flush.d.ts` |
+| `node_modules/next/dist/build/deployment-id.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/denormalize-page-path.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/denormalize-app-path.d.ts` |
+| `node_modules/next/dist/build/define-env.d.ts` |
+| `node_modules/next/dist/server/lib/cache-handlers/default.external.d.ts` |
+| `node_modules/next/dist/client/components/builtin/default.d.ts` |
+| `node_modules/next/dist/server/route-matcher-managers/default-route-matcher-manager.d.ts` |
+| `node_modules/next/dist/lib/metadata/default-metadata.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/helpers/file-reader/default-file-reader.d.ts` |
+| `node_modules/next/dist/experimental/testmode/playwright/default-config.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/deepmerge.d.ts` |
+| `node_modules/next/dist/shared/lib/deep-readonly.d.ts` |
+| `node_modules/next/dist/shared/lib/deep-freeze.d.ts` |
+| `node_modules/next/dist/server/lib/dedupe-fetch.d.ts` |
+| `node_modules/next/dist/server/lib/decode-query-path-parameter.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/decode-path-params.d.ts` |
+| `node_modules/next/dist/server/node-environment-extensions/date.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/dark-icon.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/cx.d.ts` |
+| `node_modules/next/dist/lib/eslint/customFormatter.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/CssSyntaxError.d.ts` |
+| `node_modules/next/dist/styled-jsx/types/css.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/utils/css.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/css-minimizer-plugin.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/css-chunking-plugin.d.ts` |
+| `node_modules/next/dist/server/app-render/csrf-protection.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/crypto.d.ts` |
+| `node_modules/next/dist/server/crypto-utils.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/cross.d.ts` |
+| `node_modules/next/dist/server/app-render/metadata-insertion/create-server-inserted-metadata.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/create-router-cache-key.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/create-initial-router-state.d.ts` |
+| `node_modules/next/dist/export/helpers/create-incremental-cache.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/create-href-from-url.d.ts` |
+| `node_modules/next/dist/server/app-render/create-flight-router-state-from-loader-tree.d.ts` |
+| `node_modules/next/dist/server/app-render/create-error-handler.d.ts` |
+| `node_modules/next/dist/server/lib/experimental/create-env-definitions.d.ts` |
+| `node_modules/next/dist/server/create-deduped-by-callsite-server-error-logger.d.ts` |
+| `node_modules/next/dist/server/app-render/create-component-tree.d.ts` |
+| `node_modules/next/dist/server/app-render/create-component-styles-and-scripts.d.ts` |
+| `node_modules/next/dist/build/create-compiler-aliases.d.ts` |
+| `node_modules/next/dist/lib/create-client-router-filter.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-app-loader/create-app-route-code.d.ts` |
+| `node_modules/next/dist/server/lib/cpu-profile.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/copy-file-plugin.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/error-overlay-toolbar/copy-error-button.d.ts` |
+| `node_modules/next/dist/server/web/spec-extension/cookies.d.ts` |
+| `node_modules/next/dist/server/request/cookies.d.ts` |
+| `node_modules/next/dist/server/web/sandbox/context.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/menu/context.d.ts` |
+| `node_modules/next/dist/experimental/testmode/context.d.ts` |
+| `node_modules/next/dist/shared/lib/errors/constants.d.ts` |
+| `node_modules/next/dist/shared/lib/constants.d.ts` |
+| `node_modules/next/dist/server/use-cache/constants.d.ts` |
+| `node_modules/next/dist/server/lib/trace/constants.d.ts` |
+| `node_modules/next/dist/lib/metadata/constants.d.ts` |
+| `node_modules/next/dist/lib/constants.d.ts` |
+| `node_modules/next/dist/compiled/@next/font/dist/constants.d.ts` |
+| `node_modules/next/dist/api/constants.d.ts` |
+| `node_modules/next/constants.d.ts` |
+| `node_modules/next/dist/server/typescript/constant.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/console.d.ts` |
+| `node_modules/next/dist/client/lib/console.d.ts` |
+| `node_modules/next/dist/next-devtools/shared/console-error.d.ts` |
+| `node_modules/next/dist/server/node-environment-extensions/console-dev.d.ts` |
+| `node_modules/next/dist/server/request/connection.d.ts` |
+| `node_modules/next/dist/server/typescript/rules/config.d.ts` |
+| `node_modules/next/dist/server/config.d.ts` |
+| `node_modules/next/config.d.ts` |
+| `node_modules/next/dist/server/config-utils.d.ts` |
+| `node_modules/next/dist/experimental/testing/server/config-testing-utils.d.ts` |
+| `node_modules/next/dist/server/config-shared.d.ts` |
+| `node_modules/next/dist/server/config-schema.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/compute-changed-path.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/styles/component-styles.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/container/runtime-error/component-stack-pseudo-html.d.ts` |
+| `node_modules/next/dist/build/compiler.d.ts` |
+| `node_modules/next/types/compiled.d.ts` |
+| `node_modules/next/dist/lib/compile-error.d.ts` |
+| `node_modules/next/dist/shared/lib/turbopack/compilation-events.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/compare-states.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/commonjs.d.ts` |
+| `node_modules/next/dist/server/app-render/collect-segment-data.d.ts` |
+| `node_modules/next/dist/build/segment-config/app/collect-root-param-keys.d.ts` |
+| `node_modules/next/dist/build/collect-build-traces.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/collapse-icon.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/lightningcss-loader/src/codegen.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/code-frame/code-frame.d.ts` |
+| `node_modules/next/dist/lib/coalesced-function.d.ts` |
+| `node_modules/next/dist/server/lib/clone-response.d.ts` |
+| `node_modules/next/dist/lib/metadata/clone-metadata.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/css/loaders/client.d.ts` |
+| `node_modules/next/client.d.ts` |
+| `node_modules/next/dist/client/components/client-segment.d.ts` |
+| `node_modules/next/dist/client/components/client-page.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/client-entry.d.ts` |
+| `node_modules/next/dist/server/client-component-renderer-logger.d.ts` |
+| `node_modules/next/dist/server/typescript/rules/client-boundary.d.ts` |
+| `node_modules/next/dist/lib/client-and-server-references.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/clear-cache-node-data-for-segment-path.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/helpers/clean-url.d.ts` |
+| `node_modules/next/dist/server/ci-info.d.ts` |
+| `node_modules/next/dist/server/lib/chrome-devtools-workspace.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/icons/chevron-up-down.d.ts` |
+| `node_modules/next/dist/server/route-modules/checks.d.ts` |
+| `node_modules/next/dist/shared/lib/canary-only.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/camelcase.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/call-stack/call-stack.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/call-stack-frame/call-stack-frame.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/helpers/cached-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache-impl/cache.d.ts` |
+| `node_modules/next/cache.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/cache-wrapper.d.ts` |
+| `node_modules/next/dist/server/use-cache/cache-tag.d.ts` |
+| `node_modules/next/dist/server/resume-data-cache/cache-store.d.ts` |
+| `node_modules/next/dist/server/app-render/cache-signal.d.ts` |
+| `node_modules/next/dist/server/use-cache/cache-life.d.ts` |
+| `node_modules/next/dist/client/components/segment-cache-impl/cache-key.d.ts` |
+| `node_modules/next/dist/build/webpack/cache-invalidation.d.ts` |
+| `node_modules/next/dist/server/cache-dir.d.ts` |
+| `node_modules/next/dist/server/lib/cache-control.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/cache-busting-search-param.d.ts` |
+| `node_modules/next/dist/server/after/builtin-request-context.d.ts` |
+| `node_modules/next/dist/telemetry/events/build.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/build-prefetch-segment-data-route.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/build-manifest-plugin.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/container/build-error.d.ts` |
+| `node_modules/next/dist/diagnostics/build-diagnostics.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/build-data-route.d.ts` |
+| `node_modules/next/dist/lib/build-custom-route.d.ts` |
+| `node_modules/next/dist/build/build-context.d.ts` |
+| `node_modules/next/dist/build/adapter/build-complete.d.ts` |
+| `node_modules/next/dist/lib/framework/boundary-constants.d.ts` |
+| `node_modules/next/dist/lib/framework/boundary-components.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/errors/dialog/body.d.ts` |
+| `node_modules/next/dist/server/body-streams.d.ts` |
+| `node_modules/next/dist/next-devtools/dev-overlay/components/overlay/body-locker.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-image-loader/blur.d.ts` |
+| `node_modules/next/dist/shared/lib/bloom-filter.d.ts` |
+| `node_modules/next/dist/server/lib/router-utils/block-cross-site.d.ts` |
+| `node_modules/next/dist/client/components/bfcache.d.ts` |
+| `node_modules/next/dist/lib/batcher.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/dev/helpers/file-reader/batched-file-reader.d.ts` |
+| `node_modules/next/dist/lib/metadata/generate/basic.d.ts` |
+| `node_modules/next/dist/build/webpack/config/blocks/base.d.ts` |
+| `node_modules/next/dist/server/base-server.d.ts` |
+| `node_modules/next/dist/server/normalizers/request/base-path.d.ts` |
+| `node_modules/next/dist/shared/lib/lazy-dynamic/bailout-to-csr.d.ts` |
+| `node_modules/next/dist/client/components/bailout-to-client-rendering.d.ts` |
+| `node_modules/next/babel.d.ts` |
+| `node_modules/next/dist/server/after/awaiter.d.ts` |
+| `node_modules/next/dist/server/route-modules/app-route/helpers/auto-implement-methods.d.ts` |
+| `node_modules/next/dist/client/components/metadata/async-metadata.d.ts` |
+| `node_modules/next/dist/server/app-render/async-local-storage.d.ts` |
+| `node_modules/next/dist/server/lib/async-callback-set.d.ts` |
+| `node_modules/next/dist/client/assign-location.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/as-path-to-search-params.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/apply-router-state-patch-to-tree.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/apply-flight-data.d.ts` |
+| `node_modules/next/dist/build/static-paths/app.d.ts` |
+| `node_modules/next/dist/api/app.d.ts` |
+| `node_modules/next/app.d.ts` |
+| `node_modules/next/dist/client/app-webpack.d.ts` |
+| `node_modules/next/dist/build/segment-config/app/app-segments.d.ts` |
+| `node_modules/next/dist/build/segment-config/app/app-segment-config.d.ts` |
+| `node_modules/next/dist/client/components/app-router.d.ts` |
+| `node_modules/next/dist/client/components/app-router-instance.d.ts` |
+| `node_modules/next/dist/client/components/app-router-headers.d.ts` |
+| `node_modules/next/dist/shared/lib/app-router-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/client/components/app-router-announcer.d.ts` |
+| `node_modules/next/dist/export/routes/app-route.d.ts` |
+| `node_modules/next/dist/build/templates/app-route.d.ts` |
+| `node_modules/next/dist/server/route-matchers/app-route-route-matcher.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/app-route-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/server/route-matches/app-route-route-match.d.ts` |
+| `node_modules/next/dist/server/route-definitions/app-route-route-definition.d.ts` |
+| `node_modules/next/dist/server/app-render/app-render.d.ts` |
+| `node_modules/next/dist/server/app-render/app-render-render-utils.d.ts` |
+| `node_modules/next/dist/server/app-render/app-render-prerender-utils.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/app-paths.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/app/app-pathname-normalizer.d.ts` |
+| `node_modules/next/dist/export/routes/app-page.d.ts` |
+| `node_modules/next/dist/build/templates/app-page.d.ts` |
+| `node_modules/next/dist/server/route-matchers/app-page-route-matcher.d.ts` |
+| `node_modules/next/dist/server/route-matcher-providers/app-page-route-matcher-provider.d.ts` |
+| `node_modules/next/dist/server/route-matches/app-page-route-match.d.ts` |
+| `node_modules/next/dist/server/route-definitions/app-page-route-definition.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/app/app-page-normalizer.d.ts` |
+| `node_modules/next/dist/client/app-next.d.ts` |
+| `node_modules/next/dist/client/app-next-turbopack.d.ts` |
+| `node_modules/next/dist/client/app-next-dev.d.ts` |
+| `node_modules/next/dist/client/app-link-gc.d.ts` |
+| `node_modules/next/dist/server/lib/app-info-log.d.ts` |
+| `node_modules/next/dist/client/app-index.d.ts` |
+| `node_modules/next/dist/client/app-globals.d.ts` |
+| `node_modules/next/dist/client/app-find-source-map-url.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/app/app-filename-normalizer.d.ts` |
+| `node_modules/next/dist/shared/lib/app-dynamic.d.ts` |
+| `node_modules/next/dist/api/app-dynamic.d.ts` |
+| `node_modules/next/dist/server/lib/app-dir-module.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/app-dev-overlay-setup.d.ts` |
+| `node_modules/next/dist/next-devtools/userspace/app/app-dev-overlay-error-boundary.d.ts` |
+| `node_modules/next/dist/client/app-call-server.d.ts` |
+| `node_modules/next/dist/server/normalizers/built/app/app-bundle-path-normalizer.d.ts` |
+| `node_modules/next/dist/build/webpack/plugins/app-build-manifest-plugin.d.ts` |
+| `node_modules/next/dist/client/app-build-id.d.ts` |
+| `node_modules/next/dist/client/app-bootstrap.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/runtime/api.d.ts` |
+| `node_modules/next/dist/server/api-utils/node/api-resolver.d.ts` |
+| `node_modules/next/dist/telemetry/anonymous-meta.d.ts` |
+| `node_modules/next/dist/shared/lib/amp.d.ts` |
+| `node_modules/next/amp.d.ts` |
+| `node_modules/next/dist/shared/lib/amp-mode.d.ts` |
+| `node_modules/next/dist/client/dev/amp-dev.d.ts` |
+| `node_modules/next/dist/shared/lib/amp-context.shared-runtime.d.ts` |
+| `node_modules/next/dist/build/babel/plugins/amp-attributes.d.ts` |
+| `node_modules/next/dist/lib/metadata/types/alternative-urls-types.d.ts` |
+| `node_modules/next/dist/lib/metadata/generate/alternate.d.ts` |
+| `node_modules/next/dist/client/components/router-reducer/aliased-prefetch-navigations.d.ts` |
+| `node_modules/next/dist/server/after/after.d.ts` |
+| `node_modules/next/dist/server/app-render/after-task-async-storage.external.d.ts` |
+| `node_modules/next/dist/server/app-render/after-task-async-storage-instance.d.ts` |
+| `node_modules/next/dist/build/after-production-compile.d.ts` |
+| `node_modules/next/dist/server/after/after-context.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/add-path-suffix.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/add-path-prefix.d.ts` |
+| `node_modules/next/dist/shared/lib/router/utils/add-locale.d.ts` |
+| `node_modules/next/dist/client/add-locale.d.ts` |
+| `node_modules/next/dist/client/add-base-path.d.ts` |
+| `node_modules/next/dist/shared/lib/router/adapters.d.ts` |
+| `node_modules/next/dist/server/web/adapter.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/action-validate.d.ts` |
+| `node_modules/next/dist/server/app-render/action-utils.d.ts` |
+| `node_modules/next/dist/server/app-render/action-handler.d.ts` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/action-client-wrapper.d.ts` |
+| `node_modules/next/dist/server/app-render/action-async-storage.external.d.ts` |
+| `node_modules/next/dist/server/app-render/action-async-storage-instance.d.ts` |
+| `node_modules/next/dist/client/components/styles/access-error-styles.d.ts` |
+| `node_modules/next/dist/server/accept-header.d.ts` |
+| `node_modules/next/dist/shared/lib/page-path/absolute-path-to-page.d.ts` |
+| `node_modules/next/dist/server/normalizers/absolute-filename-normalizer.d.ts` |
+| `node_modules/next/dist/compiled/@edge-runtime/primitives/abort-controller.d.ts` |
+| `node_modules/next/dist/server/route-modules/pages/builtin/_error.d.ts` |
+| `node_modules/next/dist/pages/_error.d.ts` |
+| `node_modules/next/dist/pages/_document.d.ts` |
+| `node_modules/next/dist/pages/_app.d.ts` |
+| `node_modules/next/README.md` |
+| `node_modules/next/dist/compiled/regenerator-runtime/README.md` |
+| `node_modules/next/dist/compiled/react-refresh/README.md` |
+| `node_modules/next/dist/compiled/react-is/README.md` |
+| `node_modules/next/dist/compiled/@babel/runtime/README.md` |
+| `node_modules/next/license.md` |
+| `node_modules/next/dist/shared/lib/zod.js.map` |
+| `node_modules/next/dist/esm/shared/lib/zod.js.map` |
+| `node_modules/next/dist/lib/eslint/writeOutputFile.js.map` |
+| `node_modules/next/dist/esm/lib/eslint/writeOutputFile.js.map` |
+| `node_modules/next/dist/lib/eslint/writeDefaultConfig.js.map` |
+| `node_modules/next/dist/esm/lib/eslint/writeDefaultConfig.js.map` |
+| `node_modules/next/dist/lib/typescript/writeConfigurationDefaults.js.map` |
+| `node_modules/next/dist/esm/lib/typescript/writeConfigurationDefaults.js.map` |
+| `node_modules/next/dist/lib/typescript/writeAppTypeDeclarations.js.map` |
+| `node_modules/next/dist/esm/lib/typescript/writeAppTypeDeclarations.js.map` |
+| `node_modules/next/dist/esm/build/write-build-id.js.map` |
+| `node_modules/next/dist/build/write-build-id.js.map` |
+| `node_modules/next/dist/lib/fs/write-atomic.js.map` |
+| `node_modules/next/dist/esm/lib/fs/write-atomic.js.map` |
+| `node_modules/next/dist/server/normalizers/wrap-normalizer-fn.js.map` |
+| `node_modules/next/dist/esm/server/normalizers/wrap-normalizer-fn.js.map` |
+| `node_modules/next/dist/lib/worker.js.map` |
+| `node_modules/next/dist/export/worker.js.map` |
+| `node_modules/next/dist/esm/lib/worker.js.map` |
+| `node_modules/next/dist/esm/export/worker.js.map` |
+| `node_modules/next/dist/esm/build/worker.js.map` |
+| `node_modules/next/dist/build/worker.js.map` |
+| `node_modules/next/dist/server/lib/worker-utils.js.map` |
+| `node_modules/next/dist/esm/server/lib/worker-utils.js.map` |
+| `node_modules/next/dist/server/app-render/work-unit-async-storage.external.js.map` |
+| `node_modules/next/dist/esm/server/app-render/work-unit-async-storage.external.js.map` |
+| `node_modules/next/dist/server/app-render/work-unit-async-storage-instance.js.map` |
+| `node_modules/next/dist/esm/server/app-render/work-unit-async-storage-instance.js.map` |
+| `node_modules/next/dist/server/async-storage/work-store.js.map` |
+| `node_modules/next/dist/esm/server/async-storage/work-store.js.map` |
+| `node_modules/next/dist/server/app-render/work-async-storage.external.js.map` |
+| `node_modules/next/dist/esm/server/app-render/work-async-storage.external.js.map` |
+| `node_modules/next/dist/server/app-render/work-async-storage-instance.js.map` |
+| `node_modules/next/dist/esm/server/app-render/work-async-storage-instance.js.map` |
+| `node_modules/next/dist/server/async-storage/with-store.js.map` |
+| `node_modules/next/dist/esm/server/async-storage/with-store.js.map` |
+| `node_modules/next/dist/esm/client/with-router.js.map` |
+| `node_modules/next/dist/client/with-router.js.map` |
+| `node_modules/next/dist/lib/with-promise-cache.js.map` |
+| `node_modules/next/dist/esm/lib/with-promise-cache.js.map` |
+| `node_modules/next/dist/esm/build/polyfills/fetch/whatwg-fetch.js.map` |
+| `node_modules/next/dist/build/polyfills/fetch/whatwg-fetch.js.map` |
+| `node_modules/next/dist/esm/client/dev/hot-reloader/pages/websocket.js.map` |
+| `node_modules/next/dist/esm/client/dev/error-overlay/websocket.js.map` |
+| `node_modules/next/dist/client/dev/hot-reloader/pages/websocket.js.map` |
+| `node_modules/next/dist/client/dev/error-overlay/websocket.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.js.map` |
+| `node_modules/next/dist/esm/client/webpack.js.map` |
+| `node_modules/next/dist/client/webpack.js.map` |
+| `node_modules/next/dist/next-devtools/shared/webpack-module-path.js.map` |
+| `node_modules/next/dist/esm/next-devtools/shared/webpack-module-path.js.map` |
+| `node_modules/next/dist/esm/build/webpack-config.js.map` |
+| `node_modules/next/dist/build/webpack-config.js.map` |
+| `node_modules/next/dist/server/response-cache/web.js.map` |
+| `node_modules/next/dist/server/base-http/web.js.map` |
+| `node_modules/next/dist/server/api-utils/web.js.map` |
+| `node_modules/next/dist/esm/server/response-cache/web.js.map` |
+| `node_modules/next/dist/esm/server/base-http/web.js.map` |
+| `node_modules/next/dist/esm/server/api-utils/web.js.map` |
+| `node_modules/next/dist/esm/client/web-vitals.js.map` |
+| `node_modules/next/dist/client/web-vitals.js.map` |
+| `node_modules/next/dist/server/web/web-on-close.js.map` |
+| `node_modules/next/dist/esm/server/web/web-on-close.js.map` |
+| `node_modules/next/dist/server/node-environment-extensions/web-crypto.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/postcss-loader/src/Warning.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/postcss-loader/src/Warning.js.map` |
+| `node_modules/next/dist/esm/server/node-environment-extensions/web-crypto.js.map` |
+| `node_modules/next/dist/shared/lib/utils/warn-once.js.map` |
+| `node_modules/next/dist/esm/shared/lib/utils/warn-once.js.map` |
+| `node_modules/next/dist/server/app-render/walk-tree-with-flight-router-state.js.map` |
+| `node_modules/next/dist/esm/server/app-render/walk-tree-with-flight-router-state.js.map` |
+| `node_modules/next/dist/lib/wait.js.map` |
+| `node_modules/next/dist/esm/lib/wait.js.map` |
+| `node_modules/next/dist/telemetry/events/version.js.map` |
+| `node_modules/next/dist/next-devtools/shared/version-staleness.js.map` |
+| `node_modules/next/dist/esm/next-devtools/shared/version-staleness.js.map` |
+| `node_modules/next/dist/lib/verifyAndLint.js.map` |
+| `node_modules/next/dist/esm/lib/verifyAndLint.js.map` |
+| `node_modules/next/dist/lib/verify-typescript-setup.js.map` |
+| `node_modules/next/dist/esm/lib/verify-typescript-setup.js.map` |
+| `node_modules/next/dist/lib/verify-root-layout.js.map` |
+| `node_modules/next/dist/esm/lib/verify-root-layout.js.map` |
+| `node_modules/next/dist/lib/verify-partytown-setup.js.map` |
+| `node_modules/next/dist/esm/lib/verify-partytown-setup.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/resolve-url-loader/lib/value-processor.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/resolve-url-loader/lib/value-processor.js.map` |
+| `node_modules/next/dist/shared/lib/utils.js.map` |
+| `node_modules/next/dist/shared/lib/turbopack/utils.js.map` |
+| `node_modules/next/dist/server/web/utils.js.map` |
+| `node_modules/next/dist/server/utils.js.map` |
+| `node_modules/next/dist/server/typescript/utils.js.map` |
+| `node_modules/next/dist/server/response-cache/utils.js.map` |
+| `node_modules/next/dist/server/request/utils.js.map` |
+| `node_modules/next/dist/server/node-environment-extensions/utils.js.map` |
+| `node_modules/next/dist/server/lib/utils.js.map` |
+| `node_modules/next/dist/server/lib/trace/utils.js.map` |
+| `node_modules/next/dist/server/lib/server-ipc/utils.js.map` |
+| `node_modules/next/dist/server/instrumentation/utils.js.map` |
+| `node_modules/next/dist/lib/metadata/generate/utils.js.map` |
+| `node_modules/next/dist/export/utils.js.map` |
+| `node_modules/next/dist/experimental/testing/server/utils.js.map` |
+| `node_modules/next/dist/esm/shared/lib/utils.js.map` |
+| `node_modules/next/dist/esm/shared/lib/turbopack/utils.js.map` |
+| `node_modules/next/dist/esm/server/web/utils.js.map` |
+| `node_modules/next/dist/esm/server/utils.js.map` |
+| `node_modules/next/dist/esm/server/typescript/utils.js.map` |
+| `node_modules/next/dist/esm/server/response-cache/utils.js.map` |
+| `node_modules/next/dist/esm/server/request/utils.js.map` |
+| `node_modules/next/dist/esm/server/node-environment-extensions/utils.js.map` |
+| `node_modules/next/dist/esm/server/lib/utils.js.map` |
+| `node_modules/next/dist/esm/server/lib/trace/utils.js.map` |
+| `node_modules/next/dist/esm/server/lib/server-ipc/utils.js.map` |
+| `node_modules/next/dist/esm/server/instrumentation/utils.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/generate/utils.js.map` |
+| `node_modules/next/dist/esm/export/utils.js.map` |
+| `node_modules/next/dist/esm/build/webpack/utils.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/utils.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/postcss-loader/src/utils.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/lightningcss-loader/src/utils.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/css-loader/src/utils.js.map` |
+| `node_modules/next/dist/esm/build/webpack/config/utils.js.map` |
+| `node_modules/next/dist/esm/build/utils.js.map` |
+| `node_modules/next/dist/esm/build/static-paths/utils.js.map` |
+| `node_modules/next/dist/build/webpack/utils.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/utils.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/postcss-loader/src/utils.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/lightningcss-loader/src/utils.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/css-loader/src/utils.js.map` |
+| `node_modules/next/dist/build/webpack/config/utils.js.map` |
+| `node_modules/next/dist/build/utils.js.map` |
+| `node_modules/next/dist/build/static-paths/utils.js.map` |
+| `node_modules/next/dist/esm/build/babel/loader/util.js.map` |
+| `node_modules/next/dist/build/babel/loader/util.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/user-agent.js.map` |
+| `node_modules/next/dist/esm/server/web/spec-extension/user-agent.js.map` |
+| `node_modules/next/dist/esm/client/dev/hot-reloader/app/use-websocket.js.map` |
+| `node_modules/next/dist/client/dev/hot-reloader/app/use-websocket.js.map` |
+| `node_modules/next/dist/esm/client/use-merged-ref.js.map` |
+| `node_modules/next/dist/client/use-merged-ref.js.map` |
+| `node_modules/next/dist/esm/client/use-intersection.js.map` |
+| `node_modules/next/dist/client/use-intersection.js.map` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/use-forward-console-log.js.map` |
+| `node_modules/next/dist/esm/next-devtools/userspace/app/errors/use-forward-console-log.js.map` |
+| `node_modules/next/dist/server/app-render/use-flight-response.js.map` |
+| `node_modules/next/dist/esm/server/app-render/use-flight-response.js.map` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/use-error-handler.js.map` |
+| `node_modules/next/dist/esm/next-devtools/userspace/app/errors/use-error-handler.js.map` |
+| `node_modules/next/dist/esm/client/use-client-disallowed.js.map` |
+| `node_modules/next/dist/client/use-client-disallowed.js.map` |
+| `node_modules/next/dist/server/use-cache/use-cache-wrapper.js.map` |
+| `node_modules/next/dist/esm/server/use-cache/use-cache-wrapper.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/telemetry-plugin/use-cache-tracker-utils.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/telemetry-plugin/use-cache-tracker-utils.js.map` |
+| `node_modules/next/dist/server/use-cache/use-cache-errors.js.map` |
+| `node_modules/next/dist/esm/server/use-cache/use-cache-errors.js.map` |
+| `node_modules/next/dist/next-devtools/userspace/use-app-dev-rendering-indicator.js.map` |
+| `node_modules/next/dist/esm/next-devtools/userspace/use-app-dev-rendering-indicator.js.map` |
+| `node_modules/next/dist/esm/client/components/use-action-queue.js.map` |
+| `node_modules/next/dist/client/components/use-action-queue.js.map` |
+| `node_modules/next/dist/lib/url.js.map` |
+| `node_modules/next/dist/esm/lib/url.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/url-pattern.js.map` |
+| `node_modules/next/dist/esm/server/web/spec-extension/url-pattern.js.map` |
+| `node_modules/next/dist/trace/upload-trace.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/telemetry-plugin/update-telemetry-loader-context-from-swc.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/telemetry-plugin/update-telemetry-loader-context-from-swc.js.map` |
+| `node_modules/next/dist/esm/client/components/unstable-rethrow.server.js.map` |
+| `node_modules/next/dist/client/components/unstable-rethrow.server.js.map` |
+| `node_modules/next/dist/esm/client/components/unstable-rethrow.js.map` |
+| `node_modules/next/dist/client/components/unstable-rethrow.js.map` |
+| `node_modules/next/dist/esm/client/components/unstable-rethrow.browser.js.map` |
+| `node_modules/next/dist/client/components/unstable-rethrow.browser.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/unstable-no-store.js.map` |
+| `node_modules/next/dist/esm/server/web/spec-extension/unstable-no-store.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/unstable-cache.js.map` |
+| `node_modules/next/dist/esm/server/web/spec-extension/unstable-cache.js.map` |
+| `node_modules/next/dist/esm/client/components/unresolved-thenable.js.map` |
+| `node_modules/next/dist/client/components/unresolved-thenable.js.map` |
+| `node_modules/next/dist/esm/client/components/unrecognized-action-error.js.map` |
+| `node_modules/next/dist/client/components/unrecognized-action-error.js.map` |
+| `node_modules/next/dist/server/normalizers/underscore-normalizer.js.map` |
+| `node_modules/next/dist/esm/server/normalizers/underscore-normalizer.js.map` |
+| `node_modules/next/dist/esm/client/components/unauthorized.js.map` |
+| `node_modules/next/dist/esm/client/components/builtin/unauthorized.js.map` |
+| `node_modules/next/dist/client/components/unauthorized.js.map` |
+| `node_modules/next/dist/client/components/builtin/unauthorized.js.map` |
+| `node_modules/next/dist/server/stream-utils/uint8array-helpers.js.map` |
+| `node_modules/next/dist/esm/server/stream-utils/uint8array-helpers.js.map` |
+| `node_modules/next/dist/trace/types.js.map` |
+| `node_modules/next/dist/trace/report/types.js.map` |
+| `node_modules/next/dist/shared/lib/lazy-dynamic/types.js.map` |
+| `node_modules/next/dist/server/web/types.js.map` |
+| `node_modules/next/dist/server/response-cache/types.js.map` |
+| `node_modules/next/dist/server/lib/types.js.map` |
+| `node_modules/next/dist/server/lib/router-utils/types.js.map` |
+| `node_modules/next/dist/server/lib/cache-handlers/types.js.map` |
+| `node_modules/next/dist/server/instrumentation/types.js.map` |
+| `node_modules/next/dist/server/app-render/types.js.map` |
+| `node_modules/next/dist/next-devtools/shared/types.js.map` |
+| `node_modules/next/dist/export/types.js.map` |
+| `node_modules/next/dist/export/routes/types.js.map` |
+| `node_modules/next/dist/experimental/testmode/proxy/types.js.map` |
+| `node_modules/next/dist/esm/shared/lib/lazy-dynamic/types.js.map` |
+| `node_modules/next/dist/esm/server/web/types.js.map` |
+| `node_modules/next/dist/esm/server/response-cache/types.js.map` |
+| `node_modules/next/dist/esm/server/lib/types.js.map` |
+| `node_modules/next/dist/esm/server/lib/router-utils/types.js.map` |
+| `node_modules/next/dist/esm/server/lib/cache-handlers/types.js.map` |
+| `node_modules/next/dist/esm/server/instrumentation/types.js.map` |
+| `node_modules/next/dist/esm/server/app-render/types.js.map` |
+| `node_modules/next/dist/esm/next-devtools/shared/types.js.map` |
+| `node_modules/next/dist/esm/export/types.js.map` |
+| `node_modules/next/dist/esm/export/routes/types.js.map` |
+| `node_modules/next/dist/esm/client/components/metadata/types.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/metadata/types.js.map` |
+| `node_modules/next/dist/esm/build/turborepo-access-trace/types.js.map` |
+| `node_modules/next/dist/esm/build/swc/types.js.map` |
+| `node_modules/next/dist/esm/build/static-paths/types.js.map` |
+| `node_modules/next/dist/client/components/metadata/types.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/metadata/types.js.map` |
+| `node_modules/next/dist/build/turborepo-access-trace/types.js.map` |
+| `node_modules/next/dist/build/swc/types.js.map` |
+| `node_modules/next/dist/build/static-paths/types.js.map` |
+| `node_modules/next/dist/server/lib/router-utils/typegen.js.map` |
+| `node_modules/next/dist/esm/server/lib/router-utils/typegen.js.map` |
+| `node_modules/next/dist/esm/build/type-check.js.map` |
+| `node_modules/next/dist/build/type-check.js.map` |
+| `node_modules/next/dist/lib/metadata/types/twitter-types.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/types/twitter-types.js.map` |
+| `node_modules/next/dist/lib/turbopack-warning.js.map` |
+| `node_modules/next/dist/esm/lib/turbopack-warning.js.map` |
+| `node_modules/next/dist/server/dev/turbopack-utils.js.map` |
+| `node_modules/next/dist/esm/server/dev/turbopack-utils.js.map` |
+| `node_modules/next/dist/esm/client/dev/hot-reloader/turbopack-hot-reloader-common.js.map` |
+| `node_modules/next/dist/client/dev/hot-reloader/turbopack-hot-reloader-common.js.map` |
+| `node_modules/next/dist/cli/internal/turbo-trace-server.js.map` |
+| `node_modules/next/dist/esm/client/components/segment-cache-impl/tuple-map.js.map` |
+| `node_modules/next/dist/client/components/segment-cache-impl/tuple-map.js.map` |
+| `node_modules/next/dist/lib/try-to-parse-path.js.map` |
+| `node_modules/next/dist/esm/lib/try-to-parse-path.js.map` |
+| `node_modules/next/dist/server/api-utils/node/try-get-preview-data.js.map` |
+| `node_modules/next/dist/esm/server/api-utils/node/try-get-preview-data.js.map` |
+| `node_modules/next/dist/esm/client/trusted-types.js.map` |
+| `node_modules/next/dist/client/trusted-types.js.map` |
+| `node_modules/next/dist/esm/build/next-config-ts/transpile-config.js.map` |
+| `node_modules/next/dist/build/next-config-ts/transpile-config.js.map` |
+| `node_modules/next/dist/esm/build/babel/loader/transform.js.map` |
+| `node_modules/next/dist/build/babel/loader/transform.js.map` |
+| `node_modules/next/dist/server/app-render/module-loading/track-module-loading.instance.js.map` |
+| `node_modules/next/dist/esm/server/app-render/module-loading/track-module-loading.instance.js.map` |
+| `node_modules/next/dist/server/app-render/module-loading/track-module-loading.external.js.map` |
+| `node_modules/next/dist/esm/server/app-render/module-loading/track-module-loading.external.js.map` |
+| `node_modules/next/dist/server/app-render/module-loading/track-dynamic-import.js.map` |
+| `node_modules/next/dist/esm/server/app-render/module-loading/track-dynamic-import.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/next-flight-loader/track-dynamic-import.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/track-dynamic-import.js.map` |
+| `node_modules/next/dist/server/lib/trace/tracer.js.map` |
+| `node_modules/next/dist/esm/server/lib/trace/tracer.js.map` |
+| `node_modules/next/dist/esm/client/tracing/tracer.js.map` |
+| `node_modules/next/dist/client/tracing/tracer.js.map` |
+| `node_modules/next/dist/trace/trace.test.js.map` |
+| `node_modules/next/dist/trace/trace.js.map` |
+| `node_modules/next/dist/lib/memory/trace.js.map` |
+| `node_modules/next/dist/esm/lib/memory/trace.js.map` |
+| `node_modules/next/dist/trace/trace-uploader.js.map` |
+| `node_modules/next/dist/trace/report/to-telemetry.js.map` |
+| `node_modules/next/dist/server/lib/to-route.js.map` |
+| `node_modules/next/dist/esm/server/lib/to-route.js.map` |
+| `node_modules/next/dist/trace/report/to-json.js.map` |
+| `node_modules/next/dist/next-devtools/userspace/app/terminal-logging-config.js.map` |
+| `node_modules/next/dist/esm/next-devtools/userspace/app/terminal-logging-config.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/telemetry-plugin/telemetry-plugin.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/telemetry-plugin/telemetry-plugin.js.map` |
+| `node_modules/next/dist/esm/build/turborepo-access-trace/tcp.js.map` |
+| `node_modules/next/dist/build/turborepo-access-trace/tcp.js.map` |
+| `node_modules/next/dist/server/app-render/rsc/taint.js.map` |
+| `node_modules/next/dist/esm/server/app-render/rsc/taint.js.map` |
+| `node_modules/next/dist/server/lib/incremental-cache/tags-manifest.external.js.map` |
+| `node_modules/next/dist/esm/server/lib/incremental-cache/tags-manifest.external.js.map` |
+| `node_modules/next/dist/telemetry/events/swc-plugins.js.map` |
+| `node_modules/next/dist/telemetry/events/swc-load-failure.js.map` |
+| `node_modules/next/dist/server/normalizers/request/suffix.js.map` |
+| `node_modules/next/dist/esm/server/normalizers/request/suffix.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/subresource-integrity-plugin.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/subresource-integrity-plugin.js.map` |
+| `node_modules/next/dist/build/jest/__mocks__/styleMock.js.map` |
+| `node_modules/next/dist/shared/lib/styled-jsx.js.map` |
+| `node_modules/next/dist/esm/shared/lib/styled-jsx.js.map` |
+| `node_modules/next/dist/server/app-render/strip-flight-headers.js.map` |
+| `node_modules/next/dist/esm/server/app-render/strip-flight-headers.js.map` |
+| `node_modules/next/dist/esm/build/webpack/stringify-request.js.map` |
+| `node_modules/next/dist/build/webpack/stringify-request.js.map` |
+| `node_modules/next/dist/server/lib/streaming-metadata.js.map` |
+| `node_modules/next/dist/esm/server/lib/streaming-metadata.js.map` |
+| `node_modules/next/dist/esm/build/output/store.js.map` |
+| `node_modules/next/dist/build/output/store.js.map` |
+| `node_modules/next/dist/telemetry/storage.js.map` |
+| `node_modules/next/dist/next-devtools/userspace/app/errors/stitched-error.js.map` |
+| `node_modules/next/dist/esm/next-devtools/userspace/app/errors/stitched-error.js.map` |
+| `node_modules/next/dist/experimental/testmode/playwright/step.js.map` |
+| `node_modules/next/dist/server/dev/static-paths-worker.js.map` |
+| `node_modules/next/dist/esm/server/dev/static-paths-worker.js.map` |
+| `node_modules/next/dist/esm/client/components/static-generation-bailout.js.map` |
+| `node_modules/next/dist/client/components/static-generation-bailout.js.map` |
+| `node_modules/next/dist/lib/static-env.js.map` |
+| `node_modules/next/dist/esm/lib/static-env.js.map` |
+| `node_modules/next/dist/lib/memory/startup.js.map` |
+| `node_modules/next/dist/esm/lib/memory/startup.js.map` |
+| `node_modules/next/dist/server/lib/start-server.js.map` |
+| `node_modules/next/dist/esm/server/lib/start-server.js.map` |
+| `node_modules/next/dist/next-devtools/shared/stack-frame.js.map` |
+| `node_modules/next/dist/esm/next-devtools/shared/stack-frame.js.map` |
+| `node_modules/next/dist/esm/build/spinner.js.map` |
+| `node_modules/next/dist/build/spinner.js.map` |
+| `node_modules/next/dist/server/lib/source-maps.js.map` |
+| `node_modules/next/dist/esm/server/lib/source-maps.js.map` |
+| `node_modules/next/dist/server/dev/browser-logs/source-map.js.map` |
+| `node_modules/next/dist/esm/server/dev/browser-logs/source-map.js.map` |
+| `node_modules/next/dist/shared/lib/router/utils/sorted-routes.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router/utils/sorted-routes.js.map` |
+| `node_modules/next/dist/shared/lib/router/utils/sortable-routes.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router/utils/sortable-routes.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/slow-module-detection-plugin.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/slow-module-detection-plugin.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/wellknown-errors-plugin/simpleWebpackError.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/simpleWebpackError.js.map` |
+| `node_modules/next/dist/shared/lib/side-effect.js.map` |
+| `node_modules/next/dist/esm/shared/lib/side-effect.js.map` |
+| `node_modules/next/dist/lib/memory/shutdown.js.map` |
+| `node_modules/next/dist/esm/lib/memory/shutdown.js.map` |
+| `node_modules/next/dist/esm/client/components/router-reducer/should-hard-navigate.js.map` |
+| `node_modules/next/dist/client/components/router-reducer/should-hard-navigate.js.map` |
+| `node_modules/next/dist/esm/build/polyfills/object.assign/shim.js.map` |
+| `node_modules/next/dist/build/polyfills/object.assign/shim.js.map` |
+| `node_modules/next/dist/trace/shared.js.map` |
+| `node_modules/next/dist/next-devtools/server/shared.js.map` |
+| `node_modules/next/dist/esm/next-devtools/server/shared.js.map` |
+| `node_modules/next/dist/esm/client/dev/hot-reloader/shared.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/next-types-plugin/shared.js.map` |
+| `node_modules/next/dist/client/dev/hot-reloader/shared.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/next-types-plugin/shared.js.map` |
+| `node_modules/next/dist/server/route-modules/app-route/shared-modules.js.map` |
+| `node_modules/next/dist/esm/server/route-modules/app-route/shared-modules.js.map` |
+| `node_modules/next/dist/server/lib/incremental-cache/shared-cache-controls.external.js.map` |
+| `node_modules/next/dist/esm/server/lib/incremental-cache/shared-cache-controls.external.js.map` |
+| `node_modules/next/dist/server/setup-http-agent-env.js.map` |
+| `node_modules/next/dist/esm/server/setup-http-agent-env.js.map` |
+| `node_modules/next/dist/lib/setup-exception-listeners.js.map` |
+| `node_modules/next/dist/esm/lib/setup-exception-listeners.js.map` |
+| `node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js.map` |
+| `node_modules/next/dist/esm/server/lib/router-utils/setup-dev-bundler.js.map` |
+| `node_modules/next/dist/esm/client/components/router-reducer/set-cache-busting-search-param.js.map` |
+| `node_modules/next/dist/client/components/router-reducer/set-cache-busting-search-param.js.map` |
+| `node_modules/next/dist/esm/client/set-attributes-from-props.js.map` |
+| `node_modules/next/dist/client/set-attributes-from-props.js.map` |
+| `node_modules/next/dist/telemetry/events/session-stopped.js.map` |
+| `node_modules/next/dist/compiled/next-server/server.runtime.prod.js.map` |
+| `node_modules/next/dist/server/typescript/rules/server.js.map` |
+| `node_modules/next/dist/experimental/testmode/server.js.map` |
+| `node_modules/next/dist/experimental/testmode/proxy/server.js.map` |
+| `node_modules/next/dist/esm/server/typescript/rules/server.js.map` |
+| `node_modules/next/dist/esm/api/server.js.map` |
+| `node_modules/next/dist/api/server.js.map` |
+| `node_modules/next/dist/server/server-utils.js.map` |
+| `node_modules/next/dist/esm/server/server-utils.js.map` |
+| `node_modules/next/dist/server/server-route-utils.js.map` |
+| `node_modules/next/dist/esm/server/server-route-utils.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/next-flight-loader/server-reference.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/next-flight-loader/server-reference.js.map` |
+| `node_modules/next/dist/shared/lib/server-reference-info.js.map` |
+| `node_modules/next/dist/esm/shared/lib/server-reference-info.js.map` |
+| `node_modules/next/dist/esm/client/components/router-reducer/reducers/server-patch-reducer.js.map` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/server-patch-reducer.js.map` |
+| `node_modules/next/dist/server/route-matcher-providers/helpers/manifest-loaders/server-manifest-loader.js.map` |
+| `node_modules/next/dist/esm/server/route-matcher-providers/helpers/manifest-loaders/server-manifest-loader.js.map` |
+| `node_modules/next/dist/shared/lib/server-inserted-html.shared-runtime.js.map` |
+| `node_modules/next/dist/esm/shared/lib/server-inserted-html.shared-runtime.js.map` |
+| `node_modules/next/dist/server/route-modules/pages/vendored/contexts/server-inserted-html.js.map` |
+| `node_modules/next/dist/server/route-modules/app-page/vendored/contexts/server-inserted-html.js.map` |
+| `node_modules/next/dist/server/app-render/server-inserted-html.js.map` |
+| `node_modules/next/dist/esm/server/route-modules/pages/vendored/contexts/server-inserted-html.js.map` |
+| `node_modules/next/dist/esm/server/route-modules/app-page/vendored/contexts/server-inserted-html.js.map` |
+| `node_modules/next/dist/esm/server/app-render/server-inserted-html.js.map` |
+| `node_modules/next/dist/experimental/testmode/server-edge.js.map` |
+| `node_modules/next/dist/server/typescript/rules/server-boundary.js.map` |
+| `node_modules/next/dist/esm/server/typescript/rules/server-boundary.js.map` |
+| `node_modules/next/dist/server/lib/server-action-request-meta.js.map` |
+| `node_modules/next/dist/esm/server/lib/server-action-request-meta.js.map` |
+| `node_modules/next/dist/esm/client/components/router-reducer/reducers/server-action-reducer.js.map` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/server-action-reducer.js.map` |
+| `node_modules/next/dist/server/serve-static.js.map` |
+| `node_modules/next/dist/esm/server/serve-static.js.map` |
+| `node_modules/next/dist/server/send-response.js.map` |
+| `node_modules/next/dist/esm/server/send-response.js.map` |
+| `node_modules/next/dist/server/send-payload.js.map` |
+| `node_modules/next/dist/esm/server/send-payload.js.map` |
+| `node_modules/next/dist/lib/semver-noop.js.map` |
+| `node_modules/next/dist/esm/lib/semver-noop.js.map` |
+| `node_modules/next/dist/shared/lib/segment.js.map` |
+| `node_modules/next/dist/esm/shared/lib/segment.js.map` |
+| `node_modules/next/dist/shared/lib/segment-cache/segment-value-encoding.js.map` |
+| `node_modules/next/dist/esm/shared/lib/segment-cache/segment-value-encoding.js.map` |
+| `node_modules/next/dist/server/normalizers/request/segment-prefix-rsc.js.map` |
+| `node_modules/next/dist/esm/server/normalizers/request/segment-prefix-rsc.js.map` |
+| `node_modules/next/dist/server/app-render/segment-explorer-path.js.map` |
+| `node_modules/next/dist/esm/server/app-render/segment-explorer-path.js.map` |
+| `node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js.map` |
+| `node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js.map` |
+| `node_modules/next/dist/esm/client/components/segment-cache.js.map` |
+| `node_modules/next/dist/client/components/segment-cache.js.map` |
+| `node_modules/next/dist/server/request/search-params.js.map` |
+| `node_modules/next/dist/esm/server/request/search-params.js.map` |
+| `node_modules/next/dist/esm/client/request/search-params.browser.prod.js.map` |
+| `node_modules/next/dist/client/request/search-params.browser.prod.js.map` |
+| `node_modules/next/dist/esm/client/request/search-params.browser.js.map` |
+| `node_modules/next/dist/client/request/search-params.browser.js.map` |
+| `node_modules/next/dist/esm/client/request/search-params.browser.dev.js.map` |
+| `node_modules/next/dist/client/request/search-params.browser.dev.js.map` |
+| `node_modules/next/dist/esm/client/script.js.map` |
+| `node_modules/next/dist/esm/api/script.js.map` |
+| `node_modules/next/dist/client/script.js.map` |
+| `node_modules/next/dist/api/script.js.map` |
+| `node_modules/next/dist/lib/scheduler.js.map` |
+| `node_modules/next/dist/esm/lib/scheduler.js.map` |
+| `node_modules/next/dist/esm/client/components/segment-cache-impl/scheduler.js.map` |
+| `node_modules/next/dist/client/components/segment-cache-impl/scheduler.js.map` |
+| `node_modules/next/dist/server/web/sandbox/sandbox.js.map` |
+| `node_modules/next/dist/esm/server/web/sandbox/sandbox.js.map` |
+| `node_modules/next/dist/lib/typescript/runTypeCheck.js.map` |
+| `node_modules/next/dist/esm/lib/typescript/runTypeCheck.js.map` |
+| `node_modules/next/dist/compiled/@next/react-refresh-utils/dist/runtime.js.map` |
+| `node_modules/next/dist/esm/client/dev/runtime-error-handler.js.map` |
+| `node_modules/next/dist/client/dev/runtime-error-handler.js.map` |
+| `node_modules/next/dist/shared/lib/runtime-config.external.js.map` |
+| `node_modules/next/dist/esm/shared/lib/runtime-config.external.js.map` |
+| `node_modules/next/dist/lib/eslint/runLintCheck.js.map` |
+| `node_modules/next/dist/esm/lib/eslint/runLintCheck.js.map` |
+| `node_modules/next/dist/server/after/run-with-after.js.map` |
+| `node_modules/next/dist/esm/server/after/run-with-after.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/rspack-profiling-plugin.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/rspack-profiling-plugin.js.map` |
+| `node_modules/next/dist/esm/build/webpack/plugins/rspack-flight-client-entry-plugin.js.map` |
+| `node_modules/next/dist/build/webpack/plugins/rspack-flight-client-entry-plugin.js.map` |
+| `node_modules/next/dist/server/normalizers/request/rsc.js.map` |
+| `node_modules/next/dist/esm/server/normalizers/request/rsc.js.map` |
+| `node_modules/next/dist/shared/lib/router/router.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router/router.js.map` |
+| `node_modules/next/dist/esm/client/router.js.map` |
+| `node_modules/next/dist/esm/client/compat/router.js.map` |
+| `node_modules/next/dist/esm/api/router.js.map` |
+| `node_modules/next/dist/client/router.js.map` |
+| `node_modules/next/dist/client/compat/router.js.map` |
+| `node_modules/next/dist/api/router.js.map` |
+| `node_modules/next/dist/server/lib/router-server.js.map` |
+| `node_modules/next/dist/esm/server/lib/router-server.js.map` |
+| `node_modules/next/dist/server/lib/router-utils/router-server-context.js.map` |
+| `node_modules/next/dist/esm/server/lib/router-utils/router-server-context.js.map` |
+| `node_modules/next/dist/esm/client/components/router-reducer/router-reducer.js.map` |
+| `node_modules/next/dist/client/components/router-reducer/router-reducer.js.map` |
+| `node_modules/next/dist/esm/client/components/router-reducer/router-reducer-types.js.map` |
+| `node_modules/next/dist/client/components/router-reducer/router-reducer-types.js.map` |
+| `node_modules/next/dist/shared/lib/router-context.shared-runtime.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router-context.shared-runtime.js.map` |
+| `node_modules/next/dist/server/route-modules/pages/vendored/contexts/router-context.js.map` |
+| `node_modules/next/dist/server/route-modules/app-page/vendored/contexts/router-context.js.map` |
+| `node_modules/next/dist/esm/server/route-modules/pages/vendored/contexts/router-context.js.map` |
+| `node_modules/next/dist/esm/server/route-modules/app-page/vendored/contexts/router-context.js.map` |
+| `node_modules/next/dist/server/lib/router-utils/route-types-utils.js.map` |
+| `node_modules/next/dist/esm/server/lib/router-utils/route-types-utils.js.map` |
+| `node_modules/next/dist/shared/lib/router/utils/route-regex.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router/utils/route-regex.js.map` |
+| `node_modules/next/dist/lib/route-pattern-normalizer.js.map` |
+| `node_modules/next/dist/esm/lib/route-pattern-normalizer.js.map` |
+| `node_modules/next/dist/esm/client/route-params.js.map` |
+| `node_modules/next/dist/client/route-params.js.map` |
+| `node_modules/next/dist/server/route-modules/route-module.js.map` |
+| `node_modules/next/dist/esm/server/route-modules/route-module.js.map` |
+| `node_modules/next/dist/server/lib/module-loader/route-module-loader.js.map` |
+| `node_modules/next/dist/esm/server/lib/module-loader/route-module-loader.js.map` |
+| `node_modules/next/dist/shared/lib/router/utils/route-matcher.js.map` |
+| `node_modules/next/dist/server/route-matchers/route-matcher.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router/utils/route-matcher.js.map` |
+| `node_modules/next/dist/esm/server/route-matchers/route-matcher.js.map` |
+| `node_modules/next/dist/server/route-matcher-providers/route-matcher-provider.js.map` |
+| `node_modules/next/dist/esm/server/route-matcher-providers/route-matcher-provider.js.map` |
+| `node_modules/next/dist/server/route-matcher-managers/route-matcher-manager.js.map` |
+| `node_modules/next/dist/esm/server/route-matcher-managers/route-matcher-manager.js.map` |
+| `node_modules/next/dist/server/route-matches/route-match.js.map` |
+| `node_modules/next/dist/esm/server/route-matches/route-match.js.map` |
+| `node_modules/next/dist/shared/lib/router/utils/route-match-utils.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router/utils/route-match-utils.js.map` |
+| `node_modules/next/dist/esm/client/route-loader.js.map` |
+| `node_modules/next/dist/client/route-loader.js.map` |
+| `node_modules/next/dist/server/route-kind.js.map` |
+| `node_modules/next/dist/esm/server/route-kind.js.map` |
+| `node_modules/next/dist/server/route-definitions/route-definition.js.map` |
+| `node_modules/next/dist/esm/server/route-definitions/route-definition.js.map` |
+| `node_modules/next/dist/server/lib/route-cache-key.js.map` |
+| `node_modules/next/dist/esm/server/lib/route-cache-key.js.map` |
+| `node_modules/next/dist/esm/client/route-announcer.js.map` |
+| `node_modules/next/dist/client/route-announcer.js.map` |
+| `node_modules/next/dist/server/request/root-params.js.map` |
+| `node_modules/next/dist/esm/server/request/root-params.js.map` |
+| `node_modules/next/dist/esm/client/components/errors/root-error-boundary.js.map` |
+| `node_modules/next/dist/client/components/errors/root-error-boundary.js.map` |
+| `node_modules/next/dist/server/revalidation-utils.js.map` |
+| `node_modules/next/dist/esm/server/revalidation-utils.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/revalidate.js.map` |
+| `node_modules/next/dist/esm/server/web/spec-extension/revalidate.js.map` |
+| `node_modules/next/dist/server/resume-data-cache/resume-data-cache.js.map` |
+| `node_modules/next/dist/esm/server/resume-data-cache/resume-data-cache.js.map` |
+| `node_modules/next/dist/esm/build/turborepo-access-trace/result.js.map` |
+| `node_modules/next/dist/build/turborepo-access-trace/result.js.map` |
+| `node_modules/next/dist/esm/client/components/router-reducer/reducers/restore-reducer.js.map` |
+| `node_modules/next/dist/client/components/router-reducer/reducers/restore-reducer.js.map` |
+| `node_modules/next/dist/next-devtools/server/restart-dev-server-middleware.js.map` |
+| `node_modules/next/dist/esm/next-devtools/server/restart-dev-server-middleware.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/response.js.map` |
+| `node_modules/next/dist/esm/server/web/spec-extension/response.js.map` |
+| `node_modules/next/dist/server/web/sandbox/resource-managers.js.map` |
+| `node_modules/next/dist/esm/server/web/sandbox/resource-managers.js.map` |
+| `node_modules/next/dist/lib/metadata/types/resolvers.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/types/resolvers.js.map` |
+| `node_modules/next/dist/esm/build/webpack-config-rules/resolve.js.map` |
+| `node_modules/next/dist/build/webpack-config-rules/resolve.js.map` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-url.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/resolvers/resolve-url.js.map` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-title.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/resolvers/resolve-title.js.map` |
+| `node_modules/next/dist/server/lib/router-utils/resolve-routes.js.map` |
+| `node_modules/next/dist/esm/server/lib/router-utils/resolve-routes.js.map` |
+| `node_modules/next/dist/esm/build/webpack/loaders/metadata/resolve-route-data.js.map` |
+| `node_modules/next/dist/build/webpack/loaders/metadata/resolve-route-data.js.map` |
+| `node_modules/next/dist/shared/lib/router/utils/resolve-rewrites.js.map` |
+| `node_modules/next/dist/esm/shared/lib/router/utils/resolve-rewrites.js.map` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-opengraph.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/resolvers/resolve-opengraph.js.map` |
+| `node_modules/next/dist/lib/metadata/resolve-metadata.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/resolve-metadata.js.map` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-icons.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/resolvers/resolve-icons.js.map` |
+| `node_modules/next/dist/esm/client/resolve-href.js.map` |
+| `node_modules/next/dist/client/resolve-href.js.map` |
+| `node_modules/next/dist/lib/resolve-from.js.map` |
+| `node_modules/next/dist/esm/lib/resolve-from.js.map` |
+| `node_modules/next/dist/lib/metadata/resolvers/resolve-basics.js.map` |
+| `node_modules/next/dist/esm/lib/metadata/resolvers/resolve-basics.js.map` |
+| `node_modules/next/dist/server/app-render/required-scripts.js.map` |
+| `node_modules/next/dist/esm/server/app-render/required-scripts.js.map` |
+| `node_modules/next/dist/lib/typescript/required-packages.js.map` |
+| `node_modules/next/dist/esm/lib/typescript/required-packages.js.map` |
+| `node_modules/next/dist/server/require.js.map` |
+| `node_modules/next/dist/esm/server/require.js.map` |
+| `node_modules/next/dist/lib/require-instrumentation-client.js.map` |
+| `node_modules/next/dist/esm/lib/require-instrumentation-client.js.map` |
+| `node_modules/next/dist/server/require-hook.js.map` |
+| `node_modules/next/dist/esm/server/require-hook.js.map` |
+| `node_modules/next/dist/esm/build/next-config-ts/require-hook.js.map` |
+| `node_modules/next/dist/build/next-config-ts/require-hook.js.map` |
+| `node_modules/next/dist/server/dev/require-cache.js.map` |
+| `node_modules/next/dist/esm/server/dev/require-cache.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/request.js.map` |
+| `node_modules/next/dist/esm/server/web/spec-extension/request.js.map` |
+| `node_modules/next/dist/server/async-storage/request-store.js.map` |
+| `node_modules/next/dist/esm/server/async-storage/request-store.js.map` |
+| `node_modules/next/dist/server/request-meta.js.map` |
+| `node_modules/next/dist/esm/server/request-meta.js.map` |
+| `node_modules/next/dist/esm/client/request-idle-callback.js.map` |
+| `node_modules/next/dist/client/request-idle-callback.js.map` |
+| `node_modules/next/dist/server/web/spec-extension/adapters/request-cookies.js.map` |
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The package-lock.json file should be committed with the frontend scaffold.
+
+Created the frontend/ directory with all UI-A items. The build passes and the dev server runs on port 3000. Updated plan.md. Next step is UI-B. The dev server remains active in the background.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Phase **UI-A** is in place under `frontend/`. Summary:
+
+### Created (`frontend/`)
+
+| Item | Purpose |
+|------|---------|
+| `package.json` | Node `>=24 <25`; scripts `dev` / `build` / `start`; Next 15, React 19, Vite 6 (dev) |
+| `.nvmrc` | `24` |
+| `.env.example` | `NEXT_PUBLIC_API_BASE_URL` and `VITE_API_BASE_URL` (names only) |
+| `next.config.js` | Rewrites `/api/*` → `http://localhost:8080` |
+| `vite.config.js` | Port **5173**, `/api` proxy to **8080** |
+| `app/layout.js`, `app/page.js`, `app/globals.css` | Minimal App Router shell (full routes in **UI-C**) |
+| `README.md` | Run backend on 8080, then `npm install` && `npm run dev` |
+
+### Verified
+
+- `npm run build` — success (Next **15.5.27**)
+- `npm run dev` — **http://localhost:3000** (dev server may still be running in your terminal)
+- No `.env` committed (root `.gitignore` already excludes it)
+
+### Plan
+
+`plan.md` UI-A checkboxes, sign-off row, and Part II status are updated.
+
+### Next
+
+**UI-B** — `src/api/client.js`, envelope/`ApiError`, and ticket/ask helpers.
+
+To work locally:
+
+```bash
+cd frontend && npm install && npm run dev
+```
+
+Commit `frontend/` including `package-lock.json` when you’re ready (not committed here).
+
+---
+
+_**User**_
+
+commit all and push and start with UI-B
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Committing and pushing all changes. Starting with UI-B.
+
+UI-B will be implemented without committing it separately. Reading the UI-B section of the plan and the API contract for JSDoc types.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Committing and pushing current work, then implementing UI-B per the plan.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -3 --oneline
+```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .specstory/history/2026-10-04_16-42-19Z-phase-ui-a-implementation.md
+	new file:   frontend/.env.example
+	new file:   frontend/.nvmrc
+	new file:   frontend/README.md
+	new file:   frontend/app/globals.css
+	new file:   frontend/app/layout.js
+	new file:   frontend/app/page.js
+	new file:   frontend/next.config.js
+	new file:   frontend/package-lock.json
+	new file:   frontend/package.json
+	new file:   frontend/vite.config.js
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   plan.md
+
+diff --git a/plan.md b/plan.md
+index f4b48d8..1e212c5 100644
+--- a/plan.md
++++ b/plan.md
+@@ -4,7 +4,7 @@
+ > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
+ > **Code roots:** `backend/` (Spring Boot) and `frontend/` (Next.js + Vite + JavaScript). **Do not** put Java at repo root or under a second backend app.  
+ > **Backend status:** Phases **A–F** and stack upgrade **G** complete. Live Ollama/Spring AI optional for local ask demos.  
+-> **Frontend status:** **Not started** — implement **Part II** (§20) top to bottom after backend is runnable on **8080**.  
++> **Frontend status:** **UI-A complete** — continue **Part II** (§20) **UI-B** onward after backend on **8080**.  
+ > **Date:** 2026-10-04 (frontend plan added).
+ 
+ ---
+@@ -816,7 +816,7 @@ After each phase:
+ - [ ] No agents / tools from ask
+ - [ ] No confidence field
+ - [x] No frontend work in **Part I** (backend phases only)
+-- [ ] Part II **§20** — `frontend/` not started until first **UI-A** slice
++- [x] Part II **§20** — `frontend/` scaffold (**UI-A**); product screens **UI-B** onward
+ 
+ ---
+ 
+@@ -871,7 +871,7 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify query &#34;frontend API client envelope ApiError&#34;</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify query "frontend API client envelope ApiError"
+```
+
+```
+Graph: graphify-out/graph.json (2273 nodes) | Traversal: BFS depth=2 | Start: ['API client', 'frontend.md', 'frontend/README.md', 'api-contract.md', '20.5 Phase UI-B — HTTP client and error model', '.getUnknownReturns404Envelope()', 'Frontend guidelines'] | 242 nodes found
+
+[!] TRUNCATED: showing 56 of 242 nodes (~2000-token budget). The answer may be among the 186 cut nodes — raise the token budget (CLI: --budget) or narrow the query (e.g. context_filter=['call'], or get_node for a specific symbol).
+
+NODE API client [src=commands/review-frontend.md loc=L40 community=4. Code quality and stack conventions]
+NODE frontend.md [src=rules/frontend.md loc=L1 community=Prompt History Index]
+NODE frontend/README.md [src=frontend/README.md loc=L1 community=Ticket Management — frontend]
+NODE api-contract.md [src=spec/api-contract.md loc=L1 community=Prompt History Index]
+NODE 20.5 Phase UI-B — HTTP client and error model [src=plan.md loc=L988 community=AskResponseData]
+NODE .getUnknownReturns404Envelope() [src=backend/src/test/java/com/ticketmanagement/controller/TicketControllerSliceTest.java loc=L168 community=org.junit.jupiter.api.Test]
+NODE Frontend guidelines [src=rules/frontend.md loc=L1 community=Frontend guidelines]
+NODE .status() [src=backend/src/test/java/com/ticketmanagement/rag/TicketIngestionHookIT.java loc=L169 community=.status]
+NODE org.junit.jupiter.api.Test [src= loc= community=org.junit.jupiter.api.Test]
+NODE TicketControllerSliceTest [src=backend/src/test/java/com/ticketmanagement/controller/TicketControllerSliceTest.java loc=L51 community=org.junit.jupiter.api.Test]
+NODE Requirements Spec [src=spec/requirements.md loc=None community=Prompt History Index]
+NODE .error() [src=backend/src/main/java/com/ticketmanagement/advice/RestExceptionHandler.java loc=L173 community=.error]
+NODE ai-error.md [src=docs/ai-error.md loc=L1 community=Prompt History Index]
+NODE Documentation Skill [src=skills/documentation/SKILL.md loc=None community=Prompt History Index]
+NODE .
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "TicketSummary|TicketDetail|PageResponse|ErrorResponse"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "TicketSummary|TicketDetail|PageResponse|ErrorResponse",
+  "topFiles": [
+    {
+      "matchCount": 8,
+      "uri": "spec/api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 8
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "AskResponse|question"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "AskResponse|question",
+  "topFiles": [
+    {
+      "matchCount": 30,
+      "uri": "spec/rag-api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 36
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Planning to stage and commit all changes, push the repository, and then begin work on UI-B.
+
+UI-A will be committed and pushed first. UI-B will be implemented next, followed by a second commit and push once UI-B is complete.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add plan.md &amp;&amp; git commit --trailer &#34;Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt;&#34; -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+feat(frontend): add UI-A Next.js scaffold under frontend/
+
+Establishes Node 24 tooling, env examples, API rewrites, and Vite proxy per plan §20.4.
+EOF
+)&#34; &amp;&amp; git push -u origin HEAD</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add plan.md && git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "$(cat <<'EOF'
+feat(frontend): add UI-A Next.js scaffold under frontend/
+
+Establishes Node 24 tooling, env examples, API rewrites, and Vite proxy per plan §20.4.
+EOF
+)" && git push -u origin HEAD
+```
+
+```
+[main 2729d83] feat(frontend): add UI-A Next.js scaffold under frontend/
+ 12 files changed, 2349 insertions(+), 8 deletions(-)
+ create mode 100644 .specstory/history/2026-10-04_16-42-19Z-phase-ui-a-implementation.md
+ create mode 100644 frontend/.env.example
+ create mode 100644 frontend/.nvmrc
+ create mode 100644 frontend/README.md
+ create mode 100644 frontend/app/globals.css
+ create mode 100644 frontend/app/layout.js
+ create mode 100644 frontend/app/page.js
+ create mode 100644 frontend/next.config.js
+ create mode 100644 frontend/package-lock.json
+ create mode 100644 frontend/package.json
+ create mode 100644 frontend/vite.config.js
+To github-personal:vishnuaggarwal23/ticket-management.git
+   55e00f0..2729d83  HEAD -> main
+branch 'main' set up to track 'origin/main'.
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Implementing UI-B. Starting with `src/api/client.js` containing `getBaseUrl`, `requestJson`, `ApiError`, `unwrapData`, and list helpers.
+
+Planning `src/api/tickets.js`, `src/api/ask.js`, and shared types. `getBaseUrl` will check `import.meta.env.VITE_API_BASE_URL` for Vite and `process.env.NEXT_PUBLIC_API_BASE_URL` for Next.js, returning empty when using relative paths.
+
+`ApiError` will capture status, code, details, and path. Relative paths work when the base URL is empty.
+
+`unwrapData` validates the API response envelope and returns the inner `data` field. `unwrapList` extracts the payload and checks for required `meta` metadata.
+
+Empty lists return 200 with an empty array. This is valid and should not throw.
+
+`tickets.js` will call `requestJson`. `ask.js` will expose `askQuestion`.
+
+A `frontend/jsconfig.json` will map `@/*` to `./src/*` for cleaner imports.
+
+The `jsconfig.json` will be added now rather than waiting for UI-C. List responses will carry pagination metadata: page, size, totalElements, totalPages, and sort.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "meta"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "meta",
+  "topFiles": [
+    {
+      "matchCount": 7,
+      "uri": "spec/api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 7
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Checking the meta shape around line 136.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Implementing files now. The createTicket endpoint returns 201 with data.
+
+Writing a `requestJson` helper to handle HTTP requests and parse JSON responses.
+
+Adding error handling to `requestJson`. Invalid JSON throws an error. Failed responses throw `ApiError` with status, message, and optional details.
+
+Adding a `buildQuery` helper to construct query strings while omitting undefined, null, or empty values. The listTickets endpoint will skip the status parameter when the UI selects "All". createTicket will return TicketDetail via unwrapData, and addComment will return Comment. ApiError will be exported from client.js.
+
+JSDoc typedefs will live in `frontend/src/api/types.js` to keep `client.js` clean. The API module structure includes `client.js`, `tickets.js`, `ask.js`, and `frontend/jsconfig.json` for `@/` imports.
+
+Next.js will resolve `@` imports through `jsconfig.json` compiler options. The plan will be updated once UI-B is complete. UI-B will be committed and pushed after implementation. A safe check for `import.meta.env` will prevent warnings in server-side Next.js files.
+
+`getBaseUrl()` checks `import.meta.env.VITE_A_BASE_URL` first, then falls back to `process.env.NEXT_PUBLIC_API_BASE_URL`, and returns an empty string if neither is set.
+
+.env.example uses a full backend URL for direct fetches. An empty variable triggers relative paths with rewrites. listTickets returns `{ data, meta }` with an array even when empty. unwrapListResponse validates that meta exists. ask.js implements `/api/v1/ai/ask`. plan.md will be updated for UI-B.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Implementing the UI-B API client module.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/jsconfig.json</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/api/types.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/api/client.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/api/tickets.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/api/ask.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Running npm run build to verify the Next.js app still compiles correctly with the new src/api files.
+
+Updating plan.md for UI-B. Committing and pushing the changes. Noting a potential Next.js server component issue with import.meta in client.js, though UI-B is still valid without raw fetch in the app. UI-C may encounter problems when importing client.js into server components.
+
+Confirmed getBaseUrl safely falls back to process.env on the server when import.meta is unavailable.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend &amp;&amp; npm run build</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend && npm run build
+```
+
+```
+
+> ticket-management-frontend@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.27
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 1712ms
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/4) ...
+   Generating static pages (1/4) 
+   Generating static pages (2/4) 
+   Generating static pages (3/4) 
+ ✓ Generating static pages (4/4)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      123 B         103 kB
+└ ○ /_not-found                            995 B         104 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/255-ce8c7c75002f810b.js       46.5 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)           1.9 kB
+
+
+○  (Static)  prerendered as static content
+
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Updating graphify, committing UI-B, and pushing.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify update . &amp;&amp; git add frontend/src frontend/jsconfig.json plan.md &amp;&amp; git status &amp;&amp; git commit --trailer &#34;Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt;&#34; -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+feat(frontend): add UI-B HTTP client and API modules
+
+Centralize envelope parsing, ApiError, and ticket/ask calls under src/api per plan §20.5.
+EOF
+)&#34; &amp;&amp; git push origin HEAD</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify update . && git add frontend/src frontend/jsconfig.json plan.md && git status && git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "$(cat <<'EOF'
+feat(frontend): add UI-B HTTP client and API modules
+
+Centralize envelope parsing, ApiError, and ticket/ask calls under src/api per plan §20.5.
+EOF
+)" && git push origin HEAD
+```
+
+```
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 17 file(s) not classified (no supported extension or shebang), skipped: .env.example, .gitignore, .nvmrc, ai-project-instructions.mdc, api-standards.mdc, documentation.mdc (+11 more)
+  AST extraction: 17/17 uncached files (100%)
+[graphify watch] community set changed since labeling (169 saved labels, 170 communities now; renamed 60 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.
+[graphify] backed up curated graph (5 files) -> 2026-10-04/
+[graphify watch] Rebuilt: 2298 nodes, 4764 edges, 170 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   frontend/jsconfig.json
+	new file:   frontend/src/api/ask.js
+	new file:   frontend/src/api/client.js
+	new file:   frontend/src/api/tickets.js
+	new file:   frontend/src/api/types.js
+	modified:   plan.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-04_16-42-19Z-phase-ui-a-implementation.md
+
+[main 0c6b134] feat(frontend): add UI-B HTTP client and API modules
+ 6 files changed, 401 insertions(+), 6 deletions(-)
+ create mode 100644 frontend/jsconfig.json
+ create mode 100644 frontend/src/api/ask.js
+ create mode 100644 frontend/src/api/client.js
+ create mode 100644 frontend/src/api/tickets.js
+ create mode 100644 frontend/src/api/types.js
+To github-personal:vishnuaggarwal23/ticket-management.git
+   2729d83..0c6b134  HEAD -> main
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+All changes committed and pushed. Ready to begin UI-B.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+### Git
+
+1. **`2729d83`** — `feat(frontend): add UI-A Next.js scaffold under frontend/` (includes `plan.md` UI-A updates) → pushed to `origin/main`
+2. **`0c6b134`** — `feat(frontend): add UI-B HTTP client and API modules` → pushed to `origin/main`
+
+### UI-B (`frontend/src/api/`)
+
+| File | Role |
+|------|------|
+| `client.js` | `getBaseUrl()` (`NEXT_PUBLIC_*` / `VITE_*`), `requestJson`, `ApiError`, `unwrapData`, `unwrapListEnvelope` |
+| `types.js` | JSDoc typedefs per api-contract §3 + ask `AskResponseData` |
+| `tickets.js` | `listTickets`, `getTicket`, `createTicket`, `patchTicket`, `addComment` |
+| `ask.js` | `askQuestion` → `POST /api/v1/ai/ask` |
+| `jsconfig.json` | `@/*` → `./src/*` for later routes |
+
+Empty lists return `{ data: [], meta }` without throwing. `app/` still has no direct `fetch`.
+
+**Manual check** (backend on 8080):
+
+```javascript
+import { listTickets } from '@/api/tickets';
+const { data, meta } = await listTickets({ page: 0, size: 20 });
+```
+
+Use an empty `NEXT_PUBLIC_API_BASE_URL` with Next rewrites, or set it to `http://localhost:8080` for direct CORS calls.
+
+### Next
+
+**UI-C** — shell, nav (Tickets / Ask), route stubs, redirect `/` → `/tickets`. Say when to implement it.
+
+---
+
+_**User**_
+
+add all, commit all, push all 
+implement UI-C
+
+---
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
 </details></tool-use>
 
 _**Agent (composer-2.5)**_
@@ -55,27 +3195,4 @@ _**Agent (composer-2.5)**_
 <summary>Tool use: **ripgrep_raw_search**</summary>
 Status: **loading**
 
-</details></tool-use>
-
-_**Agent (composer-2.5)**_
-
-<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
-
-</details></tool-use>
-
-_**Agent (composer-2.5)**_
-
-<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
-
-</details></tool-use>
-
-_**Agent (composer-2.5)**_
-
-<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
-<summary>Tool use: **run_terminal_command_v2** • Run command: node -v 2&gt;/dev/null; which node</summary>
-```bash
-node -v 2>/dev/null; which node
-```
 </details></tool-use>
