@@ -334,13 +334,30 @@ class TicketControllerSliceTest {
         verify(tickets, never()).updateFields(any(), any());
     }
 
+    @Test
+    void legalTransitionReturns200Envelope() throws Exception {
+        when(tickets.updateFields(eq("TKT-1001"), any()))
+                .thenReturn(detail("TKT-1001", TicketPriority.MEDIUM, TicketStatus.IN_PROGRESS));
+
+        mockMvc.perform(patch("/api/v1/tickets/TKT-1001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"IN_PROGRESS\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("IN_PROGRESS"))
+                .andExpect(jsonPath("$.error").doesNotExist());
+    }
+
     private static TicketDetailResponse detail(String id, TicketPriority priority) {
+        return detail(id, priority, TicketStatus.OPEN);
+    }
+
+    private static TicketDetailResponse detail(String id, TicketPriority priority, TicketStatus status) {
         Instant now = Instant.parse("2026-10-04T00:00:00Z");
         return new TicketDetailResponse(
                 id,
                 "Help",
                 "",
-                TicketStatus.OPEN,
+                status,
                 priority,
                 null,
                 null,

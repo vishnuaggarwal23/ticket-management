@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -233,6 +234,64 @@ class TicketApiIT extends AbstractPostgresIntegrationTest {
                         .content("{\"title\":\"urgent-one\",\"priority\":\"URGENT\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.priority").value("CRITICAL"));
+    }
+
+    @Test
+    void lifecycleOpenThroughClosedThenReopenIs409() throws Exception {
+        String id = createOpen("sm-lifecycle-flow-a");
+        mockMvc.perform(get("/api/v1/tickets/" + id))
+                .andExpect(jsonPath("$.data.status").value("OPEN"));
+        patchStatus(id, TicketStatus.IN_PROGRESS);
+        patchStatus(id, TicketStatus.RESOLVED);
+        patchStatus(id, TicketStatus.CLOSED);
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"OPEN\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error.code").value("ILLEGAL_TRANSITION"));
+        assertThat(dbStatus(id)).isEqualTo("CLOSED");
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = TicketStatus.class, names = {"CLOSED", "CANCELLED"})
+    void fieldPatchAndCommentAllowedOnTerminalStatus(TicketStatus terminal) throws Exception {
+        String id = ticketIn(terminal);
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"terminal-edit\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.title").value("terminal-edit"))
+                .andExpect(jsonPath("$.data.status").value(terminal.name()));
+
+        mockMvc.perform(post("/api/v1/tickets/" + id + "/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"body\":\"note on terminal\"}"))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/v1/tickets/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value(terminal.name()))
+                .andExpect(jsonPath("$.data.comments[0].body").value("note on terminal"));
+        assertThat(dbStatus(id)).isEqualTo(terminal.name());
+    }
+
+    @Test
+    void listFilterMatchesStatusAfterTransition() throws Exception {
+        String id = createOpen("sm-filter-in-progress");
+        patchStatus(id, TicketStatus.IN_PROGRESS);
+
+        mockMvc.perform(get("/api/v1/tickets")
+                        .param("q", "sm-filter-in-progress")
+                        .param("status", "IN_PROGRESS"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].id").value(id))
+                .andExpect(jsonPath("$.meta.totalElements").value(1));
+
+        mockMvc.perform(get("/api/v1/tickets")
+                        .param("q", "sm-filter-in-progress")
+                        .param("status", "OPEN"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(0)));
     }
 
     @ParameterizedTest

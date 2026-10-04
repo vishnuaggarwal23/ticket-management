@@ -18,6 +18,8 @@ import com.ticketmanagement.persistence.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -153,19 +155,37 @@ class TicketServiceTest {
     }
 
     @Test
-    void legalT1PersistsNewStatus() {
+    void createDoesNotInvokeMachine() {
+        when(tickets.nextTicketNumber()).thenReturn(1001L);
+        when(tickets.save(any(TicketEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        service.create(new CreateTicketRequest("Need help", null, null, null, null));
+
+        verify(statusMachine, never()).assertTransitionAllowed(any(), any());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "OPEN, IN_PROGRESS",
+            "IN_PROGRESS, RESOLVED",
+            "RESOLVED, CLOSED",
+            "OPEN, CANCELLED",
+            "IN_PROGRESS, CANCELLED"
+    })
+    void legalTransitionPersistsNewStatus(TicketStatus from, TicketStatus to) {
         TicketEntity entity = existing("TKT-1002", "Old");
+        entity.setStatus(from);
         when(tickets.findWithCommentsById("TKT-1002")).thenReturn(Optional.of(entity));
         when(tickets.save(entity)).thenReturn(entity);
 
         TicketDetailResponse updated = service.updateFields(
                 "TKT-1002",
-                new UpdateTicketRequest(null, null, null, null, null, null, TicketStatus.IN_PROGRESS));
+                new UpdateTicketRequest(null, null, null, null, null, null, to));
 
-        assertThat(updated.status()).isEqualTo(TicketStatus.IN_PROGRESS);
-        assertThat(entity.getStatus()).isEqualTo(TicketStatus.IN_PROGRESS);
+        assertThat(updated.status()).isEqualTo(to);
+        assertThat(entity.getStatus()).isEqualTo(to);
         verify(tickets).save(entity);
-        verify(statusMachine).assertTransitionAllowed(TicketStatus.OPEN, TicketStatus.IN_PROGRESS);
+        verify(statusMachine).assertTransitionAllowed(from, to);
     }
 
     @Test
