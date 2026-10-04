@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-flow.md`](../spec/ui-flow.md) (draft; confirm **DEC-06** / **DEC-15** before calling agreed). Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E and demo **§8.7**; layout context [`spec/architecture.md`](../spec/architecture.md) §12. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/architecture.md`](../spec/architecture.md) **§12.3–§12.6** (PDF `ui-flow` themes; confirm **DEC-06** / **DEC-15** before calling agreed). Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
 
 **This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
 
@@ -12,8 +12,8 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows:
 | [`spec/architecture.md`](../spec/architecture.md) | UI functional areas and API usage (§12); client communication (§10) |
 | `rules/api-standards.md` | `/api/v1`, envelopes, PATCH, list params, ask paths |
 | [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client types |
-| [`spec/ui-flow.md`](../spec/ui-flow.md) | Screens and navigation (draft) |
-| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Citation / no-match fields inside ask `data` (draft; **DEC-11**) |
+| [`spec/architecture.md`](../spec/architecture.md) §12.3–§12.6 | Screens, flows A–E, transition + ask UX |
+| [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 | Citation / no-match fields inside ask `data` (**DEC-11**) |
 
 ## Assessment vs project conventions vs open decisions
 
@@ -43,11 +43,11 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 - Optional **category** enum; optional **resolutionNotes** on detail/edit (DEC-03, DEC-05)
 - Create: **title** required; priority/assignee/category optional; no status on create form (DEC-07, DEC-13)
 
-**Open — resolve via [`spec/ui-flow.md`](../spec/ui-flow.md) / contracts before inventing UI layout (do not assume):**
+**Open — resolve via [`spec/architecture.md`](../spec/architecture.md) §12 / contracts before inventing UI layout (do not assume):**
 
 - Screen layout, navigation, how a transition is chosen, how ask is laid out
 - CSS framework, component library, router, client global store
-- Exact ask `data` field names beyond interim `answer` / `citedTicketIds` ([`spec/api-contract.md`](../spec/api-contract.md) §6) until [`spec/rag-api-contract.md`](../spec/rag-api-contract.md)
+- Exact ask `data` field names beyond §3.5 / §6.2–§6.5 in [`spec/api-contract.md`](../spec/api-contract.md) (**DEC-11** no-match wording)
 
 ## Stack
 
@@ -114,10 +114,10 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 - Empty list: **200** + empty `data` — show an empty state, not a fake error.
 - 400 validation, 404 not found, 409 illegal transition: show `error.message` (and `details` when present). Backend is source of truth for illegal status.
 - UI may disable obvious illegal transitions as **guidance only**.
-- Ask: POST JSON `{ "question" }` to `/api/v1/ai/ask`. Loading + result. Citations = ticket ids from `data` (field names per `rag-api-contract.md`). No-match: show API text honestly — e.g. “No relevant tickets found” — not a dressed-up model essay.
+- Ask: POST JSON `{ "question" }` to `/api/v1/ai/ask`. Loading + result. Citations = ticket ids from `data` (per [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5). No-match: show API text honestly — e.g. “No relevant tickets found” — not a dressed-up model essay.
 - Do not hardcode machine hosts. Do not commit secrets.
 
-## Capabilities the UI must support (when `ui-flow.md` agrees how)
+## Capabilities the UI must support (when architecture §12 agrees how)
 
 | Capability | Notes |
 |------------|--------|
@@ -151,7 +151,7 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 
 ## Spec-driven implementation
 
-- Implement behaviour from draft [`spec/ui-flow.md`](../spec/ui-flow.md) plus API/RAG contracts. For screens or flows not in that spec, **stop and confirm** rather than inventing.
+- Implement behaviour from [`spec/architecture.md`](../spec/architecture.md) §12.3–§12.6 plus API/RAG contracts. For screens or flows not covered there, **stop and confirm** rather than inventing.
 - Do not add auth screens unless a spec agrees.
 
 ## Do not
@@ -174,4 +174,4 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Ticket id, category, resolutionNotes, create requiredness from agreed [`spec/data-model.md`](../spec/data-model.md). |
 | 2026-10-04 | API client types: draft [`spec/api-contract.md`](../spec/api-contract.md). |
-| 2026-10-04 | Interim UI flows: requirements §4.1 / §8.7 + architecture §12 when `ui-flow.md` missing. |
+| 2026-10-04 | UI flows: requirements §4.1 / §8.7 + architecture §12.3–§12.6 (consolidated PDF `ui-flow` themes). |

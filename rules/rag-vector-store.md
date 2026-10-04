@@ -12,7 +12,7 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
 | `commands/review-rag-output.md` | Manual grounding review of ask answers |
 | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking strategy, ingest triggers, property keys; **proposed** numeric defaults §9.3 (**DEC-09** model/dimension still open) |
-| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Field names inside ask `data` (draft; **DEC-11** no-match wording) |
+| [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 | Ask `data`, grounding, no-match (**DEC-11**) |
 | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | Probabilistic retrieval quality (draft) |
 | [`spec/requirements.md`](../spec/requirements.md) | §2.5 deterministic vs probabilistic; FEAT-22; §4.3 eval corpus; **DEC-01**, **DEC-09**, **DEC-11** §10 |
 
@@ -42,7 +42,7 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 
 **Agreed relational / metadata shape — [`spec/data-model.md`](../spec/data-model.md):** tables `ticket`, `ticket_comment`, `ticket_vector_chunk`; resolution text column `resolution_notes`; ingest includes description, comments, resolution notes; chunk row metadata keys §11.1; re-ingest deletes/replaces rows per ticket (§8.4).
 
-**Still open — do not invent in Java without spec agreement.** Chunking **algorithm** and ingest mechanics → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (draft). Ask `data` / no-match wording → [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (draft; **DEC-11**). Retrieval **quality** scoring → [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft). Remaining open items:
+**Still open — do not invent in Java without spec agreement.** Chunking **algorithm** and ingest mechanics → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (draft). Ask `data` / no-match wording → [`spec/api-contract.md`](../spec/api-contract.md) §6.3 (**DEC-11**). Retrieval **quality** scoring → [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft). Remaining open items:
 
 - Embedding **model** (name/id), vector **dimension**, generation **model**
 - Whether ingest and query always share one embedding model (they **must** stay compatible once a choice is agreed)
@@ -149,7 +149,7 @@ Do **not** implement a chunking strategy, size, or overlap from this file alone 
 
 - Assessment path: `POST /api/ai/ask` with JSON `{"question":"..."}`.
 - Project convention: the same handler at `POST /api/v1/ai/ask`; success/error envelopes in `rules/api-standards.md`.
-- Fields **inside** `data` wait on [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (interim [`spec/api-contract.md`](../spec/api-contract.md) §6).
+- Fields **inside** `data` per [`spec/api-contract.md`](../spec/api-contract.md) §3.5 / §6.2–§6.5.
 - Do not expose prompts, chunk dumps, model names, Ollama URLs, top-K, thresholds, or vector internals on the public API unless a spec explicitly makes them public (default: they are not).
 - Do not add agent, chat-session, tool, notification, or “AI creates a ticket” endpoints.
 
@@ -159,7 +159,7 @@ Do **not** implement a chunking strategy, size, or overlap from this file alone 
 - Citations must be ticket IDs that appear in the **retrieval result** — not ids the model guessed.
 - Keep evidence (retrieved chunks / ticket ids) distinct from generated wording. Prompt instructions help but **do not guarantee** grounding. Check retrieval and claims against context **independently**.
 - Use `commands/review-rag-output.md` (or `/review-rag-output`) before accepting assistant output — **Grounding** and **Retrieval quality** sections.
-- Retrieval quality eval procedure: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) + retrieval section of `commands/review-rag-output.md`.
+- Retrieval quality eval procedure: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) **§3–§9** (corpus §5, failures **F-01…F-10** §8) + **Retrieval quality** in `commands/review-rag-output.md`.
 - Do **not** set numerical quality thresholds, formulas, or golden-answer corpora here.
 
 ## Testing
@@ -193,3 +193,5 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Metadata/table/index pointers to agreed [`spec/data-model.md`](../spec/data-model.md) §8, §11, §14.5. |
 | 2026-10-04 | Interim: architecture §16 justification; requirements §10 for open RAG **DEC** when child specs absent. |
+| 2026-10-04 | Eval pointers: [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §3–§9. |
+| 2026-10-04 | Ask `data` → [`api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (not separate `rag-api-contract` file). |

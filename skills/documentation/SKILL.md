@@ -14,7 +14,7 @@ Use this skill whenever creating or revising specs, architecture notes, API docs
 
 ## PDF hygiene checklist (do not skip)
 
-All items from `docs/Assessments.pdf` p.1–2 must exist in-repo before implementation sign-off — see [`requirements.md`](../../spec/requirements.md) **§6.8** (concrete paths to `rules/*` and `commands/*`). Spec list: ten files under `spec/` per PDF p.2.
+All items from `docs/Assessments.docx` p.1–2 must exist in-repo before implementation sign-off — see [`requirements.md`](../../spec/requirements.md) **§6.8** (concrete paths to `rules/*` and `commands/*`). Spec list: ten names under `spec/` per assignment p.2 (eight files on disk — see requirements child-spec table).
 
 ## Before writing
 
@@ -37,22 +37,20 @@ Requirement → Specification → review-spec → Plan/Tasks → Implementation 
 | UI code | [`commands/review-frontend.md`](../../commands/review-frontend.md) + `rules/frontend.md` |
 | Ask grounding | [`commands/review-rag-output.md`](../../commands/review-rag-output.md) + `rules/rag-vector-store.md` |
 
-## Spec set (all ten PDF-listed files — 2026-10-04)
+## Spec set (eight files on disk; PDF lists ten names — 2026-10-04)
 
-Implement from these; **draft** unless header says **agreed**. PDF themes: [`requirements.md`](../../spec/requirements.md) **§0.4**; summary [`assessment-brief.md`](../../docs/assessment-brief.md) **§13**.
+Implement from these; **draft** unless header says **agreed**. PDF themes: [`requirements.md`](../../spec/requirements.md) **§0.4**; summary [`assessment-brief.md`](../../docs/assessment-brief.md) **§13**. PDF-only names `rag-api-contract.md` / `ui-flow.md` → [`api-contract.md`](../../spec/api-contract.md) **§6.2–§6.5** and [`architecture.md`](../../spec/architecture.md) **§12.3–§12.6**.
 
 | File | Status | Primary content |
 |------|--------|-----------------|
 | [`requirements.md`](../../spec/requirements.md) | draft hub | FEAT-*, AC-CORE-*, flows A–E, OQ/DEC §10, §0.4 coverage |
-| [`architecture.md`](../../spec/architecture.md) | draft | Modules, APIs, RAG pipeline §15–16, chunking **justification** |
+| [`architecture.md`](../../spec/architecture.md) | draft | Modules, APIs, RAG §15–16; **UI** §12.3–§12.6 (PDF `ui-flow`) |
 | [`data-model.md`](../../spec/data-model.md) | **agreed** | Entities, Liquibase §14, DTOs §10, AC-DM-* |
 | [`state-machine.md`](../../spec/state-machine.md) | draft | T1–T5, X1–X3, §5.6 illegal matrix, AC-SM-* |
-| [`api-contract.md`](../../spec/api-contract.md) | draft | HTTP §2.11 catalog, payloads §3–§6, AC-API-* |
+| [`api-contract.md`](../../spec/api-contract.md) | draft | HTTP §2.11; payloads §3–§6; ask **§6.2–§6.5** (**AC-RAG-API-***) |
 | [`rag-ingestion.md`](../../spec/rag-ingestion.md) | draft | Hybrid chunking §6–§9, re-ingest §10, AC-RAG-ING-* |
-| [`rag-api-contract.md`](../../spec/rag-api-contract.md) | draft | Ask `data`, citations, no-match (**DEC-11** open) |
 | [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) | draft | Retrieval quality eval (FEAT-22), AC-EVAL-* |
-| [`ui-flow.md`](../../spec/ui-flow.md) | draft | Screens, flows A–E (**DEC-06** interim) |
-| [`test-strategy.md`](../../spec/test-strategy.md) | draft | AC-CORE / AC-SM / AC-API / AC-DM → test layers |
+| [`test-strategy.md`](../../spec/test-strategy.md) | draft | **§5** SM determinism; **§6** ask bands; AC layer maps |
 
 ## Engineering rules (`rules/` — edit these; `.cursor/rules/*.mdc` are pointers only)
 
@@ -75,6 +73,7 @@ Implement from these; **draft** unless header says **agreed**. PDF themes: [`req
 | [`review-frontend.md`](../../commands/review-frontend.md) | UI diffs |
 | [`review-rag-output.md`](../../commands/review-rag-output.md) | Manual ask answer / retrieval review |
 | [`update-prompt-history.md`](../../commands/update-prompt-history.md) | Rebuild `docs/prompt-history.md` from `.specstory/history/` |
+| [`improve-from-assessment-pdf.md`](../../commands/improve-from-assessment-pdf.md) | Assignment sync from `docs/Assessments.docx`; improve **existing** artefacts only (not `prompt-history.md`; **no new files**) |
 
 ## Spec template (minimum sections)
 
@@ -97,9 +96,9 @@ Implement from these; **draft** unless header says **agreed**. PDF themes: [`req
 | **AC-SM-*** | [`state-machine.md`](../../spec/state-machine.md) §9 |
 | **AC-API-*** | [`api-contract.md`](../../spec/api-contract.md) §9 |
 | **AC-RAG-ING-*** | [`rag-ingestion.md`](../../spec/rag-ingestion.md) §14 |
-| **AC-RAG-API-*** | [`rag-api-contract.md`](../../spec/rag-api-contract.md) |
+| **AC-RAG-API-*** | [`api-contract.md`](../../spec/api-contract.md) §6.2–§6.5 |
 | **AC-EVAL-*** | [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) |
-| **AC-UI-*** | [`ui-flow.md`](../../spec/ui-flow.md) |
+| **AC-UI-*** | [`architecture.md`](../../spec/architecture.md) §12.3–§12.6 |
 | **AC-TS-*** | [`test-strategy.md`](../../spec/test-strategy.md) §12 |
 
 Map backend tests through [`test-strategy.md`](../../spec/test-strategy.md) first; details in `rules/testing.md`.
@@ -116,7 +115,8 @@ Map backend tests through [`test-strategy.md`](../../spec/test-strategy.md) firs
 - Chunking **justification** (§16); **mechanics and proposed numbers** → [`rag-ingestion.md`](../../spec/rag-ingestion.md)
 - Embedding model tradeoffs (§16.3); model id / dimension **Open** → **DEC-09**
 - Configurable top-K and threshold (property keys in `rag-ingestion.md`; values open until agreed)
-- Grounding and no-match ([`rag-api-contract.md`](../../spec/rag-api-contract.md); wording **DEC-11**)
+- Grounding and no-match ([`api-contract.md`](../../spec/api-contract.md) §6.2–§6.5; wording **DEC-11**)
+- Retrieval quality eval ([`evaluation-strategy.md`](../../spec/evaluation-strategy.md) §3–§9; **AC-EVAL-***; test bands — [`test-strategy.md`](../../spec/test-strategy.md) **§5–§6**)
 
 **Chunking default (draft):** hybrid paragraph/comment-boundary first, fixed-size overflow for long blocks — see `rag-ingestion.md` §9. Confirm **proposed** §9.3 numbers with the user before marking agreed.
 
@@ -138,3 +138,4 @@ When a meaningful AI mistake is caught (bad code or ungrounded answer), add an e
 | 2026-10-04 | All ten PDF `spec/` files; AC-RAG-API / AC-EVAL / AC-UI families; traceability §0.4 / assessment-brief §13. |
 | 2026-10-04 | PDF hygiene checklist → requirements §6.8. |
 | 2026-10-04 | `update-prompt-history` command in commands index. |
+| 2026-10-04 | RAG eval pointer to [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) §3–§9 in RAG docs section. |

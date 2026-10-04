@@ -2,7 +2,7 @@
 
 > **Status:** draft — design for implementation; field-level contracts live in sibling specs.  
 > **Requirements hub:** [`requirements.md`](requirements.md) (PDF-derived acceptance and FEAT catalogue).  
-> **Assessment source:** `docs/Assessments.pdf` (via [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
+> **Assessment source:** `docs/Assessments.docx` (via [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Audience:** implementers, reviewers, assessors.
 
 **Label legend** (same as `requirements.md`)
@@ -14,7 +14,7 @@
 | **Open** | Underspecified; resolve in a child spec after confirmation. |
 | **Example** | Illustrative only (e.g. `TKT-1001`). |
 
-This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, and components. It **does not** replace [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`rag-api-contract.md`](rag-api-contract.md), [`ui-flow.md`](ui-flow.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
+This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, components, and **UI flow** (PDF `ui-flow` themes consolidated in **§12.3–§12.6** — no separate `ui-flow.md` file). It **does not** replace [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md) (includes ask `data` semantics §6.2–§6.5), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
 
 ---
 
@@ -492,7 +492,7 @@ sequenceDiagram
 | **Ticket REST** | CRUD, comments, search, filter, status via PATCH | Capabilities **PDF**; paths **Convention** `/api/v1/tickets` |
 | **Ask REST** | Natural-language Q&A | **`POST /api/ai/ask`** **PDF**; alias **`POST /api/v1/ai/ask`** **Convention** |
 
-Detailed paths, bodies, and field catalogs → [`api-contract.md`](api-contract.md), [`rag-api-contract.md`](rag-api-contract.md). Envelopes and status codes → `rules/api-standards.md`.
+Detailed paths, bodies, and field catalogs → [`api-contract.md`](api-contract.md) (ask semantics §6.2–§6.5). Envelopes and status codes → `rules/api-standards.md`.
 
 ### 11.2 Ticket API capability map
 
@@ -523,7 +523,7 @@ Detailed paths, bodies, and field catalogs → [`api-contract.md`](api-contract.
 - Invalid/missing question → **400** `VALIDATION_ERROR` (**Convention**).
 - **No** side effects (create ticket, notify) (**PDF**).
 
-Response field names inside `data` → **Open** (OQ-05, `rag-api-contract.md`).
+Response field names inside `data` → interim in [`api-contract.md`](api-contract.md) §3.5 / §6 (**DEC-11** no-match wording open).
 
 ### 11.4 Versioning
 
@@ -540,7 +540,7 @@ Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not 
 
 ## 12. Frontend architecture
 
-**Convention:** React + Vite + TypeScript (`rules/frontend.md`). Screens → [`ui-flow.md`](ui-flow.md).
+**Convention:** React + Vite + TypeScript (`rules/frontend.md`). **PDF** requires a web UI for ticket operations and ask; screen map, flows A–E, transition UX, and ask panel are specified in **§12.3–§12.6** (PDF `ui-flow` themes; eight-file `spec/` set — see [`requirements.md`](requirements.md) child-spec table).
 
 ### 12.1 UI functional areas
 
@@ -563,6 +563,45 @@ Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not 
 | **Error display** | Map API error envelope to user-visible messages |
 
 No secrets in the frontend bundle; LLM credentials stay server-side (**PDF** NFR-06).
+
+### 12.3 Screen map and flows A–E (**PDF** application + demo §8.7)
+
+Minimum surfaces to satisfy **AC-CORE-01…11** and demo script in [`requirements.md`](requirements.md) §8.7. Exact component names **Open**; behaviours are not.
+
+| Screen / surface | Primary APIs | Flows | AC themes |
+|------------------|--------------|-------|-----------|
+| **Ticket list** | `GET /api/v1/tickets` (`q`, `status`, pagination) | A1, B1–B2 | AC-CORE-02, 07, 08 |
+| **Create ticket** | `POST /api/v1/tickets` | A2 | AC-CORE-01, 10, 11 |
+| **Ticket detail** | `GET /api/v1/tickets/{id}` | A3–A7, C1 | AC-CORE-03, 04, 05, 06, 12, 13 |
+| **Comment composer** | `POST .../comments` | A4 | AC-CORE-06 |
+| **Status actions** | `PATCH` with `status` | A5, A7, C2 | AC-CORE-12, 13, 11 |
+| **Ask / assistant panel** | `POST /api/v1/ai/ask` (or PDF path) | B3–B7, E | AC-CORE-16…18 |
+
+**Navigation (logical):** List ↔ Detail; Detail → Ask panel (drawer, tab, or route — **Open**); Create from list.
+
+### 12.4 Status transition UX (**DEC-06** interim)
+
+- UI offers only **legal** target statuses for the **current** state (T1–T5 from [`state-machine.md`](state-machine.md) §5.1) — e.g. from `OPEN`: `IN_PROGRESS`, `CANCELLED`.
+- MUST NOT rely on UI alone: illegal choices still return **409** from API (Flow C).
+- On **409** `ILLEGAL_TRANSITION`, show `error.message` (and `details` if present) — **AC-CORE-11**, **AC-FEAT-11-04**.
+- **Example** illegal action: “Reopen” on `CLOSED` → `OPEN` (X1) must show readable rejection, not silent failure.
+
+### 12.5 Ask panel UX (**PDF**)
+
+| Element | Behaviour |
+|---------|-------------|
+| Question input | Single text field; submit calls ask API with `{ "question" }` |
+| Loading | In-flight indicator while waiting for **200** |
+| Grounded answer | Render `data.answer`; show `data.citedTicketIds` as links or chips to ticket detail |
+| No-match | Show `data.answer` (no-match phrase); empty citations; distinguish from HTTP errors |
+| HTTP **400** | Show validation message for blank question |
+| HTTP **409** on tickets | Not used for ask — transitions only |
+
+Citations satisfy **AC-CORE-17** in UI; grounding review still uses `commands/review-rag-output.md`.
+
+### 12.6 Process UI evidence (**PDF** p.1–2)
+
+Not product screens — demo evidence for **FEAT-23**: SpecStory / `.specstory/history/`, [`docs/prompt-history.md`](../docs/prompt-history.md), and `docs/ai-mistakes.md` when populated (**AC-CORE-23**).
 
 ---
 
@@ -717,13 +756,14 @@ Hook placement: ticket **service** after successful commit; exact mechanism → 
 ### 15.6 Generation
 
 - Spring AI **chat client** with system instructions: answer only from excerpts; cite ticket ids; admit insufficiency.
-- Map to response DTO per `rag-api-contract.md`.
+- Map to response DTO per [`api-contract.md`](api-contract.md) §3.5 / §6.
 - Review grounding with `commands/review-rag-output.md` (**PDF** process).
 
 ### 15.7 RAG testing and evaluation
 
-- **Deterministic:** contract tests for validation, no-match shape, cited ids exist in DB.
-- **Probabilistic:** `evaluation-strategy.md` + sample questions from PDF/requirements §4.3 — not single golden answer strings.
+- **Deterministic:** state machine §5; ask contract stubs §6.2 ([`test-strategy.md`](test-strategy.md)).
+- **Grounding (policy + review):** `commands/review-rag-output.md` steps 0–3 — AC-CORE-17, AC-CORE-18.
+- **Retrieval quality (probabilistic):** [`evaluation-strategy.md`](evaluation-strategy.md) — grounding vs retrieval §3; **Example** corpus and five **PDF** questions §5; procedure §6–§7; failure taxonomy **F-01…F-10** §8; **AC-EVAL-01…05** §10. Corpus aligned with [`requirements.md`](requirements.md) §4.3. Not single golden answer strings.
 
 ---
 
@@ -865,7 +905,7 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 | OQ-01 / DEC-04 | Ticket id format | [`data-model.md`](data-model.md) (agreed) |
 | OQ-02, OQ-03, OQ-10 / DEC-03, DEC-05, DEC-13 | Fields, category, resolution notes | [`data-model.md`](data-model.md) (agreed) |
 | OQ-04 / DEC-14 | REST details | `api-contract.md` |
-| OQ-05 / DEC-11 | Ask response schema | `rag-api-contract.md` |
+| OQ-05 / DEC-11 | Ask response schema | [`api-contract.md`](api-contract.md) §6.3 |
 | OQ-06 / DEC-12 | Authentication | This file if in scope |
 | OQ-07 / DEC-09 | Store + embedding product | `rag-ingestion.md` + this file |
 | OQ-08 / DEC-10 | DB roles in test vs prod | `test-strategy.md` |
@@ -886,8 +926,8 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 | [`api-contract.md`](api-contract.md) | Ticket/comment REST contracts |
 | [`state-machine.md`](state-machine.md) | Transitions, errors |
 | [`rag-ingestion.md`](rag-ingestion.md) | Chunk numbers, models, re-ingest execution |
-| [`rag-api-contract.md`](rag-api-contract.md) | Ask `data` fields, no-match |
-| [`ui-flow.md`](ui-flow.md) | Screens and journeys |
+| [`api-contract.md`](api-contract.md) §6.2–§6.5 | Ask `data`, grounding, no-match (**AC-RAG-API-***) |
+| §12.3–§12.6 (this file) | Screens, flows A–E, transition + ask UX, process evidence |
 | [`test-strategy.md`](test-strategy.md) | Layered tests |
 | [`evaluation-strategy.md`](evaluation-strategy.md) | Retrieval quality |
 | `rules/api-standards.md` | Envelopes, paths (**Convention**) |
@@ -921,3 +961,7 @@ Architecture supports verification of:
 | 2026-10-04 | Major expansion: business vs functional modules, ticket conceptual structure, tech and communication architecture, API map, vector DB and RAG depth, knowledge/chunking/embedding justification; synced with `requirements.md` (2026-10-04). |
 | 2026-10-04 | Sync: resolution notes **Agreed** (DEC-05); keyword search **DEC-08**; DEC-07 agreed in §17. |
 | 2026-10-04 | API detail handoff: draft [`api-contract.md`](api-contract.md) (§11 defers payloads/scenarios). |
+| 2026-10-04 | §15.7 links to [`evaluation-strategy.md`](evaluation-strategy.md) (retrieval vs grounding, F-* failures, AC-EVAL). |
+| 2026-10-04 | §15.7 test proof → [`test-strategy.md`](test-strategy.md) §5–§6. |
+| 2026-10-04 | PDF audit: §12.3–§12.6 UI flows, transition/ask UX, process evidence (consolidated PDF `ui-flow` themes). |
+| 2026-10-04 | §12 intro: no separate `ui-flow.md`; flows live in §12.3–§12.6 only. |

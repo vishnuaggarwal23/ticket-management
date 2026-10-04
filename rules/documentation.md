@@ -18,7 +18,7 @@ Use these during implementation and review. **Edit `rules/` and `commands/`**; `
 | Spec quality before coding | `rules/documentation.md` (architecture § map) | `commands/review-spec.md` |
 | This file (docs layout) | `rules/documentation.md` | — |
 
-Assessment PDF (`docs/Assessments.pdf`, may be gitignored): extract requirements into [`spec/requirements.md`](../spec/requirements.md). **Clones without the PDF** rely on `spec/` + these rules.
+Authoritative assignment: [`docs/Assessments.docx`](../docs/Assessments.docx). Extract into [`spec/requirements.md`](../spec/requirements.md). **Clones without that file** rely on `spec/` + these rules.
 
 ### When to run which command
 
@@ -32,14 +32,15 @@ Assessment PDF (`docs/Assessments.pdf`, may be gitignored): extract requirements
 | Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft); hub [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 |
 | Caught wrong AI code or ungrounded answer | Note in `docs/ai-mistakes.md` (see below) |
 | SpecStory saved new session(s); index stale | `commands/update-prompt-history.md` |
+| Assignment drift; tighten docs without new files | `commands/improve-from-assessment-pdf.md` (`docs/Assessments.docx`) |
 
-Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks → Implementation → **generate-tests** / write tests → **review-code** / **review-frontend** → Fix.
+Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks → Implementation → **generate-tests** / write tests → **review-code** / **review-frontend** → Fix. Periodic: **improve-from-assessment-pdf** on `spec/` + steering artefacts.
 
 ## Where things live
 
 | Artefact | Location |
 |----------|----------|
-| Assessment (authoritative assignment) | `docs/Assessments.pdf` (gitignored); restated in [`spec/requirements.md`](../spec/requirements.md) |
+| Assessment (authoritative assignment) | [`docs/Assessments.docx`](../docs/Assessments.docx); restated in [`spec/requirements.md`](../spec/requirements.md) |
 | Implementable specs | `spec/` (see list below) |
 | Human docs / notes | `docs/` (e.g. `docs/assessment-brief.md`, `docs/prompt-history.md`, `docs/ai-mistakes.md`) |
 | Prompt / session history | `.specstory/history/` |
@@ -53,21 +54,21 @@ Maintain detailed specs as work proceeds:
 
 All PDF-listed files under `spec/` (paths relative to repo root):
 
-[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), [`rag-ingestion.md`](../spec/rag-ingestion.md), [`rag-api-contract.md`](../spec/rag-api-contract.md), [`evaluation-strategy.md`](../spec/evaluation-strategy.md), [`ui-flow.md`](../spec/ui-flow.md), [`test-strategy.md`](../spec/test-strategy.md).
+[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), [`rag-ingestion.md`](../spec/rag-ingestion.md), [`evaluation-strategy.md`](../spec/evaluation-strategy.md), [`test-strategy.md`](../spec/test-strategy.md).
+
+**PDF also lists** `rag-api-contract.md` and `ui-flow.md` — **content lives in** [`api-contract.md`](../spec/api-contract.md) **§6.2–§6.5** and [`architecture.md`](../spec/architecture.md) **§12.3–§12.6** (see [`requirements.md`](../spec/requirements.md) child-spec table).
 
 ### Spec files in repo today (2026-10-04)
 
 | Present | Status |
 |---------|--------|
 | [`requirements.md`](../spec/requirements.md) | draft hub |
-| [`architecture.md`](../spec/architecture.md) | draft system design |
+| [`architecture.md`](../spec/architecture.md) | draft system design + **§12** UI flows |
 | [`data-model.md`](../spec/data-model.md) | **agreed** |
 | [`state-machine.md`](../spec/state-machine.md) | **draft** |
-| [`api-contract.md`](../spec/api-contract.md) | **draft** |
+| [`api-contract.md`](../spec/api-contract.md) | **draft** (includes ask semantics §6.2–§6.5) |
 | [`rag-ingestion.md`](../spec/rag-ingestion.md) | **draft** |
-| [`rag-api-contract.md`](../spec/rag-api-contract.md) | **draft** |
 | [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **draft** |
-| [`ui-flow.md`](../spec/ui-flow.md) | **draft** |
 | [`test-strategy.md`](../spec/test-strategy.md) | **draft** |
 
 PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **§0.4** and [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**.
@@ -81,13 +82,12 @@ PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **
 | [`requirements.md`](../spec/requirements.md) | PDF hub: **FR** / **FEAT-***, **AC-CORE-*** (§8) and **AC-FEAT-*** (§4.2); **OQ-*** / **DEC-*** register and spec handoff (§10); precedence PDF → requirements → agreed specs → rules (§2.4); deterministic vs probabilistic proof (§2.5); demo script (§8.7); glossary (§12). Detail contracts live in child specs (§13). |
 | [`architecture.md`](../spec/architecture.md) | System design: business vs functional modules, ticket aggregate shape, tech/deployment, **communication** (sync REST), **API map**, **PgVector** index role, RAG pipeline; **chunking** and **embedding tradeoffs** (PDF NFR-07 / AC-CORE-19). Numeric chunk/K/model → [`rag-ingestion.md`](../spec/rag-ingestion.md) |
 | [`data-model.md`](../spec/data-model.md) | Entities, Liquibase tables, enums, RAG chunk metadata, DTO catalogs, **indexes §14.5**; **DEC-03/04/05/07/08/13** |
-| [`api-contract.md`](../spec/api-contract.md) | Ticket/comment payloads, scenarios, ask boundary (envelopes in `rules/api-standards.md`) |
+| [`api-contract.md`](../spec/api-contract.md) | Ticket/comment payloads; ask HTTP + **§6.2–§6.5** grounding, citations, no-match (**AC-RAG-API-***, **DEC-11**); envelopes in `rules/api-standards.md` |
 | [`state-machine.md`](../spec/state-machine.md) | Legal/illegal transitions (including skipped steps if any) |
 | [`rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking (hybrid paragraph + fixed overflow), ingest sources, re-ingest (**DEC-01**), property keys; **DEC-09** model/dimension still open |
-| [`rag-api-contract.md`](../spec/rag-api-contract.md) | Ask `data` fields: answer, citations, no-match wording (**DEC-11** open) |
-| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **Retrieval quality** (probabilistic; not unit-test golden strings) |
-| [`ui-flow.md`](../spec/ui-flow.md) | Screens, navigation, status transition and ask UX (**DEC-06** interim) |
-| [`test-strategy.md`](../spec/test-strategy.md) | Map **AC-CORE** / **AC-SM** / **AC-API** / **AC-DM** → backend test layers (`rules/testing.md`) |
+| [`architecture.md`](../spec/architecture.md) §12.3–§12.6 | Screens, flows A–E, transition + ask UX (**DEC-06** interim); PDF `ui-flow` themes |
+| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **Retrieval quality** vs grounding; **Example** corpus + PDF Q1–Q5; procedure §6–§7; failures **F-01…F-10**; **AC-EVAL-*** |
+| [`test-strategy.md`](../spec/test-strategy.md) | **§5** SM determinism; **§6** ask bands; map **AC-CORE** / **AC-SM** / **AC-API** / **AC-DM** (`rules/testing.md`) |
 
 **Agreed spec:** status `agreed` (or equivalent) in the spec header, or explicit user confirmation in chat. Until then, treat as **draft** — implement only what rules already lock (envelopes, stack conventions) and stop for open payloads.
 
@@ -121,7 +121,7 @@ Use when running `commands/review-spec.md` or tracing implementation to layers �
 | §8–9 | **Functional** modules and **technical** packages (`api` / `domain` / `service` / `persistence` / `rag` / `config`) |
 | §10 | **Communication** — sync JSON REST, sequences, error vs ask no-match |
 | §11 | API capability map (PDF ask path + Convention `/api/v1`) |
-| §12 | Frontend surfaces (Convention React+Vite+TS) |
+| §12 | Frontend surfaces; **§12.3–§12.6** screen map, transition UX, ask panel (PDF `ui-flow` themes) |
 | §13–14 | Relational SoR vs **vector DB** (PgVector, chunk lifecycle) |
 | §15–16 | RAG pipeline, knowledge docs, **chunking justification**, **embedding tradeoffs** |
 | §17 | State machine placement in domain |
@@ -158,7 +158,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §2 | Envelopes; **§2.8** URI catalog; **§2.11** endpoint catalog; **§2.9** headers; **§2.10** error examples |
 | §3 | JSON resource models (ticket, comment, writes) |
 | §4–5 | Endpoints with full HTTP + cURL + scenario tables |
-| §6 | Ask URIs (`/api/ai/ask`, `/api/v1/ai/ask`), interim `data` shape |
+| §6 | Ask URIs; **§6.2–§6.5** grounding, no-match, **AC-RAG-API-*** (PDF `rag-api-contract` themes) |
 | §7 | Demo end-to-end URI sequence |
 | §8–9 | REST summary; **AC-API-*** |
 | §10 | **DEC-06**, **DEC-11**, **DEC-14** |
@@ -174,15 +174,32 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §12 | Embedding / PgVector (**DEC-09** open) |
 | §14 | **AC-RAG-ING-*** tests |
 
+### [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) structure (for reviewers)
+
+| Section | Use |
+|---------|-----|
+| §3–§4 | Grounding vs **retrieval quality**; what/how/why; deterministic vs probabilistic proof |
+| §5 | **Example** eval corpus + five **PDF** questions → expected ticket ids (aligns with [`requirements.md`](../spec/requirements.md) §4.3) |
+| §5.3 | Worked retrieval verdict examples |
+| §6–§7 | Eval procedure; obtaining retrieved set (logs/harness) |
+| §8 | Failure taxonomy **F-01…F-10** and detection |
+| §9 | Eval log fields |
+| §10 | **AC-EVAL-01…05** |
+| §12 | Open **DEC-09**, metadata-filter **OQ** |
+
+Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** — defers detail here).
+
 ### [`spec/test-strategy.md`](../spec/test-strategy.md) structure (for reviewers)
 
 | Section | Use |
 |---------|-----|
-| §5 | **AC-CORE** → test layers |
-| §6 | **AC-SM-01…08** (state machine + API integration) |
-| §7 | **AC-API-01…09** (§2.11 catalog, §4.4.1 transitions) |
-| §9 | UI acceptance substitute (no frontend tests) |
-| §10 | **FEAT-21** / **AC-CORE-14** integration suite minimum |
+| §5 | **State machine deterministic logic** — T1–T5, X1–X3, 20 illegal pairs, layers, FEAT-21 / AC-CORE-12…14 |
+| §6 | **Retrieval quality + AI output** — Bands A (JUnit) / B (grounding) / C (probabilistic eval); AC-CORE-16…18 |
+| §7 | **AC-CORE** → test layers (summary) |
+| §8 | **AC-SM-01…08** quick map (detail in §5) |
+| §9 | **AC-API-01…09** (§2.11 catalog) |
+| §11 | UI acceptance substitute (no frontend tests) |
+| §13 | **AC-TS-01…06** (this spec’s own acceptance) |
 
 ## Writing bar
 
@@ -242,3 +259,8 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | `api-contract.md` reviewer map: URI catalog, HTTP examples, §7 demo sequence. |
 | 2026-10-04 | All ten PDF `spec/` files present; removed interim missing-spec map; PDF traceability via requirements §0.4 + assessment-brief §13. |
 | 2026-10-04 | Added `commands/update-prompt-history.md` for SpecStory index maintenance. |
+| 2026-10-04 | Reviewer map for [`evaluation-strategy.md`](../spec/evaluation-strategy.md); test-strategy §4.1 pointer. |
+| 2026-10-04 | [`test-strategy.md`](../spec/test-strategy.md) reviewer map: §5 state machine, §6 retrieval/AI bands. |
+| 2026-10-04 | Eight-file `spec/` index; `rag-api-contract` / `ui-flow` → `api-contract` §6, `architecture` §12. |
+| 2026-10-04 | Added `commands/improve-from-assessment-pdf.md` (edit-only assessment sync pass). |
+| 2026-10-04 | Authoritative assignment path: `docs/Assessments.docx`. |

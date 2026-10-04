@@ -10,7 +10,7 @@ Do **not** rewrite the whole spec unless asked. Confirm with the user before edi
 
 - Primary target spec file(s) the user named (or infer from the conversation)
 - Full `spec/` set when reviewing consistency (read what exists; do not assume every file is present)
-- `docs/Assessments.pdf` as background — specs must still stand alone
+- `docs/Assessments.docx` as background — specs must still stand alone
 - Rules generated code will follow: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`, `rules/frontend.md`
 
 Mark checklist items **Pass** / **Fail** / **N/A**. Failures are blocking for implementation unless explicitly deferred as **open questions**.
@@ -35,9 +35,9 @@ Before judging content, **name every file** you used and its role. If a file is 
 | API contract | [`spec/api-contract.md`](../spec/api-contract.md) | payloads, scenarios, ask boundary (envelopes in `rules/api-standards.md`) |
 | State machine | [`spec/state-machine.md`](../spec/state-machine.md) | §5 legal/illegal matrix; **DEC-02** default (A) |
 | RAG ingestion | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | chunking §6–§9, ingest §10–§11, **AC-RAG-ING-*** |
-| RAG API | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | ask `data` fields, citations, no-match (draft; **DEC-11**) |
-| Evaluation | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | RAG retrieval quality (draft) |
-| UI flow | [`spec/ui-flow.md`](../spec/ui-flow.md) | screens and interactions (draft) |
+| RAG API / ask `data` | [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 | citations, grounding, no-match (**DEC-11**) |
+| Evaluation | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | Retrieval vs grounding §3–§4; corpus §5; procedure §6–§7; failures §8; **AC-EVAL-*** §10; FEAT-22 |
+| UI flow | [`spec/architecture.md`](../spec/architecture.md) §12.3–§12.6 | screens, flows A–E, transition + ask UX |
 | Test strategy | [`spec/test-strategy.md`](../spec/test-strategy.md) | **AC-SM** / **AC-API** / **AC-CORE** ↔ test layers |
 
 **Output must include:**
@@ -75,7 +75,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] State machine in domain/services, not UI or repository `UPDATE`
 - [ ] Test acceptance criteria can be implemented under `rules/testing.md`
 - [ ] RAG content does not contradict `rules/rag-vector-store.md` (chunking/ingest per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); no locked model/K/threshold unless **DEC-09** / §12 agreed)
-- [ ] UI spec does not require Next.js or frontend tests; layout remains open until [`spec/ui-flow.md`](../spec/ui-flow.md) is agreed
+- [ ] UI spec does not require Next.js or frontend tests; layout remains open until architecture §12 / **DEC-06** is agreed
 
 ### Cross-spec validity (name both files when flagging)
 
@@ -84,8 +84,8 @@ When a child spec is **draft** or a section is **Open**, cross-check [`spec/requ
 - [ ] [`state-machine.md`](../spec/state-machine.md) ↔ [`api-contract.md`](../spec/api-contract.md) — same transitions; PATCH `status` §4.4
 - [ ] [`data-model.md`](../spec/data-model.md) ↔ [`api-contract.md`](../spec/api-contract.md) — same fields, types, requiredness
 - [ ] `requirements.md` ↔ feature specs — no dropped assessment capabilities; no **DEC-*** closed in code but still **Open** in requirements
-- [ ] [`architecture.md`](../spec/architecture.md) ↔ [`rag-ingestion.md`](../spec/rag-ingestion.md) / `rag-api-contract.md` — no conflicting pipeline or API story
-- [ ] `ui-flow.md` ↔ API/RAG contracts — UI does not require impossible API shapes
+- [ ] [`architecture.md`](../spec/architecture.md) ↔ [`rag-ingestion.md`](../spec/rag-ingestion.md) / [`api-contract.md`](../spec/api-contract.md) §6 — no conflicting pipeline or API story
+- [ ] architecture §12 ↔ API/RAG contracts — UI does not require impossible API shapes
 
 ### When [`spec/architecture.md`](../spec/architecture.md) is in scope (expanded checklist)
 
@@ -110,6 +110,18 @@ Use `rules/documentation.md` section map for headings. Mark **N/A** for sections
 - [ ] **§14.5 index catalog** names every required BTREE, `pg_trgm` GIN, and vector HNSW index; §14.6 SQL matches §14.5
 - [ ] RAG metadata §11 uses only PDF keys + agreed technical keys (`chunkIndex`, `ingestedAt`)
 - [ ] No field catalog duplicated inside `architecture.md` §5 that contradicts §6/§10
+
+### When [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) is in scope
+
+Use `rules/documentation.md` section map. Mark **N/A** only if the review topic has no RAG ask/retrieval angle.
+
+- [ ] **§3–§4** — retrieval quality defined separately from grounding; no golden LLM string as sole proof
+- [ ] **§5** — five **PDF** questions map to **Example** expected ticket ids; aligns with [`requirements.md`](../spec/requirements.md) §4.3 (no drift)
+- [ ] **§6–§7** — procedure and “retrieved set” evidence match `commands/review-rag-output.md` and `rules/rag-vector-store.md` (no public chunk dump unless agreed)
+- [ ] **§8** — failure taxonomy usable for demo/debug (retrieval miss vs citation drop vs false empty)
+- [ ] **§10** — **AC-EVAL-01…05** trace to **FEAT-22** / **AC-FEAT-22-01/02** and demo §8.7 steps 9–10
+- [ ] **§12** — does not invent numeric K/threshold/model (points to [`rag-ingestion.md`](../spec/rag-ingestion.md) / **DEC-09**)
+- [ ] [`test-strategy.md`](../spec/test-strategy.md) **§5–§6** — state machine determinism vs ask Bands A/B/C consistent with [`evaluation-strategy.md`](../spec/evaluation-strategy.md)
 
 ---
 
@@ -251,3 +263,6 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Draft [`spec/state-machine.md`](../spec/state-machine.md) in readiness and cross-spec checks. |
 | 2026-10-04 | Draft [`spec/api-contract.md`](../spec/api-contract.md) in readiness and cross-spec checks. |
 | 2026-10-04 | Draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/test-strategy.md`](../spec/test-strategy.md) in file map and readiness. |
+| 2026-10-04 | Expanded checklist when [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) is in scope (AC-EVAL, §5 corpus). |
+| 2026-10-04 | Cross-check [`test-strategy.md`](../spec/test-strategy.md) §5–§6 when RAG or SM in scope. |
+| 2026-10-04 | Eight-file spec set: ask → `api-contract` §6.2–§6.5; UI → `architecture` §12.3–§12.6. |

@@ -1,8 +1,8 @@
 # HTTP API contract — tickets, comments, and ask (boundary)
 
 > **Status:** draft (2026-10-04) — ticket REST paths and payloads align with **Convention** in [`rules/api-standards.md`](../rules/api-standards.md) and agreed [`data-model.md`](data-model.md). Resolves **OQ-04** for ticket/comment HTTP; **DEC-14** interim alignment recorded §10.  
-> **Primary source:** `docs/Assessments.pdf` (capabilities restated in [`requirements.md`](requirements.md)).  
-> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask `data` field detail → `rag-api-contract.md` (**DEC-11** open). System map → [`architecture.md`](architecture.md) §11.
+> **Primary source:** `docs/Assessments.docx` (capabilities restated in [`requirements.md`](requirements.md)).  
+> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask `data` semantics (PDF `rag-api-contract` themes) → **§6.2–§6.5** (**DEC-11** open). UI flows → [`architecture.md`](architecture.md) §12.3–§12.6. System map → [`architecture.md`](architecture.md) §11.
 
 ---
 
@@ -53,7 +53,7 @@ All successful responses use:
 |---------------|------|--------------|--------|
 | Single resource | 200 or 201 | Object | **Omitted** |
 | Collection (list) | 200 | Array (may be empty) | **Required** pagination object |
-| Ask (grounded or no-match) | 200 | Object per §6 / `rag-api-contract.md` | Omitted |
+| Ask (grounded or no-match) | 200 | Object per §6 / §6.2–§6.5 | Omitted |
 
 **201 Created** responses MUST include header:
 
@@ -432,7 +432,7 @@ Only properties **present** in JSON are applied (**partial PATCH**). Omitted pro
 
 ### 3.5 `AskResponseData` (success `data` for ask)
 
-Returned inside the success envelope on **200** for §6.1. Field names are **interim** until **DEC-11** / `rag-api-contract.md` finalizes wording.
+Returned inside the success envelope on **200** for §6.1. Field names and no-match phrasing are **interim** until **DEC-11** is agreed (§6.3).
 
 | Property | Type | Required in response | Notes |
 |----------|------|----------------------|-------|
@@ -1096,7 +1096,7 @@ curl -sS -X POST 'http://localhost:8080/api/v1/ai/ask' \
 
 Always success envelope on **200**. Grounded answer and no-match are both **200** (not `error`).
 
-**Interim `data` shape** (until `rag-api-contract.md` / **DEC-11** finalizes wording):
+**Interim `data` shape** (see also §6.2–§6.5; **DEC-11** open):
 
 | Property | Type | Rules |
 |----------|------|-------|
@@ -1163,6 +1163,55 @@ Content-Type: application/json
 
 **Traceability:** FEAT-15–18, AC-CORE-16–18.
 
+### 6.2 Grounding and citations (**PDF** p.5–6)
+
+| Rule | Requirement |
+|------|-------------|
+| **Context-only** | `answer` MUST be derived from retrieved ticket excerpts passed to the LLM — not general model knowledge for **support-specific** questions (**PDF**). |
+| **Citations** | Every grounded answer MUST list `citedTicketIds` that appear in the **retrieval result** for that request — not ids invented by the model (**PDF**). |
+| **Id format** | Values MUST be public ticket ids (`TKT-{n}` per **DEC-04**); each non-empty id MUST exist in the relational DB (**PDF**). |
+| **No side effects** | Ask MUST NOT create/update tickets, comments, notifications, or invoke tools (**PDF** non-agentic). |
+| **Single pass** | One retrieve → one generate; no agent loop (**PDF**). |
+
+Review procedure: `commands/review-rag-output.md`. Retrieval quality (separate): [`evaluation-strategy.md`](evaluation-strategy.md).
+
+### 6.3 No-match and out-of-scope (**DEC-11** open)
+
+**PDF** p.6 bundles honest handling when nothing relevant is retrieved **or** the question is not answerable from ticket history.
+
+| Situation | HTTP | `citedTicketIds` | `answer` (interim until **DEC-11**) |
+|-----------|------|------------------|-------------------------------------|
+| Empty retrieval / below threshold | **200** | `[]` | e.g. `"No relevant tickets found."` |
+| Out-of-scope support question (no ticket evidence) | **200** | `[]` | Same honesty — MUST NOT answer from world knowledge (Flow E2 in [`requirements.md`](requirements.md)) |
+| Grounded hit | **200** | Non-empty subset of retrieved ids | Ticket-sourced narrative |
+
+**Not** no-match: blank `question` → **400** `VALIDATION_ERROR` (client error, not RAG).
+
+**Open (**DEC-11**):** distinct machine-readable code for out-of-scope vs empty retrieval; optional `reason` field — do not add without user confirmation.
+
+### 6.4 Errors vs success (ask)
+
+| Condition | Envelope | HTTP |
+|-----------|----------|------|
+| Validation failure on `question` | `error` | **400** |
+| No relevant tickets / honest out-of-scope | `data` with no-match shape | **200** |
+| Grounded answer | `data` with citations | **200** |
+| Server failure | `error` | **5xx** |
+
+No-match is **never** **404** and never the generic error envelope on **200**.
+
+### 6.5 Ask acceptance criteria (**AC-RAG-API-***)
+
+| ID | Criterion |
+|----|-----------|
+| **AC-RAG-API-01** | Request body is exactly `{ "question": string }` on both ask paths (**PDF**). |
+| **AC-RAG-API-02** | Success responses use `data.answer` + `data.citedTicketIds` per §3.5. |
+| **AC-RAG-API-03** | No-match and grounded outcomes both return **200** + success envelope. |
+| **AC-RAG-API-04** | Non-empty `citedTicketIds` only when retrieval supported the answer (**PDF**). |
+| **AC-RAG-API-05** | Ask handler performs no ticket mutations (**PDF**). |
+
+Maps to **AC-CORE-16…18**, **AC-API-06/07**, and grounding review command.
+
 ---
 
 ## 7. End-to-end example (demo script URIs)
@@ -1222,7 +1271,7 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
 | **DEC-06** | Transition API shape | **Interim closed in this contract** | PATCH `status` on ticket resource §4.4 |
-| **DEC-11** | Ask no-match wording | Open | `rag-api-contract.md` |
+| **DEC-11** | Ask no-match wording | Open | §6.3 interim phrases |
 | **DEC-14** | Ticket REST surface | **Interim agreed** | Paths/methods match `rules/api-standards.md` §4.4 |
 | **DEC-02** | Skipped hops | Open (implement A) | [`state-machine.md`](state-machine.md) |
 
@@ -1235,3 +1284,5 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | 2026-10-04 | Initial contract: envelopes, ticket/comment/ask payloads, scenarios, REST table; DEC-06/14 interim. |
 | 2026-10-04 | Expanded URI catalog §2.8–2.10; full HTTP/cURL examples per endpoint; demo URI table §7. |
 | 2026-10-04 | §2.11 full endpoint catalog; §3.5 `AskResponseData`; §4.4.1 T1–T5 PATCH table; AC-API-08/09. |
+| 2026-10-04 | PDF `rag-api-contract` themes: §6.2–§6.5 grounding, no-match, **AC-RAG-API-***. |
+| 2026-10-04 | Related-spec UI pointer → architecture §12.3–§12.6. |

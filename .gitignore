@@ -208,6 +208,7 @@ graphify-out/
 # Docs — local / proprietary artifacts (keep other docs/ files trackable)
 # -----------------------------------------------------------------------------
 docs/Assessments.pdf
+docs/Assessments.docx
 
 # -----------------------------------------------------------------------------
 # Local / developer / scratch / agent tool state (not shared)

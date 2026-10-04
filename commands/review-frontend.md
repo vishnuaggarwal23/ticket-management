@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-frontend.md`](../.cursor/commands/review-frontend.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, and [`spec/ui-flow.md`](../spec/ui-flow.md) / API / RAG contracts.
+Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §12.3–§12.6, and API / RAG contracts.
 
 **Do not generate or require frontend tests.** Do not apply fixes unless the user asks.
 
@@ -13,10 +13,10 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 - Diff / named frontend paths
 - `rules/frontend.md`
 - `rules/api-standards.md` (paths, envelopes, PATCH, pagination, 409)
-- [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo until [`spec/ui-flow.md`](../spec/ui-flow.md); **§10** for open UI/API shape (**OQ/DEC**)
+- [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo; **§10** for open UI/API shape (**OQ/DEC**)
 - [`spec/architecture.md`](../spec/architecture.md) §12 (UI surfaces) when reviewing screen/API wiring
 - [`spec/data-model.md`](../spec/data-model.md) (agreed id, category, resolutionNotes, create requiredness)
-- Draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/ui-flow.md`](../spec/ui-flow.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) — open **DEC-06**, **DEC-11**, **DEC-15** per [`spec/requirements.md`](../spec/requirements.md) §10.2
+- Draft [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5, [`spec/architecture.md`](../spec/architecture.md) §12.3–§12.6 — open **DEC-06**, **DEC-11**, **DEC-15** per [`spec/requirements.md`](../spec/requirements.md) §10.2
 - Assessment PDF only as background for **capabilities** (not stack)
 
 Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** / **minor** with file references.
@@ -27,7 +27,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 
 ### Spec and scope
 
-- [ ] Only agreed `ui-flow.md` (or user-confirmed screens). Until that file exists, use requirements **§4.1** / **§8.7** + architecture **§12** — no invented auth, agent-from-ask, extra ticket resources
+- [ ] Only agreed architecture **§12.3–§12.6** (or user-confirmed screens). Use requirements **§4.1** / **§8.7** as hub — no invented auth, agent-from-ask, extra ticket resources
 - [ ] Open items not silently decided — **DEC-06, 15**, layout/router still open; **do not** invent id format or category (use [`spec/data-model.md`](../spec/data-model.md): `TKT-{n}`, category enum, `resolutionNotes`, title required on create)
 - [ ] PDF capabilities present or explicitly deferred; when implemented, mappable to **`AC-CORE-01…11`** (§8): create, list, detail, update title/description/priority/assignee, comments, keyword search, status filter, status display, valid transitions, meaningful errors, ask with citations or no-match
 
@@ -79,7 +79,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 ## Output
 
 - **Findings** — severity, file, checklist item, brief fix (do not implement unless asked)
-- **Spec gaps** — UI without `ui-flow.md` / contract
+- **Spec gaps** — UI without architecture §12 / contract alignment
 - **Open questions assumed** — confirm with the user
 - **Frontend tests** — none required; do not request generating them
 - **Ready?** yes / no
@@ -91,8 +91,8 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 | Date | Note |
 |------|------|
 | 2026-10-04 | Initial frontend review command (React/Vite/TS); no frontend tests required. |
-| 2026-10-04 | Aligned with `rules/frontend.md` and `spec/ui-flow.md` expectations. |
+| 2026-10-04 | Aligned with `rules/frontend.md` and architecture §12 UI expectations. |
 | 2026-10-04 | Governance pass with expanded specs and rules index. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | [`spec/data-model.md`](../spec/data-model.md) inputs; id/category/resolutionNotes no longer open in UI review. |
-| 2026-10-04 | Interim flows from requirements §4.1 / §8.7 when `ui-flow.md` not in repo. |
+| 2026-10-04 | UI flows: architecture §12.3–§12.6 + requirements §4.1 / §8.7. |

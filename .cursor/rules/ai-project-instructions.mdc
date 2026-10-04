@@ -25,7 +25,7 @@ alwaysApply: true
 | AI mistakes (PDF) | `docs/ai-mistakes.md` when at least one meaningful mistake is caught |
 | RAG eval approach | `spec/evaluation-strategy.md` (retrieval quality — not unit golden strings) |
 
-**Commands:** `review-code`, `review-frontend`, `review-spec`, `generate-tests`, `review-rag-output`, `update-prompt-history`.
+**Commands:** `review-code`, `review-frontend`, `review-spec`, `generate-tests`, `review-rag-output`, `update-prompt-history`, `improve-from-assessment-pdf` (edit existing `spec/` / `rules/` / `commands/` / `skills/` / `docs/` from `docs/Assessments.docx`; no new files; skip `docs/prompt-history.md`).
 
 ## When reviewing AI output
 
@@ -40,4 +40,4 @@ alwaysApply: true
 
 ## Assessment PDF (local)
 
-Authoritative assignment: `docs/Assessments.pdf` (gitignored). Extract into `spec/requirements.md`. Distinguish **PDF requirement** vs **project convention** in every rule file’s opening sections.
+Authoritative assignment: `docs/Assessments.docx`. Extract into `spec/requirements.md`. Distinguish **PDF requirement** vs **project convention** in every rule file’s opening sections.

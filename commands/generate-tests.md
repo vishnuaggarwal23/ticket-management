@@ -11,7 +11,7 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 | Missing artefact | Action |
 |------------------|--------|
 | [`spec/data-model.md`](../spec/data-model.md) missing | Stop — do not invent ticket fields |
-| Ask `data` shape unclear vs draft [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Align with `answer` + `citedTicketIds`; flag **DEC-11** no-match wording gaps |
+| Ask `data` shape unclear vs [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 | Align with `answer` + `citedTicketIds`; flag **DEC-11** no-match wording gaps |
 ## Inputs
 
 - Specs: all ten PDF-listed files under `spec/` (see [`rules/documentation.md`](../rules/documentation.md)); only [`data-model.md`](../spec/data-model.md) is **agreed**; others **draft**
@@ -37,10 +37,10 @@ These are the ticket/ask **capabilities**. For each, propose both **happy path**
 | Filter `status` | Matching status | Invalid enum → 400 | `q` **and** `status` (AND) |
 | Get detail | Found → 200 `data` | Unknown id → 404 | |
 | PATCH fields | Title, description, priority, assignee updated | 400 validation; 404 | Partial body (only agreed fields) |
-| Status transition | Each **legal** edge T1–T5 persisted (**AC-SM-01**, **AC-API-09**) | **AC-SM-06** all 20 §5.6 pairs + X1–X3; **AC-SM-07** self-transition; API **409** + row unchanged (**AC-API-04**) | **AC-SM-08** PATCH without `status`; see [`spec/test-strategy.md`](../spec/test-strategy.md) §6–§7 |
+| Status transition | Each **legal** edge T1–T5 persisted (**AC-SM-01**, **AC-API-09**) | **AC-SM-06** all 20 §5.6 pairs + X1–X3; **AC-SM-07** self-transition; API **409** + row unchanged (**AC-API-04**) | **AC-SM-08** PATCH without `status`; see [`spec/test-strategy.md`](../spec/test-strategy.md) **§5** |
 | Comments | Add + return on detail | Empty comment; ticket not found | Comment on a status the spec forbids |
 | Persistence / restart | GET after context reload still correct | | |
-| Ask | `POST /api/ai/ask` **and** `/api/v1/ai/ask`; grounded `data` + citations from retrieval | Blank/missing `question` → 400; **no relevant tickets** → 200 + no-match **in `data`**, no fabricated ids | Do **not** golden-string the generated prose |
+| Ask | **Band A** ([`spec/test-strategy.md`](../spec/test-strategy.md) **§6.2**): both ask paths; stubbed citations | Blank `question` → 400; empty retrieval → 200 no-match in `data` | **Band C** manual only (**§6.4**); no golden prose |
 | RAG ingest | Knowledge doc + hybrid chunking per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §14 (**AC-RAG-ING-***) | Re-ingest replaces rows; comment boundaries preserved | Mock embed in default suite |
 
 ### P1 — Contract and orchestration (still major)
@@ -82,7 +82,7 @@ Follow `rules/testing.md`. A flow is not “covered” by one happy-path API tes
 
 **Frontend tests: skip.** Do not propose or write React/Vite/component/e2e tests. UI is reviewed with `commands/review-frontend.md` only.
 
-**RAG retrieval quality:** do not add golden-answer tests. Use `commands/review-rag-output.md` (**Retrieval quality** section) + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) for seeded eval questions.
+**RAG / ask:** JUnit = **Band A** only ([`spec/test-strategy.md`](../spec/test-strategy.md) **§6.2**). **Band B** grounding + **Band C** retrieval: [`evaluation-strategy.md`](../spec/evaluation-strategy.md) **§5.2–§8** + `commands/review-rag-output.md`. **AC-TS-05**, **AC-TS-06** (state machine §5).
 
 ## Tooling (conventions, not PDF)
 
@@ -125,3 +125,5 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-10-04 | [`spec/state-machine.md`](../spec/state-machine.md) drives transition test matrix. |
 | 2026-10-04 | HTTP contract tests use draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | Inputs: [`spec/test-strategy.md`](../spec/test-strategy.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). |
+| 2026-10-04 | RAG retrieval quality → [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §5.2–§8; **AC-TS-05**. |
+| 2026-10-04 | P0 maps to [`test-strategy.md`](../spec/test-strategy.md) **§5** (SM) and **§6** (ask bands). |

@@ -1,7 +1,7 @@
 # Data model — AI-Powered Support Ticket Management System
 
 > **Status:** agreed (2026-10-04) — **DEC-03, 04, 05, 07, 08, 13** confirmed in [`requirements.md`](requirements.md) §10.2.  
-> **Primary source:** `docs/Assessments.pdf` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
+> **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** [`architecture.md`](architecture.md) (aggregate shape §5, persistence §13–14), [`rules/api-standards.md`](../rules/api-standards.md), [`rules/java-springboot.md`](../rules/java-springboot.md), [`rules/rag-vector-store.md`](../rules/rag-vector-store.md).  
 > **Version:** 2026-10-04.
 
@@ -52,7 +52,7 @@ This document is the **source of truth** for:
 - **DTO** field catalogs that mirror entities for REST (detail in [`api-contract.md`](api-contract.md) when agreed).
 - **Logical** RAG structures (knowledge documents, chunk metadata) that are built in memory during ingestion.
 
-HTTP envelopes, paths, and ask `data` wording remain in `rules/api-standards.md` and [`rag-api-contract.md`](rag-api-contract.md). Transition **rules** remain in [`state-machine.md`](state-machine.md).
+HTTP envelopes and paths remain in `rules/api-standards.md`. Ask `data` semantics → [`api-contract.md`](api-contract.md) §6.2–§6.5. Transition **rules** → [`state-machine.md`](state-machine.md).
 
 ---
 
@@ -75,7 +75,7 @@ HTTP envelopes, paths, and ask `data` wording remain in `rules/api-standards.md`
 - Attachments, tags, custom fields, SLA, watchers.
 - Separate **status history** table (only **current** `status` on `ticket` unless a future spec adds audit).
 - Numeric chunk size, embedding model id, vector dimension, top-K — [`rag-ingestion.md`](rag-ingestion.md).
-- Prompt templates and LLM response JSON field names — [`rag-api-contract.md`](rag-api-contract.md).
+- Prompt templates and LLM response JSON field names — [`api-contract.md`](api-contract.md) §6; prompts internal only.
 
 ---
 
@@ -492,7 +492,7 @@ Only non-null fields apply (**Convention** partial PATCH).
 | Type | Fields | Spec owner |
 |------|--------|------------|
 | `AskRequest` | `question` (`@NotBlank`) | **PDF** |
-| `AskResponse` | `answer`, `citedTicketIds`, … | [`rag-api-contract.md`](rag-api-contract.md) |
+| `AskResponse` | `answer`, `citedTicketIds`, … | [`api-contract.md`](api-contract.md) §3.5, §6 |
 
 This file does **not** fix ask `data` property names beyond noting citations must be **ticket ids** that exist in `ticket.id` (**PDF**).
 
@@ -874,7 +874,7 @@ Remaining **Open** in other specs:
 | DEC-02 skipped transitions | `state-machine.md` |
 | DEC-06 transition API shape | [`api-contract.md`](api-contract.md) §4.4 (PATCH `status` interim) |
 | Embedding dimension, chunk sizes | [`rag-ingestion.md`](rag-ingestion.md) §9.3, §12 |
-| Ask `data` JSON | `rag-api-contract.md` |
+| Ask `data` JSON | [`api-contract.md`](api-contract.md) §6.2–§6.5 |
 
 ---
 
@@ -905,3 +905,4 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | Terminology pass: **Agreed** / **Convention** replace stale **Proposed** on DEC-03/04/05/07/08/13 rows. |
 | 2026-10-04 | Cross-ref only: transition matrix in draft [`state-machine.md`](state-machine.md). |
 | 2026-10-04 | HTTP contract cross-ref [`api-contract.md`](api-contract.md). |
+| 2026-10-04 | Ask `data` pointers → [`api-contract.md`](api-contract.md) §6 (consolidated rag-api themes). |

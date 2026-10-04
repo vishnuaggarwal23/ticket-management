@@ -1,8 +1,8 @@
 # RAG ingestion — knowledge build, chunking, embed, refresh
 
 > **Status:** draft (2026-10-04) — chunking **recommendation** and **proposed** numeric defaults for implementation; **DEC-01** (re-ingest on close) and **DEC-09** (embedding product/model id) remain **Open** with interim stance below.  
-> **Primary source:** `docs/Assessments.pdf` (restated in [`requirements.md`](requirements.md) FEAT-12…14, §11.1; [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
-> **Related:** Justification narrative → [`architecture.md`](architecture.md) §15–§16; persistence → [`data-model.md`](data-model.md) §8–§11; grounding rules → `rules/rag-vector-store.md`; ask HTTP → [`api-contract.md`](api-contract.md) §6.
+> **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md) FEAT-12…14, §11.1; [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
+> **Related:** Justification narrative → [`architecture.md`](architecture.md) §15–§16; persistence → [`data-model.md`](data-model.md) §8–§11; grounding rules → `rules/rag-vector-store.md`; ask HTTP + response semantics → [`api-contract.md`](api-contract.md) §6, §6.2–§6.5.
 
 **Label legend:** **PDF** | **Convention** | **Agreed** | **Proposed** (implementation default until user confirms) | **Example**
 
@@ -22,7 +22,7 @@ The assessment requires ticket **description**, **comments**, and **resolution-r
 | Paragraph vs fixed-size chunking; **hybrid** recommendation | Semantic / LLM-based chunking (v1) |
 | Re-ingest triggers and delete-and-replace storage | Status **history** table or transition **audit** text |
 | Metadata snapshot on each chunk | Public API exposure of chunks or models |
-| Config property **names**; **proposed** default numbers | Golden LLM answers (`evaluation-strategy.md`) |
+| Config property **names**; **proposed** default numbers | Retrieval-quality eval procedure ([`evaluation-strategy.md`](evaluation-strategy.md) §4.4 — not golden LLM answers) |
 
 ---
 
@@ -314,3 +314,5 @@ Numeric defaults for K/threshold: **Open** until agreed (FEAT-19); do not embed 
 | Date | Note |
 |------|------|
 | 2026-10-04 | Initial spec: sources (incl. not-ingested history/transitions), paragraph vs fixed-size comparison, hybrid recommendation, re-ingest, storage, AC-RAG-ING-*. |
+| 2026-10-04 | Scope: retrieval eval → [`evaluation-strategy.md`](evaluation-strategy.md) §4.4 (not golden answers). |
+| 2026-10-04 | Cross-ref ask response semantics → [`api-contract.md`](api-contract.md) §6.2–§6.5. |

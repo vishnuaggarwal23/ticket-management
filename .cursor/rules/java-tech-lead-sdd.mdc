@@ -33,15 +33,15 @@ Create and maintain as needed:
 - `spec/requirements.md`
 - `spec/architecture.md` (system design: business/functional modules, ticket shape, APIs, RAG, PgVector; chunking + embedding justification in §16 — section map in `rules/documentation.md`)
 - `spec/data-model.md`
-- `spec/api-contract.md`
+- `spec/api-contract.md` (ask semantics §6.2–§6.5; PDF `rag-api-contract` themes)
 - `spec/state-machine.md`
 - `spec/rag-ingestion.md`
-- `spec/rag-api-contract.md`
 - `spec/evaluation-strategy.md`
-- `spec/ui-flow.md`
 - `spec/test-strategy.md`
 
-Each spec: problem/context, scope & non-goals, requirements, testable acceptance criteria, contracts where relevant, open questions. Do not invent features not in an agreed spec. `docs/Assessments.pdf` informs analysis; extract into `spec/`.
+PDF also lists `rag-api-contract.md` / `ui-flow.md`; themes live in `api-contract` §6 and `architecture` §12 — see `rules/documentation.md`.
+
+Each spec: problem/context, scope & non-goals, requirements, testable acceptance criteria, contracts where relevant, open questions. Do not invent features not in an agreed spec. `docs/Assessments.docx` informs analysis; extract into `spec/`.
 
 ## Confirm before deciding (mandatory)
 

@@ -123,7 +123,7 @@ Do not enable permissive `*` CORS as a permanent default.
 
 ## API conventions (Spring)
 
-Public envelopes, pagination/sort/search query params, HTTP status mapping, PATCH-for-updates, and URI versioning (`/api/v1`) are defined in `rules/api-standards.md`. Resource field catalogs remain in `spec/api-contract.md` / `spec/rag-api-contract.md`. Implementation rules:
+Public envelopes, pagination/sort/search query params, HTTP status mapping, PATCH-for-updates, and URI versioning (`/api/v1`) are defined in `rules/api-standards.md`. Resource field catalogs and ask `data` semantics: [`spec/api-contract.md`](../spec/api-contract.md) (§6.2–§6.5). Implementation rules:
 
 - `@RestController` + JSON. Ticket controllers use `/api/v1`. Preserve `POST /api/ai/ask` with a JSON body field `"question"` as named in the assessment; also map `POST /api/v1/ai/ask`.
 - Ticket field updates are **PATCH**. Status changes go through the service + state machine, not a raw entity setter in the controller.
@@ -143,7 +143,7 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 - Request and response types are **records** in `api` (or `api.dto`). They are the HTTP contract, not JPA entities.
 - Put Bean Validation on **request** records to match [`spec/data-model.md`](../spec/data-model.md) §16 (e.g. `@NotBlank` on create `title`, `@Size` limits). Do not add required fields beyond that spec.
 - Map explicitly in the service or a dedicated mapper type in `api`/`service`. No bidirectional JPA graphs in JSON.
-- Ask response must be able to represent a grounded answer + cited ticket ids **or** honest no-match — field names wait on `spec/rag-api-contract.md`. Do not add a confidence field unless that spec does.
+- Ask response must represent grounded answer + cited ticket ids **or** honest no-match per [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (**DEC-11**). Do not add a confidence field unless that section does.
 - Do not return persistence entities from controllers. Do not put Jackson annotations on entities to “make the API work.”
 
 ## Services

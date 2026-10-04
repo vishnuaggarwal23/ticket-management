@@ -27,7 +27,7 @@ unguessable scope and unreviewable diffs.
 
 ### II. Assessment Authority
 
-`docs/Assessments.pdf` is authoritative for **what the assignment requires**.
+`docs/Assessments.docx` is authoritative for **what the assignment requires**.
 `spec/` is the implementable extraction of those requirements plus **agreed
 project conventions**.
 

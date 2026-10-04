@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-rag-output.md`](../.cursor/commands/review-rag-output.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) §15–16; ingest/chunking [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data` follows draft [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** open). **Retrieval quality** (right tickets in top-K): [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) and [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 / §4.3.
+Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) §15–16; ingest/chunking [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data`: [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (**DEC-11** open). **Retrieval quality** (right tickets in top-K): [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) and [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 / §4.3.
 
 **Pass only if all three hold:**
 
@@ -110,7 +110,7 @@ For **each** claim:
 | Relevant hits (B) | No-match | **Fail** — false no-match |
 | Relevant hits (B) | Grounded answer + retrieved ids | **Pass** this check |
 
-Equivalent user-visible wording is allowed when [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) defines it (or user confirms **DEC-11**). Do not require a golden string.
+Equivalent user-visible wording is allowed when [`spec/api-contract.md`](../spec/api-contract.md) §6.3 defines it (or user confirms **DEC-11**). Do not require a golden string.
 
 HTTP: no-match is **not** the error envelope and **not** 404.
 
@@ -154,38 +154,27 @@ Use this section only when the user asked to review a **coding** assistant, not 
 
 ## Retrieval quality (PDF: probabilistic — separate from grounding)
 
-**Grounding** asks: “Is every claim supported by **cited** retrieved text?”  
-**Retrieval quality** asks: “Did search return the **right** ticket(s) for this question?”
+**Grounding** (steps 0–3 above) asks whether every claim is supported by **cited** retrieved text.  
+**Retrieval quality** asks whether similarity search returned the **right ticket id(s)** for the question.
 
-Both matter for the assessment. Neither is proved by a single golden answer string. Procedure: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft). Use this section for manual or seeded checks.
+Authoritative procedure, corpus, examples, and failure taxonomy: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) **§3–§9** (especially **§5.2** expected ids, **§8** failures **F-01…F-10**). **FEAT-22** / **AC-EVAL-01…05**.
 
 ### When to run
 
-- After changing chunking, embeddings, top-K, threshold, or ingest text.
-- When demoing PDF **illustrative questions** (payment failures, TKT-1001 resolution, shipment issues, similar resolved, high-priority payment).
-- When grounding passes but the answer “feels wrong” — often retrieval missed the obvious ticket.
+Same triggers as [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) **§6.3** — e.g. after chunking/embed/K/threshold/ingest changes, before demo steps 9–10 ([`spec/requirements.md`](../spec/requirements.md) §8.7), or when grounding passes but the answer “feels wrong”.
 
-### Inputs
+### Minimal checklist (detail in spec §6.2)
 
-| Input | Role |
-|-------|------|
-| **Question** | Same as grounding review |
-| **Expected ticket ids** (eval set) | From a **seeded** database or fixture — e.g. [`spec/requirements.md`](../spec/requirements.md) §4.3 (**Example**) — not invented during review |
-| **Retrieved set** | Actual ids (and ranks/scores if logged in dev) |
-| **Final cited ids** | What the API returned |
-
-### Checklist
-
-- [ ] For each eval question, **expected** ticket(s) exist in the DB seed with text that should match.
-- [ ] Retrieved set includes those ids (or explains why threshold excluded them).
-- [ ] If the right ticket was **not** retrieved, grounding review may still “pass” on wrong chunks — flag **retrieval miss**.
-- [ ] If the right ticket was retrieved but **not cited**, flag **citation/orchestration** issue.
-- [ ] Record failures as test data or notes for `evaluation-strategy.md` — do not add flaky golden-string unit tests.
+- [ ] Seed or fixture matches **Example** corpus ([`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5.1 or requirements §4.3).
+- [ ] **Retrieved set** captured per §7 (logs, harness, or replay) — else verdict `not evaluated`.
+- [ ] Compare retrieved ids to §5.2 **required** ids → `good` | `partial` | `poor`.
+- [ ] Classify misses with **F-*** ids from spec §8 when helpful.
+- [ ] Record in eval log (spec §9); **do not** add golden-string unit tests.
 
 ### Output (add to review report when this section is used)
 
-- **Retrieval verdict:** `good` | `partial` | `poor` | `not evaluated` (no seed / no logs)
-- **Misses:** question → expected id(s) → retrieved ids → brief cause hypothesis (wording, chunking, threshold, metadata filter)
+- **Retrieval verdict:** `good` | `partial` | `poor` | `not evaluated`
+- **Misses:** question → expected id(s) → retrieved ids → **F-*** hypothesis (spec §8)
 - **Follow-up:** spec or config change — do not implement unless the user asks
 
 ---
@@ -200,3 +189,4 @@ Both matter for the assessment. Neither is proved by a single golden answer stri
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Citation ids must match [`spec/data-model.md`](../spec/data-model.md) `TKT-{n}` ticket PK. |
 | 2026-10-04 | Eval interim: requirements §2.5 / §4.3 when `evaluation-strategy.md` absent. |
+| 2026-10-04 | Retrieval quality section defers to [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §3–§9; AC-EVAL / F-* taxonomy. |

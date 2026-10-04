@@ -17,7 +17,7 @@ Do **not** apply fixes unless the user asks. Confirm before editing.
 ## Inputs
 
 - Diff / named paths
-- Specs: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), [`spec/data-model.md`](../spec/data-model.md) (**agreed**); draft [`spec/api-contract.md`](../spec/api-contract.md), [`spec/state-machine.md`](../spec/state-machine.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/rag-api-contract.md`](../spec/rag-api-contract.md), [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), [`spec/ui-flow.md`](../spec/ui-flow.md), [`spec/test-strategy.md`](../spec/test-strategy.md); index [`rules/documentation.md`](../rules/documentation.md); layout [`spec/architecture.md`](../spec/architecture.md) §8–9
+- Specs: [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md) (UI §12.3–§12.6), [`spec/data-model.md`](../spec/data-model.md) (**agreed**); draft [`spec/api-contract.md`](../spec/api-contract.md) (ask §6.2–§6.5), [`spec/state-machine.md`](../spec/state-machine.md), [`spec/rag-ingestion.md`](../spec/rag-ingestion.md), [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md), [`spec/test-strategy.md`](../spec/test-strategy.md) (SM §5, ask §6); index [`rules/documentation.md`](../rules/documentation.md)
 - Rules: `rules/java-springboot.md`, `rules/api-standards.md`, `rules/testing.md`, `rules/rag-vector-store.md`
 - If the diff is **UI**: follow [`commands/review-frontend.md`](review-frontend.md) instead of (or in addition to) this backend checklist. Do not require frontend tests.
 - Assessment PDF only as background — do not treat conventions as PDF requirements
@@ -67,6 +67,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 - [ ] Retrieve-then-generate once; no tools, ticket create, or notify from ask
 - [ ] Empty/below-threshold retrieval does not call the LLM to invent an answer
 - [ ] Citations are ticket IDs from **retrieval**, not model-guessed ids
+- [ ] Retrieval ranking quality is **not** proved by a golden LLM string in unit tests — use [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5–§8 + `commands/review-rag-output.md` when debugging ask
 - [ ] Chunking from [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); model name, dimension (**DEC-09**), numeric K/threshold values **not** hardcoded in Java
 
 ### Frontend
@@ -144,3 +145,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 | 2026-10-04 | State machine checks use draft [`spec/state-machine.md`](../spec/state-machine.md). |
 | 2026-10-04 | HTTP contract checks use draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | RAG ingest checks use draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); tests map [`spec/test-strategy.md`](../spec/test-strategy.md). |
+| 2026-10-04 | Ask: no golden retrieval tests; eval [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5–§8. |
