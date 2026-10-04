@@ -4,7 +4,7 @@
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code roots:** `backend/` (Spring Boot) and `frontend/` (Next.js + Vite + JavaScript). **Do not** put Java at repo root or under a second backend app.  
 > **Backend status:** Phases **A–F** and stack upgrade **G** complete. Live Ollama/Spring AI optional for local ask demos.  
-> **Frontend status:** **UI-A complete** — continue **Part II** (§20) **UI-B** onward after backend on **8080**.  
+> **Frontend status:** **UI-B complete** — continue **Part II** (§20) **UI-C** (shell + routes) after backend on **8080**.  
 > **Date:** 2026-10-04 (frontend plan added).
 
 ---
@@ -872,7 +872,7 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 | **F Ask API** | **complete** | slice + `AskServiceTest` + `AskApiIT` Band A | ask Pass | dual paths; 200 no-match; 400 validation; stub generate |
 | **G Stack upgrade (Boot 4 / Java 25 / Spring AI 2.x)** | **complete** | `./mvnw test` green (JDK 25) | pending | Boot **4.1.1**, Spring AI **2.0.1**, Jackson **3**, Testcontainers **2.x**, `spring-boot-starter-liquibase` |
 | **UI-A Scaffold** | complete | `next build` / `next dev` on **3000** | n/a | Next **15.5.x**, Node **24**, `.env.example`, rewrites + Vite proxy |
-| **UI-B API client** | not started | manual/curl against 8080 | n/a | See §20.3 |
+| **UI-B API client** | complete | manual/curl against 8080 | n/a | `src/api/client`, `tickets`, `ask`, `types` |
 | **UI-C Shell + routes** | not started | routes render | n/a | **DEC-20** |
 | **UI-D List basic** | not started | manual | n/a | **AC-UI-02** partial |
 | **UI-E List filters** | not started | manual | n/a | **AC-UI-02** |
@@ -888,7 +888,7 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 
 ## 20. Part II — Frontend implementation (`frontend/`)
 
-**Status:** in progress (UI-A complete)  
+**Status:** in progress (UI-B complete)  
 **Depends on:** Backend Part I **complete** (ticket + ask APIs on **8080**). For grounded ask demos, operator-managed Ollama + corpus per [`spec/evaluation-strategy.md`](spec/evaluation-strategy.md) — not required to merge individual UI slices.  
 **Implements:** **FEAT-01…11**, **FEAT-15…18** (user-visible); **FR-UI-01…03**; **AC-UI-01…12**; demo [`spec/requirements.md`](spec/requirements.md) **§8.7**.  
 **Read first:** [`rules/frontend.md`](rules/frontend.md), [`spec/ui-flow.md`](spec/ui-flow.md), [`spec/architecture.md`](spec/architecture.md) **§12**, [`spec/api-contract.md`](spec/api-contract.md), [`spec/rag-api-contract.md`](spec/rag-api-contract.md) **§7**, [`commands/review-frontend.md`](commands/review-frontend.md).
@@ -987,7 +987,7 @@ UI-A (scaffold)
 
 ### 20.5 Phase UI-B — HTTP client and error model
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-A  
 **Maps to:** [`spec/ui-flow.md`](spec/ui-flow.md) §5–§6, unit **UI-B**; [`rules/api-standards.md`](rules/api-standards.md)
 
@@ -1008,8 +1008,8 @@ UI-A (scaffold)
 
 **Done criteria — UI-B**
 
-- [ ] No raw `fetch` in `app/` route files (only via `src/api/*`).
-- [ ] Empty list response does not throw.
+- [x] No raw `fetch` in `app/` route files (only via `src/api/*`).
+- [x] Empty list response does not throw.
 
 ---
 
