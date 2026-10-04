@@ -2026,3 +2026,305 @@ output_path: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documen
 </task>
 </system_notification>
 <user_query>Briefly inform the user about the task result and perform any follow-up actions (if needed). If there's no follow-ups needed, don't explicitly say that.</user_query>
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Preparing a brief summary of the task results.
+
+Shell tasks completed. One used the Next.js proxy and returned 500 after roughly 30 seconds. The other went directly to the backend. Fixes were applied. Restart `npm run dev` if it is still running. `.env.local` was created.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+The investigation is done. **Ask on port 8080 works**; failures on `localhost:3000/api/...` were from Next’s **~30s rewrite timeout** while Ollama sometimes needs **90s+** for grounded answers.
+
+**Already in place:** `frontend/.env.local` with `NEXT_PUBLIC_API_BASE_URL=http://localhost:8080`, clearer README/.env.example notes, and a clearer AskPanel message when the proxy times out.
+
+**Your step:** restart the Next dev server (`npm run dev` in `frontend`) so `.env.local` is picked up, then try Ask again.
+
+---
+
+_**User**_
+
+commit all
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Committing all changes.
+
+Running git status, diff, and log to review changes. Drafting the commit message. Will add and commit, then verify. Skipping push unless requested.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status
+```
+
+```
+On branch main
+Your branch is ahead of 'origin/main' by 6 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .specstory/history/2026-10-04_17-33-12Z-model-not-found-error.md
+	new file:   .specstory/history/2026-10-04_17-42-24Z-next-js-backend-api.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   frontend/.env.example
+	modified:   frontend/README.md
+	modified:   frontend/src/components/AskPanel.jsx
+
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff &amp;&amp; git diff --staged</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff && git diff --staged
+```
+
+````
++<summary>Tool use: **ripgrep_raw_search**</summary>
++
++Parameters:
++
++```json
++{
++  "caseInsensitive": false,
++  "glob": ".env*",
++  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend",
++  "pattern": "OLLAMA|qwen"
++}
++```
++Additional data:
++
++```json
++{
++  "isPruned": true,
++  "outputMode": "content",
++  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/backend",
++  "pattern": "OLLAMA|qwen",
++  "topFiles": [
++    {
++      "matchCount": 2,
++      "uri": "backend/.env"
++    },
++    {
++      "matchCount": 2,
++      "uri": "backend/.env.example"
++    }
++  ],
++  "totalFiles": 2,
++  "totalMatches": 4
++}
++```
++Status: **completed**
++
++</details></tool-use>
++
++_**Agent (composer-2.5)**_
++
++<think><details><summary>Thought Process</summary>
++The backend returned error 000. It may be down or unresponsive.
++
++The 500 error likely comes from Next.js proxying a failed backend call. I will check if the backend is running on port 8080 and inspect the logs. A slow backend could also trigger a timeout.
++</details></think>
++
++_**Agent (composer-2.5)**_
++
++<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
++<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/terminals/1.txt</summary>
++
++</details></tool-use>
++
++_**Agent (composer-2.5)**_
++
++<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
++<summary>Tool use: **run_terminal_command_v2** • Run command: lsof -i :8080 -i :3000 2&gt;/dev/null | head -20; curl -s -m 15 -w &#34;\nhttp:%{http_code}\n&#34; -X POST &#39;http://localhost:8080/api/v1/ai/ask&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{&#34;question&#34;:&#34;hello&#34;}&#39; 2&gt;&amp;1 | tail -5</summary>
++```bash
++lsof -i :8080 -i :3000 2>/dev/null | head -20; curl -s -m 15 -w "\nhttp:%{http_code}\n" -X POST 'http://localhost:8080/api/v1/ai/ask' -H
+… (output truncated)
+````
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git log -5 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git log -5 --oneline
+```
+
+```
+6f5a5a0 feat(frontend): add ask page and complete UI-K/UI-L demo hardening
+849f4d0 test(ask): assert question over 2000 chars returns 400 on both ask paths
+7fc9625 feat(frontend): add comment composer and status transitions on detail
+10de9de feat(frontend): extract ticket detail and create flows into shared components
+fedcdaf docs: integrate spec, rules, commands, skills, and docs in review-frontend
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing the diff for frontend files only, excluding the large specstory.
+
+Checking whether .env.local is untracked or gitignored at the root level.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff frontend/.env.example frontend/README.md frontend/src/components/AskPanel.jsx</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff frontend/.env.example frontend/README.md frontend/src/components/AskPanel.jsx
+```
+
+````
+diff --git a/frontend/.env.example b/frontend/.env.example
+index 376f496..58ed99d 100644
+--- a/frontend/.env.example
++++ b/frontend/.env.example
+@@ -1,8 +1,9 @@
+-# Next.js client (browser)
++# Recommended for local dev: browser → backend :8080 (CORS). Required for Ask when Ollama can exceed ~30s;
++# same-origin /api rewrites hit Next's proxy timeout and return plain "Internal Server Error".
+ NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+ 
+ # Vite dev for shared src/ modules (optional local HMR)
+ VITE_API_BASE_URL=http://localhost:8080
+ 
+-# Next.js dev rewrites target (optional; default http://127.0.0.1:8080)
++# Next.js SSR / rewrites when NEXT_PUBLIC_API_BASE_URL is empty (default http://127.0.0.1:8080)
+ BACKEND_REWRITE_URL=http://localhost:8080
+diff --git a/frontend/README.md b/frontend/README.md
+index 1952e52..39e9709 100644
+--- a/frontend/README.md
++++ b/frontend/README.md
+@@ -11,7 +11,7 @@ React + Next.js (App Router) + Vite (shared `src/` dev). JavaScript only.
+ 
+ ```bash
+ cd frontend
+-cp .env.example .env.local   # optional; adjust API base URLs
++cp .env.example .env.local   # recommended — direct :8080 API; needed for slow local Ask/Ollama
+ npm install
+ ```
+ 
+@@ -21,7 +21,7 @@ npm install
+ npm run dev
+ ```
+ 
+-Opens **http://localhost:3000** by default. Next.js proxies `/api/*` to the backend via `next.config.js` rewrites (`BACKEND_REWRITE_URL`).
++Opens **http://localhost:3000** by default. With `NEXT_PUBLIC_API_BASE_URL` set (see `.env.example`), the browser calls the backend on **8080** directly. If that variable is empty, Next.js proxies `/api/*` via rewrites (`BACKEND_REWRITE_URL`); that proxy times out around **30 seconds**, which breaks **Ask** when local Ollama generation is slow.
+ 
+ For Vite-only HMR on `src/` modules (port **5173**):
+ 
+diff --git a/frontend/src/components/AskPanel.jsx b/frontend/src/components/AskPanel.jsx
+index 399ea9e..6087147 100644
+--- a/frontend/src/components/AskPanel.jsx
++++ b/frontend/src/components/AskPanel.jsx
+@@ -38,7 +38,1
+… (output truncated)
+````
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.gitignore",
+  "pattern": "\\.env\\.local"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.gitignore",
+  "pattern": "\\.env\\.local",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Staging frontend changes and specstory files before committing.
+
+The commit covers a frontend fix for Ask proxy timeouts and AskPanel. The message will follow a fix(frontend) convention.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add frontend/.env.example frontend/README.md frontend/src/components/AskPanel.jsx &amp;&amp; git commit --trailer &#34;Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt;&#34; -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+fix(frontend): document and surface Ask failures from Next API proxy timeout
+
+Slow local Ollama can exceed Next rewrite limits; steer devs to direct :8080 via .env.local and clearer AskPanel errors.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add frontend/.env.example frontend/README.md frontend/src/components/AskPanel.jsx && git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "$(cat <<'EOF'
+fix(frontend): document and surface Ask failures from Next API proxy timeout
+
+Slow local Ollama can exceed Next rewrite limits; steer devs to direct :8080 via .env.local and clearer AskPanel errors.
+EOF
+)" && git status
+```
+
+```
+[main c0fdc69] fix(frontend): document and surface Ask failures from Next API proxy timeout
+ 5 files changed, 2273 insertions(+), 5 deletions(-)
+ create mode 100644 .specstory/history/2026-10-04_17-33-12Z-model-not-found-error.md
+ create mode 100644 .specstory/history/2026-10-04_17-42-24Z-next-js-backend-api.md
+On branch main
+Your branch is ahead of 'origin/main' by 7 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The commit succeeded. .env.local was correctly left out of the commit.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Created commit **c0fdc69** on `main`:
+
+**fix(frontend): document and surface Ask failures from Next API proxy timeout**
+
+Included: `frontend/.env.example`, `frontend/README.md`, `AskPanel.jsx`, and two SpecStory history files. Working tree is clean; branch is **7 commits** ahead of `origin/main`. `frontend/.env.local` was not committed (local only).

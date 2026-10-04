@@ -35,6 +35,7 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | [AE-012](#ae-012) | 2026-10-04 15:33 | code | `OllamaAiConfig` fallback won over live Ollama embeddings at runtime |
 | [AE-013](#ae-013) | 2026-10-04 15:51 | process | Created `frontend/` scaffold without user authorization |
 | [AE-014](#ae-014) | 2026-10-04 16:00 | spec / docs | Stale draft / SPA / interim labels after agreed specs and **DEC-20** |
+| [AE-015](#ae-015) | 2026-10-04 17:33 | code | Ask via Next rewrites hit ~30s proxy timeout (opaque 500 on :3000) |
 
 ---
 
@@ -150,6 +151,14 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 - **How detected:** Frontend readiness audit vs `docs/Assessments.docx`; user asked to close open/draft items, then a hygiene pass ([`.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md`](../.specstory/history/2026-10-04_15-51-31Z-frontend-tech-stack-update.md)).
 - **How resolved:** Added **DEC-20** (routes/UX); synced `spec/ui-flow.md`, `spec/requirements.md`, `spec/architecture.md`, `rules/`, `commands/`, `docs/assessment-brief.md`, and skills; removed stale draft/SPA/interim wording. `grep` hygiene on `commands/` + `rules/` for `draft \`spec/` → no matches.
 
+## AE-015
+
+- **When:** 2026-10-04 17:33 UTC
+- **Kind:** code
+- **What was wrong:** The **UI-A** scaffold and dev docs treated Next.js `/api` **rewrites** as the normal browser path when `NEXT_PUBLIC_API_BASE_URL` is unset. Local **Ask** via Ollama often exceeds Next’s rewrite proxy limit (~**30s**), so `POST localhost:3000/api/v1/ai/ask` returned a plain **500** while the same call on **8080** succeeded.
+- **How detected:** User Ask failure and `curl` through port **3000** during the Ollama model-name investigation ([`.specstory/history/2026-10-04_17-33-12Z-model-not-found-error.md`](../.specstory/history/2026-10-04_17-33-12Z-model-not-found-error.md)).
+- **How resolved:** Recommended direct `:8080` in `frontend/.env.example` and README; clearer timeout hint in `AskPanel.jsx`; local `.env.local` with `NEXT_PUBLIC_API_BASE_URL=http://localhost:8080`. Commit `c0fdc69`.
+
 ---
 
 ## Revision history
@@ -161,3 +170,4 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | 2026-10-04 | Added AE-011 (1 new); extended AE-010 resolution; skipped 0 duplicates; total 11 entries. |
 | 2026-10-04 | Added AE-012 (1 new); extended AE-011 resolution; skipped 0 duplicates; total 12 entries. |
 | 2026-10-04 | Added AE-013…014 (2 new); skipped 0 duplicates; total 14 entries. |
+| 2026-10-04 | Added AE-015 (1 new); skipped 0 duplicates; total 15 entries. |
