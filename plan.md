@@ -4,7 +4,7 @@
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code roots:** `backend/` (Spring Boot) and `frontend/` (Next.js + Vite + JavaScript). **Do not** put Java at repo root or under a second backend app.  
 > **Backend status:** Phases **A–F** and stack upgrade **G** complete. Live Ollama/Spring AI optional for local ask demos.  
-> **Frontend status:** **UI-E complete** — continue **Part II** (§20) **UI-F** (create ticket) after backend on **8080**.  
+> **Frontend status:** **UI-H complete** — continue **Part II** (§20) **UI-I** (comments) after backend on **8080**.  
 > **Date:** 2026-10-04 (frontend plan added).
 
 ---
@@ -876,9 +876,9 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 | **UI-C Shell + routes** | complete | routes render | n/a | **DEC-20**, **FG2** |
 | **UI-D List basic** | complete | manual | n/a | **AC-UI-02** partial |
 | **UI-E List filters** | complete | manual | n/a | **AC-UI-02** |
-| **UI-F Create** | not started | manual | n/a | **AC-UI-01** |
-| **UI-G Detail read** | not started | manual | n/a | **AC-UI-03** |
-| **UI-H Detail save** | not started | manual | n/a | **AC-UI-04** |
+| **UI-F Create** | complete | manual | n/a | **AC-UI-01** |
+| **UI-G Detail read** | complete | manual | n/a | **AC-UI-03** |
+| **UI-H Detail save** | complete | manual | n/a | **AC-UI-04** |
 | **UI-I Comments** | not started | manual | n/a | **AC-UI-05** |
 | **UI-J Status** | not started | manual | n/a | **AC-UI-06** |
 | **UI-K Ask** | not started | manual (+ optional live RAG) | review-rag-output optional | **AC-UI-08…12** |
@@ -888,7 +888,7 @@ Prerequisite: backend `./mvnw test` green; API on **8080**; CORS allows **3000**
 
 ## 20. Part II — Frontend implementation (`frontend/`)
 
-**Status:** in progress (UI-E complete)  
+**Status:** in progress (UI-H complete)  
 **Depends on:** Backend Part I **complete** (ticket + ask APIs on **8080**). For grounded ask demos, operator-managed Ollama + corpus per [`spec/evaluation-strategy.md`](spec/evaluation-strategy.md) — not required to merge individual UI slices.  
 **Implements:** **FEAT-01…11**, **FEAT-15…18** (user-visible); **FR-UI-01…03**; **AC-UI-01…12**; demo [`spec/requirements.md`](spec/requirements.md) **§8.7**.  
 **Read first:** [`rules/frontend.md`](rules/frontend.md), [`spec/ui-flow.md`](spec/ui-flow.md), [`spec/architecture.md`](spec/architecture.md) **§12**, [`spec/api-contract.md`](spec/api-contract.md), [`spec/rag-api-contract.md`](spec/rag-api-contract.md) **§7**, [`commands/review-frontend.md`](commands/review-frontend.md).
@@ -1077,7 +1077,7 @@ UI-A (scaffold)
 
 ### 20.9 Phase UI-F — Create ticket
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-C, UI-B (**parallel** with UI-D/E after UI-C)  
 **Maps to:** **AC-UI-01**, **AC-UI-07** (create validation); [`spec/ui-flow.md`](spec/ui-flow.md) §7.2
 
@@ -1090,14 +1090,14 @@ UI-A (scaffold)
 
 **Done criteria — UI-F**
 
-- [ ] New `TKT-{n}` visible on detail without DB tools.
-- [ ] Empty title shows readable validation (**demo §8.7** step 8 pattern).
+- [x] New `TKT-{n}` visible on detail without DB tools.
+- [x] Empty title shows readable validation (**demo §8.7** step 8 pattern).
 
 ---
 
 ### 20.10 Phase UI-G — Ticket detail (read)
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-C, UI-B  
 **Maps to:** **AC-UI-03**; [`spec/ui-flow.md`](spec/ui-flow.md) §7.3
 
@@ -1110,13 +1110,13 @@ UI-A (scaffold)
 
 **Done criteria — UI-G**
 
-- [ ] **AC-UI-03**; citation deep-links from ask (UI-K) can land here.
+- [x] **AC-UI-03**; citation deep-links from ask (UI-K) can land here.
 
 ---
 
 ### 20.11 Phase UI-H — Detail field update (Save)
 
-**Status:** not started  
+**Status:** complete (2026-10-04)  
 **Depends on:** UI-G  
 **Maps to:** **AC-UI-04**; **DEC-20** (Save separate from status)
 
@@ -1129,7 +1129,7 @@ UI-A (scaffold)
 
 **Done criteria — UI-H**
 
-- [ ] **AC-UI-04** after browser reload.
+- [x] **AC-UI-04** after browser reload.
 
 ---
 

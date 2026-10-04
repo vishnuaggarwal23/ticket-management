@@ -221,3 +221,138 @@ main {
 .empty-state p {
   margin: 0 0 0.5rem;
 }
+
+.ticket-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ticket-form__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ticket-form__row .ticket-form__field {
+  flex: 1 1 12rem;
+}
+
+.ticket-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ticket-form__field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.ticket-form__field input,
+.ticket-form__field textarea,
+.ticket-form__field select {
+  padding: 0.5rem;
+  font: inherit;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.ticket-form__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.field-error {
+  color: #b71c1c;
+  font-size: 0.875rem;
+}
+
+.form-success {
+  margin: 0 0 1rem;
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: #e8eaf6;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ticket-detail__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ticket-detail__id {
+  margin: 0;
+  font-weight: 700;
+}
+
+.ticket-detail__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.ticket-detail__meta dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.ticket-detail__meta dd {
+  margin: 0.15rem 0 0;
+}
+
+.ticket-detail__section h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+}
+
+.ticket-detail__footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.comment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.comment-list__item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-list__meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  color: #666;
+}
+
+.comment-list__body {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.comment-list__empty {
+  margin: 0;
+  color: #555;
+}

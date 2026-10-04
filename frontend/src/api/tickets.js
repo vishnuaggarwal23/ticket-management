@@ -51,7 +51,9 @@ export async function listTickets({ page, size, sort, q, status } = {}) {
  * @returns {Promise<TicketDetail>}
  */
 export async function getTicket(id) {
-  const body = await requestJson(`/api/v1/tickets/${encodeURIComponent(id)}`);
+  const body = await requestJson(`/api/v1/tickets/${encodeURIComponent(id)}`, {
+    cache: 'no-store',
+  });
   return /** @type {TicketDetail} */ (unwrapData(body));
 }
 
