@@ -32,6 +32,7 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | [AE-009](#ae-009) | 2026-10-04 10:50 | code | Phase B review: page size, field `EntityManager`, silent 500 |
 | [AE-010](#ae-010) | 2026-10-04 11:56 | code | `TicketService` dual constructors failed Spring boot |
 | [AE-011](#ae-011) | 2026-10-04 13:15 | code | `DisabledEmbeddingPort` `@ConditionalOnMissingBean` left no `EmbeddingPort` |
+| [AE-012](#ae-012) | 2026-10-04 15:33 | code | `OllamaAiConfig` fallback won over live Ollama embeddings at runtime |
 
 ---
 
@@ -121,7 +122,15 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 - **Kind:** code
 - **What was wrong:** Phase D put `@ConditionalOnMissingBean(EmbeddingPort)` on `DisabledEmbeddingPort`. With Spring AI wiring, no `EmbeddingPort` bean was registered and the context failed (`NoSuchBeanDefinitionException` for `TicketIngestionService`).
 - **How detected:** `./mvnw test` — `ApplicationSmokeTest` / full suite during Phase D ingest work ([`.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md`](../.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md)).
-- **How resolved:** Dropped the misplaced condition on the disabled fallback; `OllamaAiConfig` registers live ports when models exist, and `@ConditionalOnMissingBean` on the disabled beans keeps tests on hash/stub doubles. `./mvnw test` green before RAG commit `9614178`.
+- **How resolved:** Dropped the misplaced condition on the disabled fallback; `OllamaAiConfig` registers live ports when models exist, and `@ConditionalOnMissingBean` on the disabled beans keeps tests on hash/stub doubles. `./mvnw test` green before RAG commit `9614178`. Post–Boot 4 runtime regression → **AE-012**.
+
+## AE-012
+
+- **When:** 2026-10-04 15:33 UTC
+- **Kind:** code
+- **What was wrong:** After the Java 25 / Boot 4 upgrade, `OllamaAiConfig` still used `@ConditionalOnMissingBean(EmbeddingPort)` (and the same pattern for generation). That registered `DisabledEmbeddingPort` before Spring AI’s `EmbeddingModel` existed, so `--debug` showed `OllamaEmbeddingAutoConfiguration` matched but `POST /api/ai/ask` returned **500** from the disabled stub. `application.yml` also used Spring AI 1.x `spring.ai.ollama.embedding.options.model` instead of `embedding.model`. A follow-up fix misused `ObjectProvider.ifAvailable(...)` (void) and briefly broke context creation.
+- **How detected:** HTTP sanity on a running app with Ollama up ([`.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md`](../.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md)); server log `IllegalStateException: Embeddings are not configured…`.
+- **How resolved:** `@Lazy` `@Bean` factories in `OllamaAiConfig` that choose `OllamaEmbeddingPort` / `OllamaGenerationPort` via `ObjectProvider.getIfAvailable()` else disabled stubs; plain classes for disabled ports; corrected embedding property path. `./mvnw test` green; ask **200** in sanity. Commit `f37984c`.
 
 ---
 
@@ -132,3 +141,4 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | 2026-10-04 | Initial chronological log AE-001…008 from SpecStory and spec/review fixes; no RAG ungrounded-answer row yet. |
 | 2026-10-04 | Added AE-009…010 (2 new); skipped 0 duplicates; total 10 entries. |
 | 2026-10-04 | Added AE-011 (1 new); extended AE-010 resolution; skipped 0 duplicates; total 11 entries. |
+| 2026-10-04 | Added AE-012 (1 new); extended AE-011 resolution; skipped 0 duplicates; total 12 entries. |

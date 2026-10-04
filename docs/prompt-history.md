@@ -47,6 +47,9 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 23 | 2026-10-04 09:35:31 | Wrote backend-only `plan.md` (CRUD and state machine first; RAG gated); locked C-01–C-03 and C-05 (`CRITICAL` with inbound `URGENT` alias); committed and pushed. | [`.specstory/history/2026-10-04_09-35-31Z-backend-ticket-management-plan.md`](../.specstory/history/2026-10-04_09-35-31Z-backend-ticket-management-plan.md) |
 | 24 | 2026-10-04 09:57:27 | Drove `plan.md` through backend Phases A–F: ticket CRUD and state machine (A–C), RAG ingest/PgVector/ask and after-commit hooks (D–E), dual-path ask API (F), Spring AI Ollama wiring, generate-tests/review-code follow-ups, and commit `9614178`. | [`.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md`](../.specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md) |
 | 25 | 2026-10-04 10:30:58 | Tightened `commands/review-code.md` for Java/Spring Boot guidelines, practices, and package layering; added chronological `docs/ai-error.md` and `/update-ai-error`; committed and pushed. | [`.specstory/history/2026-10-04_10-30-58Z-java-spring-boot-review.md`](../.specstory/history/2026-10-04_10-30-58Z-java-spring-boot-review.md) |
+| 26 | 2026-10-04 14:10:51 | Asked to recheck RAG re-ingest on ticket update/status change and to verify ask uses configured top-k/threshold, LLM prompt from chunks, and cited ticket ids or honest no-match. | [`.specstory/history/2026-10-04_14-10-51Z-rag-ingestion-and-ai.md`](../.specstory/history/2026-10-04_14-10-51Z-rag-ingestion-and-ai.md) |
+| 27 | 2026-10-04 14:33:33 | Upgraded backend to Java 25, Spring Boot 4.1.1, and Spring AI 2.0.1 (specs, rules, `plan.md` §19, then G-1 code/tests); `/review-code` and commit `f59efbc`; ran app with `.env`, HTTP sanity, fixed Ollama port wiring and Spring AI 2 embedding property; commit `f37984c`. | [`.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md`](../.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade-plan.md) |
+| 28 | 2026-10-04 14:33:33 | Same Cursor session as row 27: user requested Java 25 / Spring Boot 4 docs-first upgrade scoped to `backend/`; short duplicate SpecStory export of the opening prompt. | [`.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade.md`](../.specstory/history/2026-10-04_14-33-33Z-backend-stack-upgrade.md) |
 
 ## Related
 
@@ -71,3 +74,4 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 2026-10-04 | Related: canonical AI error log `docs/ai-error.md`; `ai-mistakes.md` pointer. |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (25 sessions; added 2, updated 0, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (25 sessions; added 0, updated 1, removed 0). |
+| 2026-10-04 | Synced chronological index from `.specstory/history/` (28 sessions; added 3, updated 0, removed 0). |
