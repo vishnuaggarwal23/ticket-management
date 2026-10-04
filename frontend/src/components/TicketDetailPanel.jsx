@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { ApiError } from '@/api/client';
-import { patchTicket } from '@/api/tickets';
+import { getTicket, patchTicket } from '@/api/tickets';
+import CommentComposer from '@/components/CommentComposer';
 import CommentList from '@/components/CommentList';
 import ErrorBanner from '@/components/ErrorBanner';
+import StatusTransitionButtons from '@/components/StatusTransitionButtons';
 import {
   buildChangedTicketPatch,
   ticketToFormValues,
@@ -18,6 +20,7 @@ import { formatStatusLabel } from '@/lib/ticketStatuses';
 
 /**
  * @typedef {import('../api/types.js').TicketDetail} TicketDetail
+ * @typedef {import('../api/types.js').TicketStatus} TicketStatus
  * @param {{ initialTicket: TicketDetail }} props
  */
 export default function TicketDetailPanel({ initialTicket }) {
@@ -25,8 +28,15 @@ export default function TicketDetailPanel({ initialTicket }) {
   const [values, setValues] = useState(() => ticketToFormValues(initialTicket));
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState('');
+  const [transitionError, setTransitionError] = useState('');
   const [saveMessage, setSaveMessage] = useState('');
   const [saving, setSaving] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
+
+  function applyTicket(detail) {
+    setTicket(detail);
+    setValues(ticketToFormValues(detail));
+  }
 
   /**
    * @param {React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
@@ -47,6 +57,7 @@ export default function TicketDetailPanel({ initialTicket }) {
 
   async function handleSave() {
     setFormError('');
+    setTransitionError('');
     setSaveMessage('');
     setFieldErrors({});
 
@@ -59,8 +70,7 @@ export default function TicketDetailPanel({ initialTicket }) {
     setSaving(true);
     try {
       const updated = await patchTicket(ticket.id, patch);
-      setTicket(updated);
-      setValues(ticketToFormValues(updated));
+      applyTicket(updated);
       setSaveMessage('Changes saved.');
     } catch (error) {
       if (error instanceof ApiError) {
@@ -71,6 +81,37 @@ export default function TicketDetailPanel({ initialTicket }) {
       }
     } finally {
       setSaving(false);
+    }
+  }
+
+  /**
+   * @param {TicketStatus} target
+   */
+  async function handleTransition(target) {
+    setTransitionError('');
+    setFormError('');
+    setTransitioning(true);
+
+    try {
+      const updated = await patchTicket(ticket.id, { status: target });
+      applyTicket(updated);
+      setSaveMessage(`Status updated to ${formatStatusLabel(target)}.`);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setTransitionError(error.message);
+        if (error.status === 404 || error.code === 'ILLEGAL_TRANSITION') {
+          try {
+            const fresh = await getTicket(ticket.id);
+            applyTicket(fresh);
+          } catch {
+            // keep current ticket if refetch fails
+          }
+        }
+      } else {
+        setTransitionError('Could not update status.');
+      }
+    } finally {
+      setTransitioning(false);
     }
   }
 
@@ -87,6 +128,9 @@ export default function TicketDetailPanel({ initialTicket }) {
       </header>
 
       {formError ? <ErrorBanner message={formError} /> : null}
+      {transitionError ? (
+        <ErrorBanner message={transitionError} className="error-banner--prominent" />
+      ) : null}
       {saveMessage ? <p className="form-success" role="status">{saveMessage}</p> : null}
 
       <div className="ticket-form">
@@ -190,12 +234,24 @@ export default function TicketDetailPanel({ initialTicket }) {
             type="button"
             className="button"
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || transitioning}
           >
             {saving ? 'Saving…' : 'Save changes'}
           </button>
         </div>
       </div>
+
+      <section className="ticket-detail__section" aria-labelledby="status-heading">
+        <h2 id="status-heading">Status</h2>
+        <p className="ticket-detail__status-current">
+          Current: <strong>{formatStatusLabel(ticket.status)}</strong>
+        </p>
+        <StatusTransitionButtons
+          currentStatus={ticket.status}
+          onTransition={handleTransition}
+          disabled={saving || transitioning}
+        />
+      </section>
 
       <dl className="ticket-detail__meta">
         <div>
@@ -211,6 +267,7 @@ export default function TicketDetailPanel({ initialTicket }) {
       <section className="ticket-detail__section" aria-labelledby="comments-heading">
         <h2 id="comments-heading">Comments</h2>
         <CommentList comments={ticket.comments} />
+        <CommentComposer ticketId={ticket.id} onCommentAdded={applyTicket} />
       </section>
 
       <footer className="ticket-detail__footer">

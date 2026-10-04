@@ -4226,3 +4226,381 @@ NODE TicketControllerSliceTest [src=backend/src/test/java/com/ticketmanagement/c
 … (output truncated)
 ```
 </details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Starting with UI-F: building a CreateTicketForm client component, either as a server wrapper or a full client page.
+
+UI-F will collect title, description, priority, assignee, and category. It will call createTicket on submit, redirect on success, map 400 errors to fields, and cancel back to /tickets.
+
+UI-G will load a ticket server-side and render read-only fields plus comments. It will handle 404s via ApiError, link to /ask in the footer, and display comments read-only.
+
+UI-H will let users edit fields and save only changed values without updating status. It will track dirty fields against the initial server state.
+
+The detail view will split into a read-only display and a `TicketFieldEditor` client component for UI-H. The server page will load the ticket with `cache: 'no-store'`, pass it to the client editor, and show a not-found state on 404. Shared constants for categories and priorities will live in `TicketCategories.js` and `TicketPriorities.js`.
+
+A helper will map `ApiError.details` to field names for targeted validation errors. `CreateTicketForm` will import `useState`, `useRouter`, `Link`, `createTicket`, `ApiError`, and `ErrorBanner`. UI-H will detect empty PATCH payloads to avoid sending unchanged fields.
+
+The editor will diff current form values against the initial ticket prop to build a PATCH payload containing only changed fields. Null assignee, category, and resolution notes will be normalized to empty strings. A read-only status badge will appear on the detail page, but users cannot edit it in UI-H.
+
+UI-G will render comments as a read-only list. UI-H will not include a comment composer; that belongs to UI-I.
+
+The detail page server component will fetch the ticket via `getTicket`, pass it to `TicketDetailPanel` as `initialTicket`, and catch errors to render a not-found state.
+
+TicketDetailPanel will be a client component with editable fields, read-only status, comments, a save button, links to ask, and timestamps. After a successful patch, the panel will refresh its initial state from the server response. A loading fallback will be added under `app/tickets/[id]/loading.js`. `getTicket` will use `no-store` caching, while `createTicket` and `patchTicket` will skip cache headers. Field-level validation errors will be mapped by field name.
+
+A `mapFieldErrors` helper will parse API error details into a field-name map. The create form will retain its state on 400 responses instead of resetting. Categories will be PAYMENTS, SHIPMENT, BILLING, LOGIN, and OTHER, with an optional empty default. Priorities will be LOW, MEDIUM, HIGH, and CRITICAL. The plan document will be updated for UI-F, UI-G, and UI-H.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/api/tickets.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "details"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "details",
+  "topFiles": [
+    {
+      "matchCount": 13,
+      "uri": "spec/api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 13
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Beginning implementation of UI-F, UI-G, and UI-H.
+
+Planning shared utilities for ticket categories, priorities, error mapping, and patch building. Defining form and panel components for UI-F, UI-G, and UI-H. Setting up Next.js routes for creating and viewing tickets with server-side fetching and loading states. Normalizing empty category values in create payloads.
+
+Defining `buildCreatePayload` to trim title and conditionally include description, priority, assignee, and category. Defaulting the priority select to MEDIUM. Setting detail form fallbacks for assignee, category, and resolution notes. Adding a status badge formatter.
+
+Adding a subtle "Saved" success indicator. Blocking save when no fields changed to prevent empty patches from returning 400 errors. Planning CSS classes for form errors, ticket details, status badges, and comment lists. Including a back-to-list link in the detail header and a footer ask link. Updating plan.md and running the build.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Implementing create form, detail view, and field-save PATCH flow.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/lib/ticketCategories.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/lib/ticketPriorities.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/lib/mapFieldErrors.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/lib/buildTicketPatch.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/components/CommentList.jsx</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/components/TicketNotFound.jsx</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/components/CreateTicketForm.jsx</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/components/TicketDetailPanel.jsx</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/tickets/new/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/tickets/[id]/loading.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/tickets/[id]/page.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/src/api/tickets.js</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Adding CSS for forms, status badges, and comments.
+
+Fixing buildTicketPatch to handle null values for category and assignee. Running TypeScript and JSDoc checks. Updating plan.md for UI-F, G, and H. Removing unused EDITABLE_KEYS export. Leaving CreateTicketForm submit state unchanged since navigation occurs immediately.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend/app/globals.css</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend &amp;&amp; npm run build</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/frontend && npm run build
+```
+
+```
+
+> ticket-management-frontend@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.27
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 4.9s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/7) ...
+   Generating static pages (1/7) 
+   Generating static pages (3/7) 
+   Generating static pages (5/7) 
+ ✓ Generating static pages (7/7)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      133 B         103 kB
+├ ○ /_not-found                            995 B         104 kB
+├ ○ /ask                                   133 B         103 kB
+├ ƒ /tickets                               161 B         106 kB
+├ ƒ /tickets/[id]                        2.95 kB         109 kB
+└ ○ /tickets/new                          2.4 kB         108 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/255-ce8c7c75002f810b.js       46.5 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/plan.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Graphify was updated without a commit.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify update .</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify update .
+```
+
+```
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 17 file(s) not classified (no supported extension or shebang), skipped: .env.example, .gitignore, .nvmrc, ai-project-instructions.mdc, api-standards.mdc, documentation.mdc (+11 more)
+  AST extraction: 40/40 uncached files (100%) [12 workers]
+[graphify watch] community set changed since labeling (174 saved labels, 167 communities now; renamed 63 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.
+[graphify] backed up curated graph (5 files) -> 2026-10-04/
+[graphify watch] Rebuilt: 2367 nodes, 4970 edges, 167 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Starting with UI-F, UI-G, and UI-H.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+### UI-F — Create (`/tickets/new`)
+- **`CreateTicketForm`**: title (required), description, priority, assignee, category — no status
+- **POST** via `createTicket` → redirect to `/tickets/{id}` on success
+- **400**: `ErrorBanner` + per-field errors; input kept
+- **Cancel** → `/tickets`
+
+### UI-G — Detail read (`/tickets/[id]`)
+- Server **`getTicket(id)`**; **`TicketNotFound`** on 404
+- Shows id, status badge, all fields, created/updated, comments (ascending)
+- Footer link to **`/ask`**
+- **`loading.js`** while fetching
+
+### UI-H — Save fields (same page)
+- **`TicketDetailPanel`** (client): editable title, description, priority, assignee, category, resolution notes
+- **Save changes** → **`patchTicket`** with **only changed** fields (no `status`)
+- Success updates local state; errors show banner + field details
+
+Shared: `CommentList`, `mapFieldErrors`, `buildChangedTicketPatch`, category/priority helpers, form styles.
+
+`npm run build` passes. `plan.md` updated for UI-F/G/H.
+
+**Smoke test:** backend on 8080 → create ticket → edit title → reload detail → comment composer is **UI-I** next. Changes are uncommitted locally.
+
+---
+
+_**User**_
+
+start implementation of UI-I and UI-J
+
+---
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
+</details></tool-use>

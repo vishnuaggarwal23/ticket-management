@@ -67,6 +67,11 @@ main {
   background: #ffebee;
 }
 
+.error-banner--prominent {
+  border-width: 2px;
+  background: #ffcdd2;
+}
+
 .error-banner__message {
   margin: 0;
   font-weight: 600;
@@ -355,4 +360,25 @@ main {
 .comment-list__empty {
   margin: 0;
   color: #555;
+}
+
+.comment-composer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.status-actions__none {
+  margin: 0;
+  color: #555;
+}
+
+.ticket-detail__status-current {
+  margin: 0 0 0.75rem;
 }
