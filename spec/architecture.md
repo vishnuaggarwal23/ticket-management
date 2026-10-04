@@ -14,7 +14,7 @@
 | **Open** | Underspecified; resolve in a child spec after confirmation. |
 | **Example** | Illustrative only (e.g. `TKT-1001`). |
 
-This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, components, and **frontend architecture** (**§12**). PDF `ui-flow` **screen and flow detail** lives in [`ui-model.md`](ui-model.md) (no separate `ui-flow.md`). It **does not** replace [`ui-model.md`](ui-model.md), [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md) (includes ask `data` semantics §6.2–§6.5), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
+This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, components, and **frontend architecture** (**§12**). PDF `ui-flow` **screen and flow detail** lives in [`ui-model.md`](ui-model.md) (no separate `ui-flow.md`). It **does not** replace [`ui-model.md`](ui-model.md), [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md), [`rag-api-contract.md`](rag-api-contract.md) (ask `data` semantics), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
 
 ---
 
@@ -492,7 +492,7 @@ sequenceDiagram
 | **Ticket REST** | CRUD, comments, search, filter, status via PATCH | Capabilities **PDF**; paths **Convention** `/api/v1/tickets` |
 | **Ask REST** | Natural-language Q&A | **`POST /api/ai/ask`** **PDF**; alias **`POST /api/v1/ai/ask`** **Convention** |
 
-Detailed paths, bodies, and field catalogs → [`api-contract.md`](api-contract.md) (ask semantics §6.2–§6.5). Envelopes and status codes → `rules/api-standards.md`.
+Detailed paths, bodies, and field catalogs → [`api-contract.md`](api-contract.md) (tickets) and [`rag-api-contract.md`](rag-api-contract.md) (ask). Envelopes and status codes → `rules/api-standards.md`.
 
 ### 11.2 Ticket API capability map
 
@@ -926,7 +926,7 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 | [`api-contract.md`](api-contract.md) | Ticket/comment REST contracts |
 | [`state-machine.md`](state-machine.md) | Transitions, errors |
 | [`rag-ingestion.md`](rag-ingestion.md) | Chunk numbers, models, re-ingest execution |
-| [`api-contract.md`](api-contract.md) §6.2–§6.5 | Ask `data`, grounding, no-match (**AC-RAG-API-***) |
+| [`rag-api-contract.md`](rag-api-contract.md) | Ask `data`, grounding, no-match (**AC-RAG-API-***) |
 | [`ui-model.md`](ui-model.md) | Screens, CRUD, flows A–E, transition + ask UX, **AC-UI-*** |
 | §12.3–§12.6 (this file) | Frontend architecture summary; process evidence §12.6 |
 | [`test-strategy.md`](test-strategy.md) | Layered tests |
@@ -968,3 +968,4 @@ Architecture supports verification of:
 | 2026-10-04 | §12 intro: no separate `ui-flow.md`; interim consolidation in §12.3–§12.6 (superseded by `ui-model.md` for screen detail). |
 | 2026-10-04 | Screen/flow detail → [`ui-model.md`](ui-model.md); §12 remains UI architecture summary. |
 | 2026-10-04 | `improve-from-assessment-pdf`: PDF ten-name spec list → nine repo files; `ui-flow` → `ui-model.md`. |
+| 2026-10-04 | Ask semantics → [`rag-api-contract.md`](rag-api-contract.md); ten-file spec set. |

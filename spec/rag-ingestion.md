@@ -2,7 +2,7 @@
 
 > **Status:** draft (2026-10-04) — chunking **recommendation** and **proposed** numeric defaults for implementation; **DEC-01** (re-ingest on close) and **DEC-09** (embedding product/model id) remain **Open** with interim stance below.  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md) FEAT-12…14, §11.1; [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
-> **Related:** Justification narrative → [`architecture.md`](architecture.md) §15–§16; persistence → [`data-model.md`](data-model.md) §8–§11; grounding rules → `rules/rag-vector-store.md`; ask HTTP + response semantics → [`api-contract.md`](api-contract.md) §6, §6.2–§6.5.
+> **Related:** Justification narrative → [`architecture.md`](architecture.md) §15–§16; persistence → [`data-model.md`](data-model.md) §8–§11; grounding rules → `rules/rag-vector-store.md`; ask HTTP + response semantics → [`rag-api-contract.md`](rag-api-contract.md).
 
 **Label legend:** **PDF** | **Convention** | **Agreed** | **Proposed** (implementation default until user confirms) | **Example**
 
@@ -316,3 +316,4 @@ Numeric defaults for K/threshold: **Open** until agreed (FEAT-19); do not embed 
 | 2026-10-04 | Initial spec: sources (incl. not-ingested history/transitions), paragraph vs fixed-size comparison, hybrid recommendation, re-ingest, storage, AC-RAG-ING-*. |
 | 2026-10-04 | Scope: retrieval eval → [`evaluation-strategy.md`](evaluation-strategy.md) §4.4 (not golden answers). |
 | 2026-10-04 | Cross-ref ask response semantics → [`api-contract.md`](api-contract.md) §6.2–§6.5. |
+| 2026-10-04 | Ask response semantics → [`rag-api-contract.md`](rag-api-contract.md). |

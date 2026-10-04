@@ -40,7 +40,7 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 16 | 2026-10-03 20:28:56 | Refresh `docs/assessment-brief.md` from PDF and current repo state; graphify run on the project. | [`.specstory/history/2026-10-03_20-28-56Z-assessment-brief-update.md`](../.specstory/history/2026-10-03_20-28-56Z-assessment-brief-update.md) |
 | 17 | 2026-10-03 20:40:54 | State-machine/api-contract depth; `rag-ingestion.md` and test-strategy; rules/commands link fixes; assessment-brief/skills sync; PDF coverage and `prompt-history.md` index (edit-only passes). | [`.specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md`](../.specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md) |
 | 18 | 2026-10-04 06:59:04 | Added `spec/evaluation-strategy.md` (retrieval quality, failure taxonomy F-01–F10, AC-EVAL, PDF example questions); synced cross-links in `spec/`, `rules/`, and `commands/`. | [`.specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md`](../.specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md) |
-| 19 | 2026-10-04 07:40:06 | Added `spec/ui-model.md` (screens, CRUD, ask/RAG UX, **AC-UI-***); cross-linked nine-file spec set; ran `improve-from-assessment-pdf`; refreshed `docs/prompt-history.md`. | [`.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md`](../.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md) |
+| 19 | 2026-10-04 07:40:06 | Added `spec/ui-model.md` and `spec/rag-api-contract.md`; cross-linked ten-file spec set (`ui-flow` → `ui-model`); assessment alignment and prompt-history index updates in the same session. | [`.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md`](../.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md) |
 
 ## Related
 
@@ -60,3 +60,4 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 2026-10-04 | Documented `commands/update-prompt-history.md` to regenerate this index. |
 | 2026-10-04 | Index sync: command updates existing rows when `.specstory/history/` transcripts change. |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (19 sessions; added 2, updated 2, removed 0). |
+| 2026-10-04 | Synced chronological index from `.specstory/history/` (19 sessions; added 0, updated 1, removed 0). |

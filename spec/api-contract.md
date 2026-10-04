@@ -2,7 +2,7 @@
 
 > **Status:** draft (2026-10-04) — ticket REST paths and payloads align with **Convention** in [`rules/api-standards.md`](../rules/api-standards.md) and agreed [`data-model.md`](data-model.md). Resolves **OQ-04** for ticket/comment HTTP; **DEC-14** interim alignment recorded §10.  
 > **Primary source:** `docs/Assessments.docx` (capabilities restated in [`requirements.md`](requirements.md)).  
-> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask `data` semantics (PDF `rag-api-contract` themes) → **§6.2–§6.5** (**DEC-11** open). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
+> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask / RAG HTTP semantics (**PDF** `rag-api-contract.md`) → [`rag-api-contract.md`](rag-api-contract.md) (authoritative); summary retained **§6.2–§6.5** (**DEC-11** open). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
 
 ---
 
@@ -1031,6 +1031,8 @@ After success, `GET /api/v1/tickets/{id}` includes the new comment in `comments`
 
 **Capability (**PDF**):** natural-language questions over ticket knowledge; grounded answer with citations or honest no-match; **no** side effects.
 
+**Authoritative detail:** [`rag-api-contract.md`](rag-api-contract.md). This section is a combined-catalog summary for reviewers who start from the ticket HTTP spec.
+
 ### 6.1 `POST /api/ai/ask` and `POST /api/v1/ai/ask`
 
 | | |
@@ -1287,3 +1289,4 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | 2026-10-04 | PDF `rag-api-contract` themes: §6.2–§6.5 grounding, no-match, **AC-RAG-API-***. |
 | 2026-10-04 | Related-spec UI pointer → architecture §12.3–§12.6. |
 | 2026-10-04 | Related-spec UI pointer → [`ui-model.md`](ui-model.md). |
+| 2026-10-04 | Ask detail → [`rag-api-contract.md`](rag-api-contract.md); §6 remains combined-catalog summary. |

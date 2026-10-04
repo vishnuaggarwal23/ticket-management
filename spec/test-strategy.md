@@ -311,7 +311,7 @@ Detail: **§5**. Source: [`state-machine.md`](state-machine.md) §5, §6.1.1, §
 
 ## 9. HTTP API contract acceptance → tests (**AC-API-***)
 
-Source: [`api-contract.md`](api-contract.md) §2.11, §4–§6.
+Source: [`api-contract.md`](api-contract.md) §2.11, §4–§5; ask [`rag-api-contract.md`](rag-api-contract.md).
 
 | ID | Criterion | API slice | API integration |
 |----|-----------|-----------|-----------------|

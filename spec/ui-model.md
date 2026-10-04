@@ -173,7 +173,7 @@ frontend/src/
 |------|--------|
 | Ticket APIs use **`/api/v1`** prefix | **Convention** (`rules/api-standards.md`) |
 | Updates use **`PATCH`**, not PUT | **Convention** |
-| Ask uses **`POST /api/v1/ai/ask`** (preferred) or **`POST /api/ai/ask`** (**PDF** path) with body `{ "question": "..." }` | **PDF** + [`api-contract.md`](api-contract.md) §6.1 |
+| Ask uses **`POST /api/v1/ai/ask`** (preferred) or **`POST /api/ai/ask`** (**PDF** path) with body `{ "question": "..." }` | **PDF** + [`rag-api-contract.md`](rag-api-contract.md) |
 | List uses query params `page`, `size`, `sort`, `q`, `status` | **Convention** + **PDF** search/filter |
 | Empty list → **200** with empty `data` → show **empty state**, not error | **Convention** |
 | No secrets or API keys in the frontend bundle | **PDF** NFR-06 |
@@ -459,7 +459,7 @@ There is **no** requirement for a “vector index browser” or “retrieved chu
 
 #### 10.2.3 Grounded success vs no-match (both HTTP 200)
 
-Per [`api-contract.md`](api-contract.md) §6.3–§6.4:
+Per [`rag-api-contract.md`](rag-api-contract.md):
 
 | Outcome | `citedTicketIds` | UI |
 |---------|------------------|-----|
@@ -583,7 +583,7 @@ Testable UI criteria for spec review (`commands/review-spec.md`) and frontend re
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
 | **DEC-06** | Transition API shape | **Open** (interim PATCH) | UI sends `PATCH { "status" }` per [`state-machine.md`](state-machine.md) §6 |
-| **DEC-11** | Ask no-match wording / extra fields | **Open** | UI displays `data.answer` as returned — interim phrase in [`api-contract.md`](api-contract.md) §6.3 |
+| **DEC-11** | Ask no-match wording / extra fields | **Open** | UI displays `data.answer` as returned — interim phrase in [`rag-api-contract.md`](rag-api-contract.md) |
 | **DEC-15** | Layout, router, ask placement, CSS kit | **Open** | §4.1 **Example** routes; panel vs page |
 | **DEC-02** | Skipped status hops | **Open** | UI legal-target table follows §9.1 (option A default) |
 

@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-rag-output.md`](../.cursor/commands/review-rag-output.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) §15–16; ingest/chunking [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data`: [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (**DEC-11** open). **Retrieval quality** (right tickets in top-K): [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) and [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 / §4.3.
+Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) §15–16; ingest/chunking [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data`: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** open). **Retrieval quality** (right tickets in top-K): [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) and [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 / §4.3.
 
 **Pass only if all three hold:**
 
@@ -163,7 +163,7 @@ Authoritative procedure, corpus, examples, and failure taxonomy: [`spec/evaluati
 
 Same triggers as [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) **§6.3** — e.g. after chunking/embed/K/threshold/ingest changes, before demo steps 9–10 ([`spec/requirements.md`](../spec/requirements.md) §8.7), or when grounding passes but the answer “feels wrong”.
 
-### Minimal checklist (detail in spec §6.2)
+### Minimal checklist (detail in [`rag-api-contract.md`](../spec/rag-api-contract.md))
 
 - [ ] Seed or fixture matches **Example** corpus ([`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5.1 or requirements §4.3).
 - [ ] **Retrieved set** captured per §7 (logs, harness, or replay) — else verdict `not evaluated`.

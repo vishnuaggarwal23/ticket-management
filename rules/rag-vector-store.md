@@ -12,7 +12,7 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
 | `commands/review-rag-output.md` | Manual grounding review of ask answers |
 | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking strategy, ingest triggers, property keys; **proposed** numeric defaults §9.3 (**DEC-09** model/dimension still open) |
-| [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 | Ask `data`, grounding, no-match (**DEC-11**) |
+| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Ask `data`, grounding, no-match (**DEC-11**) |
 | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | Probabilistic retrieval quality (draft) |
 | [`spec/requirements.md`](../spec/requirements.md) | §2.5 deterministic vs probabilistic; FEAT-22; §4.3 eval corpus; **DEC-01**, **DEC-09**, **DEC-11** §10 |
 
@@ -149,7 +149,7 @@ Do **not** implement a chunking strategy, size, or overlap from this file alone 
 
 - Assessment path: `POST /api/ai/ask` with JSON `{"question":"..."}`.
 - Project convention: the same handler at `POST /api/v1/ai/ask`; success/error envelopes in `rules/api-standards.md`.
-- Fields **inside** `data` per [`spec/api-contract.md`](../spec/api-contract.md) §3.5 / §6.2–§6.5.
+- Fields **inside** `data` per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §7 (field catalog cross-ref [`api-contract.md`](../spec/api-contract.md) §3.5).
 - Do not expose prompts, chunk dumps, model names, Ollama URLs, top-K, thresholds, or vector internals on the public API unless a spec explicitly makes them public (default: they are not).
 - Do not add agent, chat-session, tool, notification, or “AI creates a ticket” endpoints.
 
@@ -195,3 +195,4 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 | 2026-10-04 | Interim: architecture §16 justification; requirements §10 for open RAG **DEC** when child specs absent. |
 | 2026-10-04 | Eval pointers: [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §3–§9. |
 | 2026-10-04 | Ask `data` → [`api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (not separate `rag-api-contract` file). |
+| 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md). |

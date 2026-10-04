@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/api-standards.mdc`](../.cursor/rules/api-standards.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16). **HTTP paths, request/response payloads, and per-endpoint scenarios** are in [`spec/api-contract.md`](../spec/api-contract.md) (draft). **Ask** `data` semantics: [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (**DEC-11** no-match wording). Capability map: [`spec/architecture.md`](../spec/architecture.md) §11. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
+JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16). **HTTP paths, request/response payloads, and per-endpoint scenarios** are in [`spec/api-contract.md`](../spec/api-contract.md) (draft). **Ask** `data` semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** no-match wording). Capability map: [`spec/architecture.md`](../spec/architecture.md) §11. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
 
 Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: [`spec/architecture.md`](../spec/architecture.md) §10–11.
 
@@ -40,7 +40,7 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 
 **Open — resolve in RAG API spec when finalized (do not assume beyond interim contract):**
 
-- Ask **business** JSON inside `data` beyond §3.5 / §6.2–§6.5 in [`spec/api-contract.md`](../spec/api-contract.md) (**DEC-11**)
+- Ask **business** JSON inside `data` beyond [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §7 (**DEC-11**)
 - Dedicated transition sub-resource vs PATCH-only — **interim:** PATCH `status` per [`spec/api-contract.md`](../spec/api-contract.md) §4.4 and [`spec/state-machine.md`](../spec/state-machine.md) §6.1
 - Authentication / authorization / roles (not in the assessment)
 - Whether OpenAPI is produced (optional; if added it MUST match these rules and the specs)
@@ -292,7 +292,7 @@ Examples use agreed field names; `spec/api-contract.md` may add narrative only.
 |-------|------|
 | Columns, enums, sizes, DB indexes | [`spec/data-model.md`](../spec/data-model.md) §6, §14.5, §16 |
 | REST request/response records | [`spec/api-contract.md`](../spec/api-contract.md) §3; DTO names in [`spec/data-model.md`](../spec/data-model.md) §10 |
-| Ask `data` JSON | [`spec/api-contract.md`](../spec/api-contract.md) §6, §6.2–§6.5 (**AC-RAG-API-***) |
+| Ask `data` JSON | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**AC-RAG-API-***); URI catalog → [`api-contract.md`](../spec/api-contract.md) §6 |
 
 Do not invent fields beyond these specs. **Assignee** is a nullable string (email-like), not a user FK.
 
@@ -307,7 +307,7 @@ Content-Type: application/json
 { "question": "What caused previous payment failures?" }
 ```
 
-Also expose `POST /api/v1/ai/ask` with the same body and the **success envelope**. Field names **inside** `data`: [`spec/api-contract.md`](../spec/api-contract.md) §3.5 / §6.2–§6.5 (**DEC-11** wording open in §6.3).
+Also expose `POST /api/v1/ai/ask` with the same body and the **success envelope**. Field names **inside** `data`: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §7 (cross-ref [`api-contract.md`](../spec/api-contract.md) §3.5).
 
 **Frontend default:** call `POST /api/v1/ai/ask` for consistency with other `/api/v1` routes. The assessment path `/api/ai/ask` must remain supported for the same handler.
 
@@ -376,3 +376,4 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Status transitions point to draft [`spec/state-machine.md`](../spec/state-machine.md) §6.1. |
 | 2026-10-04 | Ticket HTTP payloads/scenarios defer to draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | Ask `data` pointers → `api-contract` §6.2–§6.5 (consolidated PDF `rag-api-contract` themes). |
+| 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md) (authoritative). |

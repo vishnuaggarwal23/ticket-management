@@ -14,7 +14,7 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows:
 | [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client types |
 | [`spec/ui-model.md`](../spec/ui-model.md) | Screens, CRUD flows, ask/RAG UX, **AC-UI-*** |
 | [`spec/architecture.md`](../spec/architecture.md) §12 | Frontend architecture summary |
-| [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 | Citation / no-match fields inside ask `data` (**DEC-11**) |
+| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Citation / no-match fields inside ask `data` (**DEC-11**) |
 
 ## Assessment vs project conventions vs open decisions
 
@@ -48,7 +48,7 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 
 - Screen layout, navigation, how a transition is chosen, how ask is laid out
 - CSS framework, component library, router, client global store
-- Exact ask `data` field names beyond §3.5 / §6.2–§6.5 in [`spec/api-contract.md`](../spec/api-contract.md) (**DEC-11** no-match wording)
+- Exact ask `data` field names beyond [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** no-match wording)
 
 ## Stack
 
@@ -115,7 +115,7 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 - Empty list: **200** + empty `data` — show an empty state, not a fake error.
 - 400 validation, 404 not found, 409 illegal transition: show `error.message` (and `details` when present). Backend is source of truth for illegal status.
 - UI may disable obvious illegal transitions as **guidance only**.
-- Ask: POST JSON `{ "question" }` to `/api/v1/ai/ask`. Loading + result. Citations = ticket ids from `data` (per [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5). No-match: show API text honestly — e.g. “No relevant tickets found” — not a dressed-up model essay.
+- Ask: POST JSON `{ "question" }` to `/api/v1/ai/ask`. Loading + result. Citations = ticket ids from `data` (per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md)). No-match: show API text honestly — e.g. “No relevant tickets found” — not a dressed-up model essay.
 - Do not hardcode machine hosts. Do not commit secrets.
 
 ## Capabilities the UI must support (when `ui-model.md` agrees how)

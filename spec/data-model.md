@@ -52,7 +52,7 @@ This document is the **source of truth** for:
 - **DTO** field catalogs that mirror entities for REST (detail in [`api-contract.md`](api-contract.md) when agreed).
 - **Logical** RAG structures (knowledge documents, chunk metadata) that are built in memory during ingestion.
 
-HTTP envelopes and paths remain in `rules/api-standards.md`. Ask `data` semantics → [`api-contract.md`](api-contract.md) §6.2–§6.5. Transition **rules** → [`state-machine.md`](state-machine.md).
+HTTP envelopes and paths remain in `rules/api-standards.md`. Ask `data` semantics → [`rag-api-contract.md`](rag-api-contract.md). Transition **rules** → [`state-machine.md`](state-machine.md).
 
 ---
 
@@ -874,7 +874,7 @@ Remaining **Open** in other specs:
 | DEC-02 skipped transitions | `state-machine.md` |
 | DEC-06 transition API shape | [`api-contract.md`](api-contract.md) §4.4 (PATCH `status` interim) |
 | Embedding dimension, chunk sizes | [`rag-ingestion.md`](rag-ingestion.md) §9.3, §12 |
-| Ask `data` JSON | [`api-contract.md`](api-contract.md) §6.2–§6.5 |
+| Ask `data` JSON | [`rag-api-contract.md`](rag-api-contract.md) |
 
 ---
 

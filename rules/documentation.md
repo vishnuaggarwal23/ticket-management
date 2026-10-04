@@ -54,9 +54,9 @@ Maintain detailed specs as work proceeds:
 
 All PDF-listed files under `spec/` (paths relative to repo root):
 
-[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), [`rag-ingestion.md`](../spec/rag-ingestion.md), [`evaluation-strategy.md`](../spec/evaluation-strategy.md), [`test-strategy.md`](../spec/test-strategy.md), [`ui-model.md`](../spec/ui-model.md).
+[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), [`rag-api-contract.md`](../spec/rag-api-contract.md), [`rag-ingestion.md`](../spec/rag-ingestion.md), [`evaluation-strategy.md`](../spec/evaluation-strategy.md), [`test-strategy.md`](../spec/test-strategy.md), [`ui-model.md`](../spec/ui-model.md).
 
-**PDF also lists** `rag-api-contract.md` and `ui-flow.md` — **content lives in** [`api-contract.md`](../spec/api-contract.md) **§6.2–§6.5** and [`ui-model.md`](../spec/ui-model.md) (screens, flows, **AC-UI-***); [`architecture.md`](../spec/architecture.md) **§12** is the UI architecture summary (see [`requirements.md`](../spec/requirements.md) child-spec table).
+**PDF filename alias:** assignment lists `ui-flow.md` → implemented as [`ui-model.md`](../spec/ui-model.md) (do not add `spec/ui-flow.md`). Ten assignment spec names → **ten** files under `spec/` (see [`requirements.md`](../spec/requirements.md) child-spec table). [`architecture.md`](../spec/architecture.md) **§12** is the UI architecture summary.
 
 ### Spec files in repo today (2026-10-04)
 
@@ -66,7 +66,8 @@ All PDF-listed files under `spec/` (paths relative to repo root):
 | [`architecture.md`](../spec/architecture.md) | draft system design + **§12** UI architecture summary |
 | [`data-model.md`](../spec/data-model.md) | **agreed** |
 | [`state-machine.md`](../spec/state-machine.md) | **draft** |
-| [`api-contract.md`](../spec/api-contract.md) | **draft** (includes ask semantics §6.2–§6.5) |
+| [`api-contract.md`](../spec/api-contract.md) | **draft** (ticket REST + ask §6 summary) |
+| [`rag-api-contract.md`](../spec/rag-api-contract.md) | **draft** (authoritative ask / **AC-RAG-API-***) |
 | [`rag-ingestion.md`](../spec/rag-ingestion.md) | **draft** |
 | [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **draft** |
 | [`test-strategy.md`](../spec/test-strategy.md) | **draft** |
@@ -83,7 +84,8 @@ PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **
 | [`requirements.md`](../spec/requirements.md) | PDF hub: **FR** / **FEAT-***, **AC-CORE-*** (§8) and **AC-FEAT-*** (§4.2); **OQ-*** / **DEC-*** register and spec handoff (§10); precedence PDF → requirements → agreed specs → rules (§2.4); deterministic vs probabilistic proof (§2.5); demo script (§8.7); glossary (§12). Detail contracts live in child specs (§13). |
 | [`architecture.md`](../spec/architecture.md) | System design: business vs functional modules, ticket aggregate shape, tech/deployment, **communication** (sync REST), **API map**, **PgVector** index role, RAG pipeline; **chunking** and **embedding tradeoffs** (PDF NFR-07 / AC-CORE-19). Numeric chunk/K/model → [`rag-ingestion.md`](../spec/rag-ingestion.md) |
 | [`data-model.md`](../spec/data-model.md) | Entities, Liquibase tables, enums, RAG chunk metadata, DTO catalogs, **indexes §14.5**; **DEC-03/04/05/07/08/13** |
-| [`api-contract.md`](../spec/api-contract.md) | Ticket/comment payloads; ask HTTP + **§6.2–§6.5** grounding, citations, no-match (**AC-RAG-API-***, **DEC-11**); envelopes in `rules/api-standards.md` |
+| [`api-contract.md`](../spec/api-contract.md) | Ticket/comment payloads; combined HTTP catalog incl. ask summary §6; envelopes in `rules/api-standards.md` |
+| [`rag-api-contract.md`](../spec/rag-api-contract.md) | Ask HTTP + `data` JSON; grounding, citations, no-match (**AC-RAG-API-***, **DEC-11**) |
 | [`state-machine.md`](../spec/state-machine.md) | Legal/illegal transitions (including skipped steps if any) |
 | [`rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking (hybrid paragraph + fixed overflow), ingest sources, re-ingest (**DEC-01**), property keys; **DEC-09** model/dimension still open |
 | [`ui-model.md`](../spec/ui-model.md) | Screens, CRUD flows, ask/RAG UX, flows A–E, **AC-UI-***; PDF `ui-flow` themes |
@@ -160,10 +162,22 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §2 | Envelopes; **§2.8** URI catalog; **§2.11** endpoint catalog; **§2.9** headers; **§2.10** error examples |
 | §3 | JSON resource models (ticket, comment, writes) |
 | §4–5 | Endpoints with full HTTP + cURL + scenario tables |
-| §6 | Ask URIs; **§6.2–§6.5** grounding, no-match, **AC-RAG-API-*** (PDF `rag-api-contract` themes) |
+| §6 | Ask URIs; **§6.2–§6.5** summary (detail → [`rag-api-contract.md`](../spec/rag-api-contract.md)) |
 | §7 | Demo end-to-end URI sequence |
 | §8–9 | REST summary; **AC-API-*** |
 | §10 | **DEC-06**, **DEC-11**, **DEC-14** |
+
+### [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) structure (for reviewers)
+
+| Section | Use |
+|---------|-----|
+| §4–§6 | Endpoints, envelopes, pipeline boundary |
+| §7 | `AskRequest` / `AskResponseData` inside success `data` |
+| §8–§9 | Grounding, citations, no-match (**DEC-11**) |
+| §10–§11 | Guardrails, non-agentic rules |
+| §17 | **AC-RAG-API-01…05** (authoritative owner) |
+
+Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-contract.md) §2.11 and §6.
 
 ### [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) structure (for reviewers)
 
@@ -278,5 +292,6 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Eight-file `spec/` index; `rag-api-contract` / `ui-flow` → `api-contract` §6, `architecture` §12. |
 | 2026-10-04 | Added [`ui-model.md`](../spec/ui-model.md); PDF `ui-flow` detail + **AC-UI-***; `architecture` §12 summary only. |
 | 2026-10-04 | `improve-from-assessment-pdf` pass: §6.8 spec-list row in requirements; assessment-brief §13 consolidation. |
+| 2026-10-04 | Ten-file `spec/` set; [`rag-api-contract.md`](../spec/rag-api-contract.md) reviewer map; **AC-RAG-API-*** owner. |
 | 2026-10-04 | Added `commands/improve-from-assessment-pdf.md` (edit-only assessment sync pass). |
 | 2026-10-04 | Authoritative assignment path: `docs/Assessments.docx`. |

@@ -17,7 +17,7 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 - [`spec/ui-model.md`](../spec/ui-model.md) — screens, flows, **AC-UI-01…12**; open **DEC-06**, **DEC-15** §14
 - [`spec/architecture.md`](../spec/architecture.md) §12 when reviewing module/API wiring at architecture level
 - [`spec/data-model.md`](../spec/data-model.md) (agreed id, category, resolutionNotes, create requiredness)
-- Draft [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 — open **DEC-11** per [`spec/requirements.md`](../spec/requirements.md) §10.2
+- Draft [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) — open **DEC-11** per [`spec/requirements.md`](../spec/requirements.md) §10.2
 - Assessment PDF only as background for **capabilities** (not stack)
 
 Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** / **minor** with file references.

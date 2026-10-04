@@ -11,7 +11,7 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 | Missing artefact | Action |
 |------------------|--------|
 | [`spec/data-model.md`](../spec/data-model.md) missing | Stop — do not invent ticket fields |
-| Ask `data` shape unclear vs [`spec/api-contract.md`](../spec/api-contract.md) §6.2–§6.5 | Align with `answer` + `citedTicketIds`; flag **DEC-11** no-match wording gaps |
+| Ask `data` shape unclear vs [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Align with `answer` + `citedTicketIds`; flag **DEC-11** no-match wording gaps |
 ## Inputs
 
 - Specs: all ten PDF-listed files under `spec/` (see [`rules/documentation.md`](../rules/documentation.md)); only [`data-model.md`](../spec/data-model.md) is **agreed**; others **draft**

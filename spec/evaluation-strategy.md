@@ -310,7 +310,7 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 | `commands/review-rag-output.md` | §3, §6, §7 |
 | `commands/generate-tests.md` | No golden strings; Bands A/B/C in [`test-strategy.md`](test-strategy.md) **§6** |
 | [`test-strategy.md`](test-strategy.md) **§5–§6** | Deterministic SM vs probabilistic retrieval split |
-| [`api-contract.md`](api-contract.md) §6.2–§6.5 | Ask grounding contract (**AC-RAG-API-***) |
+| [`rag-api-contract.md`](rag-api-contract.md) | Ask grounding contract (**AC-RAG-API-***) |
 | `commands/review-spec.md` | Lists this file as Evaluation artefact |
 
 ---

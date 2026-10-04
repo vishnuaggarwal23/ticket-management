@@ -171,8 +171,8 @@ Secrets, API keys, and machine-specific paths MUST NOT be committed.
 Assessment-expected implementable specifications live under `spec/`, including
 as work proceeds: `requirements.md`, `architecture.md`, `data-model.md`,
 `api-contract.md`, `state-machine.md`, `rag-ingestion.md`,
-`rag-api-contract.md` (themes in `api-contract.md`), `evaluation-strategy.md`,
-`ui-flow.md` (detail in `ui-model.md`), and `test-strategy.md`.
+`rag-api-contract.md`, `evaluation-strategy.md`,
+`ui-flow.md` (filename alias → `ui-model.md`), and `test-strategy.md`.
 
 Existing `spec/requirements.md` and `spec/architecture.md` are the current
 requirement and architecture drafts. `architecture.md` records system design
