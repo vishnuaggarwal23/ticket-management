@@ -1,6 +1,6 @@
 # RAG API contract — grounded ask over ticket knowledge
 
-> **Status:** draft (2026-10-04) — **PDF**-named spec for natural-language Q&A over ingested ticket text. HTTP envelopes and shared REST rules → `rules/api-standards.md`. Ticket REST remains in [`api-contract.md`](api-contract.md) §4–§5. Ingestion, chunking, models → [`rag-ingestion.md`](rag-ingestion.md); pipeline shape → [`architecture.md`](architecture.md) §15.  
+> **Status:** agreed (2026-10-04) — **PDF**-named spec for natural-language Q&A over ingested ticket text. HTTP envelopes and shared REST rules → `rules/api-standards.md`. Ticket REST → [`api-contract.md`](api-contract.md) §4–§5. Ingestion → [`rag-ingestion.md`](rag-ingestion.md); pipeline → [`architecture.md`](architecture.md) §15. **DEC-11**, **DEC-17**.  
 > **Primary source:** `docs/Assessments.docx` (RAG & Assistant Requirements, Core Acceptance Criteria p.5–6).  
 > **Related:** [`requirements.md`](requirements.md) FEAT-15…18, Flows B/E, **AC-CORE-16…18**; UI display → [`ui-model.md`](ui-model.md) §10; grounding review → `commands/review-rag-output.md`; retrieval quality → [`evaluation-strategy.md`](evaluation-strategy.md).
 
@@ -115,7 +115,7 @@ This document defines the **public RAG API contract**: paths, request/response J
 | Area | This spec defines |
 |------|-------------------|
 | **Endpoints** | `POST /api/ai/ask` (**PDF**); versioned alias (**Convention**) |
-| **Request** | `AskRequest` — `{ "question": string }` |
+| **Request** | `AskRequest` — only `question` (non-blank, max **2000** chars — **DEC-17**); unknown properties → **400** |
 | **Success `data`** | `AskResponseData` — `answer`, `citedTicketIds` |
 | **HTTP mapping** | 200 success (grounded **or** no-match); 400 validation; 5xx server errors |
 | **Grounding rules** | Context-only answers; citation integrity; single retrieve→generate pass |
@@ -236,7 +236,7 @@ Flat JSON at the request root (not wrapped in `data`).
 
 | Property | Type | Required | Validation |
 |----------|------|----------|------------|
-| `question` | string | yes | Non-blank after trim; max length **Open** (recommend align with [`data-model.md`](data-model.md) string limits if added) |
+| `question` | string | yes | Non-blank after trim; max length **2000** characters (**DEC-17**) |
 
 **PDF example:**
 
@@ -252,7 +252,7 @@ Flat JSON at the request root (not wrapped in `data`).
 |------|-----------|
 | No `ticketId`, `action`, `createTicket`, `tools` | **PDF** non-agentic |
 | No `sessionId` / `conversation` in v1 | Single-shot Q&A (**PDF**) |
-| Extra unknown properties | **Convention:** reject **400** or ignore — pick one in implementation and document in OpenAPI if added (**Open**) |
+| Extra unknown properties | **Agreed (DEC-17):** reject with **400** `VALIDATION_ERROR` (strict request body) |
 
 ### 6.3 Validation failures
 
@@ -260,6 +260,8 @@ Flat JSON at the request root (not wrapped in `data`).
 |-----------|------|----------|
 | Missing `question` | **400** | `error` |
 | Blank/whitespace `question` | **400** | `error` |
+| `question` longer than 2000 characters | **400** | `VALIDATION_ERROR` |
+| Unknown property (e.g. `"ticketId"`) | **400** | `VALIDATION_ERROR` |
 | Malformed JSON | **400** | `error` (`BAD_REQUEST` or `VALIDATION_ERROR` per `rules/api-standards.md`) |
 
 **Example error** (missing question) — full shape in [`api-contract.md`](api-contract.md) §6.1.
@@ -363,8 +365,8 @@ Content-Type: application/json;charset=UTF-8
 | Topic | Specification |
 |-------|----------------|
 | **Granularity** | Ticket-level ids (**PDF** “cite specific ticket(s)”) — not comment uuid or chunk uuid in v1 |
-| **Ordering** | **Open** — stable sort by retrieval score or lexicographic id recommended (**Convention**) |
-| **Duplicates** | **Convention:** dedupe ids in `citedTicketIds` |
+| **Ordering** | **Agreed (DEC-17):** preserve **retrieval relevance order** (highest similarity first); map from ranked chunks to ticket ids without reordering by lexicographic id |
+| **Duplicates** | **Agreed (DEC-17):** dedupe ticket ids while **preserving first occurrence** order |
 | **UI** | Clients link each id to ticket detail ([`ui-model.md`](ui-model.md) §10.2) |
 
 ### 9.3 Review
@@ -472,11 +474,13 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 
 | ID | Criterion |
 |----|-----------|
-| **AC-RAG-API-01** | Request body is exactly `{ "question": string }` on both ask paths (**PDF**). |
+| **AC-RAG-API-01** | Request body contains **only** `question` (non-blank after trim, max **2000** characters — **DEC-17**); unknown JSON properties → **400** `VALIDATION_ERROR`; same rules on `/api/ai/ask` and `/api/v1/ai/ask` (**PDF**). |
 | **AC-RAG-API-02** | Success responses use `data.answer` + `data.citedTicketIds` per §7.2. |
 | **AC-RAG-API-03** | No-match and grounded outcomes both return **200** + success envelope. |
 | **AC-RAG-API-04** | Non-empty `citedTicketIds` only when retrieval supported the answer (**PDF**). |
 | **AC-RAG-API-05** | Ask handler performs no ticket or comment mutations (**PDF**). |
+| **AC-RAG-API-06** | `question` over 2000 chars or unknown JSON properties → **400** (**DEC-17**). |
+| **AC-RAG-API-07** | Non-empty `citedTicketIds` follow retrieval relevance order, deduped (**DEC-17**). |
 
 **Also maps to:** **AC-CORE-16…18**, **AC-API-06/07** in [`api-contract.md`](api-contract.md) §9.
 
@@ -487,7 +491,8 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
 | **DEC-11** | No-match wording; optional `reason` / codes | **Agreed 2026-10-04** | Phrase §7.4; no `reason` field in v1 |
-| **DEC-09** | Embedding model affects retrieval only — not response fields | **Open** | [`rag-ingestion.md`](rag-ingestion.md) |
+| **DEC-09** | Embedding model affects retrieval only — not response fields | **Agreed 2026-10-04** | [`rag-ingestion.md`](rag-ingestion.md) §12 — `nomic-embed-text` / 768 |
+| **DEC-17** | Ask request + citations | **Agreed 2026-10-04** | §6, §9.2 |
 | Extra properties on `AskResponseData` | e.g. `confidence` | **Reference** | Not in **PDF** — do not implement ([`requirements.md`](requirements.md) §2.3) |
 
 ---
@@ -497,7 +502,10 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 | Date | Note |
 |------|------|
 | 2026-10-04 | Initial **PDF** `rag-api-contract.md`: endpoints, AskRequest/AskResponseData, grounding, no-match, guardrails, AC-RAG-API-01…05. |
+| 2026-10-04 | **DEC-17:** question max 2000, strict unknown properties, citation order + dedupe; AC-RAG-API-06/07. |
 | 2026-10-04 | Cross-linked across `spec/`, `rules/`, `commands/`, `docs/` as authoritative ask contract. |
 | 2026-10-04 | §0 document guide: PDF ask themes; business/functional/implementation triad. |
 | 2026-10-04 | §0.3 **ASK-*** independent reading units + PDF `/api/ai/ask` quote. |
 | 2026-10-04 | Major `##` headings tagged with **ASK-*** unit ids. |
+| 2026-10-04 | Doc sync: **AC-RAG-API-01** aligned with **DEC-17** (merged with AC-RAG-API-06 validation themes). |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |

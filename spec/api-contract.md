@@ -1,6 +1,6 @@
 # HTTP API contract — tickets, comments, and ask (boundary)
 
-> **Status:** draft (2026-10-04) — ticket REST paths and payloads align with **Convention** in [`rules/api-standards.md`](../rules/api-standards.md) and agreed [`data-model.md`](data-model.md). Resolves **OQ-04** for ticket/comment HTTP; **DEC-14** interim alignment recorded §10.  
+> **Status:** agreed (2026-10-04) — ticket REST paths and payloads align with **Convention** in [`rules/api-standards.md`](../rules/api-standards.md) and [`data-model.md`](data-model.md). **DEC-14**; ask limits **DEC-17** cross-ref [`rag-api-contract.md`](rag-api-contract.md).  
 > **Primary source:** `docs/Assessments.docx` (capabilities restated in [`requirements.md`](requirements.md)).  
 > **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask / RAG HTTP semantics (**PDF** `rag-api-contract.md`) → [`rag-api-contract.md`](rag-api-contract.md) (authoritative); summary retained **§6.2–§6.5** (**DEC-11** agreed). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
 
@@ -482,7 +482,7 @@ Only properties **present** in JSON are applied (**partial PATCH**). Omitted pro
 
 | Property | Type | Required | Validation |
 |----------|------|----------|------------|
-| `question` | string | yes | Non-blank after trim |
+| `question` | string | yes | Non-blank after trim; max **2000** characters (**DEC-17**); unknown properties → **400** |
 
 ### 3.5 `AskResponseData` (success `data` for ask)
 
@@ -578,11 +578,11 @@ curl -sS -D - -X POST 'http://localhost:8080/api/v1/tickets' \
 | Scenario | HTTP | `error.code` | Expected behaviour |
 |----------|------|--------------|-------------------|
 | Valid minimal body `{ "title": "x" }` | 201 | — | `status` = `OPEN`, `priority` = `MEDIUM`, `description` = `""` |
-| Valid full optional fields | 201 | — | Persisted; ingestion hook runs (async timing → `rag-ingestion.md`) |
+| Valid full optional fields | 201 | — | Persisted; **synchronous** ingest after DB commit (**DEC-18**); on ingest failure ticket row remains committed — see [`rag-ingestion.md`](rag-ingestion.md) §10.2 |
 | Missing `title` | 400 | `VALIDATION_ERROR` | `details` on `title` (see §2.10) |
 | Blank `title` `"   "` | 400 | `VALIDATION_ERROR` | Treated as blank after trim |
 | `title` over 500 chars | 400 | `VALIDATION_ERROR` | |
-| Invalid `priority` / `category` | 400 | `VALIDATION_ERROR` | e.g. `"priority": "URGENT"` |
+| Invalid `priority` / `category` | 400 | `VALIDATION_ERROR` | e.g. `"priority": "CRITICAL"` |
 | Client sends `status` | 400 | `VALIDATION_ERROR` | Field `status` rejected on create (**DEC-07**) |
 | Malformed JSON | 400 | `BAD_REQUEST` | §2.10 |
 | Unknown JSON properties | 201 | — | **Convention:** ignore unknown keys (e.g. `"foo": 1`) |
@@ -856,7 +856,7 @@ curl -sS 'http://localhost:8080/api/v1/tickets/TKT-1001' -H 'Accept: application
 
 **Non-status edits on any `status`:** Field PATCH and `POST …/comments` are allowed for **any** persisted ticket, including terminal `CLOSED` and `CANCELLED` (**PDF** does not restrict updates or comments by status). Only **`status`** changes are state-machine-gated.
 
-**Status changes:** send `status` with the **target** value. Rules → [`state-machine.md`](state-machine.md). **DEC-06 interim:** status on PATCH body (this contract); no `/transition` sub-resource.
+**Status changes:** send `status` with the **target** value. Rules → [`state-machine.md`](state-machine.md). **DEC-06 (agreed):** `status` on PATCH body (this contract); no `/transition` sub-resource.
 
 **Request examples**
 
@@ -1189,6 +1189,8 @@ Example no-match:
 | Valid `question`, no retrieval | 200 | No-match `answer`; empty citations; **do not** invent facts |
 | Missing `question` | 400 | `VALIDATION_ERROR` |
 | Blank/whitespace `question` | 400 | `VALIDATION_ERROR` |
+| `question` longer than 2000 characters | 400 | `VALIDATION_ERROR` |
+| Unknown JSON property on ask body | 400 | `VALIDATION_ERROR` |
 | Malformed JSON | 400 | `BAD_REQUEST` |
 | Ask does not create tickets | — | No `ticket` row created (**PDF**) |
 
@@ -1262,7 +1264,7 @@ No-match is **never** **404** and never the generic error envelope on **200**.
 
 | ID | Criterion |
 |----|-----------|
-| **AC-RAG-API-01** | Request body is exactly `{ "question": string }` on both ask paths (**PDF**). |
+| **AC-RAG-API-01** | Request body contains **only** `question` (non-blank, max **2000** chars — **DEC-17**); unknown properties → **400**; same rules on `/api/ai/ask` and `/api/v1/ai/ask` (**PDF**). |
 | **AC-RAG-API-02** | Success responses use `data.answer` + `data.citedTicketIds` per §3.5. |
 | **AC-RAG-API-03** | No-match and grounded outcomes both return **200** + success envelope. |
 | **AC-RAG-API-04** | Non-empty `citedTicketIds` only when retrieval supported the answer (**PDF**). |
@@ -1328,9 +1330,10 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
-| **DEC-06** | Transition API shape | **Interim closed in this contract** | PATCH `status` on ticket resource §4.4 |
+| **DEC-06** | Transition API shape | **Agreed 2026-10-04** | PATCH `status` on ticket resource §4.4 |
 | **DEC-11** | Ask no-match wording | Agreed 2026-10-04 | §6.3; [`rag-api-contract.md`](rag-api-contract.md) §7.4 |
-| **DEC-14** | Ticket REST surface | **Interim agreed** | Paths/methods match `rules/api-standards.md` §4.4 |
+| **DEC-14** | Ticket REST surface | **Agreed 2026-10-04** | Paths/methods match `rules/api-standards.md` §4.4 |
+| **DEC-17** | Ask request limits | **Agreed 2026-10-04** | §6; [`rag-api-contract.md`](rag-api-contract.md) §6 |
 | **DEC-02** | Skipped hops | Agreed 2026-10-04 | [`state-machine.md`](state-machine.md) **(A)** |
 
 ---
@@ -1340,6 +1343,8 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | Date | Note |
 |------|------|
 | 2026-10-04 | Initial contract: envelopes, ticket/comment/ask payloads, scenarios, REST table; DEC-06/14 interim. |
+| 2026-10-04 | Doc sync: **DEC-06** agreed; **DEC-18** sync ingest; **AC-RAG-API-01** + **DEC-17** ask limits. |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
 | 2026-10-04 | Expanded URI catalog §2.8–2.10; full HTTP/cURL examples per endpoint; demo URI table §7. |
 | 2026-10-04 | §2.11 full endpoint catalog; §3.5 `AskResponseData`; §4.4.1 T1–T5 PATCH table; AC-API-08/09. |
 | 2026-10-04 | PDF `rag-api-contract` themes: §6.2–§6.5 grounding, no-match, **AC-RAG-API-***. |

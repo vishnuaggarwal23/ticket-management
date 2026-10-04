@@ -1,6 +1,6 @@
 # Evaluation strategy — RAG retrieval quality and failure detection
 
-> **Status:** draft (2026-10-04) — defines **how** to evaluate probabilistic ask behaviour for the assessment learning goals; does **not** fix numeric retrieval hyperparameters (those live in [`rag-ingestion.md`](rag-ingestion.md) when agreed).  
+> **Status:** agreed (2026-10-04) — defines **how** to evaluate probabilistic ask behaviour for the assessment learning goals; numeric retrieval defaults → [`rag-ingestion.md`](rag-ingestion.md) §9.3 (**DEC-16**); **DEC-19** (no metadata pre-filter on ask v1).  
 > **Primary source:** `docs/Assessments.docx` p.2 (deterministic + probabilistic testing), p.4 (five illustrative questions), p.4–6 (retrieve → generate, grounding); restated in [`requirements.md`](requirements.md) §2.5, FEAT-22, §4.3, AC-CORE-16…18; summary [`docs/assessment-brief.md`](../docs/assessment-brief.md) §10.  
 > **Related:** Grounding review → `commands/review-rag-output.md`; pipeline → [`architecture.md`](architecture.md) §15.5–15.7; ingest/chunking → [`rag-ingestion.md`](rag-ingestion.md); test bands A/B/C → [`test-strategy.md`](test-strategy.md) **§6**; state machine determinism → **§5**; rules → `rules/rag-vector-store.md`, `rules/testing.md`.
 
@@ -210,7 +210,7 @@ These five questions are from the **PDF** (also listed in `rules/rag-vector-stor
 | 2 | What was the resolution for ticket TKT-1001? | TKT-1001 | — | Id-specific; should rank TKT-1001 top |
 | 3 | What are the common causes of shipment tracking issues? | TKT-1003 | — | Category/shipment theme |
 | 4 | Show me similar resolved tickets. | TKT-1001, TKT-1003 | TKT-1002 (CLOSED) | **Open:** “similar” is underspecified — eval focuses on **resolved/closed** payment/shipment exemplars present in seed |
-| 5 | Which high-priority tickets are related to payment? | TKT-1001, TKT-1004 | — | Needs **priority** in metadata/text; metadata-only filter is **Open** ([`architecture.md`](architecture.md) §15.5) |
+| 5 | Which high-priority tickets are related to payment? | TKT-1001, TKT-1004 | — | **DEC-19:** no metadata pre-filter on ask — eval uses similarity over ingested text/metadata in chunks; tune K/threshold if needed |
 
 **Negative / no-match fixtures (Flow E):** empty vector index; or question “What is the capital of France?” with policy that ticket-grounded ask must not use world knowledge → expect **no relevant tickets** (AC-CORE-18), retrieval **empty** — retrieval verdict `good` when empty is correct.
 
@@ -347,7 +347,7 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 |-------|---------|
 | Date / commit | 2026-10-04 / `abc123` |
 | Corpus | requirements §4.3 Example |
-| Config | `top-k=5`, `threshold=0.72`, model `…` (**Open** until DEC-09) |
+| Config | `top-k=8`, `threshold=0.72`, `distance=COSINE`, model `nomic-embed-text` (**DEC-09**, **DEC-16**) |
 | Question # | 2 |
 | Retrieved ids | TKT-1001, TKT-1002 |
 | Retrieval verdict | good |
@@ -391,12 +391,13 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
-| **DEC-09** | Embedding model / dimension | **Open** | Scores and recall depend on model; record in eval log when chosen |
+| **DEC-09** | Embedding model / dimension | **Agreed 2026-10-04** | Ollama `nomic-embed-text`, 768-dim |
+| **DEC-19** | Metadata pre-filter on ask | **Agreed 2026-10-04** | Not in v1 — pure similarity retrieval |
 | **DEC-11** | No-match wording | **Agreed 2026-10-04** | Does not change retrieval id checks |
 | **OQ** | Metadata pre-filter for Q5 (“high-priority payment”) | **Reference** | Not PDF-mandated; eval uses retrieval + corpus text — do not build metadata-only ask filter for assessment |
 | **OQ** | Automated recall@K in CI | **Reference** | PDF expects eval approach documented + reviewable results; do not add CI golden recall automation unless scope changes |
 
-Confirming numeric K/threshold defaults: [`rag-ingestion.md`](rag-ingestion.md) §9.3 / §12 — not in this file.
+Numeric K/threshold defaults: **DEC-16** in [`rag-ingestion.md`](rag-ingestion.md) §9.3 / §12.
 
 ---
 
@@ -411,3 +412,4 @@ Confirming numeric K/threshold defaults: [`rag-ingestion.md`](rag-ingestion.md) 
 | 2026-10-04 | §0 guide: TOC, PDF map, business/functional/implementation requirement triad. |
 | 2026-10-04 | §0.3 **EVAL-*** units; §5 chunk callouts for corpus + PDF question map. |
 | 2026-10-04 | Major `##` headings tagged with **EVAL-*** unit ids. |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off); **DEC-19** cross-ref in header. |

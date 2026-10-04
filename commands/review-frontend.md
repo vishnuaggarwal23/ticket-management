@@ -14,7 +14,7 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 - `rules/frontend.md`
 - `rules/api-standards.md` (paths, envelopes, PATCH, pagination, 409)
 - [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo; **§10** for open UI/API shape (**OQ/DEC**)
-- [`spec/ui-model.md`](../spec/ui-model.md) — **§0** PDF ui-flow map; screens, flows, **AC-UI-01…12**; **DEC-06** interim, **DEC-15** agreed §14
+- [`spec/ui-model.md`](../spec/ui-model.md) — **§0** PDF ui-flow map; screens, flows, **AC-UI-01…12**; **DEC-06** agreed (PATCH `status`), **DEC-15** agreed §14
 - [`spec/architecture.md`](../spec/architecture.md) §12 when reviewing module/API wiring at architecture level
 - [`spec/data-model.md`](../spec/data-model.md) (agreed id, category, resolutionNotes, create requiredness)
 - [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) — **DEC-11** agreed; no **Reference** UI ([`spec/requirements.md`](../spec/requirements.md) **§2.3**)
@@ -29,7 +29,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 ### Spec and scope
 
 - [ ] Only agreed [`ui-model.md`](../spec/ui-model.md) screens/flows (or user-confirmed deltas). Use requirements **§4.1** / **§8.7** as hub — no invented auth, agent-from-ask, extra ticket resources, delete-ticket UI
-- [ ] **DEC-06** interim PATCH UX; **DEC-15** stack agreed (layout/router is implementer choice); **do not** build **Reference** UI (§2.3); **do not** invent id/category (use [`spec/data-model.md`](../spec/data-model.md))
+- [ ] **DEC-06** PATCH `status` UX; **DEC-15** stack agreed (layout/router is implementer choice); **do not** build **Reference** UI (§2.3); **do not** invent id/category (use [`spec/data-model.md`](../spec/data-model.md))
 - [ ] PDF capabilities present or explicitly deferred; when implemented, mappable to **`AC-CORE-01…11`** (§8) and **`AC-UI-01…12`** ([`ui-model.md`](../spec/ui-model.md) §13): create, list, detail, update title/description/priority/assignee, comments, keyword search, status filter, status display, valid transitions, meaningful errors, ask with citations or no-match
 
 ### Stack (`rules/frontend.md`)

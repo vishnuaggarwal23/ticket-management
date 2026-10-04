@@ -29,7 +29,7 @@ Authoritative assignment: [`docs/Assessments.docx`](../docs/Assessments.docx). E
 | Backend Java / API / RAG code diff before merge | `commands/review-code.md` |
 | React / Vite / TypeScript UI diff before merge | `commands/review-frontend.md` |
 | Manual or demo check of an `/api/ai/ask` answer | `commands/review-rag-output.md` |
-| Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft); hub [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 |
+| Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md); hub [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 |
 | Caught wrong AI code or ungrounded answer | Note in `docs/ai-mistakes.md` (see below) |
 | SpecStory saved new session(s); index stale | `commands/update-prompt-history.md` |
 | Assignment drift; tighten docs without new files | `commands/improve-from-assessment-pdf.md` (`docs/Assessments.docx`) |
@@ -62,22 +62,22 @@ All PDF-listed files under `spec/` (paths relative to repo root):
 
 | Present | Status |
 |---------|--------|
-| [`requirements.md`](../spec/requirements.md) | draft hub |
-| [`architecture.md`](../spec/architecture.md) | draft system design + **§12** UI architecture summary |
+| [`requirements.md`](../spec/requirements.md) | **agreed** hub |
+| [`architecture.md`](../spec/architecture.md) | **agreed** system design + **§12** UI architecture summary |
 | [`data-model.md`](../spec/data-model.md) | **agreed** |
-| [`state-machine.md`](../spec/state-machine.md) | **draft** |
-| [`api-contract.md`](../spec/api-contract.md) | **draft** (ticket REST + ask §6 summary) |
-| [`rag-api-contract.md`](../spec/rag-api-contract.md) | **draft** (authoritative ask / **AC-RAG-API-***) |
-| [`rag-ingestion.md`](../spec/rag-ingestion.md) | **draft** |
-| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **draft** |
-| [`test-strategy.md`](../spec/test-strategy.md) | **draft** |
-| [`ui-model.md`](../spec/ui-model.md) | **draft** |
+| [`state-machine.md`](../spec/state-machine.md) | **agreed** |
+| [`api-contract.md`](../spec/api-contract.md) | **agreed** (ticket REST + ask §6 summary) |
+| [`rag-api-contract.md`](../spec/rag-api-contract.md) | **agreed** (authoritative ask / **AC-RAG-API-***) |
+| [`rag-ingestion.md`](../spec/rag-ingestion.md) | **agreed** |
+| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **agreed** |
+| [`test-strategy.md`](../spec/test-strategy.md) | **agreed** |
+| [`ui-model.md`](../spec/ui-model.md) | **agreed** |
 
 PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **§0.4** and [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**.
 
-**Agreed DEC (do not contradict):** **DEC-01, 02, 03, 04, 05, 07, 08, 11, 12, 13, 15** — register in [`requirements.md`](../spec/requirements.md) §10.2; data-model fields **DEC-03…08, 13** in [`data-model.md`](../spec/data-model.md).
+**Agreed DEC (do not contradict):** **DEC-01…19** (see [`requirements.md`](../spec/requirements.md) §10.2) — including **DEC-06** (PATCH `status`), **DEC-09** (PgVector + Ollama `nomic-embed-text` / 768), **DEC-10** (PostgreSQL only), **DEC-14** (REST surface), **DEC-16–19** (RAG defaults, ask limits, ingest, eval). Data-model field DECs **DEC-03…08, 13** in [`data-model.md`](../spec/data-model.md).
 
-**Still Open / interim (stop and confirm before contradicting):** **DEC-06** (interim PATCH), **DEC-09**, **DEC-10**; **DEC-14** interim agreed — requirements §10.2.
+**Spec set status:** All ten `spec/*.md` files **agreed** (2026-10-04 user sign-off). **DEC-01…19** in hub §10.2. Re-run `commands/review-spec.md` after material spec edits.
 
 **Reference only (do not implement):** Topics listed in [`requirements.md`](../spec/requirements.md) **§2.3** — may appear in child specs for clarity; **exclude** from plans, tasks, and acceptance unless the assignment PDF changes.
 
@@ -89,7 +89,7 @@ PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **
 | [`api-contract.md`](../spec/api-contract.md) | Ticket/comment payloads; combined HTTP catalog incl. ask summary §6; envelopes in `rules/api-standards.md` |
 | [`rag-api-contract.md`](../spec/rag-api-contract.md) | Ask HTTP + `data` JSON; grounding, citations, no-match (**AC-RAG-API-***, **DEC-11**) |
 | [`state-machine.md`](../spec/state-machine.md) | Legal/illegal transitions (including skipped steps if any) |
-| [`rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking (hybrid paragraph + fixed overflow), ingest sources, re-ingest (**DEC-01**), property keys; **DEC-09** model/dimension still open |
+| [`rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking (**DEC-16**), ingest sources, sync ingest + failures (**DEC-18**), re-ingest (**DEC-01**); **DEC-09** `nomic-embed-text` / 768 |
 | [`ui-model.md`](../spec/ui-model.md) | Screens, CRUD flows, ask/RAG UX, flows A–E, **AC-UI-***; PDF `ui-flow` themes |
 | [`architecture.md`](../spec/architecture.md) §12 | Frontend architecture summary; defers screen detail to `ui-model.md` |
 | [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | **Retrieval quality** vs grounding; **Example** corpus + PDF Q1–Q5; procedure §6–§7; failures **F-01…F-10**; **AC-EVAL-*** |
@@ -129,7 +129,7 @@ Use when running `commands/review-spec.md` or tracing implementation to layers �
 | §10 | **Communication** — sync JSON REST, sequences, error vs ask no-match |
 | §11 | API capability map (PDF ask path + Convention `/api/v1`) |
 | §12 | Frontend architecture summary; screen/flow detail → [`ui-model.md`](../spec/ui-model.md) |
-| §13–14 | Relational SoR vs **vector DB** (PgVector, chunk lifecycle) |
+| §13–14 | Relational SoR vs **vector DB** (PgVector, chunk lifecycle); **§13.2** sync ingest (**DEC-18**) |
 | §15–16 | RAG pipeline, knowledge docs, **chunking justification**, **embedding tradeoffs** |
 | §17 | State machine placement in domain |
 | §21 | **OQ** / **DEC** pointers (sync with `requirements.md` §10) |
@@ -156,9 +156,9 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §3–4 | States, terminal behaviour, diagrams |
 | §5.1–5.2 | **PDF** valid T1–T5 and forbidden X1–X3 |
 | §5.3–5.7 | **DEC-02** default (A); full valid/invalid matrix; §5.6 illegal register; PATCH `status` rules §6.1.1 |
-| §6 | PATCH + **409** `ILLEGAL_TRANSITION` (**DEC-06** interim) |
+| §6 | PATCH + **409** `ILLEGAL_TRANSITION` (**DEC-06** agreed) |
 | §8–9 | Domain placement; **AC-SM-*** tests |
-| §10 | **DEC-06** interim; agreed **DEC-02**, **DEC-07** |
+| §10 | **DEC-06** agreed; **DEC-02**, **DEC-07** |
 
 ### [`spec/api-contract.md`](../spec/api-contract.md) structure (for reviewers)
 
@@ -171,7 +171,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §6 | Ask URIs; **§6.2–§6.5** summary (detail → [`rag-api-contract.md`](../spec/rag-api-contract.md)) |
 | §7 | Demo end-to-end URI sequence |
 | §8–9 | REST summary; **AC-API-*** |
-| §10 | **DEC-06**, **DEC-11**, **DEC-14** |
+| §10 | **DEC-06**, **DEC-11**, **DEC-14**, **DEC-17** (ask limits) |
 
 ### [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) structure (for reviewers)
 
@@ -182,7 +182,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §7 | `AskRequest` / `AskResponseData` inside success `data` |
 | §8–§9 | Grounding, citations, no-match (**DEC-11**) |
 | §10–§11 | Guardrails, non-agentic rules |
-| §17 | **AC-RAG-API-01…05** (authoritative owner) |
+| §17 | **AC-RAG-API-01…07** (authoritative owner; **DEC-17** in §6 + AC-01/06) |
 
 Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-contract.md) §2.11 and §6.
 
@@ -195,7 +195,7 @@ Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-con
 | §6–§8 | Paragraph vs fixed-size comparison |
 | §9 | **Hybrid** recommendation; **proposed** `max-chars` / `min-chars` / `overlap` (confirm to agree) |
 | §10–§11 | Re-ingest triggers (**DEC-01** agreed); delete-and-replace storage |
-| §12 | Embedding / PgVector (**DEC-09** open) |
+| §12 | Embedding / PgVector (**DEC-09** agreed) |
 | §14 | **AC-RAG-ING-*** tests |
 
 ### [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) structure (for reviewers)
@@ -210,7 +210,7 @@ Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-con
 | §8 | Failure taxonomy **F-01…F-10** and detection |
 | §9 | Eval log fields |
 | §10 | **AC-EVAL-01…05** |
-| §12 | **DEC-09** open; **Reference** rows (do not implement) |
+| §12 | **DEC-09** agreed; **Reference** rows (do not implement) |
 
 Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** — defers detail here).
 
@@ -221,11 +221,11 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 | **§0** | PDF `ui-flow` capability map; UI BRF/FRI/IRI |
 | §4–§5 | Information architecture, app structure |
 | §7–§8 | Screen catalog; CRUD flows |
-| §9 | Status transition UX (**DEC-06** interim) |
+| §9 | Status transition UX (**DEC-06** agreed) |
 | §10 | Ask / RAG user-visible surfaces |
 | §11–§12 | Flows A–E UI mapping; demo §8.7 checklist |
 | §13 | **AC-UI-01…12** |
-| §14 | **DEC-06** interim; **DEC-11**, **DEC-15** agreed (layout choice remains implementer) |
+| §14 | **DEC-06**, **DEC-11**, **DEC-15** agreed (layout choice remains implementer) |
 
 ### [`spec/test-strategy.md`](../spec/test-strategy.md) structure (for reviewers)
 
@@ -298,6 +298,7 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | [`skills/documentation/SKILL.md`](../skills/documentation/SKILL.md) expanded; [`docs/assessment-brief.md`](../docs/assessment-brief.md) synced to full spec/rules/commands set. |
 | 2026-10-04 | `api-contract.md` reviewer map: URI catalog, HTTP examples, §7 demo sequence. |
 | 2026-10-04 | All ten PDF `spec/` files present; removed interim missing-spec map; PDF traceability via requirements §0.4 + assessment-brief §13. |
+| 2026-10-04 | Steering sync: **DEC-01…19** agreed in hub §10.2; reviewer maps updated (**DEC-09/10**, ingest **DEC-18**). |
 | 2026-10-04 | Added `commands/update-prompt-history.md` for SpecStory index maintenance. |
 | 2026-10-04 | Reviewer map for [`evaluation-strategy.md`](../spec/evaluation-strategy.md); test-strategy §4.1 pointer. |
 | 2026-10-04 | [`test-strategy.md`](../spec/test-strategy.md) reviewer map: §5 state machine, §6 retrieval/AI bands. |
@@ -311,3 +312,5 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Writing bar: independent reading unit ids (**HUB-***, **SM-***, …) for chunked spec reading. |
 | 2026-10-04 | Writing bar: **`##` heading unit suffix** convention (`· unit **ID**`); hub §0.8. |
 | 2026-10-04 | **Reference** §2.3 steering; DEC register + reviewer map sync. |
+| 2026-10-04 | Doc sync: architecture §13.2 **DEC-18**; api/rag reviewer maps **DEC-17**. |
+| 2026-10-04 | Ten-file spec set promoted to **agreed**; index table updated. |

@@ -98,7 +98,7 @@ Ten standalone files under `spec/`. PDF filename alias: `ui-flow.md` → [`ui-mo
 
 **PDF coverage:** theme → artefact map in [`requirements.md`](../spec/requirements.md) **§0.4**; **§0.5** completeness checklist; page summary **§13** below. Each spec **§0.3** lists **independent reading units**; major sections are titled `· unit **ID**` for in-file search/jump (hub **§0.8**). Steering (`rules/`, `commands/`, this skill) **indexes** specs — see [`rules/documentation.md`](../rules/documentation.md) reviewer maps.
 
-[`architecture.md`](../spec/architecture.md) holds **system design** (modules, APIs, RAG narrative). Entity tables and indexes: [`data-model.md`](../spec/data-model.md). Chunking mechanics and **proposed** defaults: [`rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9.3. Embedding model id, vector dimension, and top-K **values** remain **Open** (**DEC-09**, FEAT-19) until confirmed.
+[`architecture.md`](../spec/architecture.md) holds **system design** (modules, APIs, RAG narrative). Entity tables and indexes: [`data-model.md`](../spec/data-model.md) (`vector(768)` per **DEC-09**). Chunking and retrieval **agreed defaults**: [`rag-ingestion.md`](../spec/rag-ingestion.md) §9.3, §12 (**DEC-16**). Ingest timing and failures: **DEC-18**. Ask limits: **DEC-17**. Full register: [`requirements.md`](../spec/requirements.md) §10.2 (**DEC-01…19**).
 
 ### Engineering steering (rules + commands)
 
@@ -150,11 +150,12 @@ Use plugins such as **Graphify**, **Caveman**, **Codebase-memory MCP** to reduce
 |--------|------------|
 | Spring Boot major version | **3** |
 | Build | **Maven Wrapper** (`./mvnw`) |
-| Runtime persistence | **PostgreSQL** + **PgVector** + **Liquibase** (not H2 for production path) |
-| Frontend | **React + Vite + TypeScript** (**DEC-15** still open in requirements) |
-| Initial LLM/embeddings provider | **Ollama via configuration** (model id still **Open** → **DEC-09**) |
+| Runtime persistence | **PostgreSQL** + **PgVector** + **Liquibase** (**DEC-10** — dev, runtime, Testcontainers tests; **no H2** in v1) |
+| Frontend | **React + Vite + TypeScript** (**DEC-15** agreed) |
+| Embeddings | **Ollama `nomic-embed-text`** on **PgVector** `vector(768)` (**DEC-09**) |
+| Chat LLM | **Ollama** via Spring AI config (model id env-specific — not fixed in DEC) |
 
-Conventions must **not contradict** PDF requirements. **DEC-09** (vector store + embedding product) and **DEC-10** (H2 vs PostgreSQL roles) remain **Open**.
+Conventions must **not contradict** PDF requirements. Stack choices above are recorded as **agreed DEC** in [`requirements.md`](../spec/requirements.md) §10.2.
 
 ---
 
@@ -210,8 +211,8 @@ IN_PROGRESS → CANCELLED
 **Scraped / agreed in specs:**
 
 - **DEC-07 (agreed):** New tickets start as `OPEN`; create body does not accept `status` ([`data-model.md`](../spec/data-model.md) §5.1).
-- **DEC-02 (interim):** Only T1–T5 edges—no skipped hops (e.g. `OPEN` → `RESOLVED`) unless **DEC-02** is revised ([`state-machine.md`](../spec/state-machine.md) §5.3).
-- **DEC-06 (interim):** Status change via `PATCH` on `/api/v1/tickets/{id}` with `status` field ([`api-contract.md`](../spec/api-contract.md) §4.4).
+- **DEC-02 (agreed):** Only T1–T5 edges—no skipped hops ([`state-machine.md`](../spec/state-machine.md) §5.3).
+- **DEC-06 (agreed):** Status change via `PATCH` on `/api/v1/tickets/{id}` with `status` field ([`api-contract.md`](../spec/api-contract.md) §4.4).
 - Full **20 illegal** transition pairs documented in [`state-machine.md`](../spec/state-machine.md) §5.6; backend tests mapped in [`test-strategy.md`](../spec/test-strategy.md) **§5.4** (**AC-SM-06**).
 
 State-machine **integration tests** are required (PDF acceptance p.6). Test mapping: **AC-CORE-14**, **FEAT-21**, [`test-strategy.md`](../spec/test-strategy.md) §5.8 / §13 (**AC-TS-03**, **AC-TS-06**).
@@ -233,7 +234,7 @@ User Question → Similarity Search → Relevant Tickets → LLM + Context → G
 - Metadata on chunks: `ticketId`, `status`, `priority`, `assignee`, `category`.
 - **Re-ingest / refresh** when a ticket is **updated or closed** (do not let knowledge go stale).
 
-**Repo note:** Acceptance checklist (p.6) says re-ingestion when **updated** only; ingestion text says **updated or closed**. Requirements track this as **DEC-01** (still **Open**; **interim (B)** in [`rag-ingestion.md`](../spec/rag-ingestion.md) §10). **DEC-05 (agreed):** `resolution_notes` column on `ticket` for RAG text. Status **history** is not ingested as text—only current metadata snapshot on chunks (§4.2 of `rag-ingestion.md`).
+**Repo note:** Acceptance checklist (p.6) vs ingestion p.5 reconciled as **DEC-01 (B)** — re-ingest on **update or close** ([`rag-ingestion.md`](../spec/rag-ingestion.md) §10). **DEC-18:** synchronous ingest after DB commit; no embeddings for empty ticket text; failures logged with recovery §10.2. **DEC-05:** optional `resolution_notes`. Status **history** is not ingested as text—metadata snapshot on chunks only.
 
 ### Ask API (PDF p.5)
 
@@ -246,13 +247,13 @@ User Question → Similarity Search → Relevant Tickets → LLM + Context → G
 }
 ```
 
-- **Response JSON shape:** [`rag-api-contract.md`](../spec/rag-api-contract.md) (**AC-RAG-API-***); field catalog cross-ref [`api-contract.md`](../spec/api-contract.md) §3.5; exact no-match wording **DEC-11** still open.
+- **Response JSON shape:** [`rag-api-contract.md`](../spec/rag-api-contract.md) (**AC-RAG-API-***); **DEC-11** no-match phrase; **DEC-17** — `question` max 2000 chars, unknown properties → **400**, `citedTicketIds` in retrieval order (deduped).
 - **Convention:** alias `POST /api/v1/ai/ask` with identical behaviour ([`api-contract.md`](../spec/api-contract.md) §6).
 
 ### Retrieval quality (PDF p.5)
 
 - Document and **justify** chunking strategy (paragraph vs fixed-size vs semantic) for ticket data → **`architecture.md`** §16 (PDF names this file); **mechanics and comparison** → [`rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9 (**hybrid** draft default).
-- **top-K** and **similarity threshold** configurable, not hardcoded.
+- **top-K** and **similarity threshold** configurable (**DEC-16** defaults: top-k 8, threshold 0.72, cosine).
 - Document and **justify** embedding model choice (e.g. local Ollama vs cloud) and cost/latency/quality tradeoffs → **`architecture.md`**.
 
 ### Grounding and guardrails (PDF p.5–6)
@@ -296,7 +297,7 @@ The solution is complete when all of the following pass (expanded as **AC-CORE-*
 - [ ] Response cites specific ticket ID(s) used
 - [ ] Out-of-scope / no-match returns honest “no relevant tickets found” (not fabricated)
 - [ ] Chunking strategy and embedding model choice documented and justified in `architecture.md`
-- [ ] Re-ingestion when ticket is **updated** (see §10 for **close** vs **DEC-01**)
+- [ ] Re-ingestion when ticket is **updated** or **closed** (**DEC-01 (B)**)
 - [ ] top-K and similarity threshold configurable
 - [ ] No secrets committed
 - [ ] At least one meaningful AI mistake caught and documented
@@ -305,37 +306,31 @@ Demo walkthrough mapping: [`requirements.md`](../spec/requirements.md) §8.7.
 
 ---
 
-## 12. Decisions scraped from specs (2026-10-04)
+## 12. Decisions (authoritative: [`requirements.md`](../spec/requirements.md) §10.2)
 
-### Agreed (recorded in requirements §10.2 and `data-model.md`)
+**Status (2026-10-04):** **DEC-01…19** agreed. No blocking open rows in §10.2. Steering (`rules/`, `commands/`, this brief) indexes the hub — do not contradict it in code.
 
-| DEC | Topic | Decision |
-|-----|--------|----------|
-| **DEC-03** | `category` | Optional user-selected `TicketCategory` enum on create/update |
-| **DEC-04** | Ticket id | Public id `TKT-{n}` from sequence (start 1001); `ticket.id` `VARCHAR(16)` PK |
-| **DEC-05** | Resolution notes | Nullable `resolution_notes` on `ticket`; ingested for RAG |
-| **DEC-07** | Initial status | Server default `OPEN` on create; not in create body |
-| **DEC-08** | Keyword search | `q` matches `title` and `description` (case-insensitive); comments excluded |
-| **DEC-13** | Create validation | Non-blank `title` required; `priority` defaults `MEDIUM`; other fields per data model §16.1 |
-| **DEC-01** | Re-ingest trigger | **(B)** On ticket **update** or **close** (ingestion p.5); demo proof via edit path (p.6) — [`requirements.md`](../spec/requirements.md) §11.1 |
-| **DEC-02** | Skipped status hops | Only T1–T5 edges (**A**) |
-| **DEC-11** | Ask no-match | `data.answer` e.g. “No relevant tickets found.”; empty `citedTicketIds`; no `reason` field in v1 |
-| **DEC-12** | Authentication | None in assessment scope (PDF silent) |
-| **DEC-15** | Frontend stack | React + Vite + TypeScript (PDF “or equivalent”); layout/ask placement implementer choice |
-
-### Interim (implementable draft; confirm before calling “agreed”)
-
-| DEC | Topic | Interim stance |
-|-----|--------|----------------|
-| **DEC-06** | Transition API | PATCH `status` on `PATCH /api/v1/tickets/{id}` |
-| **DEC-14** | Ticket REST surface | Paths/payloads in [`api-contract.md`](../spec/api-contract.md); envelopes in `rules/api-standards.md` |
-
-### Still open
-
-| DEC | Topic |
-|-----|--------|
-| **DEC-09** | Embedding model + vector store product |
-| **DEC-10** | H2 vs PostgreSQL per environment |
+| DEC | Topic | Summary |
+|-----|--------|---------|
+| **DEC-01** | Re-ingest | Update **or** close (**B**) |
+| **DEC-02** | Status hops | Only T1–T5 (**A**) |
+| **DEC-03** | `category` | Optional enum on create/update |
+| **DEC-04** | Ticket id | `TKT-{n}` from sequence (1001+) |
+| **DEC-05** | Resolution notes | Optional `resolution_notes` column |
+| **DEC-06** | Transitions | PATCH `status` on ticket resource |
+| **DEC-07** | Initial status | `OPEN` on create (not in body) |
+| **DEC-08** | Search `q` | `title` + `description` only |
+| **DEC-09** | Vector + embed | PgVector + Ollama `nomic-embed-text`, **768** dims |
+| **DEC-10** | Database | PostgreSQL everywhere; **no H2** in v1 |
+| **DEC-11** | No-match | Honest phrase in `data.answer`; empty citations |
+| **DEC-12** | Auth | None in assessment scope |
+| **DEC-13** | Create fields | `title` required; defaults per data model |
+| **DEC-14** | Ticket REST | [`api-contract.md`](../spec/api-contract.md) + `rules/api-standards.md` |
+| **DEC-15** | Frontend | React + Vite + TypeScript |
+| **DEC-16** | RAG defaults | Chunk 800/120/80 hybrid; top-k 8; threshold 0.72; cosine |
+| **DEC-17** | Ask request | `question` ≤ 2000; unknown JSON → 400; citation order + dedupe |
+| **DEC-18** | Ingest | Sync after commit; failure visibility; skip empty text; status-only re-ingest |
+| **DEC-19** | Eval | No metadata pre-filter on ask in v1 |
 
 ### Explicitly not in the PDF (**Reference** — document only; do not work on)
 
@@ -361,7 +356,7 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 
 **PDF spec filenames (p.1–2, ten names → ten repo files):** `ui-flow.md` → [`ui-model.md`](../spec/ui-model.md) filename only; do not add `spec/ui-flow.md`.
 
-**Outstanding PDF delivery (not missing from specs — evidence at demo time):** `docs/ai-mistakes.md` first entry (**AC-CORE-23**); user confirmation on open **DEC-*** (see §12).
+**Outstanding PDF delivery (not missing from specs — evidence at demo time):** `docs/ai-mistakes.md` first entry (**AC-CORE-23**); local verify Ollama `nomic-embed-text` → **768** dims; runnable app + demo §8.7.
 
 ---
 
@@ -414,3 +409,4 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **C
 | 2026-10-04 | Primary source: `docs/Assessments.docx`. |
 | 2026-10-04 | §4 spec table + §13: requirements §0.5 and per-spec §0 maps; steering sync with `rules/` / `commands/` / `skills/`. |
 | 2026-10-04 | §14: hub §0.8 heading unit suffix; in-spec search `· unit **` for chunk jump. |
+| 2026-10-04 | **DEC-01…19** agreed; §7 conventions, §10 RAG, §12 decision table; steering sync with `rules/` / `commands/` / `skills/`. |

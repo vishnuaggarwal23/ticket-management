@@ -345,7 +345,7 @@ Exact required/optional validation → §16 and [`api-contract.md`](api-contract
 | Cardinality | 1 ticket : N chunks (derived) |
 | FK | `ticket_vector_chunk.ticket_id` → `ticket.id` |
 | Delete | **Convention:** `ON DELETE CASCADE` + explicit delete-all-for-ticket before re-ingest |
-| Consistency | Chunks may lag ticket briefly if ingest is async (**Open**); must converge after re-ingest |
+| Consistency | Ticket row committed before ingest (**DEC-18** sync after commit); on ingest failure index may lag until retry/next mutation — [`rag-ingestion.md`](rag-ingestion.md) §10.2 |
 
 ### 7.3 Referential integrity summary
 
@@ -387,7 +387,7 @@ Store **chunked**, **embedded** ticket knowledge with metadata keys: `ticketId`,
 | `ticket_id` | `VARCHAR(16)` | NO | FK → `ticket.id` |
 | `chunk_index` | `INT` | NO | 0-based order within ticket ingest |
 | `content` | `TEXT` | NO | Text segment embedded and passed to LLM |
-| `embedding` | `vector(n)` | NO | `n` = agreed dimension in `rag-ingestion.md` |
+| `embedding` | `vector(768)` | NO | **DEC-09** — Ollama `nomic-embed-text` native dimension |
 | `metadata` | `JSONB` | NO | PDF keys + technical keys §11 |
 | `ingested_at` | `TIMESTAMPTZ` | NO | Snapshot timestamp |
 
@@ -647,7 +647,7 @@ flowchart LR
   G --> H[ticket_vector_chunk]
 ```
 
-**Proposed:** Ingest on create even if description empty (zero chunks or single minimal chunk — exact rule in `rag-ingestion.md`).
+**Agreed (DEC-18):** Ingest hook runs on create; if there is no embeddable text, **no** `ticket_vector_chunk` rows and **no** embedding call ([`rag-ingestion.md`](rag-ingestion.md) §10.1).
 
 ### 13.2 Update fields / resolution notes
 
@@ -732,13 +732,13 @@ CREATE TABLE ticket_comment (
 ### 14.4 DDL sketch — `ticket_vector_chunk`
 
 ```sql
--- dimension n from rag-ingestion.md
+-- DEC-09: vector(768) for Ollama nomic-embed-text
 CREATE TABLE ticket_vector_chunk (
   id           UUID PRIMARY KEY,
   ticket_id    VARCHAR(16) NOT NULL REFERENCES ticket(id) ON DELETE CASCADE,
   chunk_index  INT NOT NULL,
   content      TEXT NOT NULL,
-  embedding    vector(n) NOT NULL,
+  embedding    vector(768) NOT NULL,
   metadata     JSONB NOT NULL,
   ingested_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (ticket_id, chunk_index)
@@ -793,7 +793,7 @@ No separate index on `ticket_id` alone — the composite index leading column is
 | `uq_ticket_vector_chunk_ticket_chunk` | UNIQUE (BTREE) | `(ticket_id, chunk_index)` | One row per chunk slot; re-ingest delete/replace; `ticket_id` lookups |
 | `idx_ticket_vector_chunk_embedding_hnsw` | **HNSW** (pgvector) | `(embedding vector_cosine_ops)` | Ask-path similarity search (**PDF** RAG) |
 
-**Open in `rag-ingestion.md`:** HNSW build parameters (`m`, `ef_construction`), distance op class if metric is inner product instead of cosine (`vector_ip_ops`). Index **must** use the same metric as the configured similarity threshold.
+**Agreed metric (**DEC-09** / **DEC-16**):** cosine / `vector_cosine_ops`. HNSW build parameters (`m`, `ef_construction`) remain **Convention** tunables in Liquibase unless profiling requires change.
 
 **Optional (not v1):** `idx_ticket_vector_chunk_ingested_at` on `(ingested_at DESC)` for ops/debug only.
 
@@ -812,7 +812,7 @@ No separate index on `ticket_id` alone — the composite index leading column is
 
 ### 14.6 Liquibase SQL — extensions and indexes
 
-Run after tables exist. Replace `vector(n)` and HNSW opclass if `rag-ingestion.md` chooses a different dimension or metric.
+Run after tables exist. `embedding` column is `vector(768)` per **DEC-09**; HNSW uses `vector_cosine_ops` per **DEC-16**.
 
 ```sql
 -- 002-extensions.yaml
@@ -898,7 +898,7 @@ Maps to columns: `created_at`, `updated_at`, `priority`, `status` — priority s
 |-------|------|
 | `resolutionNotes` | Optional; max 100k; ingested when non-blank |
 
-**Proposed:** Not required to transition to `RESOLVED` (assessment does not mandate); UI may encourage.
+**Agreed (DEC-05):** Not required to transition to `RESOLVED`; resolution notes remain optional; UI may encourage.
 
 ### 16.4 Database constraints
 
@@ -919,14 +919,9 @@ Authoritative register: [`requirements.md`](requirements.md) §10.2.
 | **DEC-07** | Initial status | `OPEN` server default; not in create body | Agreed 2026-10-04 |
 | **DEC-08** | Search scope | `title` + `description` only | Agreed 2026-10-04 |
 | **DEC-13** | Required create fields | `title` required; others optional with defaults | Agreed 2026-10-04 |
-
-Remaining **Open** in other specs:
-
-| ID | Owner |
-|----|-------|
-| **DEC-06** | Transition API shape — [`api-contract.md`](api-contract.md) §4.4 (PATCH `status` interim) |
-| **DEC-09** | Embedding model + vector dimension — [`rag-ingestion.md`](rag-ingestion.md) §12 |
-| **DEC-10** | DB roles (H2 vs PostgreSQL) — [`test-strategy.md`](test-strategy.md) §12 |
+| **DEC-09** | Embedding | PgVector + Ollama `nomic-embed-text`, `vector(768)` | Agreed 2026-10-04 |
+| **DEC-10** | DB roles | PostgreSQL dev/runtime/tests; no H2 | Agreed 2026-10-04 |
+| **DEC-06** | Transitions | PATCH `status` on ticket resource | Agreed 2026-10-04 |
 
 ---
 
@@ -961,3 +956,5 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | Ask `data` pointers → [`api-contract.md`](api-contract.md) §6 (consolidated rag-api themes). |
 | 2026-10-04 | §0.3 **DM-*** independent reading units (enums → DDL → AC). |
 | 2026-10-04 | Major `##` headings tagged with **DM-*** unit ids. |
+| 2026-10-04 | **DEC-09/10/18:** `vector(768)`, PostgreSQL-only note, empty-ticket ingest skip cross-ref. |
+| 2026-10-04 | Doc sync: vector consistency row aligned with **DEC-18** (no async ingest). |

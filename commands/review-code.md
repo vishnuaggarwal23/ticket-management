@@ -31,7 +31,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 ### Spec and scope
 
 - [ ] Implements only **agreed** specs; no **Reference** features ([`spec/requirements.md`](../spec/requirements.md) **§2.3** — auth, delete API, agents, confidence on ask, rerankers, etc.)
-- [ ] No silent answers to open questions — check **§10.2 (DEC-*)**; still-**Open:** **DEC-09**, **DEC-10** (model/dimension, DB roles). **Interim:** **DEC-06**/**DEC-14**. Chunking per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §9 (**proposed** §9.3 until confirmed). **Agreed DEC** + data model: see [`rules/documentation.md`](../rules/documentation.md)
+- [ ] Code matches **§10.2 (DEC-*)** — **DEC-01…19** agreed (hub 2026-10-04). Embedding: **DEC-09** (`nomic-embed-text`, 768). DB: **DEC-10** (Postgres + Testcontainers; no H2). Chunk/retrieval defaults: **DEC-16** via config. Ingest: **DEC-18** sync after commit. Ask limits: **DEC-17**. Index: [`rules/documentation.md`](../rules/documentation.md)
 - [ ] Domain status machine matches [`spec/state-machine.md`](../spec/state-machine.md) §5 (T1–T5, X1–X3, full invalid matrix)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
@@ -68,7 +68,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 - [ ] Empty/below-threshold retrieval does not call the LLM to invent an answer
 - [ ] Citations are ticket IDs from **retrieval**, not model-guessed ids
 - [ ] Retrieval ranking quality is **not** proved by a golden LLM string in unit tests — use [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5–§8 + `commands/review-rag-output.md` when debugging ask
-- [ ] Chunking from [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); model name, dimension (**DEC-09**), numeric K/threshold values **not** hardcoded in Java
+- [ ] Chunking from [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**DEC-16**); `nomic-embed-text` / **768** (**DEC-09**); K/threshold/chunk sizes **not** hardcoded in Java
 
 ### Frontend
 
@@ -148,3 +148,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 | 2026-10-04 | Spec inputs: requirements **§0.5**; per-file **§0** via `rules/documentation.md`. |
 | 2026-10-04 | Ask: no golden retrieval tests; eval [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5–§8. |
 | 2026-10-04 | **Reference** §2.3 scope gate; **DEC** register sync (**DEC-09**/**DEC-10** open). |
+| 2026-10-04 | **DEC-01…19** agreed; review checklist updated. |

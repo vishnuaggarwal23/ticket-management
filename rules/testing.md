@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/testing.mdc`](../.cursor/rules/testing.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Tests prove **acceptance criteria** from `spec/` (start each file’s **§0** for PDF scope of that domain). Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed). HTTP paths, payloads, scenarios: **[`spec/api-contract.md`](../spec/api-contract.md)** (draft). Ask `data` / semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md). Ingest/chunking: [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**AC-RAG-ING-***). RAG **retrieval quality**: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) + `commands/review-rag-output.md` — not golden LLM answer strings in unit tests.
+Tests prove **acceptance criteria** from `spec/` (start each file’s **§0** for PDF scope of that domain). Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed). HTTP paths, payloads, scenarios: **[`spec/api-contract.md`](../spec/api-contract.md)** (agreed). Ask `data` / semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md). Ingest/chunking: [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**AC-RAG-ING-***). RAG **retrieval quality**: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) + `commands/review-rag-output.md` — not golden LLM answer strings in unit tests.
 
 **AC mapping:** primary index [`spec/test-strategy.md`](../spec/test-strategy.md) (**§0** proof map) — **§5** state machine determinism, **§6** ask/retrieval bands, plus **AC-CORE-***, **AC-SM-***, **AC-API-***, **AC-DM-***. Fallback: [`spec/requirements.md`](../spec/requirements.md) §8–§9, **§0.5** completeness.
 
@@ -16,7 +16,7 @@ Tests prove **acceptance criteria** from `spec/` (start each file’s **§0** fo
 
 **Assessment PDF** requires tests that prove the ticket **state machine** (legal and illegal transitions), **backend validation**, **persistence that survives restart**, and honest RAG **no-match / citation** behaviour. It does **not** mandate JUnit, Mockito, Testcontainers, H2, coverage percentages, CI, or a frontend test stack.
 
-**Reference (do not add tests for):** features listed in [`spec/requirements.md`](../spec/requirements.md) **§2.3** (auth, delete API, ask confidence, CI recall@K automation, etc.). **Open:** **DEC-10** (H2 vs Postgres roles) — follow agreed choice in specs before locking test DB story.
+**Reference (do not add tests for):** features listed in [`spec/requirements.md`](../spec/requirements.md) **§2.3** (auth, delete API, ask confidence, CI recall@K automation, etc.). **Agreed:** **DEC-10** — PostgreSQL via Testcontainers for integration tests; no H2 in v1.
 
 **This project’s approved conventions** (use these when implementing; do not describe them as PDF requirements):
 

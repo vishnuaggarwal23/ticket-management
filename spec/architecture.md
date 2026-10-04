@@ -1,6 +1,6 @@
 # Architecture
 
-> **Status:** draft — design for implementation; field-level contracts live in sibling specs.  
+> **Status:** agreed (2026-10-04) — design for implementation; field-level contracts live in sibling specs. **DEC-01…19** per [`requirements.md`](requirements.md) §10.2.  
 > **Requirements hub:** [`requirements.md`](requirements.md) (PDF-derived acceptance and FEAT catalogue).  
 > **Assessment source:** `docs/Assessments.docx` (via [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Audience:** implementers, reviewers, assessors.
@@ -95,7 +95,7 @@ Support Tickets
 |----|-------------|
 | IR-ARCH-01 | Maven Wrapper; Liquibase; Testcontainers for integration tests |
 | IR-ARCH-02 | Layering: domain / service / persistence / api / rag per `rules/java-springboot.md` |
-| IR-ARCH-03 | Spring AI for embed + chat; Ollama via config (**DEC-09** Open) |
+| IR-ARCH-03 | Spring AI for embed + chat; Ollama `nomic-embed-text` + local chat model via config (**DEC-09**) |
 
 ### 0.3 Independent reading units
 
@@ -240,7 +240,7 @@ Business modules are **cohesive responsibility areas** for planning and traceabi
 
 - Status changes follow the published lifecycle; illegal moves are **refused** by the backend.
 - The assistant does **not** invent ticket facts when retrieval does not support an answer.
-- Operational knowledge in the vector index must **not go stale** when tickets change (**PDF**); execution timing is **Open** → `rag-ingestion.md`.
+- Operational knowledge in the vector index must **not go stale** when tickets change (**PDF**); ingest runs **synchronously** after successful DB commit (**DEC-18**) — see `rag-ingestion.md` §10–§10.2.
 
 ---
 
@@ -373,7 +373,7 @@ flowchart LR
 | AI | Spring AI (embed, vector store, chat) | **PDF** |
 | Ticket DB | PostgreSQL + Liquibase | **Convention** (PDF allows PostgreSQL/H2) |
 | Vector search | PgVector extension, same instance | **Convention** (PDF examples PGVector/Chroma) |
-| Models (initial) | Ollama via Spring AI properties | **Convention**; model **ids** **Open** → `rag-ingestion.md` |
+| Models (initial) | Ollama via Spring AI properties | **DEC-09:** embed `nomic-embed-text`; chat model via `spring.ai.ollama.chat` (**Convention** — e.g. local LLM for demo) |
 | API | REST, JSON | **PDF** |
 | Frontend | React + Vite + TypeScript | **Convention** (PDF: React/Next or equivalent) |
 | Tests | JUnit 5, Mockito, PostgreSQL Testcontainers | **Convention** (`rules/testing.md`) |
@@ -425,7 +425,7 @@ No message broker, no separate RAG microservice, no BFF unless a future spec add
 | **State transition coordinator** | Invoke state machine on status change requests |
 | **Validation adapter** | Enforce Bean Validation + domain rules at boundary |
 
-**Triggers RAG:** successful updates and comments enqueue or run **ingestion** (§15.4; timing **Open**).
+**Triggers RAG:** successful updates and comments run **synchronous ingestion** after commit (§15.4; **DEC-18**).
 
 ### 8.2 Discovery module
 
@@ -454,7 +454,7 @@ Distinct from **vector similarity search** (RAG only).
 | Component | Responsibility |
 |-----------|----------------|
 | **API error mapper** | `@ControllerAdvice` → stable error envelope (**Convention**) |
-| **Transaction boundaries** | Ticket mutations atomic; ingestion may be after-commit (**Open**) |
+| **Transaction boundaries** | Ticket mutations atomic; ingestion after successful commit (**DEC-18**); ingest failure does not roll back ticket row |
 
 ---
 
@@ -647,7 +647,7 @@ Minimum surfaces to satisfy **AC-CORE-01…11** and demo script in [`requirement
 
 **Navigation (logical):** List ↔ Detail; Detail → Ask panel (drawer, tab, or route — **Open**); Create from list.
 
-### 12.4 Status transition UX (**DEC-06** interim)
+### 12.4 Status transition UX (**DEC-06** agreed)
 
 - UI offers only **legal** target statuses for the **current** state (T1–T5 from [`state-machine.md`](state-machine.md) §5.1) — e.g. from `OPEN`: `IN_PROGRESS`, `CANCELLED`.
 - MUST NOT rely on UI alone: illegal choices still return **409** from API (Flow C).
@@ -658,7 +658,7 @@ Minimum surfaces to satisfy **AC-CORE-01…11** and demo script in [`requirement
 
 | Element | Behaviour |
 |---------|-------------|
-| Question input | Single text field; submit calls ask API with `{ "question" }` |
+| Question input | Single text field; submit calls ask API with `{ "question" }` only (max **2000** chars; unknown JSON keys → **400** — **DEC-17**) |
 | Loading | In-flight indicator while waiting for **200** |
 | Grounded answer | Render `data.answer`; show `data.citedTicketIds` as links or chips to ticket detail |
 | No-match | Show `data.answer` (no-match phrase); empty citations; distinguish from HTTP errors |
@@ -687,7 +687,7 @@ Identifiers, required fields, resolution notes, indexes → [`data-model.md`](da
 
 After successful ticket **update**, **comment add**, or **close** (per agreed **DEC-01**), run **re-ingestion** for that ticket so ask retrieval sees current text and metadata (**PDF** FR-14).
 
-Execution model (inline, `@TransactionalEventListener`, async job) → **`rag-ingestion.md`** (**Open**).
+Execution model → **`rag-ingestion.md`** §10 (**DEC-18**): **synchronous** ingest after successful DB commit; failure visibility and recovery §10.2.
 
 ### 13.3 Testing datastores
 
@@ -713,7 +713,7 @@ Each **indexed unit** is a **chunk** of ticket knowledge with:
 
 | Element | Description |
 |---------|-------------|
-| **Embedding vector** | Fixed dimension per chosen model (**Open** → `rag-ingestion.md`) |
+| **Embedding vector** | **768** dimensions — Ollama `nomic-embed-text` (**DEC-09**) |
 | **Chunk text** | Text segment passed to LLM at ask time (or reconstructable reference) |
 | **Metadata** | **PDF** keys: `ticketId`, `status`, `priority`, `assignee`, `category` |
 | **Technical keys** | `chunkIndex`, `ingestedAt` — [`data-model.md`](data-model.md) §11.1; ingest version **Open** in `rag-ingestion.md` |
@@ -740,8 +740,8 @@ Vector tables and `pgvector` / `pg_trgm` extensions are versioned in **Liquibase
 | Property | Guarantee |
 |----------|-----------|
 | Ticket read-your-writes | Relational DB transactional |
-| Search index | **Eventually consistent** with ticket DB if ingestion is async (**Open**); must converge after re-ingest |
-| Ask after update | Acceptance expects retrieval can reflect new text (**AC-CORE-20**) |
+| Search index | Ticket row is committed before ingest (**DEC-18** sync); on ingest failure index may lag until retry — §13.2, `rag-ingestion.md` §10.2; converges after successful re-ingest |
+| Ask after update | Acceptance expects retrieval can reflect new text after successful ingest (**AC-CORE-20**) |
 
 ---
 
@@ -886,23 +886,28 @@ Integration via **Spring AI**; provider swappable in config.
 **Architecture constraints:**
 
 - **Same embedding model** at ingest and query (or full reindex on change).
-- Vector **dimension** fixed per model — schema must match (**Open**).
-- **Initial provider:** Ollama (**Convention**); **model id** not fixed here.
+- Vector **dimension** **768** for Ollama `nomic-embed-text` (**DEC-09**).
+- **Provider:** Ollama via Spring AI (**DEC-09**).
 
-**Final model selection and dimension** → `rag-ingestion.md` with pointer back to this justification.
+Numeric defaults and model id → [`rag-ingestion.md`](rag-ingestion.md) §9.3, §12 (**DEC-16**).
 
 ### 16.4 Configuration slots (names illustrative)
 
 ```yaml
 rag:
   retrieval:
-    top-k: # Open numeric — FR-18
-    similarity-threshold: # Open numeric — FR-18
+    top-k: 8
+    similarity-threshold: 0.72
+    distance-metric: COSINE
   chunking:
-    max-chars: # Open — rag-ingestion.md
-    min-chars: # Open
+    max-chars: 800
+    min-chars: 120
+    overlap-chars: 80
 spring.ai:
-  # embedding and chat model ids — Open
+  ollama:
+    embedding:
+      options:
+        model: nomic-embed-text
 ```
 
 Use `@ConfigurationProperties` — no magic numbers in Java (**PDF** intent for top-K/threshold).
@@ -920,7 +925,7 @@ States and transitions: [`state-machine.md`](state-machine.md) + `requirements.m
 - Repositories do not expose unguarded status updates.
 - Illegal transition → domain error → **409** `ILLEGAL_TRANSITION` (**Convention**).
 
-**Agreed:** skipped hops **DEC-02 (A)**; initial status `OPEN` on create (**DEC-07** — [`data-model.md`](data-model.md) §5.1). **Interim:** transition API (**DEC-06**).
+**Agreed:** skipped hops **DEC-02 (A)**; initial status `OPEN` on create (**DEC-07**); transition API **DEC-06** (PATCH `status`).
 
 ---
 
@@ -972,16 +977,18 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 |----|-------|-------------|
 | OQ-01 / DEC-04 | Ticket id format | [`data-model.md`](data-model.md) (agreed) |
 | OQ-02, OQ-03, OQ-10 / DEC-03, DEC-05, DEC-13 | Fields, category, resolution notes | [`data-model.md`](data-model.md) (agreed) |
-| OQ-04 / DEC-14 | REST details | `api-contract.md` |
+| OQ-04 / DEC-14 | REST details | [`api-contract.md`](api-contract.md) (**agreed**) |
 | OQ-05 / DEC-11 | Ask response schema | [`api-contract.md`](api-contract.md) §6.3 |
 | OQ-06 / DEC-12 | Authentication | This file if in scope |
-| OQ-07 / DEC-09 | Store + embedding product | `rag-ingestion.md` + this file |
+| OQ-07 / DEC-09 | Store + embedding product | [`rag-ingestion.md`](rag-ingestion.md) §12 (**agreed** — PgVector + `nomic-embed-text` / 768) |
 | OQ-08 / DEC-10 | DB roles in test vs prod | `test-strategy.md` |
 | OQ-11, OQ-12 / DEC-02, DEC-06, DEC-07 | Transitions API and skipped hops | `state-machine.md`, `api-contract.md` |
 | OQ-14 / DEC-08 | Keyword search scope | [`data-model.md`](data-model.md) §15.2 (agreed); narrative in `api-contract.md` when written |
-| OQ-15 / DEC-01 | Re-ingest on close only | `rag-ingestion.md` |
-| — | Ingest sync vs async | `rag-ingestion.md` |
-| — | Metadata-filtered retrieval | Future spec / eval |
+| OQ-15 / DEC-01 | Re-ingest on close only | [`rag-ingestion.md`](rag-ingestion.md) (**agreed** (B)) |
+| — / **DEC-18** | Ingest timing + failure handling | [`rag-ingestion.md`](rag-ingestion.md) §10 (**agreed** — sync after commit) |
+| — / **DEC-16** | Chunk + retrieval defaults | [`rag-ingestion.md`](rag-ingestion.md) §9.3, §12 (**agreed**) |
+| — / **DEC-17** | Ask request limits | [`rag-api-contract.md`](rag-api-contract.md) §6 (**agreed**) |
+| — / **DEC-19** | Metadata pre-filter on ask | [`evaluation-strategy.md`](evaluation-strategy.md) (**agreed** — none in v1) |
 
 ---
 
@@ -1035,6 +1042,8 @@ Architecture supports verification of:
 | 2026-10-04 | PDF audit: §12.3–§12.6 UI flows, transition/ask UX, process evidence (consolidated PDF `ui-flow` themes). |
 | 2026-10-04 | §12 intro: no separate `ui-flow.md`; interim consolidation in §12.3–§12.6 (superseded by `ui-model.md` for screen detail). |
 | 2026-10-04 | Screen/flow detail → [`ui-model.md`](ui-model.md); §12 remains UI architecture summary. |
+| 2026-10-04 | Doc sync: **DEC-06/18** agreed wording; closed ingest sync/async **Open**; §14.6 consistency model. |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
 | 2026-10-04 | `improve-from-assessment-pdf`: PDF ten-name spec list → nine repo files; `ui-flow` → `ui-model.md`. |
 | 2026-10-04 | Ask semantics → [`rag-api-contract.md`](rag-api-contract.md); ten-file spec set. |
 | 2026-10-04 | §0 guide: verbatim PDF RAG flow diagram; PDF theme map; BRF/FRI/IRI at architecture level. |

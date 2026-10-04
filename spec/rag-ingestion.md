@@ -1,6 +1,6 @@
 # RAG ingestion — knowledge build, chunking, embed, refresh
 
-> **Status:** draft (2026-10-04) — chunking **recommendation** and **proposed** numeric defaults for implementation; **DEC-01** agreed (update or close); **DEC-09** (embedding product/model id) **Open**.  
+> **Status:** agreed (2026-10-04) — **DEC-01**, **DEC-09**, **DEC-16**, **DEC-18** (PgVector, Ollama `nomic-embed-text` / 768, chunk/retrieval defaults, sync ingest + failure handling, empty-content skip).  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md) FEAT-12…14, §11.1; [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** Justification narrative → [`architecture.md`](architecture.md) §15–§16; persistence → [`data-model.md`](data-model.md) §8–§11; grounding rules → `rules/rag-vector-store.md`; ask HTTP + response semantics → [`rag-api-contract.md`](rag-api-contract.md).
 
@@ -75,7 +75,7 @@
 | IR-ING-01 | `KnowledgeDocumentBuilder` + `TicketChunker` + `TicketIngestionService` | §13 |
 | IR-ING-02 | Hook from ticket **service** after successful DB commit | §10, [`architecture.md`](architecture.md) §15.4 |
 | IR-ING-03 | `@ConfigurationProperties` for `rag.chunking.*` and `rag.retrieval.*` — no hardcoded K/threshold in Java | §9.3, §12.1 (**PDF**) |
-| IR-ING-04 | Liquibase `vector(n)` dimension matches chosen model (**DEC-09**) | [`data-model.md`](data-model.md) §8.2 |
+| IR-ING-04 | Liquibase `vector(768)` matches Ollama `nomic-embed-text` (**DEC-09**) | [`data-model.md`](data-model.md) §8.2 |
 | IR-ING-05 | Deterministic chunk order for repeatable tests | §11 step 2 |
 
 ### 0.4 Independent reading units
@@ -88,7 +88,7 @@
 | **ING-D** | §6 Paragraph chunking | Yes | **ING-C** | Comment-boundary rules | §8 compare |
 | **ING-E** | §7 Fixed-size overflow | Yes | **ING-D** | When/how overflow splits | §9 hybrid |
 | **ING-F** | §8 Comparison table | Yes | **ING-D**, **ING-E** | Paragraph vs fixed for ticket shapes | [`architecture.md`](architecture.md) §16 |
-| **ING-G** | §9 Hybrid + yaml | Yes | **ING-F** | Default strategy + config snippet | **DEC-09** Open |
+| **ING-G** | §9 Hybrid + yaml | Yes | **ING-F** | Default strategy + config snippet | **DEC-09**, **DEC-16** |
 | **ING-H** | §10 Triggers | Yes | **ING-A** | When to re-ingest (**DEC-01**) | [`requirements.md`](requirements.md) §11.1 |
 | **ING-I** | §11 Storage | Yes | **ING-C** | DELETE + INSERT per ticket | [`data-model.md`](data-model.md) §8.4 |
 | **ING-J** | §12–§13 | Yes | **ING-G** | Model/store + Java placement | `rules/rag-vector-store.md` |
@@ -317,9 +317,9 @@ Running **fixed-size-only** on the full `assembledText` would:
 
 Tickets are **semi-structured narratives**: a stable **description**, an **append-only comment thread**, and a **resolution** capstone — not a single essay. Paragraph/comment boundaries mirror how agents read tickets. Fixed-size is a **safety valve** for pasted stack traces or long descriptions, not the primary splitter.
 
-### 9.3 Proposed numeric defaults (**Proposed** — confirm before treating as **Agreed**)
+### 9.3 Agreed numeric defaults (**DEC-16** — overridable via configuration)
 
-| Property | Proposed value | Notes |
+| Property | Agreed default | Notes |
 |----------|----------------|-------|
 | `rag.chunking.max-chars` | `800` | ~150–200 tokens; overflow trigger |
 | `rag.chunking.min-chars` | `120` | Merge tiny **within-section** fragments only |
@@ -328,7 +328,7 @@ Tickets are **semi-structured narratives**: a stable **description**, an **appen
 
 Tune after eval; do not hardcode in Java — use `@ConfigurationProperties` (**PDF** intent for retrieval params; same pattern for chunking).
 
-**Example `application.yml` fragment (**Example only** — chunk keys **Proposed**; `retrieval.top-k` / `similarity-threshold` / model id **Open** per PDF “configurable, not hardcoded” and **DEC-09**):**
+**Example `application.yml` fragment (**Agreed** defaults — **DEC-09**, **DEC-16**):**
 
 ```yaml
 rag:
@@ -338,12 +338,13 @@ rag:
     min-chars: 120
     overlap-chars: 80
   retrieval:
-    top-k: 8          # Open — tune via evaluation-strategy.md
+    top-k: 8
     similarity-threshold: 0.72
     distance-metric: COSINE
   embedding:
-    provider: ollama  # DEC-09 Open
+    provider: ollama
     model: nomic-embed-text
+    dimensions: 768   # Must match Liquibase vector(768); do not use Ollama API truncation in v1
 ```
 
 Bind with `@ConfigurationProperties(prefix = "rag")` per `rules/java-springboot.md`.
@@ -357,12 +358,32 @@ Bind with `@ConfigurationProperties(prefix = "rag")` per `rules/java-springboot.
 | Ticket **created** | **Yes** | Initial index (**PDF** pipeline) |
 | Ticket **updated** (fields, including description, resolution, assignee, etc.) | **Yes** | **PDF** p.6 acceptance |
 | **Comment** added | **Yes** | Ticket updated; comment text must appear (**AC-FEAT-14-02**) |
-| Status transition only (no text change) | **Yes** (**Proposed**) | Metadata snapshot must reflect new `status` (e.g. `CLOSED`) even if `assembledText` unchanged |
+| Status transition only (no text change) | **Yes** (**DEC-18**) | Metadata snapshot must reflect new `status` (e.g. `CLOSED`) even if `assembledText` unchanged |
 | Ticket **closed** (`status` → `CLOSED`) | **Yes** | **PDF** p.5 “updated **or** closed”; satisfies **AC-FEAT-14-03** |
 
 **Agreed DEC-01 (B):** Re-ingest on **update or close** per ingestion p.5 — treat **close** as a re-ingest trigger (status-only change included). Primary demo proof for p.6 “updated” checklist: edit ticket then ask ([`requirements.md`](requirements.md) §11.1).
 
-**Execution (**Proposed**): synchronous ingest hook from ticket **service** after successful commit ([`architecture.md`](architecture.md) §15.4); async queue is **out of scope** unless latency requires it later.
+**Execution (**DEC-18**):** **Synchronous** ingest hook from ticket **service** **after successful DB commit** of the triggering mutation ([`architecture.md`](architecture.md) §13.2). Async queue is **Reference** unless a future spec revises **DEC-18**.
+
+### 10.1 Empty content — no embeddings (**DEC-18**)
+
+When `KnowledgeDocument` has **no embeddable text** (e.g. create with blank `description`, no comments, no resolution notes), ingestion MUST:
+
+1. **Not** call the embedding model.
+2. **Not** insert rows into `ticket_vector_chunk` (after `DELETE` for that `ticket_id` if re-ingest).
+
+Title-only tickets are indexed only if title text is included in the assembled document per §5; if the assembled body is empty, skip embed.
+
+### 10.2 Ingest failures — visibility and recovery (**DEC-18**)
+
+Ticket/comment HTTP mutations **succeed** when relational persistence succeeds; ingest runs **after** commit and **must not** roll back the ticket transaction if embedding or vector write fails.
+
+| Requirement | Specification |
+|-------------|----------------|
+| **Visibility** | Log at **ERROR** with `ticketId`, exception message, and correlation id; optional Spring Boot health indicator or metric counter `rag.ingest.failures` (**Convention**). |
+| **User-visible (optional)** | API responses for ticket writes remain **201/200**; stale index is acceptable briefly — document in ops notes. Do not return 5xx on ticket API solely because ingest failed unless a future **DEC** changes this. |
+| **Recovery** | (1) Any later ticket update, comment, or status change **re-triggers** ingest for that ticket. (2) **Manual repair:** re-save ticket (PATCH no-op field) or run documented “reindex all tickets” maintenance (**Reference** dev/admin script — not a public REST requirement). (3) **Rebuild:** if `ticket_vector_chunk` is lost, full re-ingest from PostgreSQL ([`data-model.md`](data-model.md) §13.6). |
+| **Retry** | v1: **no** automatic retry queue; operator or next mutation retries. A bounded in-process retry (e.g. 2 attempts with backoff) is **Convention**-allowed if logged; not required for assessment. |
 
 ---
 
@@ -379,26 +400,29 @@ Vectors are **derived**; rebuild from PostgreSQL if the index is lost.
 
 ## 12. Embedding model and vector store (**DEC-09**) · unit **ING-J**
 
-| Topic | Interim **Convention** | **Open** |
-|-------|------------------------|----------|
-| Vector store | PostgreSQL **PgVector** (project convention) | Chroma vs PGVector if **DEC-09** changes |
-| Embedding provider | **Ollama** via Spring AI (local) | Cloud model + API key in env |
-| Model id | — | e.g. `nomic-embed-text` — record in config when chosen |
-| Vector dimension `n` | Must match model | Liquibase `vector(n)` per [`data-model.md`](data-model.md) §8.2 |
+| Topic | **Agreed (DEC-09)** |
+|-------|---------------------|
+| Vector store | PostgreSQL **PgVector** extension on the **same** instance as `ticket` / `ticket_comment` |
+| Embedding provider | **Ollama** via Spring AI (local dev/demo) |
+| Model id | **`nomic-embed-text`** (Ollama library; pull with `ollama pull nomic-embed-text`) |
+| Vector dimension `n` | **768** — native `embedding_length` in Ollama model metadata; Liquibase `vector(768)` per [`data-model.md`](data-model.md) §8.2, §14.4 |
+| Distance / index | **Cosine** similarity; HNSW `vector_cosine_ops` per [`data-model.md`](data-model.md) §14.5.4 |
 
-**Rule:** ingest and ask query **must** use the **same** embedding model; changing model requires full reindex.
+**Rule:** ingest and ask query **must** use the **same** embedding model and **768**-dimensional vectors in v1; do **not** pass Ollama embed API `dimensions` below 768 unless a future **DEC** changes schema. Changing model or dimension requires full reindex and Liquibase migration.
 
-### 12.1 Retrieval settings (ingest boundary)
+**Spring AI (**Convention**):** configure `spring.ai.ollama.embedding.options.model=nomic-embed-text` (and base URL via env); align with `rules/java-springboot.md`.
 
-Ingest does not apply top-K; ask does. Property names (**Proposed**, align `rules/rag-vector-store.md`):
+### 12.1 Retrieval settings (**DEC-16**)
 
-| Property | Purpose |
-|----------|---------|
-| `rag.retrieval.top-k` | Max chunks to LLM |
-| `rag.retrieval.similarity-threshold` | Min score; below → no-match |
-| `rag.retrieval.distance-metric` | `COSINE` (**Proposed**) — threshold calibration depends on this |
+Ingest does not apply top-K; ask does. Property names (align `rules/rag-vector-store.md`):
 
-Numeric defaults for K/threshold: **Open** until agreed (FEAT-19); do not embed in Java.
+| Property | Purpose | Agreed default |
+|----------|---------|----------------|
+| `rag.retrieval.top-k` | Max chunks to LLM | `8` |
+| `rag.retrieval.similarity-threshold` | Min score; below → no-match | `0.72` |
+| `rag.retrieval.distance-metric` | Similarity semantics | `COSINE` |
+
+Defaults are overridable via configuration (FEAT-19); do not embed literals in Java.
 
 ---
 
@@ -435,6 +459,7 @@ Unit tests mock `TicketIngestionPort`; integration tests assert `ticket_vector_c
 | **AC-RAG-ING-06** | Given ticket update changing comment text, when re-ingest completes, then old comment text absent from `ticket_vector_chunk` rows (**AC-FEAT-14-01**). |
 | **AC-RAG-ING-07** | Given transition to `CLOSED`, when re-ingest runs, then metadata `status` is `CLOSED` on all new chunks (**AC-FEAT-14-03**). |
 | **AC-RAG-ING-08** | Chunking strategy and hybrid justification traceable to this file + architecture §16 (**AC-FEAT-13-03**, **AC-CORE-19**). |
+| **AC-RAG-ING-09** | Given ticket with no embeddable text, when ingest runs, then `ticket_vector_chunk` has zero rows for that `ticket_id` and embedding API is not called (**DEC-18**). |
 
 ---
 
@@ -443,9 +468,10 @@ Unit tests mock `TicketIngestionPort`; integration tests assert `ticket_vector_c
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
 | **DEC-01** | Re-ingest on close vs p.6 wording | **Agreed 2026-10-04** — **(B)** §10 | Hub §11.1 |
-| **DEC-09** | Model id + dimension | **Open** | Blocks Liquibase `vector(n)` final value |
-| Chunk numeric defaults §9.3 | `max-chars` / `min-chars` / `overlap` | **Proposed** | Confirm to mark **Agreed** |
-| Async ingest queue | Latency | **Reference** | Default sync §10 for assessment; do not build job queue unless scope changes |
+| **DEC-09** | PgVector + Ollama `nomic-embed-text` / 768 | **Agreed 2026-10-04** | §12 |
+| **DEC-16** | Chunk + retrieval defaults | **Agreed 2026-10-04** | §9.3, §12.1 |
+| **DEC-18** | Sync ingest, failures, empty skip | **Agreed 2026-10-04** | §10, §10.1–§10.2 |
+| Async ingest queue | Latency | **Reference** | **DEC-18** sync default; job queue only if scope changes |
 
 ---
 
@@ -460,3 +486,5 @@ Unit tests mock `TicketIngestionPort`; integration tests assert `ticket_vector_c
 | 2026-10-04 | §0 guide, PDF map, BRF/FRI/IRI triad; example assembledText + application.yml; ingest hook pseudocode. |
 | 2026-10-04 | §0.4 **ING-*** independent reading units + PDF verbatim ingestion quote. |
 | 2026-10-04 | Major `##` headings tagged with **ING-*** unit ids; TOC updated. |
+| 2026-10-04 | **DEC-09/16/18:** PgVector + Ollama `nomic-embed-text` (768), agreed chunk/retrieval defaults, sync ingest, failure recovery, empty-content skip. |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |

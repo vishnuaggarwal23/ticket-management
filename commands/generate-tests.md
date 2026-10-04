@@ -16,7 +16,7 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 ## Inputs
 
 - Specs: all ten PDF-listed files under `spec/` (see [`rules/documentation.md`](../rules/documentation.md)); each child spec **§0** for domain scope; hub **§0.4–§0.8**; use **`##` heading unit tags** (`· unit **TS-B**`) to locate test targets quickly; only [`data-model.md`](../spec/data-model.md) is **agreed**; others **draft**
-- **[`spec/test-strategy.md`](../spec/test-strategy.md)** — primary map for **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-CORE-*** layers. **[`spec/requirements.md`](../spec/requirements.md)** — **`AC-FEAT-*`** (§4.2) and FR traceability (§9). Do not invent tests for **Open** **DEC-09**/**DEC-10** or **Reference** §2.3 features.
+- **[`spec/test-strategy.md`](../spec/test-strategy.md)** — primary map for **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-CORE-*** layers. **[`spec/requirements.md`](../spec/requirements.md)** — **`AC-FEAT-*`** (§4.2) and FR traceability (§9). **DEC-10:** Postgres Testcontainers only (no H2). **DEC-17:** ask validation tests. Do not invent tests for **Reference** §2.3 features.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
 - Code under test (if present) — generate against **implemented** behaviour first

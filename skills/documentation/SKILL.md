@@ -50,7 +50,7 @@ Implement from these; **draft** unless header says **agreed**. PDF themes: [`req
 | [`state-machine.md`](../../spec/state-machine.md) | draft | T1–T5, X1–X3, §5.6 illegal matrix, REST ex §6.5, AC-SM-* | §0 |
 | [`api-contract.md`](../../spec/api-contract.md) | draft | HTTP §2.11; ticket payloads §3–§5; ask §6 summary | §0 |
 | [`rag-api-contract.md`](../../spec/rag-api-contract.md) | draft | Ask HTTP + `data`; **AC-RAG-API-*** | §0 |
-| [`rag-ingestion.md`](../../spec/rag-ingestion.md) | draft | Hybrid chunking §6–§9, yaml ex §9.3, re-ingest §10, AC-RAG-ING-* | §0 |
+| [`rag-ingestion.md`](../../spec/rag-ingestion.md) | draft | Hybrid chunking **DEC-16**; **DEC-09** embed; sync ingest **DEC-18**; re-ingest **DEC-01** | §0 |
 | [`evaluation-strategy.md`](../../spec/evaluation-strategy.md) | draft | Retrieval quality eval (FEAT-22), AC-EVAL-* | §0 |
 | [`test-strategy.md`](../../spec/test-strategy.md) | draft | **§5** SM determinism; **§6** ask bands; AC layer maps | §0 |
 
@@ -115,14 +115,16 @@ Map backend tests through [`test-strategy.md`](../../spec/test-strategy.md) firs
 - Communication (sync REST) and API map (§10–11)
 - Vector store (PgVector convention) vs PostgreSQL SoR (§13–14)
 - RAG ingest and ask pipeline (§15)
-- Chunking **justification** (§16); **mechanics and proposed numbers** → [`rag-ingestion.md`](../../spec/rag-ingestion.md)
-- Embedding model tradeoffs (§16.3); model id / dimension **Open** → **DEC-09**
-- Configurable top-K and threshold (property keys in `rag-ingestion.md`; values open until agreed)
-- Grounding and no-match ([`rag-api-contract.md`](../../spec/rag-api-contract.md); **DEC-11** agreed)
-- Do not spec or implement **Reference** RAG/UI features (§2.3): confidence scores, async ingest queues, metadata ask filters, etc.
+- Chunking **justification** (§16); mechanics + **agreed defaults** → [`rag-ingestion.md`](../../spec/rag-ingestion.md) (**DEC-16**)
+- Embedding: **DEC-09** — Ollama `nomic-embed-text`, **768** dims; tradeoffs in architecture §16.3
+- Configurable top-K/threshold/chunk sizes — **DEC-16** defaults in `rag-ingestion.md` §9.3, §12
+- Ask: **DEC-11** no-match; **DEC-17** request limits and citation order ([`rag-api-contract.md`](../../spec/rag-api-contract.md))
+- Ingest: **DEC-18** synchronous after DB commit; failure visibility §10.2
+- Eval: **DEC-19** — no metadata pre-filter on ask in v1
+- Do not spec or implement **Reference** RAG/UI features (§2.3): confidence scores, async ingest job queues, metadata ask filters, etc.
 - Retrieval quality eval ([`evaluation-strategy.md`](../../spec/evaluation-strategy.md) §3–§9; **AC-EVAL-***; test bands — [`test-strategy.md`](../../spec/test-strategy.md) **§5–§6**)
 
-**Chunking default (draft):** hybrid paragraph/comment-boundary first, fixed-size overflow for long blocks — see `rag-ingestion.md` §9. Confirm **proposed** §9.3 numbers with the user before marking agreed.
+**Chunking default (agreed DEC-16):** hybrid paragraph/comment-boundary first, fixed-size overflow for long blocks — `rag-ingestion.md` §9.3 (800/120/80, top-k 8, threshold 0.72, cosine).
 
 ## API and state machine docs
 
@@ -149,3 +151,4 @@ When a meaningful AI mistake is caught (bad code or ungrounded answer), add an e
 | 2026-10-04 | Spec §0 pattern, requirements §0.5, updated spec-set table; aligned with `rules/documentation.md` reviewer maps. |
 | 2026-10-04 | Spec template: **`##` heading unit suffix**; search `· unit **` to jump chunks. |
 | 2026-10-04 | **Reference** label + §2.3; rules/commands sync for out-of-PDF scope. |
+| 2026-10-04 | **DEC-01…19** agreed; RAG/ingest/ask pointers updated; chunk defaults **DEC-16**. |

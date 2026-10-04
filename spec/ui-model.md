@@ -1,6 +1,6 @@
 # UI model — views, screens, and flows
 
-> **Status:** draft (2026-10-04) — product UI behaviour for ticket operations and grounded ask. **PDF** `ui-flow.md` themes are specified here in detail; [`architecture.md`](architecture.md) **§12** is the high-level frontend architecture summary.  
+> **Status:** agreed (2026-10-04) — product UI behaviour for ticket operations and grounded ask. **PDF** `ui-flow.md` themes are specified here in detail; [`architecture.md`](architecture.md) **§12** is the high-level frontend architecture summary. **DEC-06**, **DEC-11**, **DEC-15**.  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** [`data-model.md`](data-model.md) (field catalogs), [`api-contract.md`](api-contract.md) (HTTP + ask `data`), [`state-machine.md`](state-machine.md) (transition matrix), [`evaluation-strategy.md`](evaluation-strategy.md) (ask demo questions), `rules/frontend.md`, `commands/review-frontend.md`.
 
@@ -80,7 +80,7 @@
 | **UI-B** | §6 Global errors | Yes | — | Meaningful API error display (**PDF**) | `rules/frontend.md` |
 | **UI-C** | §7 List + filters | Yes | **UI-A** | List, search `q`, status filter | [`api-contract.md`](api-contract.md) **API-E** |
 | **UI-D** | §8 CRUD/detail | Yes | **UI-A** | Create, edit fields, comments | **API-C**, **API-F** |
-| **UI-E** | §9 Status UX | Yes | **UI-D** | Transition controls (**DEC-06** interim) | [`state-machine.md`](state-machine.md) **SM-F** |
+| **UI-E** | §9 Status UX | Yes | **UI-D** | Transition controls (**DEC-06** agreed) | [`state-machine.md`](state-machine.md) **SM-F** |
 | **UI-F** | §10 Ask panel | Yes | **UI-A** | Question input, citations, no-match | [`rag-api-contract.md`](rag-api-contract.md) **ASK-*** |
 | **UI-G** | §11 Flows A–E | Yes | **UI-C…F** | Hub journey → screens | [`requirements.md`](requirements.md) §4.1 |
 | **UI-H** | §12–§13 Demo + AC-UI | Yes | **UI-G** | Grader checklist | [`requirements.md`](requirements.md) §8.7 |
@@ -409,7 +409,7 @@ Summary matrix for implementers and `commands/review-frontend.md`:
 
 ## 9. Status transitions (UI) · unit **UI-E**
 
-**Authority:** [`state-machine.md`](state-machine.md) §5.1 (T1–T5), §5.2 (X1–X3). **Interim API (**DEC-06**):** `PATCH` with target `status`; may include other valid fields on the same request ([`api-contract.md`](api-contract.md) §4.4).
+**Authority:** [`state-machine.md`](state-machine.md) §5.1 (T1–T5), §5.2 (X1–X3). **Agreed API (**DEC-06**):** `PATCH` with target `status`; may include other valid fields on the same request ([`api-contract.md`](api-contract.md) §4.4).
 
 ### 9.1 Legal targets by current state (guidance)
 
@@ -433,7 +433,7 @@ UI **should** offer only these targets (buttons, dropdown, or stepper — **Open
 
 ### 9.3 Resolution notes and `RESOLVED`
 
-**Agreed** (DEC-05): `resolutionNotes` may be edited on detail before or when moving to `RESOLVED` (**Open** whether UI **requires** notes before T2 — **PDF** does not mandate a gate; backend does not require non-null notes in agreed data model unless validation added later).
+**Agreed** (DEC-05): `resolutionNotes` are **optional** on detail and when moving to `RESOLVED` — UI must not require notes before T2 (**PDF** does not mandate a gate).
 
 ### 9.4 Status transition sequence (UI)
 
@@ -513,7 +513,7 @@ Per [`rag-api-contract.md`](rag-api-contract.md):
 | Outcome | `citedTicketIds` | UI |
 |---------|------------------|-----|
 | **Grounded** | Non-empty (subset of real tickets) | Show answer + citation links; user can open each ticket |
-| **No-match / out-of-scope** | `[]` | Show `data.answer` honestly (interim e.g. “No relevant tickets found.” — **DEC-11**); **no** fabricated facts styled as verified |
+| **No-match / out-of-scope** | `[]` | Show `data.answer` honestly (default phrase per **DEC-11**); **no** fabricated facts styled as verified |
 | **HTTP error** | N/A | Error envelope — not mixed with success layout |
 
 **PDF** example questions (for manual demo / eval — **Example** corpus in §4.3):
@@ -562,7 +562,7 @@ sequenceDiagram
 UI does **not** show ingest jobs. Agents verify **AC-CORE-20** by:
 
 1. Editing ticket text on **detail** (or adding a comment).
-2. Waiting for backend re-ingest (timing **Open** — inline vs async).
+2. Backend completes **synchronous** re-ingest after DB commit (**DEC-18**); on failure, retry via another ticket mutation or operator recovery per [`rag-ingestion.md`](rag-ingestion.md) §10.2.
 3. Asking a question on **ask** that should reflect the new text.
 
 Same after transition to **CLOSED** per **DEC-01** / **FEAT-14** (close triggers re-ingest per ingestion **PDF** p.5).
@@ -631,7 +631,7 @@ Testable UI criteria for spec review (`commands/review-spec.md`) and frontend re
 
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
-| **DEC-06** | Transition API shape | **Interim** | UI sends `PATCH` with `status` (± other fields) per [`state-machine.md`](state-machine.md) §6 |
+| **DEC-06** | Transition API shape | **Agreed 2026-10-04** | UI sends `PATCH` with `status` (± other fields) per [`state-machine.md`](state-machine.md) §6 |
 | **DEC-11** | Ask no-match wording / extra fields | **Agreed 2026-10-04** | UI displays `data.answer` as returned — e.g. [`rag-api-contract.md`](rag-api-contract.md) §7.4 |
 | **DEC-15** | Layout, router, ask placement, CSS kit | **Agreed** (stack); placement Open | React+Vite+TS; §4.1 **Example** routes; panel vs page |
 | **DEC-02** | Skipped status hops | **Agreed 2026-10-04** | UI legal-target table follows §9.1 (**DEC-02 (A)**) |
@@ -650,3 +650,5 @@ Do not close **Open** items in implementation without updating [`requirements.md
 | 2026-10-04 | §0 document guide: PDF ui-flow capability map; business/functional/implementation triad. |
 | 2026-10-04 | §0.3 **UI-*** independent reading units (screens → flows → demo). |
 | 2026-10-04 | Major `##` headings tagged with **UI-*** unit ids. |
+| 2026-10-04 | Doc sync: **DEC-06** agreed; **DEC-18** sync re-ingest UX; **DEC-11** no-match wording. |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |

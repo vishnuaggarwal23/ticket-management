@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/api-standards.mdc`](../.cursor/rules/api-standards.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§0, §6, §10, §16). **HTTP paths, request/response payloads, and per-endpoint scenarios** are in [`spec/api-contract.md`](../spec/api-contract.md) (draft, **§0** REST map). **Ask** `data` semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**§0**, **DEC-11** no-match wording). Capability map: [`spec/architecture.md`](../spec/architecture.md) §11. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
+JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§0, §6, §10, §16). **HTTP paths, request/response payloads, and per-endpoint scenarios** are in [`spec/api-contract.md`](../spec/api-contract.md) (agreed, **§0** REST map). **Ask** `data` semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**§0**, **DEC-11** no-match wording). Capability map: [`spec/architecture.md`](../spec/architecture.md) §11. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
 
 Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: [`spec/architecture.md`](../spec/architecture.md) §10–11.
 
@@ -33,17 +33,22 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 - Ticket **id:** public string `TKT-{n}` (`n` from `ticket_number_seq`, start 1001); path param `{id}` uses this value
 - **Create:** `title` required (`@NotBlank`); `description`, `assignee`, `category`, `priority` optional; `priority` defaults `MEDIUM`; `description` defaults empty; **`status` not** on create — server sets `OPEN` (DEC-07)
 - **JSON properties:** camelCase — `resolutionNotes`, `createdAt`, `updatedAt`, `comments`; comment create field **`body`**; enums uppercase (`OPEN`, `HIGH`, `PAYMENTS`, …)
-- **Priority:** `LOW` | `MEDIUM` | `HIGH` | `CRITICAL`
+- **Priority:** `LOW` | `MEDIUM` | `HIGH` | `URGENT` (**DEC-13**)
 - **Category (optional):** `PAYMENTS` | `SHIPMENT` | `BILLING` | `LOGIN` | `OTHER`
 - **Keyword `q`:** case-insensitive match on **`title` and `description` only** (DEC-08); not comments
-- **Status transition:** PATCH `status` with **target** enum per [`spec/state-machine.md`](../spec/state-machine.md) §6.1 (**DEC-06** may add a dedicated sub-resource later); illegal → **409** `ILLEGAL_TRANSITION`
+- **Status transition:** PATCH `status` with **target** enum per [`spec/state-machine.md`](../spec/state-machine.md) §6.1 (**DEC-06** agreed for assessment scope); illegal → **409** `ILLEGAL_TRANSITION`
+- **Ask request:** only `question` (max **2000** chars per **DEC-17**); unknown JSON properties → **400**; see [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §6
 
-**Open (in PDF scope) — resolve before treating as fixed:**
+**Agreed (hub §10.2 — implement per child specs, not invented here):**
 
-- Embedding model / vector dimension (**DEC-09**); numeric top-K/threshold **values** (config keys in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12.1)
+- **DEC-09:** PgVector + Ollama `nomic-embed-text`, **768**-dim vectors
+- **DEC-10:** PostgreSQL dev, runtime, and Testcontainers tests; **no H2** in v1
+- **DEC-14:** Ticket REST paths/payloads in [`spec/api-contract.md`](../spec/api-contract.md)
+- **DEC-16:** Default chunk/retrieval property values in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §9.3, §12 (overridable via config)
+- **DEC-17:** Ask request — only `question` (max **2000** chars); unknown JSON properties → **400** (see [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §6)
+- **DEC-18:** **Synchronous** ticket ingest/re-ingest after successful DB commit; failure visibility/recovery in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10.2
 
 **Reference (out of PDF scope — do not implement):** see [`spec/requirements.md`](../spec/requirements.md) **§2.3** (e.g. ask `confidence`, dedicated `/transition` routes, delete ticket API).
-- Dedicated transition sub-resource vs PATCH-only — **interim:** PATCH `status` per [`spec/api-contract.md`](../spec/api-contract.md) §4.4 and [`spec/state-machine.md`](../spec/state-machine.md) §6.1
 - Authentication / authorization / roles (not in the assessment)
 - Whether OpenAPI is produced (optional; if added it MUST match these rules and the specs)
 
@@ -356,7 +361,7 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 ## Do not
 
 - Do not treat `/api/v1`, PATCH, 409, or these envelopes as PDF requirements.
-- Do not silently answer open questions in [`spec/requirements.md`](../spec/requirements.md) — use **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement still-**Open** **DEC-09**, **DEC-10** as fixed behaviour. **Interim:** **DEC-06**, **DEC-14**. **Agreed DEC** list: [`rules/documentation.md`](documentation.md) (hub §10.2).
+- Do not silently contradict [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)** — authoritative register is **DEC-01…19** (agreed 2026-10-04). Do not invent model ids, dimensions, or DB products outside those specs. Index: [`rules/documentation.md`](documentation.md).
 - Do not implement **Reference** topics in requirements **§2.3** (auth, delete API, confidence on ask, etc.) — document only.
 - Do not prescribe Spring Security, API keys, or multi-tenancy for the assessment build (**DEC-12** agreed: no auth).
 - Do not return persistence entities or a second JSON error shape from one controller.
@@ -382,3 +387,5 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md) (authoritative). |
 | 2026-10-04 | Cross-refs to spec **§0** guides (`api-contract`, `rag-api-contract`, `data-model`). |
 | 2026-10-04 | **Reference** §2.3: out-of-PDF items not API work; DEC register sync. |
+| 2026-10-04 | **DEC-01…19** agreed; priority enum **URGENT** (**DEC-13**); ask **DEC-17**; removed stale open DEC-09/10 text. |
+| 2026-10-04 | Doc sync: explicit **DEC-17** / **DEC-18** in agreed block; **DEC-06** PATCH unchanged. |

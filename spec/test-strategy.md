@@ -1,6 +1,6 @@
 # Test strategy — acceptance mapping and layers
 
-> **Status:** draft (2026-10-04) — maps **AC-CORE-***, **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-EVAL-***, and **AC-TS-*** to backend test layers. Tooling: `rules/testing.md` (JUnit 5, Mockito, Testcontainers, no frontend tests).  
+> **Status:** agreed (2026-10-04) — maps **AC-CORE-***, **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-EVAL-***, and **AC-TS-*** to backend test layers. Tooling: `rules/testing.md` (JUnit 5, Mockito, Testcontainers, no frontend tests).  
 > **Primary source:** `docs/Assessments.docx` p.2 (deterministic + probabilistic testing), p.4–6 (state machine, ask); [`requirements.md`](requirements.md) §2.5, §8–§9, Flows A/C/E, FEAT-11, FEAT-21, FEAT-22.  
 > **Contracts:** [`state-machine.md`](state-machine.md) (T1–T5, §5.6 illegal register), [`api-contract.md`](api-contract.md) §2.11 / §4.4, [`evaluation-strategy.md`](evaluation-strategy.md) (retrieval + failure taxonomy), [`data-model.md`](data-model.md) §16–§18.
 
@@ -272,6 +272,7 @@ Use **Mockito doubles** for embedding, vector search, and generation — **no** 
 | Scenario | Setup | Assert | AC |
 |----------|--------|--------|-----|
 | Blank / missing `question` | — | **400** validation envelope | AC-API-06 |
+| `question` longer than 2000 chars or unknown property | — | **400** `VALIDATION_ERROR` | **DEC-17**, AC-RAG-API-06 |
 | Empty retrieval | Search returns `[]` | **200**; no-match inside `data`; **no** `error` | AC-CORE-18, Flow E1 |
 | Stubbed hit | Fixed chunks + ticket ids | **200**; `citedTicketIds` ⊆ stub ids; ids exist in DB if integration | AC-CORE-17 |
 | Both ask paths | Same case | `/api/ai/ask` ≡ `/api/v1/ai/ask` | AC-API-07 |
@@ -431,8 +432,10 @@ Detail: [`data-model.md`](data-model.md) §18.
 | ID | Impact |
 |----|--------|
 | **DEC-02** | Illegal set = §5.6 twenty rows (option A only) |
-| **DEC-06** | PATCH `status` only — no `/transition` route tests |
-| **DEC-10** | Postgres via Testcontainers default |
+| **DEC-06** | PATCH `status` on ticket resource — no `/transition` route tests |
+| **DEC-10** | **Agreed:** PostgreSQL via Testcontainers for integration tests; **no H2** |
+| **DEC-17** | Ask validation | `question` max 2000; unknown properties → 400 |
+| **DEC-18** | Ingest | Sync after commit; empty content → no chunk rows (integration when ingest wired) |
 | **DEC-11** | Ask `data` / no-match wording |
 | Chunking §9.3 | [`rag-ingestion.md`](rag-ingestion.md) **AC-RAG-ING-*** |
 
@@ -463,3 +466,4 @@ Detail: [`data-model.md`](data-model.md) §18.
 | 2026-10-04 | §0 guide: PDF map, business/functional/implementation triad, TOC. |
 | 2026-10-04 | §0.3 **TS-*** independent reading units (SM JUnit vs eval bands). |
 | 2026-10-04 | Major `##` headings tagged with **TS-*** unit ids. |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |

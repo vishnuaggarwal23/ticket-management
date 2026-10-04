@@ -1,6 +1,6 @@
 # Ticket status state machine
 
-> **Status:** draft (2026-10-04) — **PDF** allowed edges (T1–T5) and forbidden reopen examples (X1–X3) are locked from [`requirements.md`](requirements.md) FEAT-11 / §2.6. **Agreed:** initial status on create (**DEC-07**); skipped hops **DEC-02 (A)**. **Interim:** transition UX/API shape (**DEC-06**).  
+> **Status:** agreed (2026-10-04) — **PDF** allowed edges (T1–T5) and forbidden reopen examples (X1–X3) are locked from [`requirements.md`](requirements.md) FEAT-11 / §2.6. **DEC-07** initial status; **DEC-02 (A)** skipped hops; **DEC-06** PATCH `status`.  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** [`data-model.md`](data-model.md) §5.1 (`TicketStatus`), §10 PATCH; [`architecture.md`](architecture.md) §17 (domain placement); `rules/api-standards.md` (409 envelope); `rules/java-springboot.md` (layering).
 
@@ -58,7 +58,7 @@
 |----|-------------|-------|
 | IR-SM-01 | `TicketStatusMachine` in **domain** package — no rules in repository | §8 |
 | IR-SM-02 | Illegal transition → `IllegalTicketTransitionException` → HTTP **409** `ILLEGAL_TRANSITION` | §6.3 |
-| IR-SM-03 | PATCH `/api/v1/tickets/{id}` with body field `status` (**DEC-06** interim) | §6.1 |
+| IR-SM-03 | PATCH `/api/v1/tickets/{id}` with body field `status` (**DEC-06** agreed) | §6.1 |
 | IR-SM-04 | On **409**, DB row unchanged (integration test) | §6.3 |
 
 ### 0.3 Independent reading units
@@ -92,7 +92,7 @@ This spec is the **authoritative transition matrix** for implementation and test
 |----------|----------------|
 | States, legal edges T1–T5, illegal edges under default **DEC-02** stance (§5.3) | Status **history** / audit table (not in [`data-model.md`](data-model.md)) |
 | PDF forbidden reopen examples X1–X3 | Role-based “who may transition” (no auth in assessment) |
-| How status changes are requested (**interim:** PATCH `status` — **DEC-06**) | Workflow beyond these five states |
+| How status changes are requested (**DEC-06:** PATCH `status`) | Workflow beyond these five states |
 | Domain enforcement, HTTP **409** mapping (**Convention**) | Re-opening policy changes without a **DEC** update |
 
 ---
@@ -180,7 +180,7 @@ Explicit assessment examples for illegal “reopen”:
 
 **Requirements traceability:** AC-FEAT-11-03, AC-CORE-13, Flow C in [`requirements.md`](requirements.md).
 
-**Example (Flow C):** Ticket in `CLOSED`. Client PATCHes `status: "OPEN"`. Backend rejects; UI shows a readable message (exact copy **Open** — e.g. “Cannot transition from CLOSED to OPEN”).
+**Example (Flow C):** Ticket in `CLOSED`. Client PATCHes `status: "OPEN"`. Backend rejects; UI shows `error.message` per §5.6 / [`api-contract.md`](api-contract.md) §4.4 (e.g. “Cannot transition from CLOSED to OPEN”).
 
 ### 5.3 Default rule for all other pairs (**Agreed DEC-02 (A)**)
 
@@ -329,7 +329,7 @@ Implementation MUST centralize §5.1–§5.6 in domain code (§8), e.g.:
 
 ## 6. API and persistence behaviour · unit **SM-F**
 
-### 6.1 Request shape (**DEC-06** interim — [`api-contract.md`](api-contract.md) §4.4)
+### 6.1 Request shape (**DEC-06** agreed — [`api-contract.md`](api-contract.md) §4.4)
 
 - Status change: **`PATCH /api/v1/tickets/{id}`** with request body field **`status`** set to the **target** enum string (same values as §3). Success response wraps the ticket in envelope `data` (not request body).
 - Non-status fields may appear on the same PATCH per [`data-model.md`](data-model.md) §10 / [`api-contract.md`](api-contract.md) §4.4; when `status` is present, the state machine runs **before** commit.
@@ -455,7 +455,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | ID | Topic | Status | Owner spec |
 |----|-------|--------|------------|
 | **DEC-02** | Skipped hops / extra edges | **Agreed 2026-10-04** — **(A)** only T1–T5 | This file |
-| **DEC-06** | Dedicated transition API vs PATCH | **Interim** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | [`ui-model.md`](ui-model.md) §9 for UX |
+| **DEC-06** | Dedicated transition API vs PATCH | **Agreed 2026-10-04** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | [`ui-model.md`](ui-model.md) §9 for UX |
 | **DEC-07** | Initial `OPEN` on create | **Agreed** | [`data-model.md`](data-model.md) §5.1 |
 
 ---
@@ -467,8 +467,10 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | 2026-10-04 | Initial spec: PDF T1–T5 / X1–X3, full invalid matrix under DEC-02 default (A), API/domain placement, AC-SM-*. |
 | 2026-10-04 | Transition UX pointer → [`architecture.md`](architecture.md) §12.4 (PDF ui-flow themes). |
 | 2026-10-04 | Transition UX pointer → [`ui-model.md`](ui-model.md) §9 (**DEC-06**). |
-| 2026-10-04 | **DEC-02:** user confirmed interim **(A)** — only T1–T5; decision remains Open in requirements §10.2. |
-| 2026-10-04 | **DEC-02** agreed in hub §10.2 (PDF-backed). |
+| 2026-10-04 | **DEC-02** agreed **(A)** in hub §10.2 (PDF-backed). |
+| 2026-10-04 | **DEC-06** agreed — PATCH `status` final for assessment scope. |
+| 2026-10-04 | Doc sync: removed stale **interim** labels for **DEC-06**. |
+| 2026-10-04 | Promoted to **agreed** with ten-file spec set (user sign-off). |
 | 2026-10-04 | §6.1 aligned with [`api-contract.md`](api-contract.md) PATCH body (not request `data` wrapper). |
 | 2026-10-04 | §5.5–5.7 valid ops + 20-row invalid register; §6.1.1 PATCH `status` presence rules; AC-SM-06–08. |
 | 2026-10-04 | §0 guide (PDF map, BRF/FRI/IRI); §6.5 REST JSON examples for T1 and X1. |

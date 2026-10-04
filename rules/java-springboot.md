@@ -8,9 +8,9 @@ Backend coding standards for the support ticket management application.
 |-------|--------|
 | Business/functional modules, layering map | [`spec/architecture.md`](../spec/architecture.md) §0, §4, §8–9 |
 | HTTP paths, envelopes, list params | `rules/api-standards.md`; API map [`spec/architecture.md`](../spec/architecture.md) §11 |
-| Ticket/comment **field** catalogs | [`spec/data-model.md`](../spec/data-model.md) (agreed); HTTP contract [`spec/api-contract.md`](../spec/api-contract.md) (draft) |
-| State machine rules | [`spec/state-machine.md`](../spec/state-machine.md) (draft) **§0**, §5–§6; PDF hub [`spec/requirements.md`](../spec/requirements.md) FEAT-11 |
-| RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §0, §14–16, [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (draft) |
+| Ticket/comment **field** catalogs | [`spec/data-model.md`](../spec/data-model.md) (agreed); HTTP contract [`spec/api-contract.md`](../spec/api-contract.md) (agreed) |
+| State machine rules | [`spec/state-machine.md`](../spec/state-machine.md) (agreed) **§0**, §5–§6; PDF hub [`spec/requirements.md`](../spec/requirements.md) FEAT-11 |
+| RAG | `rules/rag-vector-store.md`, [`spec/architecture.md`](../spec/architecture.md) §0, §14–16, [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (agreed) |
 | Tests | `rules/testing.md`, [`spec/test-strategy.md`](../spec/test-strategy.md), `commands/generate-tests.md` |
 | UI | `rules/frontend.md` |
 
@@ -224,7 +224,8 @@ Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machin
 | 2026-10-04 | Synced with [`spec/architecture.md`](../spec/architecture.md) §8–9 technical components. |
 | 2026-10-04 | Added revision history section. |
 | 2026-10-04 | Entities, enums, tables, and Liquibase index catalog aligned with agreed [`spec/data-model.md`](../spec/data-model.md). |
-| 2026-10-04 | State machine interim: requirements FEAT-11; child specs only when user adds files. |
+| 2026-10-04 | State machine: requirements FEAT-11 + [`state-machine.md`](../spec/state-machine.md); **DEC-06** PATCH agreed. |
+| 2026-10-04 | **DEC-10:** PostgreSQL + Testcontainers; **DEC-09:** Ollama embed model per `rag-ingestion.md` §12. |
 | 2026-10-04 | Domain SM defers to draft [`spec/state-machine.md`](../spec/state-machine.md); removed duplicate edge table. |
 | 2026-10-04 | HTTP payloads: draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | Pointers to child spec **§0** maps (SM, RAG, architecture); steering sync with `rules/documentation.md`. |
