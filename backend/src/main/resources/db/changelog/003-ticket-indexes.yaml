@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-ticket-indexes
+      author: ticket-management
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: |
+              CREATE INDEX idx_ticket_status ON ticket (status);
+              CREATE INDEX idx_ticket_created_at ON ticket (created_at DESC);
+              CREATE INDEX idx_ticket_updated_at ON ticket (updated_at DESC);
+              CREATE INDEX idx_ticket_priority ON ticket (priority);
+              CREATE INDEX idx_ticket_status_created_at ON ticket (status, created_at DESC);
+              CREATE INDEX idx_ticket_title_trgm ON ticket USING gin (title gin_trgm_ops);
+              CREATE INDEX idx_ticket_description_trgm ON ticket USING gin (description gin_trgm_ops);
+              CREATE INDEX idx_ticket_comment_ticket_created ON ticket_comment (ticket_id, created_at ASC);

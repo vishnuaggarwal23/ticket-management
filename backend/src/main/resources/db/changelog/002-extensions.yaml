@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-pg-trgm
+      author: ticket-management
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS pg_trgm;

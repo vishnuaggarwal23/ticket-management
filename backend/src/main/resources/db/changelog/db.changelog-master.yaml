@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: 001-ticket-tables.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 002-extensions.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 003-ticket-indexes.yaml
+      relativeToChangelogFile: true

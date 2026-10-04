@@ -266,7 +266,8 @@ Controller (api) → TicketService → Domain (status rules) / Repositories
 
 ## 6. Phase A — Application setup and configuration
 
-**Status:** not started  
+**Status:** complete  
+
 **Depends on:** C-01, C-03  
 **Implements:** IR stack conventions; architecture §7, §18
 
@@ -321,10 +322,10 @@ Without a runnable Boot app, Maven Wrapper, and a Postgres-backed schema, later 
 
 ### 6.4 Done criteria — Phase A
 
-- [ ] `cd backend && ./mvnw test` green (smoke).
-- [ ] No secrets in git.
-- [ ] Tables `ticket`, `ticket_comment` + agreed relational indexes present on Testcontainers DB.
-- [ ] `rag/` package empty.
+- [x] `cd backend && ./mvnw test` green (smoke).
+- [x] No secrets in git.
+- [x] Tables `ticket`, `ticket_comment` + agreed relational indexes present on Testcontainers DB.
+- [x] `rag/` package empty.
 
 ---
 
@@ -820,7 +821,7 @@ After each phase:
 
 | Phase | Status | Tests | Review-code | Notes |
 |-------|--------|-------|-------------|-------|
-| A Setup | not started | | | |
+| A Setup | complete | smoke green | | Boot 3.5.16; Liquibase 001–003; pg_trgm only |
 | B1 Enums | not started | | | C-02: `CRITICAL`; JSON `URGENT`→`CRITICAL` |
 | B2 Persistence | not started | | | |
 | B3 Service CRUD | not started | | | |
@@ -839,3 +840,4 @@ After each phase:
 |------|------|
 | 2026-10-04 | Initial backend-only plan: CRUD + SM first; RAG gated on Phase C complete and user confirmation; code under `backend/`. |
 | 2026-10-04 | Confirmed **C-01** `com.ticketmanagement`; **C-02** `CRITICAL` + inbound `URGENT` mapped; **C-03** latest Boot 3 GA; **C-05** assignee `@Size(max=320)` only. **C-04** chat model still deferred. |
+| 2026-10-04 | Phase **A** implemented: `backend/` Spring Boot **3.5.16**, Maven Wrapper, Compose `pgvector/pgvector:pg16`, Liquibase ticket tables + relational indexes, Testcontainers smoke. |
