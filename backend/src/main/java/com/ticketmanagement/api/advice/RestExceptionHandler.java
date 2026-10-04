@@ -1,6 +1,7 @@
 package com.ticketmanagement.api.advice;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.ticketmanagement.api.common.ErrorResponse;
 import com.ticketmanagement.api.common.ErrorResponse.ErrorBody;
 import com.ticketmanagement.api.common.ErrorResponse.ErrorDetail;
@@ -76,6 +77,14 @@ public class RestExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleNotReadable(
             HttpMessageNotReadableException ex, HttpServletRequest request) {
+        if (ex.getMostSpecificCause() instanceof UnrecognizedPropertyException unknown) {
+            return error(
+                    HttpStatus.BAD_REQUEST,
+                    "VALIDATION_ERROR",
+                    "Request validation failed.",
+                    List.of(new ErrorDetail(unknown.getPropertyName(), "unknown property")),
+                    request);
+        }
         if (ex.getMostSpecificCause() instanceof InvalidFormatException invalid) {
             String field = invalid.getPath().isEmpty() ? "body" : invalid.getPath().getLast().getFieldName();
             return error(

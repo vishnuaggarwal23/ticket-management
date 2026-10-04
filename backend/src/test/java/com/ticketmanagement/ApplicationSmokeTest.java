@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ApplicationSmokeTest extends AbstractPostgresIntegrationTest {
 
-    private static final List<String> EXPECTED_TABLES = List.of("ticket", "ticket_comment");
+    private static final List<String> EXPECTED_TABLES = List.of("ticket", "ticket_comment", "ticket_vector_chunk");
 
     private static final List<String> EXPECTED_INDEXES = List.of(
             "ticket_pkey",
@@ -25,7 +25,10 @@ class ApplicationSmokeTest extends AbstractPostgresIntegrationTest {
             "idx_ticket_title_trgm",
             "idx_ticket_description_trgm",
             "ticket_comment_pkey",
-            "idx_ticket_comment_ticket_created"
+            "idx_ticket_comment_ticket_created",
+            "ticket_vector_chunk_pkey",
+            "uq_ticket_vector_chunk_ticket_chunk",
+            "idx_ticket_vector_chunk_embedding_hnsw"
     );
 
     @Autowired
@@ -38,7 +41,7 @@ class ApplicationSmokeTest extends AbstractPostgresIntegrationTest {
                         SELECT table_name
                         FROM information_schema.tables
                         WHERE table_schema = 'public'
-                          AND table_name IN ('ticket', 'ticket_comment')
+                          AND table_name IN ('ticket', 'ticket_comment', 'ticket_vector_chunk')
                         """,
                 String.class);
         assertThat(tables).containsExactlyInAnyOrderElementsOf(EXPECTED_TABLES);
@@ -53,19 +56,14 @@ class ApplicationSmokeTest extends AbstractPostgresIntegrationTest {
                         SELECT indexname
                         FROM pg_indexes
                         WHERE schemaname = 'public'
-                          AND tablename IN ('ticket', 'ticket_comment')
+                          AND tablename IN ('ticket', 'ticket_comment', 'ticket_vector_chunk')
                         """,
                 String.class));
         assertThat(indexes).containsAll(EXPECTED_INDEXES);
 
-        Integer vectorTables = jdbcTemplate.queryForObject(
-                """
-                        SELECT COUNT(*)
-                        FROM information_schema.tables
-                        WHERE table_schema = 'public'
-                          AND table_name = 'ticket_vector_chunk'
-                        """,
+        Integer vectorExt = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM pg_extension WHERE extname = 'vector'",
                 Integer.class);
-        assertThat(vectorTables).isZero();
+        assertThat(vectorExt).isEqualTo(1);
     }
 }

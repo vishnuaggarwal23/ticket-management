@@ -15,6 +15,7 @@ import com.ticketmanagement.domain.TicketStatusMachine;
 import com.ticketmanagement.domain.TicketValidationException;
 import com.ticketmanagement.persistence.TicketEntity;
 import com.ticketmanagement.persistence.TicketRepository;
+import com.ticketmanagement.rag.TicketIngestionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -47,13 +49,16 @@ class TicketServiceTest {
     @Mock
     private TicketRepository tickets;
 
+    @Mock
+    private TicketIngestionService ingestion;
+
     private TicketStatusMachine statusMachine;
     private TicketService service;
 
     @BeforeEach
     void setUp() {
         statusMachine = spy(new TicketStatusMachine());
-        service = new TicketService(tickets, new TicketMapper(), new ApiProperties(20, 100), statusMachine);
+        service = new TicketService(tickets, new TicketMapper(), new ApiProperties(20, 100), statusMachine, ingestion);
     }
 
     @Test
@@ -73,6 +78,7 @@ class TicketServiceTest {
         assertThat(saved.getDescription()).isEmpty();
         assertThat(created.id()).isEqualTo("TKT-1001");
         assertThat(created.comments()).isEmpty();
+        verify(ingestion).ingest("TKT-1001");
     }
 
     @Test
@@ -82,6 +88,7 @@ class TicketServiceTest {
                 .isInstanceOf(TicketValidationException.class);
         verify(tickets, never()).save(any());
         verify(tickets, never()).nextTicketNumber();
+        verify(ingestion, never()).ingest(any());
     }
 
     @Test
@@ -104,6 +111,7 @@ class TicketServiceTest {
         assertThat(updated.title()).isEqualTo("New title");
         assertThat(entity.getDescription()).isEqualTo("desc");
         verify(tickets).save(entity);
+        verify(ingestion).ingest("TKT-1002");
     }
 
     @Test
@@ -113,6 +121,7 @@ class TicketServiceTest {
                 new UpdateTicketRequest(null, null, null, null, null, null, null)))
                 .isInstanceOf(EmptyPatchException.class);
         verify(tickets, never()).save(any());
+        verify(ingestion, never()).ingest(any());
     }
 
     @Test
@@ -129,6 +138,7 @@ class TicketServiceTest {
         assertThat(response.body()).isEqualTo("hello");
         assertThat(entity.getComments()).hasSize(1);
         verify(tickets).saveAndFlush(entity);
+        verify(ingestion).ingest("TKT-1003");
     }
 
     @Test
@@ -152,6 +162,7 @@ class TicketServiceTest {
         assertThatThrownBy(() -> service.addComment("TKT-missing", new CreateCommentRequest("hello")))
                 .isInstanceOf(TicketNotFoundException.class);
         verify(tickets, never()).saveAndFlush(any());
+        verify(ingestion, never()).ingest(any());
     }
 
     @Test
@@ -186,6 +197,7 @@ class TicketServiceTest {
         assertThat(entity.getStatus()).isEqualTo(to);
         verify(tickets).save(entity);
         verify(statusMachine).assertTransitionAllowed(from, to);
+        verify(ingestion).ingest("TKT-1002");
     }
 
     @Test
@@ -202,6 +214,7 @@ class TicketServiceTest {
         assertThat(entity.getTitle()).isEqualTo("Old");
         assertThat(entity.getStatus()).isEqualTo(TicketStatus.OPEN);
         verify(tickets, never()).save(any());
+        verify(ingestion, never()).ingest(any());
     }
 
     @Test
@@ -228,6 +241,20 @@ class TicketServiceTest {
                 .isInstanceOf(TicketNotFoundException.class);
         verify(statusMachine, never()).assertTransitionAllowed(any(), any());
         verify(tickets, never()).save(any());
+        verify(ingestion, never()).ingest(any());
+    }
+
+    @Test
+    void ingestFailureDoesNotFailTicketWrite() {
+        when(tickets.nextTicketNumber()).thenReturn(1001L);
+        when(tickets.save(any(TicketEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        doThrow(new IllegalStateException("embed down")).when(ingestion).ingest("TKT-1001");
+
+        TicketDetailResponse created = service.create(
+                new CreateTicketRequest("Need help", "payment timeout", null, null, null));
+
+        assertThat(created.id()).isEqualTo("TKT-1001");
+        verify(ingestion).ingest("TKT-1001");
     }
 
     private static TicketEntity existing(String id, String title) {

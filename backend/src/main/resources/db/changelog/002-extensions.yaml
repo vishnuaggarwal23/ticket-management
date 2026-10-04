@@ -6,3 +6,10 @@ databaseChangeLog:
       changes:
         - sql:
             sql: CREATE EXTENSION IF NOT EXISTS pg_trgm;
+  - changeSet:
+      id: 002-pgvector
+      author: ticket-management
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS vector;

@@ -20,8 +20,35 @@ spring:
     time-zone: UTC
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      init:
+        pull-model-strategy: never
+      embedding:
+        options:
+          model: nomic-embed-text
+      chat:
+        options:
+          model: ${OLLAMA_CHAT_MODEL:llama3.2}
 
 app:
   api:
     page-size-default: 20
     page-size-max: 100
+
+rag:
+  chunking:
+    strategy: HYBRID_PARAGRAPH_THEN_FIXED
+    max-chars: 800
+    min-chars: 120
+    overlap-chars: 80
+  retrieval:
+    top-k: 8
+    similarity-threshold: 0.72
+    distance-metric: COSINE
+  embedding:
+    provider: ollama
+    model: nomic-embed-text
+    dimensions: 768
+    base-url: ${OLLAMA_BASE_URL:http://localhost:11434}

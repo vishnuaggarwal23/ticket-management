@@ -1,6 +1,7 @@
 package com.ticketmanagement.support;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -9,6 +10,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 @SpringBootTest
+@Import(TestRagDoublesConfig.class)
 public abstract class AbstractPostgresIntegrationTest {
 
     @Container
@@ -22,5 +24,7 @@ public abstract class AbstractPostgresIntegrationTest {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
+        registry.add("spring.ai.model.chat", () -> "none");
+        registry.add("spring.ai.model.embedding", () -> "none");
     }
 }

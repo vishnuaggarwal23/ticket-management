@@ -21,36 +21,40 @@ import com.ticketmanagement.domain.TicketValidationException;
 import com.ticketmanagement.persistence.CommentEntity;
 import com.ticketmanagement.persistence.TicketEntity;
 import com.ticketmanagement.persistence.TicketRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ticketmanagement.rag.TicketIngestionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 public class TicketService {
+
+    private static final Logger log = LoggerFactory.getLogger(TicketService.class);
 
     private final TicketRepository tickets;
     private final TicketMapper mapper;
     private final ApiProperties apiProperties;
     private final TicketStatusMachine statusMachine;
+    private final TicketIngestionService ingestion;
 
-    @Autowired
-    public TicketService(TicketRepository tickets, TicketMapper mapper, ApiProperties apiProperties) {
-        this(tickets, mapper, apiProperties, new TicketStatusMachine());
-    }
-
-    TicketService(
+    public TicketService(
             TicketRepository tickets,
             TicketMapper mapper,
             ApiProperties apiProperties,
-            TicketStatusMachine statusMachine
+            TicketStatusMachine statusMachine,
+            TicketIngestionService ingestion
     ) {
         this.tickets = tickets;
         this.mapper = mapper;
         this.apiProperties = apiProperties;
         this.statusMachine = statusMachine;
+        this.ingestion = ingestion;
     }
 
     @Transactional
@@ -66,7 +70,9 @@ public class TicketService {
         ticket.setPriority(request.priority() == null ? TicketPriority.MEDIUM : request.priority());
         ticket.setAssignee(request.assignee());
         ticket.setCategory(request.category());
-        return mapper.toDetail(tickets.save(ticket));
+        TicketEntity saved = tickets.save(ticket);
+        ingestAfterCommit(saved.getId());
+        return mapper.toDetail(saved);
     }
 
     @Transactional(readOnly = true)
@@ -127,7 +133,9 @@ public class TicketService {
         if (request.status() != null) {
             ticket.setStatus(request.status());
         }
-        return mapper.toDetail(tickets.save(ticket));
+        TicketEntity saved = tickets.save(ticket);
+        ingestAfterCommit(saved.getId());
+        return mapper.toDetail(saved);
     }
 
     @Transactional
@@ -141,6 +149,27 @@ public class TicketService {
         comment.setBody(request.body());
         ticket.addComment(comment);
         tickets.saveAndFlush(ticket);
+        ingestAfterCommit(ticket.getId());
         return mapper.toComment(comment);
+    }
+
+    private void ingestAfterCommit(String ticketId) {
+        Runnable ingest = () -> {
+            try {
+                ingestion.ingest(ticketId);
+            } catch (RuntimeException ex) {
+                log.error("RAG ingest failed ticketId={}", ticketId, ex);
+            }
+        };
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    ingest.run();
+                }
+            });
+        } else {
+            ingest.run();
+        }
     }
 }

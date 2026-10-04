@@ -3,8 +3,8 @@
 > **Artefact:** backend-only implementation plan (Spec-Driven Development **Plan / Tasks** step).  
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code root:** `backend/` under the repository working directory. **Do not** put Java sources at repo root or under a second application.  
-> **Frontend:** out of this plan. **RAG (whole):** documented below, **blocked** until Phase C is marked complete **and** you explicitly confirm to start RAG.  
-> **Status of this plan:** Phase **A–C complete**. RAG remains **blocked** until you explicitly confirm to start Phase D.  
+> **Frontend:** out of this plan. **RAG:** Phases **D–F** implemented (ingest pipeline, after-commit hooks, Band A ask). Live Ollama/Spring AI still a port + test doubles.  
+> **Status of this plan:** Phase **A–F complete**.  
 > **Date:** 2026-10-04.
 
 ---
@@ -124,7 +124,7 @@ Do not describe conventions as PDF mandates in comments or README.
 | **C-01** | Java root package | **`com.ticketmanagement`** — one root, never a second. |
 | **C-02** | `TicketPriority` | Canonical stored/returned value is **`CRITICAL`** (fourth enum constant). Incoming JSON (create/PATCH) **`URGENT` is accepted and mapped to `CRITICAL`**. Persist and respond only `CRITICAL`. Other unknown strings still **400**. Domain/JPA enum has **no** `URGENT` constant. Mapping lives in the **API Jackson deserializer** (`api`), not in `domain`. |
 | **C-03** | Spring Boot 3 | Use the **latest production (GA) Spring Boot 3** release at implementation time — not milestone/RC. Do not describe the patch as a PDF requirement. |
-| **C-04** | Chat / generation model (RAG) | **Still deferred** until RAG start confirmation. (User “C-04 only size” applies to assignee, recorded as **C-05**.) |
+| **C-04** | Chat / generation model (RAG) | Config via `OLLAMA_CHAT_MODEL` / `spring.ai.ollama.chat.options.model`. Example default **`llama3.2`** (Convention; not a mandated DEC). Embedding remains **`nomic-embed-text`**. |
 | **C-05** | Assignee validation | **`@Size(max = 320)` only** — no `@Email` / RFC email requirement. Nullable free string. |
 
 Specs/rules that still said `URGENT` as a first-class enum or `@Email` on assignee are aligned to this table.
@@ -590,13 +590,13 @@ After Phase C is **complete**:
 2. **Wait for explicit user confirmation** to start RAG (e.g. “start RAG” / “proceed with Phase D”).
 3. Until that message: no Spring AI dependencies, no Ollama calls, no ask controllers, no chunker, no vector DDL applied in the running app (files may be sketched in this plan only).
 
-**RAG start authorization:** not granted (user confirmation pending).
+**RAG start authorization:** granted 2026-10-04 (“start with the next phase”). Phase **D** implemented; **E/F** still sequential.
 
 ---
 
 ## 10. Phase D — RAG ingestion pipeline, embeddings, vector store
 
-**Status:** blocked (after Phase C complete **and** user confirmation)  
+**Status:** complete  
 **Implements:** FEAT-12…14, AC-CORE-15/19/20, AC-RAG-ING-*, DEC-01, DEC-09, DEC-16, DEC-18  
 **Read first:** [`spec/rag-ingestion.md`](spec/rag-ingestion.md), [`spec/architecture.md`](spec/architecture.md) §14–16, [`rules/rag-vector-store.md`](rules/rag-vector-store.md)
 
@@ -665,15 +665,18 @@ Ollama **base URL** from env only. Chat model id = **C-04**.
 
 ### 10.6 Done criteria — Phase D
 
-- [ ] Vector schema + HNSW present (AC-DM-08 remainder).
-- [ ] Ingest tests green with embedding doubles.
-- [ ] Review-code RAG checklist Pass for ingest (ask still later).
+- [x] Vector schema + HNSW present (AC-DM-08 remainder).
+- [x] Ingest tests green with embedding doubles.
+- [x] Ingest pipeline review vs [`commands/review-code.md`](commands/review-code.md) RAG ingest items: knowledge from description/comments/resolution; metadata keys; re-ingest replace; no ask. Live Spring AI/Ollama adapter deferred to Phase E (port + doubles in default suite).
+
+**Phase D status:** complete.
 
 ---
 
 ## 11. Phase E — Embedding job / ingest wiring from ticket service
 
-**Status:** blocked (after Phase D)  
+**Status:** complete (2026-10-04)  
+**Depends on:** Phase D complete  
 **Note:** Spec is **synchronous after commit**, not a separate batch worker. **Do not** add Kafka/queues (**Reference**).
 
 ### 11.1 Work
@@ -690,14 +693,14 @@ Ollama **base URL** from env only. Chat model id = **C-04**.
 
 ### 11.3 Done criteria — Phase E
 
-- [ ] Hooks on create/update/comment/status including close.
-- [ ] Tests prove hook **and** no ingest on failed ticket write.
+- [x] Hooks on create/update/comment/status including close.
+- [x] Tests prove hook **and** no ingest on failed ticket write.
 
 ---
 
 ## 12. Phase F — AI ask API (retrieve-then-generate)
 
-**Status:** blocked (after Phase E)  
+**Status:** complete (2026-10-04)  
 **Implements:** FEAT-15…18, AC-CORE-16…18, AC-RAG-API-01…07, DEC-11, DEC-17, DEC-19  
 **Read:** [`spec/rag-api-contract.md`](spec/rag-api-contract.md)
 
@@ -737,9 +740,9 @@ Thin `AiAskController` in `api`.
 
 ### 12.5 Done criteria — Phase F
 
-- [ ] Dual ask paths; envelopes; no-match 200; 400 validation.
-- [ ] Band A tests green without live LLM.
-- [ ] Review-code RAG ask checklist Pass.
+- [x] Dual ask paths; envelopes; no-match 200; 400 validation.
+- [x] Band A tests green without live LLM.
+- [x] Review-code RAG ask checklist Pass (live Ollama/Spring AI still deferred; ports + doubles).
 - [ ] Optional: one documented grounding review; AI mistake log if a hallucination is caught ([`docs/ai-error.md`](docs/ai-error.md) via **`/update-ai-error`**).
 
 ---
@@ -769,8 +772,8 @@ Follow [`commands/generate-tests.md`](commands/generate-tests.md). Map names to 
 
 | Flow | Positive | Negative |
 |------|----------|----------|
-| Ingest | knowledge + hybrid chunks; replace on re-ingest | empty skip embed; failed write no ingest |
-| Ask | 200 answer + cited ids from retrieval | 400 question; 200 no-match; no generate on empty |
+| Ingest | knowledge + hybrid chunks; replace on re-ingest | empty skip embed; failed write no ingest | **E done** (after-commit hooks + doubles). |
+| Ask | 200 answer + cited ids from retrieval | 400 question; 200 no-match; no generate on empty | **F done** (Band A; no live LLM). |
 
 ---
 
@@ -805,7 +808,7 @@ After each phase:
 
 ## 16. Suggested implementation order (one-line index)
 
-1. **C-01, C-02, C-03, C-05 agreed** (2026-10-04). **C-04** (chat model) remains for RAG.
+1. **C-01, C-02, C-03, C-05 agreed** (2026-10-04). **C-04** chat model is env/config (`OLLAMA_CHAT_MODEL`, example `llama3.2`).
 2. Phase **A** — Maven, yml, Compose, Liquibase tickets, Testcontainers smoke.
 3. Phase **B1** — enums, constants, sort whitelist.
 4. Phase **B2** — entities, repositories, search SQL, repo tests.
@@ -815,9 +818,9 @@ After each phase:
 8. **Phase B closeout** — generate-tests P0–P2 (CRUD) + review-code; **done 2026-10-04**.
 9. Phase **C** — `TicketStatusMachine`, PATCH `status`, full SM tests; **complete 2026-10-04**.
 10. **Stop.** User confirmation for RAG.
-11. Phase **D** — vector schema, chunker, embed port, ingest service.
-12. Phase **E** — after-commit hooks from ticket service.
-13. Phase **F** — ask API both paths, Band A tests, grounding review.
+11. Phase **D** — vector schema, chunker, embed port, ingest service; **complete 2026-10-04**.
+12. Phase **E** — after-commit hooks from ticket service; **complete 2026-10-04**.
+13. Phase **F** — ask API both paths, Band A tests; **complete 2026-10-04**. Live models / Band B–C optional.
 
 ---
 
@@ -832,10 +835,10 @@ After each phase:
 | B4 HTTP CRUD | complete | slice+IT green; generate-tests P0–P2 CRUD | **Pass** | list `size` default from `ApiProperties`; 500 logged, body generic; no status PATCH |
 | B5 Restart | complete | IT green | Pass (with B) | DirtiesContext + same Testcontainers DB |
 | B generate-tests | complete for CRUD | `./mvnw test` green | — | P0 SM now Phase C; ask/ingest still deferred |
-| **C State machine** | **complete** | domain + service + slice + API 20 illegal / T1–T5 green | SM placement Pass | PATCH `status`; 409 unchanged row; **RAG still needs chat confirm** |
-| D Ingest / vectors | blocked | | | |
-| E Ingest hooks | blocked | | | |
-| F Ask API | blocked | | | |
+| **C State machine** | **complete** | domain + service + slice + API 20 illegal / T1–T5 green | SM placement Pass | PATCH `status`; 409 unchanged row |
+| **D Ingest / vectors** | **complete** | builder/chunker/unit + `TicketIngestionIT` doubles | ingest Pass (ask N/A) | `ticket_vector_chunk` + HNSW; no TicketService hook; no live Ollama |
+| **E Ingest hooks** | **complete** | service unit + `TicketIngestionHookIT` | hook Pass | after-commit; ingest failure does not fail ticket write |
+| **F Ask API** | **complete** | slice + `AskServiceTest` + `AskApiIT` Band A | ask Pass | dual paths; 200 no-match; 400 validation; stub generate |
 
 ---
 
@@ -853,3 +856,6 @@ After each phase:
 | 2026-10-04 | AI error log [`docs/ai-error.md`](docs/ai-error.md); `/update-ai-error`. |
 | 2026-10-04 | Phase **B** closeout: generate-tests **P0–P2** for ticket CRUD (SM/ask/RAG skipped). Review-code **Pass** after fixing list page-size default, `EntityManager` constructor injection, and unexpected-500 logging. Phase **C** still not started. |
 | 2026-10-04 | Phase **C** implemented: `TicketStatusMachine` T1–T5 and 20 illegal pairs; PATCH `status` 200/409; `./mvnw test` green. RAG not started. |
+| 2026-10-04 | Phase **D** implemented: PgVector `ticket_vector_chunk` + HNSW; hybrid chunker; ingest service with embedding doubles. TicketService hooks and ask API not started. |
+| 2026-10-04 | Phases **E** and **F** implemented: after-commit ingest from `TicketService`; `POST /api/ai/ask` and `/api/v1/ai/ask`; Band A tests with embedding/generation doubles. Live Ollama still not wired. |
+| 2026-10-04 | Spring AI **1.1.4** Ollama adapters wired (`EmbeddingPort` / `GenerationPort`). Tests keep `spring.ai.model.*=none` + doubles. No Ollama Docker. |

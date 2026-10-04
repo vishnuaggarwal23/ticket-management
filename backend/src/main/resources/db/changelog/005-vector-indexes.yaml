@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-vector-indexes
+      author: ticket-management
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: |
+              CREATE INDEX idx_ticket_vector_chunk_embedding_hnsw
+                ON ticket_vector_chunk
+                USING hnsw (embedding vector_cosine_ops);

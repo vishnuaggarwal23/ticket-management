@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-vector-chunk-table
+      author: ticket-management
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: |
+              CREATE TABLE ticket_vector_chunk (
+                id UUID PRIMARY KEY,
+                ticket_id VARCHAR(16) NOT NULL REFERENCES ticket (id) ON DELETE CASCADE,
+                chunk_index INT NOT NULL,
+                content TEXT NOT NULL,
+                embedding vector(768) NOT NULL,
+                metadata JSONB NOT NULL,
+                ingested_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                CONSTRAINT uq_ticket_vector_chunk_ticket_chunk UNIQUE (ticket_id, chunk_index)
+              );
