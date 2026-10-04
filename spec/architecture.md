@@ -14,7 +14,7 @@
 | **Open** | Underspecified; resolve in a child spec after confirmation. |
 | **Example** | Illustrative only (e.g. `TKT-1001`). |
 
-This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, components, and **UI flow** (PDF `ui-flow` themes consolidated in **§12.3–§12.6** — no separate `ui-flow.md` file). It **does not** replace [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md) (includes ask `data` semantics §6.2–§6.5), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
+This document describes **system shape**: business capabilities, ticket and RAG structure, technology layout, APIs, communication, components, and **frontend architecture** (**§12**). PDF `ui-flow` **screen and flow detail** lives in [`ui-model.md`](ui-model.md) (no separate `ui-flow.md`). It **does not** replace [`ui-model.md`](ui-model.md), [`data-model.md`](data-model.md), [`api-contract.md`](api-contract.md) (includes ask `data` semantics §6.2–§6.5), [`state-machine.md`](state-machine.md), [`rag-ingestion.md`](rag-ingestion.md), [`test-strategy.md`](test-strategy.md), or [`evaluation-strategy.md`](evaluation-strategy.md).
 
 ---
 
@@ -540,7 +540,7 @@ Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not 
 
 ## 12. Frontend architecture
 
-**Convention:** React + Vite + TypeScript (`rules/frontend.md`). **PDF** requires a web UI for ticket operations and ask; screen map, flows A–E, transition UX, and ask panel are specified in **§12.3–§12.6** (PDF `ui-flow` themes; eight-file `spec/` set — see [`requirements.md`](requirements.md) child-spec table).
+**Convention:** React + Vite + TypeScript (`rules/frontend.md`). **PDF** requires a web UI for ticket operations and ask. **§12.3–§12.6** below summarise UI architecture; **authoritative** screen catalog, CRUD flows, transition/ask UX, and **AC-UI-*** are in [`ui-model.md`](ui-model.md) (PDF `ui-flow` themes; see [`requirements.md`](requirements.md) child-spec table).
 
 ### 12.1 UI functional areas
 
@@ -927,7 +927,8 @@ Do not implement ambiguous behaviour until resolved in specs + `requirements.md`
 | [`state-machine.md`](state-machine.md) | Transitions, errors |
 | [`rag-ingestion.md`](rag-ingestion.md) | Chunk numbers, models, re-ingest execution |
 | [`api-contract.md`](api-contract.md) §6.2–§6.5 | Ask `data`, grounding, no-match (**AC-RAG-API-***) |
-| §12.3–§12.6 (this file) | Screens, flows A–E, transition + ask UX, process evidence |
+| [`ui-model.md`](ui-model.md) | Screens, CRUD, flows A–E, transition + ask UX, **AC-UI-*** |
+| §12.3–§12.6 (this file) | Frontend architecture summary; process evidence §12.6 |
 | [`test-strategy.md`](test-strategy.md) | Layered tests |
 | [`evaluation-strategy.md`](evaluation-strategy.md) | Retrieval quality |
 | `rules/api-standards.md` | Envelopes, paths (**Convention**) |
@@ -964,4 +965,6 @@ Architecture supports verification of:
 | 2026-10-04 | §15.7 links to [`evaluation-strategy.md`](evaluation-strategy.md) (retrieval vs grounding, F-* failures, AC-EVAL). |
 | 2026-10-04 | §15.7 test proof → [`test-strategy.md`](test-strategy.md) §5–§6. |
 | 2026-10-04 | PDF audit: §12.3–§12.6 UI flows, transition/ask UX, process evidence (consolidated PDF `ui-flow` themes). |
-| 2026-10-04 | §12 intro: no separate `ui-flow.md`; flows live in §12.3–§12.6 only. |
+| 2026-10-04 | §12 intro: no separate `ui-flow.md`; interim consolidation in §12.3–§12.6 (superseded by `ui-model.md` for screen detail). |
+| 2026-10-04 | Screen/flow detail → [`ui-model.md`](ui-model.md); §12 remains UI architecture summary. |
+| 2026-10-04 | `improve-from-assessment-pdf`: PDF ten-name spec list → nine repo files; `ui-flow` → `ui-model.md`. |

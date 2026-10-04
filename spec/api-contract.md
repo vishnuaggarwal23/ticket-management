@@ -2,7 +2,7 @@
 
 > **Status:** draft (2026-10-04) — ticket REST paths and payloads align with **Convention** in [`rules/api-standards.md`](../rules/api-standards.md) and agreed [`data-model.md`](data-model.md). Resolves **OQ-04** for ticket/comment HTTP; **DEC-14** interim alignment recorded §10.  
 > **Primary source:** `docs/Assessments.docx` (capabilities restated in [`requirements.md`](requirements.md)).  
-> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask `data` semantics (PDF `rag-api-contract` themes) → **§6.2–§6.5** (**DEC-11** open). UI flows → [`architecture.md`](architecture.md) §12.3–§12.6. System map → [`architecture.md`](architecture.md) §11.
+> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask `data` semantics (PDF `rag-api-contract` themes) → **§6.2–§6.5** (**DEC-11** open). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
 
 ---
 
@@ -1286,3 +1286,4 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | 2026-10-04 | §2.11 full endpoint catalog; §3.5 `AskResponseData`; §4.4.1 T1–T5 PATCH table; AC-API-08/09. |
 | 2026-10-04 | PDF `rag-api-contract` themes: §6.2–§6.5 grounding, no-match, **AC-RAG-API-***. |
 | 2026-10-04 | Related-spec UI pointer → architecture §12.3–§12.6. |
+| 2026-10-04 | Related-spec UI pointer → [`ui-model.md`](ui-model.md). |

@@ -341,7 +341,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | ID | Topic | Status | Owner spec |
 |----|-------|--------|------------|
 | **DEC-02** | Skipped hops / extra edges | **Open** — implement **option (A)** only (confirmed 2026-10-04; may revisit later) | This file |
-| **DEC-06** | Dedicated transition API vs PATCH | **Interim** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | [`architecture.md`](architecture.md) §12.4 for UX |
+| **DEC-06** | Dedicated transition API vs PATCH | **Interim** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | [`ui-model.md`](ui-model.md) §9 for UX |
 | **DEC-07** | Initial `OPEN` on create | **Agreed** | [`data-model.md`](data-model.md) §5.1 |
 
 ---
@@ -352,6 +352,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 |------|------|
 | 2026-10-04 | Initial spec: PDF T1–T5 / X1–X3, full invalid matrix under DEC-02 default (A), API/domain placement, AC-SM-*. |
 | 2026-10-04 | Transition UX pointer → [`architecture.md`](architecture.md) §12.4 (PDF ui-flow themes). |
+| 2026-10-04 | Transition UX pointer → [`ui-model.md`](ui-model.md) §9 (**DEC-06**). |
 | 2026-10-04 | **DEC-02:** user confirmed interim **(A)** — only T1–T5; decision remains Open in requirements §10.2. |
 | 2026-10-04 | §6.1 aligned with [`api-contract.md`](api-contract.md) PATCH body (not request `data` wrapper). |
 | 2026-10-04 | §5.5–5.7 valid ops + 20-row invalid register; §6.1.1 PATCH `status` presence rules; AC-SM-06–08. |

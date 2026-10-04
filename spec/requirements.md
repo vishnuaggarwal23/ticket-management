@@ -19,8 +19,9 @@
 | [`rag-ingestion.md`](rag-ingestion.md) | Present (draft) | Chunking (paragraph + fixed hybrid), ingest sources, re-ingest (**DEC-01** interim), **DEC-09** |
 | [`evaluation-strategy.md`](evaluation-strategy.md) | Present (draft) | Retrieval quality eval (**PDF** learning goal, FEAT-22) |
 | [`test-strategy.md`](test-strategy.md) | Present (draft) | **§5** state machine determinism; **§6** ask/retrieval bands; AC-CORE / AC-SM / AC-API maps |
+| [`ui-model.md`](ui-model.md) | Present (draft) | PDF `ui-flow` themes: screens, CRUD, ask/RAG UX, flows A–E, **AC-UI-*** |
 
-**PDF list items consolidated (no separate file in repo):** ask `data` semantics, citations, no-match (**DEC-11**) → [`api-contract.md`](api-contract.md) **§6.2–§6.5**; screens and flows A–E → [`architecture.md`](architecture.md) **§12.3–§12.6** (`rules/frontend.md` for UI conventions).
+**PDF list items consolidated (no separate `ui-flow.md` / `rag-api-contract.md` in repo):** ask `data` semantics, citations, no-match (**DEC-11**) → [`api-contract.md`](api-contract.md) **§6.2–§6.5**; screens and flows A–E → [`ui-model.md`](ui-model.md) (detail) + [`architecture.md`](architecture.md) **§12** (UI architecture summary); `rules/frontend.md` for UI conventions.
 
 **Label legend**
 
@@ -60,7 +61,7 @@
 |------------------|----------------------|
 | PDF-faithful requirements and acceptance criteria | HTTP status codes, JSON envelopes, or `/api/v1` path rules → `rules/api-standards.md` + `api-contract.md` |
 | Feature slices (FEAT-*) and traceability to FR / AC | Table schemas, Liquibase, vector dimensions → `data-model.md`, `rag-ingestion.md` |
-| Flows and **Example** demo data (§4.3) | UI wireframes → [`architecture.md`](architecture.md) §12.3–§12.6, `rules/frontend.md` |
+| Flows and **Example** demo data (§4.3) | UI wireframes → [`ui-model.md`](ui-model.md), `rules/frontend.md` |
 | Explicit **Open** items and **DEC-*** register | Prompt templates, model IDs, numeric top-K → `architecture.md`, `rag-ingestion.md` |
 
 Until §10 decisions are **agreed**, treat implementable detail in child specs as **draft**; do not close Open items only in code. See [`rules/documentation.md`](../rules/documentation.md) (“Agreed spec”).
@@ -75,7 +76,7 @@ Use this table to confirm nothing from the assignment is “lost” between the 
 | Learning goals: specs for AI-native feature; test deterministic + probabilistic (p.2) | §1.3, §2.5, FEAT-22, §6.7 | [`evaluation-strategy.md`](evaluation-strategy.md), [`test-strategy.md`](test-strategy.md) |
 | Token optimisation plugins + prompt caching (p.2) | §7 NFR-11, `rules/documentation.md` | Optional tooling — not product behaviour |
 | Stack: Java 21, Spring Boot, Spring AI, PostgreSQL/H2, embedding, vector store, REST, React/Next or equivalent (p.2–3) | §2.1, §6.1 | **DEC-09**, **DEC-10** for store/DB roles in `architecture.md` / `rag-ingestion.md` |
-| Ticket CRUD, comments, search, filter, persistence, validation, UI errors (p.3–4) | §4.2 FEAT-01…10, §8.1–8.2 | HTTP → [`api-contract.md`](api-contract.md); UI → [`architecture.md`](architecture.md) §12.3–§12.6 |
+| Ticket CRUD, comments, search, filter, persistence, validation, UI errors (p.3–4) | §4.2 FEAT-01…10, §8.1–8.2 | HTTP → [`api-contract.md`](api-contract.md); UI → [`ui-model.md`](ui-model.md) |
 | Backend state machine; valid transitions; invalid reopen examples (p.4) | §2.6, FEAT-11, Flow A/C | [`state-machine.md`](state-machine.md); skipped hops → **DEC-02** |
 | Basic RAG pipeline diagram: tickets → knowledge → chunk → embed → store → ask → search → LLM → answer → sources (p.4) | §6.6, Flow D | [`architecture.md`](architecture.md) §15; `rules/rag-vector-store.md` pipeline |
 | Five illustrative assistant questions (p.4) | §4.3 **Example** table | Eval: [`evaluation-strategy.md`](evaluation-strategy.md) §5–§8; review: `commands/review-rag-output.md` |
@@ -87,7 +88,7 @@ Use this table to confirm nothing from the assignment is “lost” between the 
 | Core acceptance checklist (p.6) | §8 **AC-CORE-01…23**, §8.7 demo script | Sign-off uses §8.6 checklist |
 | Process artefacts + token optimisation (p.1–2) | §6.8, §7 NFR-01…11, FEAT-23 | Demo steps 15, 18; `docs/ai-mistakes.md` when first entry |
 | `POST /api/ai/ask` request `{ "question": "..." }` (p.5) | FEAT-15, §2.6 | Response shape **Open** → **DEC-11** |
-| PDF spec file list (ten names, p.1–2) | Child-spec table (top); §6.8; [`docs/assessment-brief.md`](../docs/assessment-brief.md) §4 | **Eight** files on disk; `rag-api-contract` themes → [`api-contract.md`](api-contract.md) §6.2–§6.5; `ui-flow` themes → [`architecture.md`](architecture.md) §12.3–§12.6 |
+| PDF spec file list (ten names, p.1–2) | Child-spec table (top); §6.8; [`docs/assessment-brief.md`](../docs/assessment-brief.md) §4 | **Nine** files on disk; `rag-api-contract` themes → [`api-contract.md`](api-contract.md) §6.2–§6.5; `ui-flow` themes → [`ui-model.md`](ui-model.md) |
 
 **Not in the PDF (do not add without a new agreed spec):** authentication, multi-tenancy, attachments, notifications, delete-ticket API, agentic tool use, confidence scores on ask responses.
 
@@ -298,7 +299,7 @@ FEAT-20 → parallel to FEAT-12..19 (documentation)
 
 ### 4.1 End-to-end flows (**PDF**-aligned)
 
-Flows below describe **observable behaviour** the system must support. Step names are logical; REST paths → [`api-contract.md`](api-contract.md); screen map → [`architecture.md`](architecture.md) §12.3–§12.6.
+Flows below describe **observable behaviour** the system must support. Step names are logical; REST paths → [`api-contract.md`](api-contract.md); screen map → [`ui-model.md`](ui-model.md).
 
 #### Flow A — Agent resolves a ticket (deterministic core)
 
@@ -870,7 +871,7 @@ The PDF does **not** mandate seed data. The table below is an **Example** corpus
 | RAG ingest | FR-13…14 | FEAT-12…14 | Flow D; §11.1 |
 | RAG ask | FR-15…18, FR-21…22 | FEAT-15…19 | Flow B/E; §4.3 **Example** corpus |
 | Documentation / eval | FR-19…20, FR-23…24 | FEAT-20…23 | §6.2; §2.5 |
-| Frontend (implied) | FR-01…10, FR-15…18 | UI + API | §4.2; [`architecture.md`](architecture.md) §12 (**DEC-06** / **DEC-15**) |
+| Frontend (implied) | FR-01…10, FR-15…18 | UI + API | §4.2; [`ui-model.md`](ui-model.md) (**DEC-06** / **DEC-15**) |
 
 ### 5.2 Functional requirements index
 
@@ -938,7 +939,7 @@ Create and maintain specifications before coding. PDF example set:
 | `evaluation-strategy.md` | Retrieval quality evaluation |
 | `test-strategy.md` | **§5** state machine determinism; **§6** ask bands A/B/C; AC layer maps |
 
-Ask JSON semantics (PDF list name `rag-api-contract.md`): [`api-contract.md`](api-contract.md) §6.2–§6.5. UI flows (PDF list name `ui-flow.md`): [`architecture.md`](architecture.md) §12.3–§12.6.
+Ask JSON semantics (PDF list name `rag-api-contract.md`): [`api-contract.md`](api-contract.md) §6.2–§6.5. UI flows (PDF list name `ui-flow.md`): [`ui-model.md`](ui-model.md).
 
 ### 6.3 Backend implementation requirements (**PDF** + engineering implications)
 
@@ -1002,6 +1003,7 @@ Maintain steering artefacts including at minimum (**PDF**). Repo paths (edit `ru
 | *(Convention)* Review frontend | `commands/review-frontend.md` — not named in PDF |
 | *(Convention)* Refresh prompt-history index | `commands/update-prompt-history.md` — rebuild `docs/prompt-history.md` from `.specstory/history/` |
 | *(Convention)* Re-align existing specs/rules/docs with assignment | `commands/improve-from-assessment-pdf.md` — `docs/Assessments.docx`; edit-only; skips `docs/prompt-history.md` |
+| PDF spec file list before implementation (p.1–2; ten names incl. `ui-flow.md`, `rag-api-contract.md`) | Nine `spec/*.md` files — consolidation map in [`rules/documentation.md`](../rules/documentation.md) spec set; child-spec table (top) |
 
 Demonstrate **reusable AI instructions** across the project (**PDF**).
 
@@ -1025,7 +1027,7 @@ Demonstrate **reusable AI instructions** across the project (**PDF**).
 | IR-03 | PostgreSQL/H2 persistence (roles Open) |
 | IR-04 | Vector store + embedding model (products Open) |
 | IR-05 | React/Next or equivalent UI |
-| IR-06 | Complete PDF spec artefact set before implementation (**PDF** lists ten filenames; **eight** markdown files in `spec/` with `rag-api-contract` / `ui-flow` themes consolidated — child-spec table) |
+| IR-06 | Complete PDF spec artefact set before implementation (**PDF** lists ten filenames; **nine** markdown files in `spec/` with `rag-api-contract` / `ui-flow` themes consolidated — child-spec table) |
 | IR-07 | `architecture.md` justifies chunking and embedding model |
 | IR-08 | Configurable top-K and similarity threshold |
 | IR-09 | State-machine integration tests |
@@ -1147,7 +1149,7 @@ Use for final demo sign-off (**PDF** p.6):
 
 ### 8.7 Demo and grading script (**Example** walkthrough)
 
-Repeatable path to demonstrate **AC-CORE-01…23** and **FEAT-22** (retrieval quality evidence). Adjust UI labels to match [`architecture.md`](architecture.md) §12.3–§12.6.
+Repeatable path to demonstrate **AC-CORE-01…23** and **FEAT-22** (retrieval quality evidence). Adjust UI labels to match [`ui-model.md`](ui-model.md).
 
 | Step | Action | Pass if |
 |------|--------|---------|
@@ -1240,7 +1242,7 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 | **DEC-03** | OQ-03 | How is `category` set? | User field / enum / derived rule | `data-model.md` | FEAT-13 metadata | Agreed 2026-10-04 | Optional user-selected `TicketCategory` enum on create/update (`data-model.md` §5.3). |
 | **DEC-04** | OQ-01 | Ticket id format | Opaque UUID / `TKT-*` / numeric | `data-model.md` | UI, citations | Agreed 2026-10-04 | Public id `TKT-{n}` from `ticket_number_seq` (start 1001); `ticket.id` `VARCHAR(16)` PK (`data-model.md` §5.5, §14.1). |
 | **DEC-05** | OQ-10 | Resolution notes shape | Dedicated field / comment template / resolve action text | `data-model.md`, `rag-ingestion.md` | FEAT-12 | Agreed 2026-10-04 | Nullable `resolution_notes` column on `ticket`; ingested for RAG (`data-model.md` §6.1). |
-| **DEC-06** | OQ-11 | Transition API & UI | Dedicated PATCH transition / status field on update / wizard | `api-contract.md`, [`architecture.md`](architecture.md) §12.4 | FEAT-11 | Interim | PATCH `status` on `PATCH /api/v1/tickets/{id}` — [`api-contract.md`](api-contract.md) §4.4; UX in architecture §12.4 |
+| **DEC-06** | OQ-11 | Transition API & UI | Dedicated PATCH transition / status field on update / wizard | `api-contract.md`, [`ui-model.md`](ui-model.md) §9 | FEAT-11 | Interim | PATCH `status` on `PATCH /api/v1/tickets/{id}` — [`api-contract.md`](api-contract.md) §4.4; UX in `ui-model.md` §9 |
 | **DEC-07** | OQ-13 | Initial status on create | Default `OPEN` / other | `state-machine.md`, `data-model.md` | FEAT-01 | Agreed 2026-10-04 | Server default `OPEN` on create; not accepted from create request body (`data-model.md` §5.1). |
 | **DEC-08** | OQ-14 | Searchable fields | Title only / title+description / include comments | `api-contract.md`, `data-model.md` | FEAT-06 | Agreed 2026-10-04 | Keyword `q` matches `title` and `description` (case-insensitive); comments excluded (`data-model.md` §15.2). |
 | **DEC-09** | OQ-07 | Vector store + embedding product | PGVector vs Chroma; local vs cloud model | `architecture.md`, `rag-ingestion.md` | FEAT-13, IR-04 | Open | — |
@@ -1249,7 +1251,7 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 | **DEC-12** | OQ-06 | Auth | None for assessment / basic auth / other | `architecture.md` (if any) | **Open** scope | Open | — |
 | **DEC-13** | OQ-02 | Required fields on create | Minimal set aligned to PDF | `data-model.md` | FEAT-01, 09 | Agreed 2026-10-04 | Create requires non-blank `title`; `description`, `assignee`, `category` optional; `priority` defaults `MEDIUM`; `description` defaults empty (`data-model.md` §16.1). |
 | **DEC-14** | OQ-04 | Ticket REST surface | Align with **Convention** in `rules/api-standards.md` | `api-contract.md` | All FEAT API | Interim agreed 2026-10-04 | Paths/methods/payloads in [`api-contract.md`](api-contract.md); envelopes in `rules/api-standards.md` |
-| **DEC-15** | OQ-09 | Frontend stack | React+Next vs React+Vite+TS (**Convention** in rules) | [`architecture.md`](architecture.md) §12, `rules/frontend.md` | FEAT UI | Open | Convention: React+Vite+TS |
+| **DEC-15** | OQ-09 | Frontend stack | React+Next vs React+Vite+TS (**Convention** in rules) | [`ui-model.md`](ui-model.md) §14, `rules/frontend.md` | FEAT UI | Open | Convention: React+Vite+TS |
 
 ### 10.3 Spec handoff map (OQ → spec)
 
@@ -1257,12 +1259,12 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 |----|--------------|----------------|
 | OQ-01, OQ-02, OQ-03, OQ-10, OQ-13, OQ-14 | `data-model.md` | `api-contract.md` |
 | OQ-04 | `api-contract.md` | `rules/api-standards.md` (**Convention**) |
-| OQ-05, OQ-11 (wording) | [`api-contract.md`](api-contract.md) §6.3 | [`architecture.md`](architecture.md) §12.4–§12.5 |
+| OQ-05, OQ-11 (wording) | [`api-contract.md`](api-contract.md) §6.3 | [`ui-model.md`](ui-model.md) §10 |
 | OQ-06 | `architecture.md` (if in scope) | — |
 | OQ-07, OQ-15 | `rag-ingestion.md` | `architecture.md` |
 | OQ-08 | `architecture.md` | `test-strategy.md` |
-| OQ-09 | [`architecture.md`](architecture.md) §12 | `rules/frontend.md` (**Convention**) |
-| OQ-11, OQ-12 | `state-machine.md` | [`architecture.md`](architecture.md) §12.4, `api-contract.md` |
+| OQ-09 | [`ui-model.md`](ui-model.md) §14 | `rules/frontend.md` (**Convention**) |
+| OQ-11, OQ-12 | `state-machine.md` | [`ui-model.md`](ui-model.md) §9, `api-contract.md` |
 | Retrieval eval (learning goal) | `evaluation-strategy.md` | `test-strategy.md` |
 
 **Rule:** Closing an OQ requires (1) user confirmation, (2) update to owning spec, (3) **Decision** row in §10.2, (4) if PDF-facing, optional note in §11.
@@ -1325,7 +1327,7 @@ Keep `requirements.md` as the **PDF + acceptance hub**. Put implementable detail
 | Legal/illegal transition matrix extensions (DEC-02) | `state-machine.md` |
 | Chunk size, overlap, model id, vector dimensions, property keys | `rag-ingestion.md`, [`architecture.md`](architecture.md) |
 | Ask `data` JSON fields, citation array shape, no-match rules | [`api-contract.md`](api-contract.md) §6.2–§6.5 |
-| Screen map, navigation, transition UX, ask panel | [`architecture.md`](architecture.md) §12.3–§12.6 |
+| Screen map, navigation, transition UX, ask panel | [`ui-model.md`](ui-model.md) |
 | Test class layout, Testcontainers usage | `test-strategy.md`, `rules/testing.md` |
 | Prompt templates, system prompts for LLM | `rag-ingestion.md` / service config (not PDF-mandated text) |
 | Code package layout | `rules/java-springboot.md` (**Convention**) |
@@ -1355,6 +1357,8 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | [`test-strategy.md`](test-strategy.md) expanded §5 (SM) and §6 (retrieval/AI); **AC-TS-06**. |
 | 2026-10-04 | PDF audit: `rag-api-contract` / `ui-flow` content paths; demo §8.7 steps 17–18 (FEAT-22, hygiene). |
 | 2026-10-04 | UI flow pointers normalized to [`architecture.md`](architecture.md) §12.3–§12.6. |
+| 2026-10-04 | Added [`ui-model.md`](ui-model.md); PDF `ui-flow` detail and **AC-UI-***; hub pointers updated. |
+| 2026-10-04 | `improve-from-assessment-pdf`: §6.8 PDF ten-name spec list row; hub aligned to nine-file consolidation. |
 | 2026-10-04 | `improve-from-assessment-pdf` in §6.8; §0.4 row for PDF ten-name spec list; IR-06 consolidation note. |
 | 2026-10-04 | Primary source header: `docs/Assessments.docx`. |
 | 2026-10-04 | All `Assessments.pdf` path references → `docs/Assessments.docx` across steering artefacts. |

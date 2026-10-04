@@ -38,8 +38,9 @@ Create and maintain as needed:
 - `spec/rag-ingestion.md`
 - `spec/evaluation-strategy.md`
 - `spec/test-strategy.md`
+- `spec/ui-model.md`
 
-PDF also lists `rag-api-contract.md` / `ui-flow.md`; themes live in `api-contract` §6 and `architecture` §12 — see `rules/documentation.md`.
+PDF also lists `rag-api-contract.md` / `ui-flow.md`; themes live in `api-contract` §6 and `ui-model.md` (UI summary in `architecture` §12) — see `rules/documentation.md`.
 
 Each spec: problem/context, scope & non-goals, requirements, testable acceptance criteria, contracts where relevant, open questions. Do not invent features not in an agreed spec. `docs/Assessments.docx` informs analysis; extract into `spec/`.
 

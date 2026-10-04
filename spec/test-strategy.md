@@ -358,7 +358,7 @@ Detail: [`data-model.md`](data-model.md) §18.
 
 ## 11. Frontend acceptance without UI tests
 
-**PDF** UI expectations → backend substitutes where noted in §7. Screen/flow map for manual demo: [`architecture.md`](architecture.md) §12.3–§12.6. Demo script: [`requirements.md`](requirements.md) §8.7 (steps 1–18). UI code review: `commands/review-frontend.md`.
+**PDF** UI expectations → backend substitutes where noted in §7. Screen/flow map for manual demo: [`ui-model.md`](ui-model.md) §12. Demo script: [`requirements.md`](requirements.md) §8.7 (steps 1–18). UI acceptance IDs: **AC-UI-*** in `ui-model.md` §13. UI code review: `commands/review-frontend.md`.
 
 ---
 
@@ -395,3 +395,4 @@ Detail: [`data-model.md`](data-model.md) §18.
 | 2026-10-04 | §4.1 FEAT-22 / AC-EVAL; AC-TS-05. |
 | 2026-10-04 | Major expansion: **§5** state machine deterministic logic (T1–T5, X1–X3, 20 illegal pairs, layers, lifecycle); **§6** retrieval quality + AI output (Bands A–C); **AC-TS-06**; renumbered sections. |
 | 2026-10-04 | §11 links UI demo to [`architecture.md`](architecture.md) §12.3–§12.6; requirements §8.7 steps 17–18. |
+| 2026-10-04 | §11 links UI demo to [`ui-model.md`](ui-model.md). |
