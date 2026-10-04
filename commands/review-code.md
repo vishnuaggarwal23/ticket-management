@@ -87,12 +87,15 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 - [ ] **One** Spring Boot application (`@SpringBootApplication`); main class has no business logic
 - [ ] **One** Java package root under `src/main/java` (e.g. `com.ticketmanagement`); no second root, no default package
 - [ ] Types are **grouped and separated** by layer **and** by logical concern — **Fail** if controllers, DTOs, entities, services, RAG, and config all sit in `{root}` or in one bag package
-- [ ] Layout is **by layer**, not by feature-as-a-second-app: `{root}/api`, `domain`, `service`, `persistence`, `rag`, `config`
-- [ ] Within a layer, split when distinct concerns exist (ticket HTTP vs ask HTTP; ticket vs comment persistence; ingest vs retrieve under `rag/`). Shared types (e.g. `@RestControllerAdvice`) stay in the layer root, not copied per subpackage
+- [ ] Layout is **by technical role** (quick navigation): `{root}/controller`, `dto/*`, `service`, `entity`, `repository`, `exception`, `util`, `advice`, `domain`, `rag`, `config`
+- [ ] All `@RestController` types live in `controller/` (not mixed with DTOs); HTTP records in `dto/common`, `dto/request`, `dto/response`; `@RestControllerAdvice` in `advice/`
 - [ ] Do not mix unrelated types in one package (entity + controller, RAG port + ticket service, config beans + domain enums)
-- [ ] Subpackages when a type set grows (`api.ticket`, `persistence.ticket`); do not invent `web`, `dao`, `manager`, or a parallel `controller` tree; do not over-split (one class per empty package)
-- [ ] Ask stays in `rag/` + a **thin** controller in `api/` — not a second microservice or a second `*Application`
-- [ ] JPA entities and Spring Data repositories live only in `persistence`; domain types are not `@Entity`
+- [ ] Subpackages under `dto/` and `rag/` when a group grows; do not resurrect `api.ticket` / `persistence` combined bags; do not invent `web`, `dao`, `manager`
+- [ ] Ask orchestration in `service/`; RAG adapters in `rag/`; **thin** `AiAskController` in `controller/` — not a second microservice
+- [ ] JPA entities only in `entity/`; Spring Data repos (+ `Specification` helpers) only in `repository/`; domain types are not `@Entity`
+- [ ] Exceptions in `exception/` (not `domain/`); small helpers in `util/`
+- [ ] Ticket/comment I/O is **Spring Data JPA** (`JpaRepository`, `@Query`, `Pageable`, custom fragments) — services do not use `JdbcTemplate` / raw SQL for `ticket` / `ticket_comment` (**C-06**)
+- [ ] Vector chunk storage stays behind `rag` ports (JDBC/pgvector allowed there); no duplicate DAO layer for tickets
 - [ ] `@Configuration` / `@ConfigurationProperties` live in `config`; no ad-hoc bean wiring inside controllers/services
 - [ ] Test sources mirror production packages under `src/test/java` (same root); IT types stay with repository/API tests per `rules/testing.md`
 
@@ -101,7 +104,7 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 - [ ] Types: PascalCase; methods/fields/locals: camelCase; packages: all-lowercase, no underscores
 - [ ] Constants and enum constants: `UPPER_SNAKE`; `TicketStatus`, `TicketPriority` (`CRITICAL`, not domain `URGENT`), `TicketCategory` are **enums**, not `String` (JSON `"URGENT"` → `CRITICAL` only in **api**)
 - [ ] Names are readable and role-true: `TicketService`, `TicketRepository`, `TicketStatusMachine`, `IllegalTicketTransitionException` — not `TktSvc`, `SM`, `Helper`, `Util`, `Manager` dumping mixed concerns
-- [ ] Layer suffixes: `*Controller` in `api`; `*Service` in `service`; `*Repository` in `persistence`; `*Entity` for JPA types; domain exceptions `*Exception`
+- [ ] Layer suffixes: `*Controller` in `controller`; `*Service` in `service`; `*Repository` in `repository`; `*Entity` in `entity`; `*Exception` in `exception`
 - [ ] Request/response types are API **records** (e.g. create/update/list DTOs) — not `*VO`, not persistence entities reused as JSON
 - [ ] Spring Data method names match derived-query / `@Query` intent; no vague `getData` / `doWork`
 - [ ] Config properties classes use a clear prefix (e.g. `rag.retrieval`); no unexplained one-letter type names
@@ -112,7 +115,8 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 - [ ] `jakarta.*` not `javax.*`; Java 21 language features are fine (`record`, `switch`, text blocks); no `sun.*`
 - [ ] Public application APIs do not return `null` — `Optional` for a missing ticket; empty `List`/`Page` for empty collections
 - [ ] Prefer `record` for API DTOs and small immutable values; no Lombok, MapStruct, QueryDSL, or extra web stacks unless a spec agrees
-- [ ] Methods stay focused; no god class that both mutates tickets and inlines the transition table
+- [ ] Methods stay focused; extract helpers when a method mixes orchestration, validation, and field mapping — no god class that both mutates tickets and inlines the transition table
+- [ ] Injected collaborators are named by role: `ticketService`, `ticketRepository` — not ambiguous `tickets` when the type is not a collection
 - [ ] Time: `java.time` (`Instant` for stored timestamps); no `java.util.Date` / `Calendar`
 - [ ] Log with SLF4J; include ticket id when known; never log secrets, passwords, API keys, raw prompts, or full model output by default
 - [ ] No SQL/JPQL string concatenation of user input; bind parameters; `sort` is allowlisted
@@ -120,13 +124,13 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 
 ### Spring Boot practices
 
-- [ ] Matches agreed **functional → technical** map ([`spec/architecture.md`](../spec/architecture.md) §8–9): ticket ops in `service`/`persistence`, ask in `rag/`, state machine in `domain`
-- [ ] Call flow: Controller (`api`) → application service → domain (rules) / repository (I/O) / RAG port — no skipped-layer shortcuts
-- [ ] **api:** `@RestController` + JSON; HTTP mapping, `@Valid`/`@Validated`, status codes, DTO mapping only. No JPQL, no status-machine tables, no `@Transactional`, no leaking entities, no Spring AI/PgVector/Ollama types on the HTTP boundary
+- [ ] Matches agreed **functional → technical** map ([`spec/architecture.md`](../spec/architecture.md) §8–9): ticket ops in `service`/`repository`, ask in `rag/`, state machine in `domain`
+- [ ] Call flow: `controller` → `service` → `domain` (rules) / `repository` (I/O) / `rag` port — no skipped-layer shortcuts
+- [ ] **controller:** `@RestController` + JSON; HTTP mapping, `@Valid`/`@Validated`, status codes, DTO mapping only. No JPQL, no status-machine tables, no `@Transactional`, no leaking entities, no Spring AI/PgVector/Ollama types on the HTTP boundary
 - [ ] **domain:** status rules and domain errors only; **no** Spring Web, JPA, `@Autowired`, or JDBC
-- [ ] **service:** `@Transactional` on writes; `@Transactional(readOnly = true)` on reads that need a transaction; short transactions; depend on repository **interfaces** and domain types, not controllers or `HttpServletRequest`
+- [ ] **service:** `@Transactional` on writes; `@Transactional(readOnly = true)` on reads that need a transaction; short transactions; depend on repository **interfaces** and domain types, not controllers or `HttpServletRequest`; after-commit side effects (e.g. RAG ingest) in small helpers, not inlined transaction-sync blocks
 - [ ] Ticket mutations trigger RAG ingest via **service** hook/port after successful write — not from controller or repository ([`spec/architecture.md`](../spec/architecture.md) §10.2, §15.4)
-- [ ] **persistence:** load/save and keyword/status queries only; no ad-hoc `@Modifying` status `UPDATE`; keyword `q` searches **title and description** only
+- [ ] **repository:** Spring Data JPA load/save and keyword/status queries only; no ad-hoc `@Modifying` status `UPDATE`; keyword `q` searches **title and description** only
 - [ ] **rag:** retrieve-then-generate from ticket knowledge only; no ticket create, notify, or tool-chain from ask
 - [ ] **config:** beans and property binding only; RAG/JDBC/Ollama URLs, model ids, top-K, threshold, chunk limits in `@ConfigurationProperties` — not magic numbers in Java
 - [ ] One `@RestControllerAdvice` maps to the error envelope; no per-controller error JSON; 500 bodies have no internals
@@ -185,6 +189,8 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
 | 2026-10-04 | SDD expansion: routing table, severity labels, spec-gap and assumption reporting. |
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md), [`spec/architecture.md`](../spec/architecture.md), and aligned rules. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | §2 checklist: **C-06** Spring Data JPA primary; vector JDBC only in `rag/`. |
+| 2026-10-04 | Packaging checklist: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`. |
 | 2026-10-04 | Agreed data-model DECs vs open DECs; Liquibase index catalog §14.5 check. |
 | 2026-10-04 | Three-spec interim map in `rules/documentation.md`; SM from requirements FEAT-11 until `state-machine.md`. |
 | 2026-10-04 | State machine checks use draft [`spec/state-machine.md`](../spec/state-machine.md). |

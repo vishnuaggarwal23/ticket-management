@@ -1,11 +1,13 @@
 package com.ticketmanagement.rag;
 
-import com.ticketmanagement.domain.TicketId;
+import com.ticketmanagement.util.TicketId;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
-import com.ticketmanagement.persistence.TicketEntity;
-import com.ticketmanagement.persistence.TicketRepository;
+import com.ticketmanagement.entity.TicketEntity;
+import com.ticketmanagement.repository.TicketRepository;
+import com.ticketmanagement.service.TicketIngestionService;
 import com.ticketmanagement.support.AbstractPostgresIntegrationTest;
+import com.ticketmanagement.support.ChunkMetadataAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -28,6 +30,19 @@ class TicketIngestionIT extends AbstractPostgresIntegrationTest {
 
     @Autowired
     private VectorChunkStore store;
+
+    @Test
+    void ingestedChunksExposeFullMetadataJson() {
+        TicketEntity ticket = persist("metadata matrix billing help");
+        ticket.setAssignee("billing@example.com");
+        ticket.setCategory(com.ticketmanagement.domain.TicketCategory.BILLING);
+        tickets.saveAndFlush(ticket);
+
+        ingestion.ingest(ticket.getId());
+
+        store.findByTicketId(ticket.getId()).forEach(chunk ->
+                ChunkMetadataAssertions.assertPdfAndTechnicalMetadataKeys(chunk.metadataJson(), ticket.getId()));
+    }
 
     @Test
     void ingestThenReIngestReplacesRows() {

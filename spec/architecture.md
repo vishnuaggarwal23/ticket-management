@@ -94,7 +94,7 @@ Support Tickets
 | ID | Requirement |
 |----|-------------|
 | IR-ARCH-01 | Maven Wrapper; Liquibase; Testcontainers for integration tests |
-| IR-ARCH-02 | Layering: domain / service / persistence / api / rag per `rules/java-springboot.md` |
+| IR-ARCH-02 | Layering: domain / service / persistence / api / rag per `rules/java-springboot.md`; relational I/O via **Spring Data JPA** (**C-06**) |
 | IR-ARCH-03 | Spring AI for embed + chat; Ollama `nomic-embed-text` + local chat model via config (**DEC-09**) |
 
 ### 0.3 Independent reading units
@@ -443,7 +443,7 @@ Distinct from **vector similarity search** (RAG only).
 | **Knowledge document builder** | Assemble ticket text + metadata into ingestible documents |
 | **Chunking service** | Split documents per agreed strategy (§16) |
 | **Embedding port** | Call Spring AI embedding model |
-| **Vector index writer** | Upsert/delete chunks in PgVector |
+| **Vector index writer** | Upsert/delete chunks in PgVector (typically **not** JPA — JDBC/Spring AI behind `VectorChunkStore`; ticket text still loaded via JPA repos) |
 | **Ingestion orchestrator** | Run pipeline on create/update/close triggers |
 | **Retrieval service** | Embed question, top-K, threshold filter |
 | **Ask orchestrator** | Build prompt, call chat model, map citations / no-match |
@@ -467,22 +467,29 @@ Technical layout follows **`rules/java-springboot.md`** (**Convention**).
 ```
 {root}/
   Application.java
-  api/            Controllers, request/response DTOs, @ControllerAdvice
-  domain/         Ticket status enum, state machine, domain exceptions
-  service/        Transactional application services
-  persistence/    JPA entities, Spring Data repositories
-  rag/            Knowledge build, chunk/embed, retrieval, ask
-  config/         Spring configuration, RAG @ConfigurationProperties, Spring AI beans
+  advice/         @RestControllerAdvice
+  controller/     All REST controllers (tickets, ask)
+  dto/            common/, request/, response/, serde/ — HTTP JSON types
+  domain/         Enums, state machine (no Spring Web/JPA)
+  entity/         JPA @Entity types
+  exception/      Application exceptions
+  repository/     Spring Data JPA + Specifications
+  service/        Use cases, mappers, AskService, TicketIngestionService
+  util/           TicketId, sort parsing, shared constants
+  rag/            Ports, chunking, vector store, model adapters
+  config/         @Configuration, @ConfigurationProperties, Spring AI beans
 ```
 
 ### 9.2 Layer responsibilities
 
 | Layer | Responsibility |
 |-------|----------------|
-| **api** | HTTP mapping, `@Valid`, status codes; **no** business rules |
-| **domain** | State machine, illegal transition errors; **no** Spring Web/JPA |
+| **controller** / **dto** | HTTP mapping, `@Valid`, JSON records; **no** business rules |
+| **advice** | Stable error envelopes |
+| **domain** | State machine; **no** Spring Web/JPA |
+| **exception** | Typed failures consumed by advice |
+| **entity** / **repository** | JPA + Spring Data; **no** SM bypass; **no** ticket `JdbcTemplate` |
 | **service** | Use cases, transactions, orchestrate repos + domain + RAG hooks |
-| **persistence** | Load/save; **no** bypass of state machine for status |
 | **rag** | Ingest and ask; **no** ticket side effects on ask path |
 | **config** | Beans and property binding only |
 
@@ -490,12 +497,12 @@ Technical layout follows **`rules/java-springboot.md`** (**Convention**).
 
 | Business module (§4.3) | Primary packages |
 |------------------------|------------------|
-| Ticket registry | `service`, `persistence`, `api` |
-| Collaboration timeline | `service`, `persistence`, `api` |
-| Work discovery | `service`, `persistence`, `api` |
+| Ticket registry | `service`, `repository`, `entity`, `controller`, `dto` |
+| Collaboration timeline | `service`, `repository`, `entity`, `controller`, `dto` |
+| Work discovery | `service`, `repository`, `controller`, `dto` |
 | Lifecycle governance | `domain`, `service` |
 | Knowledge indexing / freshness | `rag`, `service` (hooks) |
-| Assisted research | `rag`, `api` (`AiAskController` or equivalent) |
+| Assisted research | `rag`, `service`, `controller` (`AiAskController`) |
 
 ---
 
@@ -677,7 +684,8 @@ Not product screens — demo evidence for **FEAT-23**: SpecStory / `.specstory/h
 
 ### 13.1 Relational system of record
 
-- **Tickets** and **comments** in **PostgreSQL** via Spring Data JPA (**PDF**).
+- **Tickets** and **comments** in **PostgreSQL** via **Spring Data JPA** as the **primary** access layer (**PDF** persistence + **Convention** **C-06**).
+- **Pattern:** `@Entity` types in `persistence`; `JpaRepository` interfaces; `@Query` / derived methods / `Pageable`; optional **custom repository fragments** for keyword+filter list queries — services depend on repositories, not ad-hoc JDBC.
 - Schema changes via **Liquibase** (**Convention**); Hibernate `ddl-auto` validate/none.
 - **FR-08 / AC-CORE-09:** data survives restart.
 
@@ -1051,3 +1059,5 @@ Architecture supports verification of:
 | 2026-10-04 | §0.3 **ARCH-*** independent reading units for modular architecture review. |
 | 2026-10-04 | Major `##` headings tagged with **ARCH-*** unit ids. |
 | 2026-10-04 | FEAT-23 evidence: [`docs/ai-error.md`](../docs/ai-error.md); `ai-mistakes.md` pointer. |
+| 2026-10-04 | §13.1 / §9: **Spring Data JPA primary** for tickets/comments (**C-06**); vector writer JDBC/Spring AI exception. |
+| 2026-10-04 | §9.1: type-based packages (`controller`, `dto`, `entity`, `repository`, `exception`, `util`, `advice`). |

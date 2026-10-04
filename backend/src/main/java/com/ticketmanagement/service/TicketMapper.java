@@ -1,10 +1,10 @@
 package com.ticketmanagement.service;
 
-import com.ticketmanagement.api.ticket.CommentResponse;
-import com.ticketmanagement.api.ticket.TicketDetailResponse;
-import com.ticketmanagement.api.ticket.TicketSummaryResponse;
-import com.ticketmanagement.persistence.CommentEntity;
-import com.ticketmanagement.persistence.TicketEntity;
+import com.ticketmanagement.dto.response.CommentResponse;
+import com.ticketmanagement.dto.response.TicketDetailResponse;
+import com.ticketmanagement.dto.response.TicketSummaryResponse;
+import com.ticketmanagement.entity.CommentEntity;
+import com.ticketmanagement.entity.TicketEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;

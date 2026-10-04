@@ -1,6 +1,6 @@
 package com.ticketmanagement.config;
 
-import com.ticketmanagement.api.ticket.TicketPriorityJsonDeserializer;
+import com.ticketmanagement.dto.serde.TicketPriorityJsonDeserializer;
 import com.ticketmanagement.domain.TicketPriority;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;

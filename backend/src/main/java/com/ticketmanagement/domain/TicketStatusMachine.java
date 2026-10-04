@@ -1,5 +1,7 @@
 package com.ticketmanagement.domain;
 
+import com.ticketmanagement.exception.IllegalTicketTransitionException;
+
 import java.util.Set;
 
 public final class TicketStatusMachine {

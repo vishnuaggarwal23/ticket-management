@@ -1,6 +1,7 @@
 package com.ticketmanagement.rag;
 
 import com.ticketmanagement.config.RagProperties;
+import com.ticketmanagement.service.AskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

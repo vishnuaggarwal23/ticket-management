@@ -1,7 +1,7 @@
 package com.ticketmanagement.rag;
 
-import com.ticketmanagement.persistence.CommentEntity;
-import com.ticketmanagement.persistence.TicketEntity;
+import com.ticketmanagement.entity.CommentEntity;
+import com.ticketmanagement.entity.TicketEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;

@@ -116,6 +116,15 @@ Use these in `commands/review-rag-output.md` and [`spec/evaluation-strategy.md`]
 | **Out-of-scope support question** | Question not answerable from ticket corpus even if the model “knows” | Same: do **not** use general LLM knowledge; say no relevant tickets / cannot answer from history |
 | **Grounded hit** | Retrieved excerpts support an answer | 200 + answer + **cited ticket ids from retrieval** |
 
+## Relational vs vector persistence
+
+| Data | Access (**Convention** **C-06**) |
+|------|-------------------------------------|
+| `ticket`, `ticket_comment` | **Spring Data JPA** repositories in `persistence` — ingest loads tickets/comments through these, not JDBC |
+| `ticket_vector_chunk` | **`rag`** `VectorChunkStore` implementation (e.g. `JdbcTemplate` + pgvector casts, or Spring AI PgVector) — keep SQL/vector ops behind the port |
+
+Do not add JPA entities for chunks **and** a second JDBC writer without a spec change; pick the port adapter pattern already in `backend/`.
+
 ## Pipeline (assessment behaviour)
 
 ```
@@ -192,6 +201,7 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 | 2026-10-04 | SDD expansion: OQ/DEC pointers; cross-links to architecture RAG sections and evaluation strategy. |
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and [`spec/architecture.md`](../spec/architecture.md) §13–16. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | **C-06:** JPA for ticket/comment loads; vector port JDBC/Spring AI exception. |
 | 2026-10-04 | Metadata/table/index pointers to agreed [`spec/data-model.md`](../spec/data-model.md) §8, §11, §14.5. |
 | 2026-10-04 | Interim: architecture §16 justification; requirements §10 for open RAG **DEC** when child specs absent. |
 | 2026-10-04 | Eval pointers: [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §3–§9. |

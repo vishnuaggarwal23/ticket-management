@@ -73,7 +73,7 @@
 | ID | Requirement |
 |----|-------------|
 | IR-DM-01 | Liquibase changelogs; PostgreSQL + PgVector extension |
-| IR-DM-02 | JPA entities + DTOs per §10; Bean Validation per §16 |
+| IR-DM-02 | JPA entities + **Spring Data JPA** repositories for `ticket`/`ticket_comment`; API DTOs per §10; Bean Validation per §16 (**C-06**) |
 | IR-DM-03 | HNSW index on embedding column (§14.5) |
 
 ### 0.3 Independent reading units
@@ -141,6 +141,7 @@ HTTP envelopes and paths remain in `rules/api-standards.md`. Ask `data` semantic
 4. **No JPA entity on the HTTP boundary** — controllers use DTO records; services map explicitly ([`rules/java-springboot.md`](../rules/java-springboot.md)).
 5. **Metadata snapshot at ingest** — chunk metadata reflects ticket state **at ingest time**; re-ingest refreshes vectors and metadata (**PDF** freshness).
 6. **Liquibase owns schema** — every table/column here maps to a changelog; Hibernate validates only.
+7. **Spring Data JPA for relational I/O** — `ticket` and `ticket_comment` are accessed through JPA entities and Spring Data repositories (**Convention** **C-06**); list/search uses repository `@Query` or custom fragments, not parallel JDBC DAOs.
 
 ---
 
@@ -197,11 +198,12 @@ erDiagram
 
 | Concept | Package / type kind |
 |---------|---------------------|
-| `Ticket`, `Comment` | `persistence` JPA entities |
+| `Ticket`, `Comment` | `entity` JPA types; `repository` Spring Data access |
 | `TicketStatus`, `TicketPriority`, `TicketCategory` | `domain` enums |
-| `TicketVectorChunk` | `persistence` (or Spring AI store adapter table) |
+| `TicketVectorChunk` | Logical table §8.2; **implementation** via `rag` `VectorChunkStore` (JDBC/pgvector or Spring AI adapter), not required as a JPA entity |
 | `KnowledgeDocument`, `RagChunkMetadata` | `rag` records / value types (not JPA) |
-| `CreateTicketRequest`, `TicketResponse`, … | `api` records |
+| `CreateTicketRequest`, `TicketResponse`, … | `dto.request` / `dto.response` records |
+| Not found / illegal transition / validation errors | `exception` types; mapped in `advice` |
 
 ---
 
@@ -401,6 +403,8 @@ Store **chunked**, **embedded** ticket knowledge with metadata keys: `ticketId`,
 
 If Spring AI PgVector auto-schema is used, **still** document the logical model here and add a Liquibase changeset that matches the store’s table/column names. Single source of truth remains Liquibase ([`rules/java-springboot.md`](../rules/java-springboot.md)).
 
+**Access style:** relational ticket/comment reads for ingest use **Spring Data JPA** repositories. Chunk rows are written/read through the **`rag`** vector port (e.g. parameterized JDBC for `vector` similarity) — this does not replace JPA for the ticket aggregate.
+
 ### 8.4 Re-ingest storage strategy (**Convention**)
 
 On re-ingest for `ticket_id`:
@@ -476,7 +480,7 @@ Title is for human context in chunks; **PDF** ingest sources are description, co
 
 ## 10. API data transfer models (DTOs) · unit **DM-E**
 
-DTOs are **Java records** in `api` with Bean Validation on **requests**. Responses use the success envelope `{ "data": ... }` ([`rules/api-standards.md`](../rules/api-standards.md)).
+DTOs are **Java records** in `dto.request` / `dto.response` with Bean Validation on **requests**. Responses use the success envelope `{ "data": ... }` ([`rules/api-standards.md`](../rules/api-standards.md)).
 
 Field names below are **Agreed** with this data model; HTTP paths, scenarios, and envelope usage → [`api-contract.md`](api-contract.md).
 
@@ -868,7 +872,7 @@ WHERE (
 - Single phrase; no token AND/OR (**Convention**).
 - Comments **not** searched unless DEC-08 is revised in `api-contract.md`.
 - **Indexes:** `idx_ticket_title_trgm` and `idx_ticket_description_trgm` (§14.5); requires `pg_trgm` extension.
-- **Implementation:** prefer `WHERE title ILIKE :q OR description ILIKE :q` with bound parameter; for combined `status` + `q`, planner can use status composite index plus trgm, or bitmap AND — verify with `EXPLAIN` in integration tests at scale if needed.
+- **Implementation:** express in **Spring Data JPA** — `@Query` JPQL or a custom repository fragment with bound `:q` / `:status` (e.g. `ILIKE` on title and description). Services call `TicketRepository` only. For combined `status` + `q`, planner can use status composite index plus trgm — verify with `EXPLAIN` in integration tests at scale if needed.
 
 ### 15.3 Sort whitelist
 
@@ -961,3 +965,5 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | **DEC-09/10/18:** `vector(768)`, PostgreSQL-only note, empty-ticket ingest skip cross-ref. |
 | 2026-10-04 | Doc sync: vector consistency row aligned with **DEC-18** (no async ingest). |
 | 2026-10-04 | **C-02:** `CRITICAL` canonical; inbound JSON `URGENT` → `CRITICAL`. **C-05:** assignee `@Size(max=320)` only. |
+| 2026-10-04 | **C-06:** Spring Data JPA primary for `ticket`/`ticket_comment`; vector chunks via `rag` port. |
+| 2026-10-04 | §4.3 layer mapping: `entity`, `repository`, `dto`, `exception` packages. |

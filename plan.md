@@ -122,10 +122,11 @@ Do not describe conventions as PDF mandates in comments or README.
 | ID | Topic | Decision |
 |----|--------|----------|
 | **C-01** | Java root package | **`com.ticketmanagement`** — one root, never a second. |
-| **C-02** | `TicketPriority` | Canonical stored/returned value is **`CRITICAL`** (fourth enum constant). Incoming JSON (create/PATCH) **`URGENT` is accepted and mapped to `CRITICAL`**. Persist and respond only `CRITICAL`. Other unknown strings still **400**. Domain/JPA enum has **no** `URGENT` constant. Mapping lives in the **API Jackson deserializer** (`api`), not in `domain`. |
+| **C-02** | `TicketPriority` | Canonical stored/returned value is **`CRITICAL`** (fourth enum constant). Incoming JSON (create/PATCH) **`URGENT` is accepted and mapped to `CRITICAL`**. Persist and respond only `CRITICAL`. Other unknown strings still **400**. Domain/JPA enum has **no** `URGENT` constant. Mapping lives in **`dto.serde`** Jackson deserializer, not in `domain`. |
 | **C-03** | Spring Boot 3 | Use the **latest production (GA) Spring Boot 3** release at implementation time — not milestone/RC. Do not describe the patch as a PDF requirement. |
 | **C-04** | Chat / generation model (RAG) | Config via `OLLAMA_CHAT_MODEL` / `spring.ai.ollama.chat.options.model`. Example default **`llama3.2`** (Convention; not a mandated DEC). Embedding remains **`nomic-embed-text`**. |
 | **C-05** | Assignee validation | **`@Size(max = 320)` only** — no `@Email` / RFC email requirement. Nullable free string. |
+| **C-06** | Relational persistence | **Spring Data JPA** is the **primary** stack for `ticket` / `ticket_comment`. **Preference order:** (1) **derived** query methods (`findBy…`, `ContainingIgnoreCase`, `OrderBy…`); (2) **`JpaSpecificationExecutor`** + `Specification` for optional filters/sort/fetch (no hand-built JPQL strings or `EntityManager` repository impls); (3) **`@EntityGraph`** for fetch plans; (4) **`@Query`** only when unavoidable — today **`nextval('ticket_number_seq')`** (native). Services use repositories only — not `JdbcTemplate` for ticket I/O. **Exception:** `ticket_vector_chunk` via `rag` `VectorChunkStore` (JDBC/pgvector). |
 
 Specs/rules that still said `URGENT` as a first-class enum or `@Email` on assignee are aligned to this table.
 
@@ -141,35 +142,25 @@ backend/
   .mvn/wrapper/
   mvnw
   mvnw.cmd
-  docker-compose.yml          # local PostgreSQL (+ pgvector image); not the test DB
-  .env.example                # variable NAMES only
-  README.md                   # how to run backend only (optional, short)
+  .env.example                # datasource + Ollama variable NAMES only (no in-repo Compose)
+  README.md                   # run against operator-managed Postgres/pgvector + local Ollama
   src/main/java/com/ticketmanagement/
     Application.java
-    api/
-      common/                 # envelopes, page meta, error body records
-      ticket/                 # TicketController, request/response records
-      advice/                 # RestExceptionHandler
-    domain/
-      TicketStatus.java
-      TicketPriority.java
-      TicketCategory.java
-      TicketStatusMachine.java
-      IllegalTicketTransitionException.java
-      TicketNotFoundException.java
-    service/
-      TicketService.java
-      TicketMapper.java       # explicit DTO ↔ entity (no MapStruct)
-    persistence/
-      TicketEntity.java
-      CommentEntity.java
-      TicketRepository.java
-      CommentRepository.java
+    advice/                   # RestExceptionHandler
+    controller/               # TicketController, AiAskController
+    dto/
+      common/                 # DataResponse, PageResponse, ErrorResponse, …
+      request/                # CreateTicketRequest, UpdateTicketRequest, AskRequest, …
+      response/               # TicketDetailResponse, AskResponseData, …
+      serde/                  # TicketPriorityJsonDeserializer
+    domain/                   # enums + TicketStatusMachine (no Spring Web/JPA)
+    entity/                   # TicketEntity, CommentEntity
+    exception/                # TicketNotFoundException, IllegalTicketTransitionException, …
+    repository/               # TicketRepository, CommentRepository, TicketSpecifications
+    service/                  # TicketService, TicketMapper, AskService, TicketIngestionService
+    util/                     # TicketId, SortParser, TicketConstraints, …
     config/
-      WebCorsConfig.java
-      JacksonConfig.java      # if needed for unknown properties
-      PersistenceConfig.java  # optional
-    rag/                      # EMPTY until Phase D — do not populate early
+    rag/                      # ports, chunker, vector store, Ollama adapters (not controllers)
   src/main/resources/
     application.yml
     application-local.yml     # optional
@@ -181,27 +172,30 @@ backend/
       004-vector-chunk-table.yaml   # Phase D only
       005-vector-indexes.yaml       # Phase D only
   src/test/java/com/ticketmanagement/
-    domain/
-    service/
-    api/
-    persistence/
-    support/                  # Testcontainers base, fixtures
+    advice/ controller/ dto/ domain/ entity/ exception/
+    repository/ service/ util/ rag/ config/
+    support/                  # Testcontainers base, fixtures (mirror production package names)
 ```
 
 **Layering (must hold):**
 
 ```text
-Controller (api) → TicketService → Domain (status rules) / Repositories
+controller → service → domain (rules) / repository (+ rag ports)
 ```
 
-| Layer | May | Must not |
-|-------|-----|----------|
-| `api` | HTTP, `@Valid`, status codes, envelopes | Transition tables, JPQL, entities in JSON |
-| `domain` | Enums, SM, domain exceptions | Spring Web, JPA, `@Autowired` |
-| `service` | `@Transactional` use cases, mapping | `HttpServletRequest`, leaking entities |
-| `persistence` | Load/save, search/filter queries | Ad-hoc `UPDATE status`, SM bypass |
+| Package | Holds | Must not |
+|---------|--------|----------|
+| `controller` | REST adapters | Business rules, JPQL, entities in JSON |
+| `dto/*` | HTTP records + serde | JPA, transactions |
+| `advice` | Exception → error envelope | Business rules |
+| `domain` | Enums, state machine | Spring Web, JPA, `@Entity` |
+| `exception` | Typed failures | HTTP mapping (that is `advice`) |
+| `entity` | JPA mappings | Controllers, DTOs |
+| `repository` | Spring Data JPA | Ad-hoc status `UPDATE`; SM bypass |
+| `service` | Use cases, mappers | `HttpServletRequest`, raw SQL for tickets |
+| `util` | Pure helpers | Spring stereotypes |
 | `config` | Beans, properties | Business rules |
-| `rag` | Phase D+ only | Ticket create/notify from ask |
+| `rag` | Ingest/retrieve adapters | Ticket HTTP, ask controllers |
 
 ---
 
@@ -210,7 +204,8 @@ Controller (api) → TicketService → Domain (status rules) / Repositories
 ### 5.1 Stack (**Convention** unless marked PDF)
 
 - Java **21** (**PDF**), Jakarta (`jakarta.*`).
-- Spring Boot **3**, Spring Web MVC, Spring Data JPA.
+- Spring Boot **3**, Spring Web MVC.
+- **Spring Data JPA** (**C-06**, **Convention**): primary persistence — `JpaRepository` + `JpaSpecificationExecutor`, derived methods first, `Specification` for dynamic list/search/sort/fetch; avoid JPQL/`EntityManager` custom `*Impl` classes; native `@Query` only for sequence `nextval`; Hibernate validates against Liquibase.
 - Maven Wrapper only: `./mvnw` from `backend/`.
 - PostgreSQL (**DEC-10**); **no H2**.
 - Liquibase owns schema; `spring.jpa.hibernate.ddl-auto: validate` (or `none`).
@@ -251,7 +246,8 @@ Controller (api) → TicketService → Domain (status rules) / Repositories
 
 - Unit: domain SM (real types, **no Mockito on the machine**); services with Mockito repos.
 - Slice: MockMvc + mocked `TicketService`.
-- Integration: **Testcontainers PostgreSQL** + same Liquibase; **not** Compose Postgres; **not** a developer’s local DB.
+- Integration: **Testcontainers PostgreSQL** + same Liquibase; **not** the operator’s local Postgres used for `spring-boot:run`.
+- Local dev: point `SPRING_DATASOURCE_*` at **your** PostgreSQL (pgvector-capable) — **no** `docker-compose` or other container definitions under `backend/`.
 - Default suite: **no** live Ollama (RAG later uses doubles).
 - Run: `cd backend && ./mvnw test`.
 - After CRUD slices: follow [`commands/generate-tests.md`](commands/generate-tests.md) P0 order; review with [`commands/review-code.md`](commands/review-code.md).
@@ -294,10 +290,10 @@ Without a runnable Boot app, Maven Wrapper, and a Postgres-backed schema, later 
   - List defaults: document `app.api.page-size-default: 20`, `page-size-max: 100` as `@ConfigurationProperties` (not magic numbers in controllers).
 - **A.4 CORS (`config/WebCorsConfig`)**
   - Map `/api/**` to `http://localhost:5173`; methods `GET, POST, PATCH, OPTIONS`; **not** `*` origin as a permanent default.
-- **A.5 Docker Compose (local only)**
-  - PostgreSQL image suitable for later pgvector (e.g. `pgvector/pgvector:pg16`) so Phase D does not change the product DB.
-  - Expose 5432; credentials **only** in Compose / env, not hardcoded in Java.
-  - Compose is **not** used by `./mvnw test`.
+- **A.5 Local database (operator-managed; not in `backend/`)**
+  - **Do not** add `docker-compose.yml`, Dockerfiles, or other container orchestration under `backend/`. Postgres (with **pgvector** for Phase D+) and Ollama run in **your** existing containers or hosts.
+  - Document required env names in `.env.example` (`SPRING_DATASOURCE_URL`, `USERNAME`, `PASSWORD`; later `OLLAMA_BASE_URL`, `OLLAMA_CHAT_MODEL`). Credentials **only** in env, not hardcoded in Java.
+  - `./mvnw test` uses **Testcontainers** only — never the dev datasource URL.
 - **A.6 Liquibase Phase A (relational only)**
   - Master changelog includes **001**, **002 `pg_trgm` only** (defer `vector` extension to Phase D if you want a clean CRUD schema — **or** install `vector` early with unused extension; prefer **defer vector table**).
   - **001-ticket-tables.yaml**
@@ -347,7 +343,7 @@ Implement **B1 → B5 in order**. Do **not** PATCH `status` until Phase C (you m
 - **Create**
   - `TicketStatus`: `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED`.
   - `TicketPriority`: `LOW`, `MEDIUM`, `HIGH`, `CRITICAL` only (**C-02**). **Do not** add `URGENT` to the enum.
-  - `api` JSON: custom deserializer maps `URGENT` → `CRITICAL`; serializer always writes `CRITICAL`. Test: create/PATCH with `"priority":"URGENT"` returns `"CRITICAL"` and persists `CRITICAL`. Invalid values (e.g. `P1`) still 400.
+  - JSON (`dto.serde`): custom deserializer maps `URGENT` → `CRITICAL`; serializer always writes `CRITICAL`. Test: create/PATCH with `"priority":"URGENT"` returns `"CRITICAL"` and persists `CRITICAL`. Invalid values (e.g. `P1`) still 400.
   - `TicketCategory`: `PAYMENTS`, `SHIPMENT`, `BILLING`, `LOGIN`, `OTHER`.
   - Constants class or dedicated types: `TicketId` formatter `TKT-%d`; max lengths 500 / 100_000 / 320 / 50_000 / 100_000 from data-model §16.
   - `SortWhitelist`: `createdAt`, `updatedAt`, `priority`, `status`.
@@ -371,14 +367,13 @@ Implement **B1 → B5 in order**. Do **not** PATCH `status` until Phase C (you m
 - **`CommentEntity`**
   - Table `ticket_comment`; UUID id; `@ManyToOne` ticket; `body`; `created_at`.
 - **ID generation**
-  - On persist, allocate `nextval('ticket_number_seq')` (native query or `@Query`) and format `TKT-{n}`. Do not use UUID for ticket PK.
-- **`TicketRepository`**
-  - `Optional<TicketEntity> findById(String id)`
-  - Search/filter: parameterized `@Query` — `status = :status` AND (`title ILIKE :q OR description ILIKE :q`); **never** concatenate user input into JPQL.
-  - `Page<TicketEntity>` with `Pageable`.
-  - Priority sort: map enum order in query/`ORDER BY CASE` so `LOW < MEDIUM < HIGH < CRITICAL` ([`spec/data-model.md`](spec/data-model.md) §5.2).
-- **`CommentRepository`**
-  - Find by ticket ordered by `createdAt` ASC — or fetch join on detail query.
+  - On persist, allocate `nextval('ticket_number_seq')` via repository **native `@Query`** (only allowed native) and format `TKT-{n}`. Do not use UUID for ticket PK.
+- **`TicketRepository`** extends `JpaRepository<TicketEntity, String>` **and** `JpaSpecificationExecutor<TicketEntity>` (**C-06**)
+  - Detail with comments: `findOne(Specification)` with fetch join spec (or `@EntityGraph`) — **not** JPQL `JOIN FETCH` unless spec agrees.
+  - List/search: `findAll(Specification, Pageable)` — `Specification` for optional `status`, keyword `q` on **title + description** (bound parameters); priority sort via Criteria `CASE` inside the spec, not string-built JPQL.
+  - Default interface methods may compose specs (`search`, `findWithCommentsById`) — still no `*CustomImpl` + `EntityManager`.
+- **`CommentRepository`** extends `JpaRepository<CommentEntity, UUID>`
+  - **Derived:** `findByTicket_IdOrderByCreatedAtAsc` (no `@Query`).
 - **Must not:** `@Modifying` status updates.
 
 **Tests (integration, Testcontainers)**
@@ -396,7 +391,7 @@ Implement **B1 → B5 in order**. Do **not** PATCH `status` until Phase C (you m
 
 **Why:** HTTP must not see JPA graphs. Bean Validation matches data-model §16. Services own transactions.
 
-**Request records (`api`)**
+**Request records (`dto.request`)**
 
 - `CreateTicketRequest`: `title` `@NotBlank` `@Size(max=500)`; `description` `@Size(max=100000)` optional; `priority` optional; `assignee` optional `@Size(max=320)` **only** (**C-05**, no `@Email`); `category` optional. **No `status`.**
 - `UpdateTicketRequest` (Phase B): optional `title`, `description`, `priority`, `assignee`, `category`, `resolutionNotes` — **no `status` yet**.
@@ -643,7 +638,7 @@ Ollama **base URL** from env only. Chat model id = **C-04**.
 | `RagChunkMetadata` | PDF keys `ticketId`, `status`, `priority`, `assignee`, `category` + technical `chunkIndex`, `ingestedAt`. |
 | `TicketChunker` | Hybrid: section + comment-atomic blocks; overflow fixed-size + overlap; min-chars merge **within section only**, never across comments. |
 | `EmbeddingPort` | Spring AI embedding; **same model** as ask query. |
-| `VectorChunkStore` | Delete-all-for-ticket then insert (**DEC** re-ingest). |
+| `VectorChunkStore` | Delete-all-for-ticket then insert (**DEC** re-ingest). **Not** Spring Data JPA — JDBC/pgvector (or Spring AI adapter) behind this port per **C-06**. Ticket loads for ingest still use `TicketRepository`. |
 | `TicketIngestionService` | Orchestrate load → assemble → chunk → embed → write. |
 
 **Triggers after successful DB commit** (**DEC-18** sync): create; field update; comment add; **any status change including close** (**DEC-01 B**, **DEC-18** status-only re-ingest).
@@ -722,7 +717,7 @@ Ollama **base URL** from env only. Chat model id = **C-04**.
 5. Else: generate **only** from retrieved excerpts + ticket ids; citations = ids from **retrieval**, deduped, **relevance order** (**DEC-17**). Strip model-guessed ids.
 6. **Non-agentic:** no ticket writes, no tools, no notify.
 
-Thin `AiAskController` in `api`.
+Thin `AiAskController` in `controller`.
 
 ### 12.3 Tests — Band A only in `./mvnw test` ([`spec/test-strategy.md`](spec/test-strategy.md) §6.2)
 
@@ -808,8 +803,8 @@ After each phase:
 
 ## 16. Suggested implementation order (one-line index)
 
-1. **C-01, C-02, C-03, C-05 agreed** (2026-10-04). **C-04** chat model is env/config (`OLLAMA_CHAT_MODEL`, example `llama3.2`).
-2. Phase **A** — Maven, yml, Compose, Liquibase tickets, Testcontainers smoke.
+1. **C-01, C-02, C-03, C-05, C-06 agreed** (2026-10-04). **C-04** chat model is env/config (`OLLAMA_CHAT_MODEL`, example `llama3.2`). **C-06** Spring Data JPA primary for relational persistence.
+2. Phase **A** — Maven, yml, `.env.example`, Liquibase tickets, Testcontainers smoke (dev DB external).
 3. Phase **B1** — enums, constants, sort whitelist.
 4. Phase **B2** — entities, repositories, search SQL, repo tests.
 5. Phase **B3** — DTOs, mapper, `TicketService` CRUD, service tests.
@@ -828,9 +823,9 @@ After each phase:
 
 | Phase | Status | Tests | Review-code | Notes |
 |-------|--------|-------|-------------|-------|
-| A Setup | complete | smoke green | n/a (scaffold) | Boot 3.5.16; Liquibase 001–003; pg_trgm only |
+| A Setup | complete | smoke green | n/a (scaffold) | Boot 3.5.16; Liquibase 001–003; pg_trgm only; dev Postgres/Ollama external to `backend/` |
 | B1 Enums | complete | unit green | Pass (with B) | C-02: `CRITICAL`; JSON `URGENT`→`CRITICAL` |
-| B2 Persistence | complete | IT green | Pass (with B) | constructor `EntityManager`; search/filter; no HTTP |
+| B2 Persistence | complete | IT green | Pass (with B) | Spring Data JPA + `JpaSpecificationExecutor`; no custom `*Impl` |
 | B3 Service CRUD | complete | unit green | Pass (with B) | no status PATCH |
 | B4 HTTP CRUD | complete | slice+IT green; generate-tests P0–P2 CRUD | **Pass** | list `size` default from `ApiProperties`; 500 logged, body generic; no status PATCH |
 | B5 Restart | complete | IT green | Pass (with B) | DirtiesContext + same Testcontainers DB |
@@ -848,7 +843,7 @@ After each phase:
 |------|------|
 | 2026-10-04 | Initial backend-only plan: CRUD + SM first; RAG gated on Phase C complete and user confirmation; code under `backend/`. |
 | 2026-10-04 | Confirmed **C-01** `com.ticketmanagement`; **C-02** `CRITICAL` + inbound `URGENT` mapped; **C-03** latest Boot 3 GA; **C-05** assignee `@Size(max=320)` only. **C-04** chat model still deferred. |
-| 2026-10-04 | Phase **A** implemented: `backend/` Spring Boot **3.5.16**, Maven Wrapper, Compose `pgvector/pgvector:pg16`, Liquibase ticket tables + relational indexes, Testcontainers smoke. |
+| 2026-10-04 | Phase **A** implemented: `backend/` Spring Boot **3.5.16**, Maven Wrapper, Liquibase ticket tables + relational indexes, Testcontainers smoke. |
 | 2026-10-04 | Phase **B1** implemented: domain enums/constants/sort parser; API Jackson maps `URGENT`→`CRITICAL`. |
 | 2026-10-04 | Phase **B2** implemented: JPA ticket/comment entities, sequence ids, parameterized search, Testcontainers repository tests. |
 | 2026-10-04 | Phase **B3–B4** implemented: ticket CRUD service/DTOs, REST `/api/v1/tickets`, envelopes, MockMvc slice + API integration tests (no status PATCH). |
@@ -859,3 +854,7 @@ After each phase:
 | 2026-10-04 | Phase **D** implemented: PgVector `ticket_vector_chunk` + HNSW; hybrid chunker; ingest service with embedding doubles. TicketService hooks and ask API not started. |
 | 2026-10-04 | Phases **E** and **F** implemented: after-commit ingest from `TicketService`; `POST /api/ai/ask` and `/api/v1/ai/ask`; Band A tests with embedding/generation doubles. Live Ollama still not wired. |
 | 2026-10-04 | Spring AI **1.1.4** Ollama adapters wired (`EmbeddingPort` / `GenerationPort`). Tests keep `spring.ai.model.*=none` + doubles. No Ollama Docker. |
+| 2026-10-04 | Plan: **no** in-repo Docker/Compose under `backend/` — dev Postgres/pgvector and Ollama are operator-managed; tests remain Testcontainers-only. |
+| 2026-10-04 | **C-06:** Spring Data JPA primary for relational ticket persistence; vector chunk store remains `rag` port + JDBC exception. |
+| 2026-10-04 | **C-06** tightened: derived queries → `Specification` → `@EntityGraph` → minimal native; removed custom repository `EntityManager` JPQL pattern from target implementation. |
+| 2026-10-04 | Backend packages: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`, `service`, `rag`, `config` (replaced `api/` + `persistence/` split). |

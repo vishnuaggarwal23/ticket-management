@@ -1111,7 +1111,7 @@ Demonstrate **reusable AI instructions** across the project (**PDF**).
 |----|-------------|
 | IR-01 | Java 21 + Spring Boot + Spring AI |
 | IR-02 | REST API for tickets and ask |
-| IR-03 | PostgreSQL persistence — dev, runtime, Testcontainers tests (**DEC-10**) |
+| IR-03 | PostgreSQL persistence — dev, runtime, Testcontainers tests (**DEC-10**); relational access via **Spring Data JPA** (**C-06**, `plan.md` §3) |
 | IR-04 | PgVector + Ollama `nomic-embed-text` (**DEC-09**) |
 | IR-05 | React/Next or equivalent UI |
 | IR-06 | Complete PDF spec artefact set before implementation (**PDF** lists ten filenames; **ten** markdown files in `spec/` — `ui-flow.md` implemented as `ui-flow.md`; child-spec table) |

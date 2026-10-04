@@ -1,21 +1,28 @@
 package com.ticketmanagement.rag;
 
-import com.ticketmanagement.api.ticket.CreateCommentRequest;
-import com.ticketmanagement.api.ticket.CreateTicketRequest;
-import com.ticketmanagement.api.ticket.TicketDetailResponse;
-import com.ticketmanagement.api.ticket.UpdateTicketRequest;
+import com.ticketmanagement.domain.TicketCategory;
+import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
-import com.ticketmanagement.persistence.CommentEntity;
-import com.ticketmanagement.persistence.CommentRepository;
+import com.ticketmanagement.dto.request.CreateCommentRequest;
+import com.ticketmanagement.dto.request.CreateTicketRequest;
+import com.ticketmanagement.dto.request.UpdateTicketRequest;
+import com.ticketmanagement.dto.response.TicketDetailResponse;
+import com.ticketmanagement.entity.CommentEntity;
+import com.ticketmanagement.exception.EmptyPatchException;
+import com.ticketmanagement.exception.IllegalTicketTransitionException;
+import com.ticketmanagement.repository.CommentRepository;
 import com.ticketmanagement.service.TicketService;
 import com.ticketmanagement.support.AbstractPostgresIntegrationTest;
+import com.ticketmanagement.support.ChunkMetadataAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TicketIngestionHookIT extends AbstractPostgresIntegrationTest {
 
@@ -27,6 +34,62 @@ class TicketIngestionHookIT extends AbstractPostgresIntegrationTest {
 
     @Autowired
     private CommentRepository comments;
+
+    @Test
+    void createTriggersInitialIngestWithMetadata() {
+        TicketDetailResponse created = tickets.create(
+                new CreateTicketRequest(
+                        "Create hook",
+                        "initial ingest body unique phrase",
+                        TicketPriority.HIGH,
+                        "agent@example.com",
+                        TicketCategory.PAYMENTS));
+        List<VectorChunkStore.StoredChunk> chunks = store.findByTicketId(created.id());
+        assertThat(chunks).isNotEmpty();
+        for (VectorChunkStore.StoredChunk chunk : chunks) {
+            ChunkMetadataAssertions.assertPdfAndTechnicalMetadataKeys(chunk.metadataJson(), created.id());
+            assertThat(chunk.metadataJson()).contains("\"priority\":\"HIGH\"");
+            assertThat(chunk.metadataJson()).contains("\"assignee\":\"agent@example.com\"");
+            assertThat(chunk.metadataJson()).contains("\"category\":\"PAYMENTS\"");
+        }
+    }
+
+    @Test
+    void illegalStatusTransitionDoesNotReIngestOrChangeChunks() {
+        TicketDetailResponse created = tickets.create(
+                new CreateTicketRequest("Illegal hook", "body for illegal transition ingest test", null, null, null));
+        List<UUID> chunkIdsBefore = store.findByTicketId(created.id()).stream()
+                .map(VectorChunkStore.StoredChunk::id)
+                .toList();
+        assertThat(chunkIdsBefore).isNotEmpty();
+
+        assertThatThrownBy(() -> tickets.updateFields(created.id(), status(TicketStatus.CLOSED)))
+                .isInstanceOf(IllegalTicketTransitionException.class);
+
+        List<UUID> chunkIdsAfter = store.findByTicketId(created.id()).stream()
+                .map(VectorChunkStore.StoredChunk::id)
+                .toList();
+        assertThat(chunkIdsAfter).containsExactlyElementsOf(chunkIdsBefore);
+    }
+
+    @Test
+    void emptyPatchDoesNotReplaceVectorChunks() {
+        TicketDetailResponse created = tickets.create(
+                new CreateTicketRequest("Empty patch hook", "content before empty patch", null, null, null));
+        List<UUID> chunkIdsBefore = store.findByTicketId(created.id()).stream()
+                .map(VectorChunkStore.StoredChunk::id)
+                .toList();
+
+        assertThatThrownBy(() -> tickets.updateFields(
+                created.id(),
+                new UpdateTicketRequest(null, null, null, null, null, null, null)))
+                .isInstanceOf(EmptyPatchException.class);
+
+        List<UUID> chunkIdsAfter = store.findByTicketId(created.id()).stream()
+                .map(VectorChunkStore.StoredChunk::id)
+                .toList();
+        assertThat(chunkIdsAfter).containsExactlyElementsOf(chunkIdsBefore);
+    }
 
     @Test
     void updateDescriptionReplacesStoredContent() {

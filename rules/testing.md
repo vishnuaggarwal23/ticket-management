@@ -81,9 +81,10 @@ Detail: [`spec/test-strategy.md`](../spec/test-strategy.md) **§5** (T1–T5, X1
 - These tests are **necessary but not sufficient**. Full **API testing** (envelopes, pagination, versioned paths, persistence through HTTP) is required in **API testing** below.
 - Controllers stay thin: slice tests prove mapping and `@Valid` — **not** the transition table (domain) and **not** JPQL (repository).
 
-### Repositories (persistence)
+### Repositories (persistence — Spring Data JPA)
 
-- **Kind:** integration. **PostgreSQL via Testcontainers**, Liquibase applied. Do **not** mock `TicketRepository` / `CommentRepository` / `EntityManager` to fake SQL.
+- **Kind:** integration. **PostgreSQL via Testcontainers**, Liquibase applied. Exercise real **`JpaRepository`** / `@Query` / custom fragment SQL — do **not** mock `TicketRepository` / `CommentRepository` to fake persistence.
+- Prefer `@DataJpaTest` (or full `@SpringBootTest`) for repository-only suites; use `EntityManager` in tests only for assertions/fixtures, not as a substitute for production repository APIs.
 - **Positive:** insert and find by id (`TKT-{n}` format); keyword search on **title + description** (DEC-08); filter by status; comments ordered by `created_at` asc; field persistence (not status-machine rules).
 - **Schema:** Liquibase changelogs include indexes from [`spec/data-model.md`](../spec/data-model.md) §14.5; optional assertion **AC-DM-08** when adding migration tests (index names exist after migrate).
 - **Negative:** missing id → empty `Optional`; search/filter with no rows → empty collection, not an error; constraint violations the schema actually enforces (not null, unique) when those exist in Liquibase.
@@ -341,6 +342,7 @@ See [`spec/test-strategy.md`](../spec/test-strategy.md) §9.
 | 2026-10-04 | SDD expansion: map tests to `AC-CORE-*` / `AC-FEAT-*`; RAG retrieval vs golden-answer boundary. |
 | 2026-10-04 | Synced with expanded [`spec/requirements.md`](../spec/requirements.md) and `spec/test-strategy.md` role. |
 | 2026-10-04 | Added revision history section. |
+| 2026-10-04 | Repository tests: Spring Data JPA integration emphasis (**C-06**). |
 | 2026-10-04 | Field/search assertions use agreed [`spec/data-model.md`](../spec/data-model.md); Liquibase index catalog §14.5 / AC-DM-08. |
 | 2026-10-04 | AC traceability via [`spec/requirements.md`](../spec/requirements.md) §8–§9 when `test-strategy.md` absent. |
 | 2026-10-04 | State-machine negative set: [`spec/state-machine.md`](../spec/state-machine.md) §5.4 matrix. |

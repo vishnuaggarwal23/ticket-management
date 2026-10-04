@@ -22,7 +22,7 @@ Backend coding standards for the support ticket management application.
 
 - Java **21**, Spring Boot **3** (major version only — do not pin a patch)
 - **Maven Wrapper** — run `./mvnw` (or `mvnw.cmd`); do not rely on a locally installed Maven
-- **PostgreSQL** as the ticket system of record; **PgVector** in the same instance for embeddings; **Liquibase** for all schema
+- **PostgreSQL** as the ticket system of record; **Spring Data JPA** as the primary relational access layer; **PgVector** in the same instance for embeddings; **Liquibase** for all schema
 - **Spring AI** for embeddings and chat; **Ollama** as the initial provider **via configuration only**
 - Jakarta APIs (`jakarta.*`), not `javax.*`
 
@@ -35,8 +35,9 @@ Do not assume a finalized Spring Boot patch, Spring AI version, PostgreSQL/PgVec
 | Language | Java 21 |
 | App | Single Spring Boot 3 monolith (`@SpringBootApplication`) |
 | HTTP | Spring Web MVC, JSON REST |
-| Persistence | Spring Data JPA + PostgreSQL |
+| Persistence | **Spring Data JPA** (primary) on **PostgreSQL** — derived queries first, then `JpaSpecificationExecutor`, then `@EntityGraph`; `@Query` (native/JPQL) only when unavoidable; **no** hand-built JPQL in `*CustomImpl` + `EntityManager` |
 | Schema | Liquibase changelogs; Hibernate DDL is **not** the source of truth (`ddl-auto` `validate` or `none`) |
+| Non-JPA I/O | **Narrow exception:** `ticket_vector_chunk` cosine search/upsert may use `JdbcTemplate` or Spring AI behind a `rag` port — not a second persistence style for tickets/comments |
 | Validation | Bean Validation on API DTOs (`jakarta.validation`) |
 | Config | `application.yml` + environment variables; typed `@ConfigurationProperties` for RAG |
 | Time | `java.time` (`Instant` for stored timestamps); no `java.util.Date` |
@@ -47,42 +48,53 @@ Do not add MapStruct, Lombok, QueryDSL, or extra web stacks unless a spec agrees
 
 One root package under `src/main/java` (do not invent a second Spring Boot application). Pick one root (e.g. `com.example.tickets`) and use it consistently — **do not** commit a second package root.
 
-Layout is **by layer**, matching [`spec/architecture.md`](../spec/architecture.md) §9:
+Layout is **by technical role** (one package per kind of type), matching [`spec/architecture.md`](../spec/architecture.md) §9 — so you can open `controller/`, `service/`, `entity/`, etc. and see everything at a glance:
 
 ```
 {root}/
   Application.java
-  api/            # controllers, request/response records, @ControllerAdvice
-  domain/         # status enum, state machine, domain exceptions (no Spring Web, no JPA)
-  service/        # transactional application services; mapping DTO ↔ domain/entity
-  persistence/    # JPA entities, Spring Data repositories
-  rag/            # document build, chunk/embed ports, retrieval, ask orchestration
-  config/         # @Configuration, @ConfigurationProperties, Spring AI wiring
+  advice/           # @RestControllerAdvice (error mapping)
+  controller/       # all @RestController types (tickets, ask, …)
+  dto/
+    common/         # envelopes: DataResponse, PageResponse, ErrorResponse, …
+    request/        # inbound JSON records (@Valid)
+    response/       # outbound JSON records
+    serde/          # Jackson deserializers/serializers for DTOs
+  domain/           # enums, state machine, pure domain rules (no Spring Web, no JPA)
+  entity/           # JPA @Entity types only
+  exception/        # application/domain exceptions (mapped in advice/)
+  repository/       # Spring Data JPA interfaces + Specification helpers
+  service/          # @Service use cases, @Component mappers; includes AskService / TicketIngestionService
+  util/             # small shared helpers (TicketId, SortParser, constraints constants, …)
+  rag/              # RAG ports, adapters, chunking, vector store impl (not HTTP controllers)
+  config/           # @Configuration, @ConfigurationProperties, Spring AI wiring
 ```
 
-Do **not** put all types in `{root}` or in a single layer package. Group files by **layer first**, then by **logical concern** when more than one concern exists in that layer:
+**Rules:**
 
-- Ticket HTTP vs ask HTTP: `api.ticket` vs `api.ask` (or equivalent); shared advice stays in `api`
-- Ticket vs comment persistence: `persistence` subpackages when both entity sets exist
-- RAG ingest vs retrieve/ask types: subpackages under `rag/` when those type sets grow
-
-Use subpackages when a type set grows (`api.ticket`, `persistence.ticket`). Do not invent `web`, `dao`, `manager`, or a parallel `controller` tree. Do not over-split (one class per package with no extra types coming). Keep the **ask** path in `rag/` + a thin controller in `api/` — not a second microservice.
+- **Do not** mix controllers and DTOs in one package (`api.ticket` style is deprecated).
+- **Do not** put entities and repositories in one package — `entity/` vs `repository/`.
+- **Do not** put exceptions in `domain/` — use `exception/` so failures are easy to find.
+- HTTP stays thin: `controller/` → `service/` → `repository/` / `rag` ports.
+- Tests use the **same package names** under `src/test/java` (`controller`, `service`, `repository`, …).
+- Do not invent parallel trees (`web`, `dao`, `manager`). Subpackages under `dto/` and `rag/` are allowed when a group grows; avoid one-class micro-packages.
 
 The main class stays empty of business logic.
 
 ## Layering and call flow
 
 ```
-Controller (api) → Application service → Domain (rules) / Repository (I/O)
+Controller → Application service → Domain (rules) / Repository (I/O)
                                       → RAG port (ingest or ask)
 ```
 
 | Layer | May | Must not |
 |-------|-----|----------|
-| **api** | HTTP mapping, `@Valid`, status codes, DTO mapping calls | Status-machine rules, JPQL, embedding math, leaking entities |
+| **controller** (+ **dto**) | HTTP mapping, `@Valid`, status codes; calls services | Status-machine rules, JPQL, embedding math, leaking entities |
+| **advice** | Map exceptions → error envelope | Business rules |
 | **domain** | Ticket status rules, domain errors, pure functions | `@RestController`, `@Entity`, `@Autowired`, JDBC |
-| **service** | `@Transactional` use cases, orchestrate repos + domain + RAG hooks | HTTP types (`HttpServletRequest`), persistence-entity JSON |
-| **persistence** | Load/save, query by keyword/status | Transition status by ad-hoc `UPDATE`, skip the state machine |
+| **service** | `@Transactional` use cases; **inject repositories** (and RAG ports), not raw SQL for tickets | HTTP types (`HttpServletRequest`); `JdbcTemplate` / `EntityManager` for ticket CRUD; persistence-entity JSON |
+| **entity** / **repository** | Entities map tables; repos load/save, keyword/status queries | `JdbcTemplate` on ticket tables; ad-hoc `UPDATE status`; skip the state machine |
 | **rag** | Build knowledge text, retrieve, generate from retrieved context only | Create tickets, notify, tool-chain from ask |
 | **config** | Beans and property binding | Business rules |
 
@@ -94,7 +106,8 @@ Keep HTTP adapters thin. Repositories must not apply ad-hoc status updates.
 - Readable names: `TicketService`, `TicketStatus`, `IllegalTicketTransitionException`. No opaque abbreviations (`TktSvc`, `SM`).
 - Prefer `record` for API DTOs and small immutable values. Use `enum` for `TicketStatus`, `TicketPriority`, `TicketCategory` per [`spec/data-model.md`](../spec/data-model.md) §5. Do not use `String` for those in domain or persistence. `TicketPriority` has **`CRITICAL`** (not `URGENT`); accept JSON `"URGENT"` only via an **API-layer** deserializer that maps it to `CRITICAL`.
 - Public application APIs must not return `null`. Use `Optional` for a missing ticket; empty `List`/`Page` for empty collections.
-- Prefer `final` on injected collaborators. Keep methods short; extract when a service method both mutates a ticket and implements transition tables.
+- Prefer `final` on injected collaborators. Name them by role (`ticketService`, `ticketRepository`), not as if they were collections (`tickets` for a single repository or service).
+- Keep methods short; extract patch application, after-commit scheduling, and ingest chunk assembly into focused types or private methods when orchestration grows.
 - Java 21 is fine (`record`, `switch`, text blocks for JPQL or prompts held in config/code as agreed). Do not use `sun.*` APIs.
 - Log with SLF4J. Include ticket id when known. Never log secrets, passwords, API keys, raw prompts, or full model output by default.
 
@@ -104,8 +117,8 @@ Keep HTTP adapters thin. Repositories must not apply ad-hoc status updates.
 public TicketEntity get(String id) { return repo.findById(id).orElse(null); }
 
 // ✅ GOOD — constructor, Optional, domain-safe lookup
-public TicketService(TicketRepository tickets) { this.tickets = tickets; }
-public Optional<Ticket> findById(TicketId id) { return tickets.findById(id); }
+public TicketService(TicketRepository ticketRepository) { this.ticketRepository = ticketRepository; }
+public Optional<Ticket> findById(TicketId id) { return ticketRepository.findById(id); }
 ```
 
 ## Configuration
@@ -113,7 +126,7 @@ public Optional<Ticket> findById(TicketId id) { return tickets.findById(id); }
 - Externalize JDBC URL, credentials, Ollama/base URLs, model ids, RAG **top-K**, similarity threshold, and chunk size limits. No magic numbers in Java for retrieval.
 - Bind RAG settings with `@ConfigurationProperties` (prefix such as `rag.retrieval`). Validate with `@Validated` on that properties class where practical.
 - Committed examples list **environment variable names only** (`.env.example`). Never commit passwords, keys, or machine-specific absolute paths.
-- Spring profiles: `local` / default for Docker Compose Postgres; tests use Testcontainers (see testing rules). Do not point the default test suite at a developer’s already-running database.
+- Spring profiles: `local` / default for operator-managed Postgres (env vars); tests use Testcontainers (see testing rules). Do not point the default test suite at a developer’s already-running database.
 - Set `spring.jpa.open-in-view=false`. Do not use Open Session in View to lazy-load in controllers.
 - CORS for the local Vite dev server is an implementation convenience, not an assessment requirement. Example (adjust port to your Vite config):
 
@@ -146,9 +159,9 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 
 ## DTOs
 
-- Request and response types are **records** in `api` (or `api.dto`). They are the HTTP contract, not JPA entities.
+- Request and response types are **records** in `dto.request` / `dto.response` (shared envelopes in `dto.common`). They are the HTTP contract, not JPA entities.
 - Put Bean Validation on **request** records to match [`spec/data-model.md`](../spec/data-model.md) §16 (e.g. `@NotBlank` on create `title`, `@Size` limits). Assignee: `@Size(max = 320)` only — **not** `@Email`. Do not add required fields beyond that spec.
-- Map explicitly in the service or a dedicated mapper type in `api`/`service`. No bidirectional JPA graphs in JSON.
+- Map explicitly in the service or a dedicated mapper in `service`. No bidirectional JPA graphs in JSON.
 - Ask response must represent grounded answer + cited ticket ids **or** honest no-match per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** agreed). Do not add **confidence** or other **Reference** ask fields ([`spec/requirements.md`](../spec/requirements.md) **§2.3**).
 - Do not return persistence entities from controllers. Do not put Jackson annotations on entities to “make the API work.”
 
@@ -168,10 +181,21 @@ Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machin
 - Invalid transitions throw a domain exception; service must not persist the illegal status.
 - Domain exceptions are unchecked and meaningful (`IllegalTicketTransitionException`, not-found). They must not include SQL, stack traces, or secrets in `getMessage()`.
 
-## Repositories
+## Repositories (Spring Data JPA — use extensively)
 
-- Spring Data JPA interfaces in `persistence`. Naming: `TicketRepository`, `CommentRepository`.
-- Methods express queries (derived names or `@Query` with **parameters**). Never concatenate user input into JPQL/SQL.
+Ticket and comment **read/write paths go through Spring Data JPA** unless a spec documents a narrow exception (vector similarity is **not** ticket persistence — see `rag/` + `rules/rag-vector-store.md`).
+
+**Preference order (C-06):**
+
+1. **Derived** query methods (`findByStatus`, `findByTicket_IdOrderByCreatedAtAsc`, `ContainingIgnoreCase`, …).
+2. **`JpaSpecificationExecutor`** + reusable `Specification` types for optional filters, sort (including enum order), and fetch joins — not string-concatenated JPQL in a `*CustomImpl`.
+3. **`@EntityGraph`** on repository methods when a fetch plan is static.
+4. **`@Query`** (JPQL or native) **only when** derived/spec APIs cannot express the access (e.g. `SELECT nextval('ticket_number_seq')`).
+
+- Repository interfaces in `repository`, extending `JpaRepository<Entity, Id>` and `JpaSpecificationExecutor` when dynamic queries are needed. Naming: `TicketRepository`, `CommentRepository`.
+- **Do not** add `TicketRepositoryCustomImpl`-style classes that build JPQL with `EntityManager.createQuery`.
+- Services call repository interfaces; they do **not** embed JPQL/SQL strings or inject `JdbcTemplate` for `ticket` / `ticket_comment`.
+- Methods express queries with **parameters**. Never concatenate user input into JPQL/SQL.
 - Keyword search and filter-by-status belong here as queries the service calls — not as business-rule methods that change status.
 - Keyword `q` searches **title and description** only (DEC-08; [`spec/data-model.md`](../spec/data-model.md) §15.2; `rules/api-standards.md`).
 - No `@Modifying` query that sets `status` except through the same path as the state machine (prefer loading the entity and letting the service apply a legal transition).
@@ -179,16 +203,17 @@ Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machin
 
 ## Entities
 
-- JPA entities live only in `persistence`. They map **1:1 with Liquibase** tables/columns. Explicit `@Table` / `@Column` names matching the changelog; do not let undocumented Hibernate naming be the schema.
+- JPA entities live only in `entity`. They map **1:1 with Liquibase** tables/columns. Explicit `@Table` / `@Column` names matching the changelog; do not let undocumented Hibernate naming be the schema.
 - Tables: `ticket`, `ticket_comment`, `ticket_vector_chunk` ([`spec/data-model.md`](../spec/data-model.md) §6, §8, §14). Ticket PK `id` is `VARCHAR` `TKT-{n}`; comment PK `UUID`; `resolution_notes` on `ticket`.
 - Identity, associations, and nullability follow [`spec/data-model.md`](../spec/data-model.md). All indexes in §14.5 must appear in Liquibase (`003-ticket-indexes`, `005-vector-indexes`, extensions in `002`).
 - No state-machine tables inside entity setters. A setter that blindly does `this.status = next` is incorrect if it skips domain rules.
 - Prefer `Instant` + timezone-safe mapping. Do not use EAGER graphs that load the entire comment history unless the use case needs it; lazy + explicit fetch in queries is preferred.
-- Vector/chunk tables are persistence of **derived** RAG data, not the ticket source of truth. Schema for `vector` columns must match the agreed embedding dimension **once that model is agreed**.
+- **`ticket` and `ticket_comment` are JPA-mapped entities.** Do not add parallel DAOs or JDBC repositories for the same tables.
+- `ticket_vector_chunk` is **derived** RAG storage. It may stay off the JPA entity graph (e.g. `JdbcVectorChunkStore` in `rag/`) when `vector` operators are easier in SQL; Liquibase still owns the table ([`spec/data-model.md`](../spec/data-model.md) §8).
 
 ## Error handling
 
-- `@RestControllerAdvice` in `api` maps exceptions onto the **error envelope** in `rules/api-standards.md`:
+- `@RestControllerAdvice` in `advice` maps `exception` types onto the **error envelope** in `rules/api-standards.md`:
   - Bean Validation → 400 `VALIDATION_ERROR` (field-level `details`)
   - not found → 404 `NOT_FOUND`
   - illegal transition → 409 `ILLEGAL_TRANSITION`
@@ -238,3 +263,6 @@ Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machin
 | 2026-10-04 | **DEC-02** agreed; **Reference** ask fields per requirements §2.3. |
 | 2026-10-04 | `TicketPriority` **CRITICAL**; JSON `URGENT` mapped in `api`; assignee `@Size(max=320)`. |
 | 2026-10-04 | Packaging: group by layer then logical concern; do not dump all types in one package. |
+| 2026-10-04 | **Spring Data JPA primary** for tickets/comments; custom repository fragments; vector chunk I/O exception in `rag/`. |
+| 2026-10-04 | **C-06** preference ladder: derived → `Specification` → `@EntityGraph` → minimal `@Query`; no `*CustomImpl` JPQL. |
+| 2026-10-04 | Package layout: `controller`, `dto/*`, `entity`, `repository`, `exception`, `util`, `advice`, `service`, `rag`, `config`. |

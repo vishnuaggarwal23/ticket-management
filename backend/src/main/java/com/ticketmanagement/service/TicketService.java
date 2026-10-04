@@ -1,27 +1,26 @@
 package com.ticketmanagement.service;
 
-import com.ticketmanagement.api.common.PageMeta;
-import com.ticketmanagement.api.common.PageResponse;
-import com.ticketmanagement.api.ticket.CommentResponse;
-import com.ticketmanagement.api.ticket.CreateCommentRequest;
-import com.ticketmanagement.api.ticket.CreateTicketRequest;
-import com.ticketmanagement.api.ticket.TicketDetailResponse;
-import com.ticketmanagement.api.ticket.TicketSummaryResponse;
-import com.ticketmanagement.api.ticket.UpdateTicketRequest;
 import com.ticketmanagement.config.ApiProperties;
-import com.ticketmanagement.domain.EmptyPatchException;
-import com.ticketmanagement.domain.SortParser;
-import com.ticketmanagement.domain.TicketId;
-import com.ticketmanagement.domain.TicketNotFoundException;
 import com.ticketmanagement.domain.TicketPriority;
-import com.ticketmanagement.domain.TicketSort;
 import com.ticketmanagement.domain.TicketStatus;
 import com.ticketmanagement.domain.TicketStatusMachine;
-import com.ticketmanagement.domain.TicketValidationException;
-import com.ticketmanagement.persistence.CommentEntity;
-import com.ticketmanagement.persistence.TicketEntity;
-import com.ticketmanagement.persistence.TicketRepository;
-import com.ticketmanagement.rag.TicketIngestionService;
+import com.ticketmanagement.dto.common.PageMeta;
+import com.ticketmanagement.dto.common.PageResponse;
+import com.ticketmanagement.dto.request.CreateCommentRequest;
+import com.ticketmanagement.dto.request.CreateTicketRequest;
+import com.ticketmanagement.dto.request.UpdateTicketRequest;
+import com.ticketmanagement.dto.response.CommentResponse;
+import com.ticketmanagement.dto.response.TicketDetailResponse;
+import com.ticketmanagement.dto.response.TicketSummaryResponse;
+import com.ticketmanagement.entity.CommentEntity;
+import com.ticketmanagement.entity.TicketEntity;
+import com.ticketmanagement.exception.EmptyPatchException;
+import com.ticketmanagement.exception.TicketNotFoundException;
+import com.ticketmanagement.exception.TicketValidationException;
+import com.ticketmanagement.repository.TicketRepository;
+import com.ticketmanagement.util.SortParser;
+import com.ticketmanagement.util.TicketId;
+import com.ticketmanagement.util.TicketSort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -29,32 +28,30 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 public class TicketService {
 
     private static final Logger log = LoggerFactory.getLogger(TicketService.class);
 
-    private final TicketRepository tickets;
-    private final TicketMapper mapper;
+    private final TicketRepository ticketRepository;
+    private final TicketMapper ticketMapper;
     private final ApiProperties apiProperties;
-    private final TicketStatusMachine statusMachine;
-    private final TicketIngestionService ingestion;
+    private final TicketPatchApplicator patchApplicator;
+    private final TicketIngestionService ingestionService;
 
     public TicketService(
-            TicketRepository tickets,
-            TicketMapper mapper,
+            TicketRepository ticketRepository,
+            TicketMapper ticketMapper,
             ApiProperties apiProperties,
             TicketStatusMachine statusMachine,
-            TicketIngestionService ingestion
+            TicketIngestionService ingestionService
     ) {
-        this.tickets = tickets;
-        this.mapper = mapper;
+        this.ticketRepository = ticketRepository;
+        this.ticketMapper = ticketMapper;
         this.apiProperties = apiProperties;
-        this.statusMachine = statusMachine;
-        this.ingestion = ingestion;
+        this.patchApplicator = new TicketPatchApplicator(statusMachine);
+        this.ingestionService = ingestionService;
     }
 
     @Transactional
@@ -63,42 +60,42 @@ public class TicketService {
             throw new TicketValidationException("title", "must not be blank");
         }
         TicketEntity ticket = new TicketEntity();
-        ticket.setId(TicketId.format(tickets.nextTicketNumber()));
+        ticket.setId(TicketId.format(ticketRepository.nextTicketNumber()));
         ticket.setTitle(request.title().trim());
         ticket.setDescription(request.description() == null ? "" : request.description());
         ticket.setStatus(TicketStatus.OPEN);
         ticket.setPriority(request.priority() == null ? TicketPriority.MEDIUM : request.priority());
         ticket.setAssignee(request.assignee());
         ticket.setCategory(request.category());
-        TicketEntity saved = tickets.save(ticket);
-        ingestAfterCommit(saved.getId());
-        return mapper.toDetail(saved);
+        TicketEntity saved = ticketRepository.save(ticket);
+        scheduleIngestAfterCommit(saved.getId());
+        return ticketMapper.toDetail(saved);
     }
 
     @Transactional(readOnly = true)
     public TicketDetailResponse getById(String id) {
-        TicketEntity ticket = tickets.findWithCommentsById(id)
+        TicketEntity ticket = ticketRepository.findWithCommentsById(id)
                 .orElseThrow(() -> new TicketNotFoundException(id));
-        return mapper.toDetail(ticket);
+        return ticketMapper.toDetail(ticket);
     }
 
     @Transactional(readOnly = true)
     public PageResponse<TicketSummaryResponse> list(int page, int size, String sort, String q, TicketStatus status) {
-        if (size < 1 || size > apiProperties.pageSizeMax()) {
-            throw new TicketValidationException("size", "must be between 1 and " + apiProperties.pageSizeMax());
-        }
-        if (page < 0) {
-            throw new TicketValidationException("page", "must be greater than or equal to 0");
-        }
-        TicketSort parsed = SortParser.parse(sort);
+        validateListPagination(page, size);
+        TicketSort parsedSort = SortParser.parse(sort);
         Sort springSort = Sort.by(
-                parsed.direction() == TicketSort.Direction.ASC ? Sort.Direction.ASC : Sort.Direction.DESC,
-                parsed.property());
-        Page<TicketEntity> result = tickets.search(status, q, PageRequest.of(page, size, springSort));
-        String echo = parsed.property() + "," + parsed.direction().name().toLowerCase();
+                parsedSort.direction() == TicketSort.Direction.ASC ? Sort.Direction.ASC : Sort.Direction.DESC,
+                parsedSort.property());
+        Page<TicketEntity> result = ticketRepository.search(status, q, PageRequest.of(page, size, springSort));
+        String sortEcho = parsedSort.property() + "," + parsedSort.direction().name().toLowerCase();
         return new PageResponse<>(
-                result.getContent().stream().map(mapper::toSummary).toList(),
-                new PageMeta(result.getNumber(), result.getSize(), result.getTotalElements(), result.getTotalPages(), echo)
+                result.getContent().stream().map(ticketMapper::toSummary).toList(),
+                new PageMeta(
+                        result.getNumber(),
+                        result.getSize(),
+                        result.getTotalElements(),
+                        result.getTotalPages(),
+                        sortEcho)
         );
     }
 
@@ -107,35 +104,12 @@ public class TicketService {
         if (!request.hasUpdates()) {
             throw new EmptyPatchException();
         }
-        TicketEntity ticket = tickets.findWithCommentsById(id)
+        TicketEntity ticket = ticketRepository.findWithCommentsById(id)
                 .orElseThrow(() -> new TicketNotFoundException(id));
-        if (request.status() != null) {
-            statusMachine.assertTransitionAllowed(ticket.getStatus(), request.status());
-        }
-        if (request.title() != null) {
-            ticket.setTitle(request.title());
-        }
-        if (request.description() != null) {
-            ticket.setDescription(request.description());
-        }
-        if (request.priority() != null) {
-            ticket.setPriority(request.priority());
-        }
-        if (request.assignee() != null) {
-            ticket.setAssignee(request.assignee());
-        }
-        if (request.category() != null) {
-            ticket.setCategory(request.category());
-        }
-        if (request.resolutionNotes() != null) {
-            ticket.setResolutionNotes(request.resolutionNotes());
-        }
-        if (request.status() != null) {
-            ticket.setStatus(request.status());
-        }
-        TicketEntity saved = tickets.save(ticket);
-        ingestAfterCommit(saved.getId());
-        return mapper.toDetail(saved);
+        patchApplicator.apply(ticket, request);
+        TicketEntity saved = ticketRepository.save(ticket);
+        scheduleIngestAfterCommit(saved.getId());
+        return ticketMapper.toDetail(saved);
     }
 
     @Transactional
@@ -143,33 +117,32 @@ public class TicketService {
         if (request.body() == null || request.body().isBlank()) {
             throw new TicketValidationException("body", "must not be blank");
         }
-        TicketEntity ticket = tickets.findById(ticketId)
+        TicketEntity ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException(ticketId));
         CommentEntity comment = new CommentEntity();
         comment.setBody(request.body());
         ticket.addComment(comment);
-        tickets.saveAndFlush(ticket);
-        ingestAfterCommit(ticket.getId());
-        return mapper.toComment(comment);
+        ticketRepository.saveAndFlush(ticket);
+        scheduleIngestAfterCommit(ticket.getId());
+        return ticketMapper.toComment(comment);
     }
 
-    private void ingestAfterCommit(String ticketId) {
-        Runnable ingest = () -> {
+    private void validateListPagination(int page, int size) {
+        if (size < 1 || size > apiProperties.pageSizeMax()) {
+            throw new TicketValidationException("size", "must be between 1 and " + apiProperties.pageSizeMax());
+        }
+        if (page < 0) {
+            throw new TicketValidationException("page", "must be greater than or equal to 0");
+        }
+    }
+
+    private void scheduleIngestAfterCommit(String ticketId) {
+        TransactionAfterCommit.run(() -> {
             try {
-                ingestion.ingest(ticketId);
+                ingestionService.ingest(ticketId);
             } catch (RuntimeException ex) {
                 log.error("RAG ingest failed ticketId={}", ticketId, ex);
             }
-        };
-        if (TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    ingest.run();
-                }
-            });
-        } else {
-            ingest.run();
-        }
+        });
     }
 }

@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketmanagement.config.RagProperties;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
-import com.ticketmanagement.persistence.TicketEntity;
-import com.ticketmanagement.persistence.TicketRepository;
+import com.ticketmanagement.entity.TicketEntity;
+import com.ticketmanagement.repository.TicketRepository;
+import com.ticketmanagement.service.TicketIngestionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.ticketmanagement.domain.TicketCategory;
+import com.ticketmanagement.support.ChunkMetadataAssertions;
 
 @ExtendWith(MockitoExtension.class)
 class TicketIngestionServiceTest {
@@ -80,8 +84,27 @@ class TicketIngestionServiceTest {
         assertThat(captor.getValue().getFirst().metadataJson()).contains("\"ticketId\":\"TKT-1\"");
         assertThat(captor.getValue().getFirst().metadataJson()).contains("\"status\":\"OPEN\"");
         assertThat(captor.getValue().getFirst().metadataJson()).contains("\"priority\":\"MEDIUM\"");
-        assertThat(captor.getValue().getFirst().metadataJson()).contains("\"category\"");
-        assertThat(captor.getValue().getFirst().content()).contains("Need a refund");
+        VectorChunkStore.StoredChunk stored = captor.getValue().getFirst();
+        ChunkMetadataAssertions.assertPdfAndTechnicalMetadataKeys(stored.metadataJson(), "TKT-1");
+        assertThat(stored.metadataJson()).contains("\"category\"");
+        assertThat(stored.content()).contains("Need a refund");
+    }
+
+    @Test
+    void everyStoredChunkHasFullMetadataSnapshot() {
+        TicketEntity ticket = ticket("TKT-42", "Shipment delay on route 7");
+        ticket.setAssignee("ops@example.com");
+        ticket.setCategory(TicketCategory.SHIPMENT);
+        ticket.setPriority(TicketPriority.CRITICAL);
+        when(tickets.findWithCommentsById("TKT-42")).thenReturn(Optional.of(ticket));
+
+        service.ingest("TKT-42");
+
+        ArgumentCaptor<List<VectorChunkStore.StoredChunk>> captor = ArgumentCaptor.forClass(List.class);
+        verify(store).replaceAll(eq("TKT-42"), captor.capture());
+        assertThat(captor.getValue()).isNotEmpty();
+        captor.getValue().forEach(chunk ->
+                ChunkMetadataAssertions.assertPdfAndTechnicalMetadataKeys(chunk.metadataJson(), "TKT-42"));
     }
 
     @Test

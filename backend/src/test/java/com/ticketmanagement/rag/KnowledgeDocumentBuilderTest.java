@@ -3,8 +3,8 @@ package com.ticketmanagement.rag;
 import com.ticketmanagement.domain.TicketCategory;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
-import com.ticketmanagement.persistence.CommentEntity;
-import com.ticketmanagement.persistence.TicketEntity;
+import com.ticketmanagement.entity.CommentEntity;
+import com.ticketmanagement.entity.TicketEntity;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
