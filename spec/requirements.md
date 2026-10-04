@@ -95,9 +95,71 @@ Use this table to confirm nothing from the assignment is “lost” between the 
 
 **Not in the PDF (do not add without a new agreed spec):** authentication, multi-tenancy, attachments, notifications, delete-ticket API, agentic tool use, confidence scores on ask responses.
 
+### 0.5 PDF verbatim anchors (complete assignment text → spec home)
+
+Use this checklist during sign-off: every bullet below appears **verbatim or restated** somewhere in the ten-file `spec/` set (plus `rules/*` / `commands/*` for hygiene). Child spec is the implementation owner; this table is the **index of completeness**.
+
+| PDF theme (assignment wording) | Primary spec home | Supporting |
+|--------------------------------|-------------------|------------|
+| Workflow: Requirement → Specification → Plan/Tasks → Implementation → Testing → Review → Fix; do **not** start with “Build the complete application.” | §3.4, §6.8 | `commands/*`, [`docs/assessment-brief.md`](../docs/assessment-brief.md) §2 |
+| Hygiene: Java Spring Boot, testing, API standards, documentation skills, RAG/vector guidelines; review code/spec/tests; **review RAG output for hallucination** | §6.8 | `rules/*.md`, `commands/review-*.md` |
+| Spec set: `requirements`, `architecture`, `data-model`, `api-contract`, `state-machine`, `rag-ingestion`, `rag-api-contract`, `evaluation-strategy`, `ui-flow`, `test-strategy` | Child-spec table (header) | `ui-flow` → [`ui-model.md`](ui-model.md) |
+| Prompt history: `.specstory/history/` + `docs/prompt-history.md` | §6.8, NFR-01 | `commands/update-prompt-history.md` |
+| Document ≥1 meaningful AI mistake (wrong code **or** ungrounded RAG answer) | AC-CORE-23, §8.7 step 18 | `docs/ai-mistakes.md` (when first entry exists) |
+| Token optimisation: Graphify, Caveman, Codebase-memory MCP; prompt caching for static instructions | NFR-11, §6.8 | `.cursor/rules/graphify.mdc` |
+| Stack: Java 21, Spring Boot, Spring AI, PostgreSQL/H2, embedding model, vector store (PGVector/Chroma), REST, React/Next or equivalent, Cursor/Copilot/Kiro | §2.1, §6.1, IR-* | [`architecture.md`](architecture.md) §7 |
+| Learning goals: specs for AI-native feature; SDD for CRUD **and** RAG; validate AI code **and** answers; test deterministic SM **and** probabilistic retrieval | §1.3, §2.5, FEAT-22 | [`test-strategy.md`](test-strategy.md), [`evaluation-strategy.md`](evaluation-strategy.md) |
+| App: create/list/view tickets; update title, description, priority, assignee; comments; keyword search; filter by status; DB persistence; backend validation; meaningful UI errors | FEAT-01…10, §8.1 | [`api-contract.md`](api-contract.md), [`ui-model.md`](ui-model.md) |
+| NL Q&A over ticket history; grounded in real data; cite ticket id(s); explicit no-match (no fabrication) | FEAT-15…18, §8.3 | [`rag-api-contract.md`](rag-api-contract.md) |
+| State machine: `OPEN→IN_PROGRESS→RESOLVED→CLOSED`; `OPEN→CANCELLED`; `IN_PROGRESS→CANCELLED`; invalid rejected; examples `CLOSED→OPEN`, `RESOLVED→OPEN`, `CANCELLED→OPEN` ❌ | §2.6, FEAT-11 | [`state-machine.md`](state-machine.md) |
+| Five example assistant questions (payment failures, TKT-1001 resolution, shipment causes, similar resolved, high-priority payment) | §4.3 **Example** | [`evaluation-strategy.md`](evaluation-strategy.md) §5 |
+| Basic RAG flow diagram (tickets → knowledge → chunk → embed → store → question → search → LLM → answer → sources) | §6.6, Flow D | [`architecture.md`](architecture.md) §15.1 |
+| Ingest: description, comments, resolution notes; metadata `ticketId`, `status`, `priority`, `assignee`, `category`; re-ingest on **updated or closed** | FEAT-12…14 | [`rag-ingestion.md`](rag-ingestion.md) §4, §10 |
+| `POST /api/ai/ask` with `{ "question": "What caused previous payment failures?" }` | FEAT-15, §2.6 | [`rag-api-contract.md`](rag-api-contract.md) §6 |
+| Chunking strategy documented/justified; top-K and similarity threshold **configurable**; embedding model choice documented/justified | FEAT-19…20, AC-CORE-19…21 | [`architecture.md`](architecture.md) §16; [`rag-ingestion.md`](rag-ingestion.md) §9, §12 |
+| Grounding: answer **only** from retrieved context; no general LLM knowledge for support questions; no-match explicit; **single** retrieve→generate; **not** an agent (no create ticket, notify, tools) | §2.2, FEAT-18 | [`rag-api-contract.md`](rag-api-contract.md) §11 |
+| Core acceptance checklist (23 items on p.6 incl. SM integration tests, embeddings stored, ask grounded/cited/no-match, architecture docs, re-ingest on update, configurable retrieval, no secrets, AI mistake) | §8 **AC-CORE-01…23**, §8.7 | [`test-strategy.md`](test-strategy.md) §7 |
+
+**PDF tension (do not hide):** p.5 re-ingest on **updated or closed** vs p.6 “when ticket is **updated**” → **DEC-01** ([§11.1](#11-pdf-inconsistencies-and-requirement-reconciliation)).
+
+### 0.6 Independent reading units (hub chunks)
+
+Read **one row at a time**. Each unit is written to stand alone; follow **Read first** only when you need deeper contracts or examples.
+
+| Unit | Section | Standalone? | Read first | You get | Detail lives in |
+|------|---------|-------------|------------|---------|-----------------|
+| **HUB-A** | §1 Problem | Yes | — | Why product + assessment matter (**PDF**) | — |
+| **HUB-B** | §2 Scope | Yes | — | In/out of scope; enums; deterministic vs probabilistic | Child specs for HTTP/RAG |
+| **HUB-C** | §3 Business reqs | Yes | **HUB-B** | Process + product business themes | §6.8 hygiene |
+| **HUB-D** | §4.1 Flows A–E | Yes | **HUB-B** | End-to-end journeys (ticket + ask) | [`ui-model.md`](ui-model.md) §11 |
+| **HUB-E** | §4.2 FEAT-01…10 | Yes | **HUB-B** | Ticket CRUD, search, filter, validation (**PDF** p.3–4) | [`api-contract.md`](api-contract.md), [`ui-model.md`](ui-model.md) |
+| **HUB-F** | §4.2 FEAT-11 | Yes | **HUB-B** | State machine requirement + AC-FEAT-11 | [`state-machine.md`](state-machine.md) |
+| **HUB-G** | §4.2 FEAT-12…14 | Yes | **HUB-B** | Ingest + freshness (**PDF** p.5) | [`rag-ingestion.md`](rag-ingestion.md) |
+| **HUB-H** | §4.2 FEAT-15…18 | Yes | **HUB-G** | Ask, grounding, guardrails (**PDF** p.3–6) | [`rag-api-contract.md`](rag-api-contract.md) |
+| **HUB-I** | §4.2 FEAT-19…20 | Yes | **HUB-G** | Configurable retrieval; chunk/embed docs | [`architecture.md`](architecture.md) §16, [`rag-ingestion.md`](rag-ingestion.md) |
+| **HUB-J** | §4.3 Example corpus | Yes | — | Five **PDF** questions + demo tickets (**Example**) | [`evaluation-strategy.md`](evaluation-strategy.md) §5 |
+| **HUB-K** | §8 AC-CORE | Yes | **HUB-E…H** | Sign-off checklist (**PDF** p.6) | [`test-strategy.md`](test-strategy.md) §7 |
+| **HUB-L** | §8.7 Demo script | Yes | **HUB-K** | Steps 1–18 for graders | [`ui-model.md`](ui-model.md) §12 |
+| **HUB-M** | §10 DEC register | Yes | **HUB-B** | Open vs agreed decisions | Owning child spec per §10.3 |
+
+### 0.7 Chunk convention (all `spec/` files)
+
+Every child spec uses the same pattern in **§0**:
+
+- **Independent reading units** — table of small sections you can read without reading the whole file.
+- **Prerequisites** — “none” or specific units/sections **in this file** first; cross-file deps use **See also** links only.
+- **PDF** — assignment wording anchor where applicable.
+- **Example** — sample JSON, YAML, or ticket text; not mandated production data unless labeled **Agreed**.
+
+When implementing, prefer **one unit → one PR slice** (e.g. **HUB-F** + [`state-machine.md`](state-machine.md) unit **SM-B** before ask work).
+
+### 0.8 Section headings and unit ids
+
+Major `##` sections in every child spec suffix the **unit id** from §0.6 / that file’s §0.3 table, e.g. `## 5. Transitions · units **SM-B**…**SM-E**`. Search the repo for `· unit **` or `· units **` to jump directly to a reading chunk.
+
 ---
 
-## 1. Problem and context
+## 1. Problem and context · unit **HUB-A**
 
 ### 1.1 Product problem (**PDF**)
 
@@ -123,7 +185,7 @@ The PDF states the application is important, but the **main assessment** is **ho
 
 ---
 
-## 2. Scope
+## 2. Scope · unit **HUB-B**
 
 ### 2.1 In scope (**PDF**)
 
@@ -223,7 +285,7 @@ Use these consistently across FEAT, specs, and tests unless a **DEC** changes th
 
 ---
 
-## 3. Business requirements
+## 3. Business requirements · unit **HUB-C**
 
 Business requirements express **why** the organisation cares and **what success looks like** at a product and assessment level. Wording follows the PDF’s exercise and acceptance themes.
 
@@ -259,9 +321,11 @@ The solution is **business-complete** when all items in §8 **Core acceptance cr
 
 ---
 
-## 4. Independent feature catalogue
+## 4. Independent feature catalogue · units **HUB-D**…**HUB-J**
 
 Features below are **independent delivery slices** for planning and traceability. Each maps to PDF capabilities; detailed contracts live in downstream specs.
+
+**How to read this section in chunks:** use hub units **HUB-D** (flows §4.1), **HUB-E…I** (features §4.2), **HUB-J** (examples §4.3) from [§0.6](#06-independent-reading-units-hub-chunks). Each **FEAT-*** subsection is written to be readable without the others; cross-links point to child spec **units** (e.g. **SM-B**, **ASK-C**).
 
 | Feature ID | Feature name | Primary layer | PDF anchor |
 |------------|--------------|---------------|------------|
@@ -1060,7 +1124,7 @@ Demonstrate **reusable AI instructions** across the project (**PDF**).
 
 ---
 
-## 8. Core acceptance criteria (**PDF** p.6)
+## 8. Core acceptance criteria (**PDF** p.6) · unit **HUB-K**
 
 The solution is complete when every item below passes. Each item expands the PDF checklist with **detailed acceptance criteria** (`AC-CORE-xx`) and links to features / flows.
 
@@ -1150,7 +1214,7 @@ Use for final demo sign-off (**PDF** p.6):
 
 **Learning goal (p.2, not a separate p.6 checkbox):** retrieval quality evidenced per **FEAT-22** / [`evaluation-strategy.md`](evaluation-strategy.md) — demo step 17.
 
-### 8.7 Demo and grading script (**Example** walkthrough)
+### 8.7 Demo and grading script (**Example** walkthrough) · unit **HUB-L**
 
 Repeatable path to demonstrate **AC-CORE-01…23** and **FEAT-22** (retrieval quality evidence). Adjust UI labels to match [`ui-model.md`](ui-model.md).
 
@@ -1210,7 +1274,7 @@ Repeatable path to demonstrate **AC-CORE-01…23** and **FEAT-22** (retrieval qu
 
 ---
 
-## 10. Open questions, decisions, and spec handoff
+## 10. Open questions, decisions, and spec handoff · unit **HUB-M**
 
 Resolve **Open** items in downstream specs **after confirmation**—do not assume answers in implementation alone (§10.3).
 
@@ -1367,3 +1431,6 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | `improve-from-assessment-pdf` in §6.8; §0.4 row for PDF ten-name spec list; IR-06 consolidation note. |
 | 2026-10-04 | Primary source header: `docs/Assessments.docx`. |
 | 2026-10-04 | All `Assessments.pdf` path references → `docs/Assessments.docx` across steering artefacts. |
+| 2026-10-04 | §0.5 PDF verbatim anchor index — full assignment text mapped to ten-file spec set (completeness checklist). |
+| 2026-10-04 | §0.6–§0.7 independent reading units + chunk convention for all `spec/` files. |
+| 2026-10-04 | §0.8 + major `##` headings tagged with **HUB-*** unit ids. |

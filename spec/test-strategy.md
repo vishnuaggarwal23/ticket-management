@@ -4,6 +4,70 @@
 > **Primary source:** `docs/Assessments.docx` p.2 (deterministic + probabilistic testing), p.4–6 (state machine, ask); [`requirements.md`](requirements.md) §2.5, §8–§9, Flows A/C/E, FEAT-11, FEAT-21, FEAT-22.  
 > **Contracts:** [`state-machine.md`](state-machine.md) (T1–T5, §5.6 illegal register), [`api-contract.md`](api-contract.md) §2.11 / §4.4, [`evaluation-strategy.md`](evaluation-strategy.md) (retrieval + failure taxonomy), [`data-model.md`](data-model.md) §16–§18.
 
+**Label legend:** **PDF** | **Convention** | **Example**
+
+---
+
+## Table of contents
+
+0. [Document guide](#0-document-guide)  
+1. [Problem and context](#1-problem-and-context)  
+2. [Scope and non-goals](#2-scope-and-non-goals)  
+3. [Test kinds](#3-test-kinds-summary)  
+4. [Deterministic vs probabilistic](#4-deterministic-vs-probabilistic-index)  
+5. [State machine determinism](#5-state-machine--deterministic-logic)  
+6. [Retrieval and AI output](#6-retrieval-quality-and-ai-output)  
+7.–14. AC maps, open decisions, **AC-TS-***, revision history  
+
+---
+
+## 0. Document guide
+
+### 0.1 PDF coverage map
+
+| **PDF** (p.2, p.4, p.6) | Proof location |
+|-------------------------|----------------|
+| Test **deterministic** state machine; integration tests pass | **§5**, **AC-CORE-14**, **AC-TS-03**, **AC-TS-06** |
+| Test/debug **probabilistic** retrieval / AI answers | **§6**, [`evaluation-strategy.md`](evaluation-strategy.md) |
+| Backend validation, persistence, invalid transitions rejected | §7, §9–§10 |
+| Embeddings stored; ask grounded/cited/no-match | §6.2, §7 |
+| No frontend tests this milestone | §11 (**Convention**) |
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements** — show assessors **evidence**, not hope: `./mvnw test` for ticket logic; structured eval + review commands for RAG.
+
+**Functional requirements**
+
+| ID | Requirement | Section |
+|----|-------------|---------|
+| FR-TS-01 | Every T1–T5 proven at domain + API integration | §5.2 |
+| FR-TS-02 | All 20 illegal pairs + X1–X3 → **409**, row unchanged | §5.4, **AC-SM-06** |
+| FR-TS-03 | Ask: 400 blank question; 200 no-match shape; cited ids exist (stub) | §6.2 Band A |
+| FR-TS-04 | Retrieval quality sign-off for **PDF** Q1–Q5 | §6.3–§6.5, **AC-TS-05** |
+
+**Implementation requirements**
+
+| ID | Requirement | Tooling |
+|----|-------------|---------|
+| IR-TS-01 | JUnit 5, Mockito, Testcontainers PostgreSQL + Liquibase | `rules/testing.md` |
+| IR-TS-02 | `./mvnw test` — no paid cloud LLM in default CI | §6.2 |
+| IR-TS-03 | Use `commands/generate-tests.md` when extending catalogue | §1 |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **TS-A** | §3–§4 | Yes | — | Test kinds; deterministic vs probabilistic index | `rules/testing.md` |
+| **TS-B** | §5 SM proof | Yes | **TS-A** | T1–T5, X1–X3, 20 illegal pairs (**PDF**) | [`state-machine.md`](state-machine.md) **SM-E** |
+| **TS-C** | §6.2 Band A | Yes | **TS-A** | JUnit-safe ask contract tests | [`rag-api-contract.md`](rag-api-contract.md) **ASK-H** |
+| **TS-D** | §6.3–§6.5 Bands B–C | Yes | **TS-C** | Grounding review + retrieval eval | [`evaluation-strategy.md`](evaluation-strategy.md) **EVAL-*** |
+| **TS-E** | §7–§10 AC maps | Yes | **TS-B**, **TS-C** | AC-CORE/SM/API/DM → layers | [`requirements.md`](requirements.md) §8 |
+| **TS-F** | §11 UI substitute | Yes | — | Manual demo replaces UI tests | [`ui-model.md`](ui-model.md) §12 |
+| **TS-G** | §13 AC-TS | Yes | **TS-B…E** | This spec’s own acceptance | — |
+
+**PDF verbatim (p.6):** “State-machine integration tests pass.” → **TS-B** + **AC-CORE-14**.
+
 ---
 
 ## 1. Problem and context
@@ -29,7 +93,7 @@ This spec answers: **which acceptance IDs are proven by which test kind**, with 
 
 ---
 
-## 3. Test kinds (summary)
+## 3. Test kinds (summary) · unit **TS-A**
 
 Authoritative layering rules: `rules/testing.md`.
 
@@ -45,7 +109,7 @@ Both **API slice** and **API integration** are required for implemented HTTP end
 
 ---
 
-## 4. Deterministic vs probabilistic (index)
+## 4. Deterministic vs probabilistic (index) · unit **TS-A**
 
 | Area | Nature | Where detailed |
 |------|--------|----------------|
@@ -57,7 +121,7 @@ Both **API slice** and **API integration** are required for implemented HTTP end
 
 ---
 
-## 5. State machine — deterministic logic
+## 5. State machine — deterministic logic · unit **TS-B**
 
 **Authoritative transition rules:** [`state-machine.md`](state-machine.md) §5. **Requirements:** FEAT-11 (FR-11, FR-12), FEAT-21, AC-CORE-12…14, Flow A (happy path), Flow C (invalid reopen).
 
@@ -172,7 +236,7 @@ Green `./mvnw test` **must** include an integration suite that collectively prov
 
 ---
 
-## 6. Retrieval quality and AI output
+## 6. Retrieval quality and AI output · units **TS-C**, **TS-D**
 
 **Authoritative eval procedure:** [`evaluation-strategy.md`](evaluation-strategy.md). **Grounding review:** `commands/review-rag-output.md`. **Requirements:** FEAT-15…18, FEAT-22, AC-CORE-16…18, Flow B / Flow E.
 
@@ -274,7 +338,7 @@ When demo or eval fails, use [`evaluation-strategy.md`](evaluation-strategy.md) 
 
 ---
 
-## 7. AC-CORE → primary proof (backend)
+## 7. AC-CORE → primary proof (backend) · unit **TS-E**
 
 | AC-CORE | Theme | Primary proof |
 |---------|-------|----------------|
@@ -292,7 +356,7 @@ When demo or eval fails, use [`evaluation-strategy.md`](evaluation-strategy.md) 
 
 ---
 
-## 8. State machine acceptance → tests (**AC-SM-***)
+## 8. State machine acceptance → tests (**AC-SM-***) · unit **TS-E**
 
 Detail: **§5**. Source: [`state-machine.md`](state-machine.md) §5, §6.1.1, §9.
 
@@ -309,7 +373,7 @@ Detail: **§5**. Source: [`state-machine.md`](state-machine.md) §5, §6.1.1, §
 
 ---
 
-## 9. HTTP API contract acceptance → tests (**AC-API-***)
+## 9. HTTP API contract acceptance → tests (**AC-API-***) · unit **TS-E**
 
 Source: [`api-contract.md`](api-contract.md) §2.11, §4–§5; ask [`rag-api-contract.md`](rag-api-contract.md).
 
@@ -339,7 +403,7 @@ Source: [`api-contract.md`](api-contract.md) §2.11, §4–§5; ask [`rag-api-co
 
 ---
 
-## 10. Data model acceptance → tests (**AC-DM-***)
+## 10. Data model acceptance → tests (**AC-DM-***) · unit **TS-E**
 
 | ID | Primary layer |
 |----|----------------|
@@ -356,7 +420,7 @@ Detail: [`data-model.md`](data-model.md) §18.
 
 ---
 
-## 11. Frontend acceptance without UI tests
+## 11. Frontend acceptance without UI tests · unit **TS-F**
 
 **PDF** UI expectations → backend substitutes where noted in §7. Screen/flow map for manual demo: [`ui-model.md`](ui-model.md) §12. Demo script: [`requirements.md`](requirements.md) §8.7 (steps 1–18). UI acceptance IDs: **AC-UI-*** in `ui-model.md` §13. UI code review: `commands/review-frontend.md`.
 
@@ -374,7 +438,7 @@ Detail: [`data-model.md`](data-model.md) §18.
 
 ---
 
-## 13. Acceptance criteria (this spec)
+## 13. Acceptance criteria (this spec) · unit **TS-G**
 
 | ID | Criterion |
 |----|-----------|
@@ -396,3 +460,6 @@ Detail: [`data-model.md`](data-model.md) §18.
 | 2026-10-04 | Major expansion: **§5** state machine deterministic logic (T1–T5, X1–X3, 20 illegal pairs, layers, lifecycle); **§6** retrieval quality + AI output (Bands A–C); **AC-TS-06**; renumbered sections. |
 | 2026-10-04 | §11 links UI demo to [`architecture.md`](architecture.md) §12.3–§12.6; requirements §8.7 steps 17–18. |
 | 2026-10-04 | §11 links UI demo to [`ui-model.md`](ui-model.md). |
+| 2026-10-04 | §0 guide: PDF map, business/functional/implementation triad, TOC. |
+| 2026-10-04 | §0.3 **TS-*** independent reading units (SM JUnit vs eval bands). |
+| 2026-10-04 | Major `##` headings tagged with **TS-*** unit ids. |

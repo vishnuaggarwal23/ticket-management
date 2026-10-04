@@ -46,7 +46,75 @@ This document describes **system shape**: business capabilities, ticket and RAG 
 
 ---
 
-## 1. Problem and context
+## 0. Document guide
+
+### 0.1 PDF coverage map (system design themes)
+
+| **PDF** | Section |
+|---------|---------|
+| Stack and modules (Java 21, Boot, Spring AI, PG, vector store, REST, React) | §7, §12 |
+| Ticket aggregate + CRUD capabilities | §4–§5, §8 |
+| Basic RAG flow diagram (verbatim structure below) | §15.1 |
+| Chunking + embedding **justification** (**AC-CORE-19**) | §16 |
+| Configurable top-K / threshold | §18 |
+| Non-agentic ask | §15.2 |
+| `ui-flow` summary | §12 → detail [`ui-model.md`](ui-model.md) |
+
+**PDF basic RAG flow (p.4 — restated verbatim):**
+
+```text
+Support Tickets
+  ↓ Create Knowledge Documents
+  ↓ Chunk
+  ↓ Generate Embeddings
+  ↓ Vector Store
+  ↓ User Question
+  ↓ Similarity Search
+  ↓ Relevant Tickets
+  ↓ LLM + Context
+  ↓ Grounded Answer
+  ↓ Ticket Sources
+```
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements** — one deployable system where deterministic ticket ops and probabilistic ask share PostgreSQL truth and a PgVector index.
+
+**Functional requirements (architecture-level)**
+
+| ID | Capability | Module |
+|----|------------|--------|
+| FR-ARCH-01 | Ticket lifecycle + REST | Ticket module §8 |
+| FR-ARCH-02 | Ingest on ticket change | RAG ingest §15.4 |
+| FR-ARCH-03 | Single-shot grounded ask | RAG ask §15.5–15.6 |
+| FR-ARCH-04 | SPA ticket + ask UI | §12 |
+
+**Implementation requirements**
+
+| ID | Requirement |
+|----|-------------|
+| IR-ARCH-01 | Maven Wrapper; Liquibase; Testcontainers for integration tests |
+| IR-ARCH-02 | Layering: domain / service / persistence / api / rag per `rules/java-springboot.md` |
+| IR-ARCH-03 | Spring AI for embed + chat; Ollama via config (**DEC-09** Open) |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **ARCH-A** | §1–§2 | Yes | — | Problem, scope, deterministic vs probabilistic | [`requirements.md`](requirements.md) §2.5 |
+| **ARCH-B** | §4 Business modules | Yes | **ARCH-A** | Capability map → FEAT ids | §8 functional |
+| **ARCH-C** | §5 Ticket shape | Yes | **ARCH-A** | Aggregate + RAG text sources (conceptual) | [`data-model.md`](data-model.md) |
+| **ARCH-D** | §7–§8 Stack + modules | Yes | **ARCH-A** | Java/Spring/PG/React conventions | `rules/java-springboot.md` |
+| **ARCH-E** | §10–§11 Communication + API map | Yes | **ARCH-C** | REST sync; PDF ask path | [`api-contract.md`](api-contract.md) |
+| **ARCH-F** | §12 Frontend summary | Yes | **ARCH-E** | SPA architecture (**PDF** ui-flow themes) | [`ui-model.md`](ui-model.md) **UI-*** units |
+| **ARCH-G** | §13–§14 Persistence + PgVector | Yes | **ARCH-C** | SoR vs vector index | [`data-model.md`](data-model.md) §8 |
+| **ARCH-H** | §15 RAG pipeline | Yes | **ARCH-G** | Ingest + ask stages (**PDF** ladder §0.1) | [`rag-ingestion.md`](rag-ingestion.md) **ING-*** |
+| **ARCH-I** | §16 Chunk/embed justification | Yes | **ARCH-H** | **AC-CORE-19** narrative | [`rag-ingestion.md`](rag-ingestion.md) §9 numbers |
+| **ARCH-J** | §17–§18 SM + config | Yes | **ARCH-C** | Domain placement; K/threshold keys | [`state-machine.md`](state-machine.md) |
+
+---
+
+## 1. Problem and context · unit **ARCH-A**
 
 The system is an **AI-powered support ticket management** application (**PDF**): conventional ticket operations (create, list, detail, update core fields, comments, keyword search, status filter, persistence, validation) plus **RAG-based** natural-language Q&A over ticket history.
 
@@ -61,7 +129,7 @@ The assistant is **retrieve-then-generate** only (**PDF**): grounded answers wit
 
 ---
 
-## 2. Scope and non-goals
+## 2. Scope and non-goals · unit **ARCH-A**
 
 ### 2.1 In scope (architecture must support)
 
@@ -94,7 +162,7 @@ The assistant is **retrieve-then-generate** only (**PDF**): grounded answers wit
 
 ---
 
-## 4. Business architecture
+## 4. Business architecture · unit **ARCH-B**
 
 Business architecture describes **who** uses the system, **what** business capabilities exist, and how they group—without prescribing HTTP paths or Java packages.
 
@@ -176,7 +244,7 @@ Business modules are **cohesive responsibility areas** for planning and traceabi
 
 ---
 
-## 5. Ticket structure (conceptual)
+## 5. Ticket structure (conceptual) · unit **ARCH-C**
 
 Field catalogs, enums, and Liquibase tables belong in [`data-model.md`](data-model.md) (agreed). This section defines the **architectural shape** of a ticket for design discussions.
 
@@ -293,7 +361,7 @@ flowchart LR
 
 ---
 
-## 7. Technology structure
+## 7. Technology structure · unit **ARCH-D**
 
 ### 7.1 Stack summary
 
@@ -343,7 +411,7 @@ No message broker, no separate RAG microservice, no BFF unless a future spec add
 
 ---
 
-## 8. Functional modules and components
+## 8. Functional modules and components · unit **ARCH-D**
 
 **Functional modules** are implementable slices of behaviour (often map 1:1 to application services). **Components** are the main parts inside each module.
 
@@ -431,7 +499,7 @@ Technical layout follows **`rules/java-springboot.md`** (**Convention**).
 
 ---
 
-## 10. Communication architecture
+## 10. Communication architecture · unit **ARCH-E**
 
 ### 10.1 Style
 
@@ -483,7 +551,7 @@ sequenceDiagram
 
 ---
 
-## 11. API architecture
+## 11. API architecture · unit **ARCH-E**
 
 ### 11.1 API surfaces
 
@@ -538,7 +606,7 @@ Illegal status transition → **409** `ILLEGAL_TRANSITION` (**Convention**, not 
 
 ---
 
-## 12. Frontend architecture
+## 12. Frontend architecture · unit **ARCH-F**
 
 **Convention:** React + Vite + TypeScript (`rules/frontend.md`). **PDF** requires a web UI for ticket operations and ask. **§12.3–§12.6** below summarise UI architecture; **authoritative** screen catalog, CRUD flows, transition/ask UX, and **AC-UI-*** are in [`ui-model.md`](ui-model.md) (PDF `ui-flow` themes; see [`requirements.md`](requirements.md) child-spec table).
 
@@ -605,7 +673,7 @@ Not product screens — demo evidence for **FEAT-23**: SpecStory / `.specstory/h
 
 ---
 
-## 13. Data and persistence
+## 13. Data and persistence · unit **ARCH-G**
 
 ### 13.1 Relational system of record
 
@@ -627,7 +695,7 @@ Execution model (inline, `@TransactionalEventListener`, async job) → **`rag-in
 
 ---
 
-## 14. Vector database architecture
+## 14. Vector database architecture · unit **ARCH-G**
 
 ### 14.1 Product choice
 
@@ -677,7 +745,7 @@ Vector tables and `pgvector` / `pg_trgm` extensions are versioned in **Liquibase
 
 ---
 
-## 15. RAG architecture
+## 15. RAG architecture · unit **ARCH-H**
 
 ### 15.1 Pipeline overview (**PDF**)
 
@@ -767,7 +835,7 @@ Hook placement: ticket **service** after successful commit; exact mechanism → 
 
 ---
 
-## 16. Knowledge, chunking, and embeddings
+## 16. Knowledge, chunking, and embeddings · unit **ARCH-I**
 
 This section satisfies **PDF** acceptance **AC-CORE-19** / **FEAT-20**: documented **justification** for chunking and embedding choices. Numeric parameters and model ids → **`rag-ingestion.md`** when agreed.
 
@@ -841,7 +909,7 @@ Use `@ConfigurationProperties` — no magic numbers in Java (**PDF** intent for 
 
 ---
 
-## 17. Status state machine (placement)
+## 17. Status state machine (placement) · unit **ARCH-J**
 
 States and transitions: [`state-machine.md`](state-machine.md) + `requirements.md` FEAT-11.
 
@@ -856,7 +924,7 @@ States and transitions: [`state-machine.md`](state-machine.md) + `requirements.m
 
 ---
 
-## 18. Configuration
+## 18. Configuration · unit **ARCH-J**
 
 Externalized configuration (**PDF** NFR-06: no secrets in git).
 
@@ -969,3 +1037,6 @@ Architecture supports verification of:
 | 2026-10-04 | Screen/flow detail → [`ui-model.md`](ui-model.md); §12 remains UI architecture summary. |
 | 2026-10-04 | `improve-from-assessment-pdf`: PDF ten-name spec list → nine repo files; `ui-flow` → `ui-model.md`. |
 | 2026-10-04 | Ask semantics → [`rag-api-contract.md`](rag-api-contract.md); ten-file spec set. |
+| 2026-10-04 | §0 guide: verbatim PDF RAG flow diagram; PDF theme map; BRF/FRI/IRI at architecture level. |
+| 2026-10-04 | §0.3 **ARCH-*** independent reading units for modular architecture review. |
+| 2026-10-04 | Major `##` headings tagged with **ARCH-*** unit ids. |

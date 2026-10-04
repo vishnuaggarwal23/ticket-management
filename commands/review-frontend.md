@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-frontend.md`](../.cursor/commands/review-frontend.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, [`spec/ui-model.md`](../spec/ui-model.md) (**AC-UI-***), [`spec/architecture.md`](../spec/architecture.md) §12 (summary), and API / RAG contracts.
+Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, [`spec/ui-model.md`](../spec/ui-model.md) (**§0**, **AC-UI-***), [`spec/architecture.md`](../spec/architecture.md) §12 (summary), and API / RAG contracts.
 
 **Do not generate or require frontend tests.** Do not apply fixes unless the user asks.
 
@@ -14,7 +14,7 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 - `rules/frontend.md`
 - `rules/api-standards.md` (paths, envelopes, PATCH, pagination, 409)
 - [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo; **§10** for open UI/API shape (**OQ/DEC**)
-- [`spec/ui-model.md`](../spec/ui-model.md) — screens, flows, **AC-UI-01…12**; open **DEC-06**, **DEC-15** §14
+- [`spec/ui-model.md`](../spec/ui-model.md) — **§0** PDF ui-flow map; screens, flows, **AC-UI-01…12**; open **DEC-06**, **DEC-15** §14
 - [`spec/architecture.md`](../spec/architecture.md) §12 when reviewing module/API wiring at architecture level
 - [`spec/data-model.md`](../spec/data-model.md) (agreed id, category, resolutionNotes, create requiredness)
 - Draft [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) — open **DEC-11** per [`spec/requirements.md`](../spec/requirements.md) §10.2
@@ -98,3 +98,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 | 2026-10-04 | [`spec/data-model.md`](../spec/data-model.md) inputs; id/category/resolutionNotes no longer open in UI review. |
 | 2026-10-04 | UI flows: architecture §12.3–§12.6 + requirements §4.1 / §8.7. |
 | 2026-10-04 | Primary UI spec: [`ui-model.md`](../spec/ui-model.md); **AC-UI-*** checklist. |
+| 2026-10-04 | Inputs reference [`ui-model.md`](../spec/ui-model.md) **§0** PDF map. |

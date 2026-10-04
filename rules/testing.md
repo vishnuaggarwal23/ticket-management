@@ -2,9 +2,9 @@
 
 Cursor attaches this file via [`.cursor/rules/testing.mdc`](../.cursor/rules/testing.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-Tests prove **acceptance criteria** from `spec/`. Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed). HTTP paths, payloads, scenarios: **[`spec/api-contract.md`](../spec/api-contract.md)** (draft). Ask `data` / semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md). Ingest/chunking: [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**AC-RAG-ING-***). RAG **retrieval quality**: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) + `commands/review-rag-output.md` — not golden LLM answer strings in unit tests.
+Tests prove **acceptance criteria** from `spec/` (start each file’s **§0** for PDF scope of that domain). Backend layering and ingest-hook placement: [`spec/architecture.md`](../spec/architecture.md) §8–9, §15.4. Backend coding standards: `rules/java-springboot.md`. HTTP envelopes, status codes, pagination, and versioned paths: `rules/api-standards.md`. Ticket field catalogs and validation: **[`spec/data-model.md`](../spec/data-model.md)** (agreed). HTTP paths, payloads, scenarios: **[`spec/api-contract.md`](../spec/api-contract.md)** (draft). Ask `data` / semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md). Ingest/chunking: [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (**AC-RAG-ING-***). RAG **retrieval quality**: [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft) + `commands/review-rag-output.md` — not golden LLM answer strings in unit tests.
 
-**AC mapping:** primary index [`spec/test-strategy.md`](../spec/test-strategy.md) — **§5** state machine determinism, **§6** ask/retrieval bands, plus **AC-CORE-***, **AC-SM-***, **AC-API-***, **AC-DM-***. Fallback: [`spec/requirements.md`](../spec/requirements.md) §8–§9.
+**AC mapping:** primary index [`spec/test-strategy.md`](../spec/test-strategy.md) (**§0** proof map) — **§5** state machine determinism, **§6** ask/retrieval bands, plus **AC-CORE-***, **AC-SM-***, **AC-API-***, **AC-DM-***. Fallback: [`spec/requirements.md`](../spec/requirements.md) §8–§9, **§0.5** completeness.
 
 | Command | Use |
 |---------|-----|
@@ -346,3 +346,4 @@ See [`spec/test-strategy.md`](../spec/test-strategy.md) §9.
 | 2026-10-04 | [`spec/test-strategy.md`](../spec/test-strategy.md): AC-SM-06–08, AC-API-08–09 mapping. |
 | 2026-10-04 | Retrieval eval: [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §5.2 / §8 **F-***; test-strategy §4.1. |
 | 2026-10-04 | State machine + ask bands: [`test-strategy.md`](../spec/test-strategy.md) §5–§6. |
+| 2026-10-04 | Pointers to spec **§0** and requirements **§0.5**; aligned with `rules/documentation.md`. |

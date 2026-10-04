@@ -38,6 +38,55 @@
 
 ---
 
+## 0. Document guide
+
+### 0.1 PDF coverage map (UI / ui-flow themes)
+
+| **PDF** application requirement | UI section |
+|---------------------------------|------------|
+| Create, list, view, update tickets | §7–§8 |
+| Assignee, comments | §8 |
+| Search, status filter | §7 list screen |
+| Meaningful errors | §6 |
+| Valid/invalid status transitions (display only) | §9 |
+| Natural-language Q&A; citations; no-match | §10 |
+| Five example questions (demo) | §10, §12 |
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements** — agents complete ticket work and verify RAG answers **without** Postman; errors and citations are visible in the product.
+
+**Functional requirements**
+
+| ID | Requirement | AC |
+|----|-------------|-----|
+| FR-UI-01 | All **AC-CORE-01…11** capabilities reachable in UI | **AC-UI-01…08** |
+| FR-UI-02 | Ask shows answer + cited ticket links/ids | **AC-UI-09** |
+| FR-UI-03 | No-match copy visible (not blank) | **AC-UI-10** |
+
+**Implementation requirements (**Convention** — **DEC-15** Open)**
+
+| ID | Requirement |
+|----|-------------|
+| IR-UI-01 | React + Vite + TypeScript; API client per `rules/frontend.md` |
+| IR-UI-02 | No frontend automated tests this milestone |
+| IR-UI-03 | Route map in §5; env `VITE_API_BASE_URL` for backend |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **UI-A** | §4–§5 | Yes | — | Routes, IA, app shell (**Example**) | [`architecture.md`](architecture.md) §12 |
+| **UI-B** | §6 Global errors | Yes | — | Meaningful API error display (**PDF**) | `rules/frontend.md` |
+| **UI-C** | §7 List + filters | Yes | **UI-A** | List, search `q`, status filter | [`api-contract.md`](api-contract.md) **API-E** |
+| **UI-D** | §8 CRUD/detail | Yes | **UI-A** | Create, edit fields, comments | **API-C**, **API-F** |
+| **UI-E** | §9 Status UX | Yes | **UI-D** | Transition controls (**DEC-06** interim) | [`state-machine.md`](state-machine.md) **SM-F** |
+| **UI-F** | §10 Ask panel | Yes | **UI-A** | Question input, citations, no-match | [`rag-api-contract.md`](rag-api-contract.md) **ASK-*** |
+| **UI-G** | §11 Flows A–E | Yes | **UI-C…F** | Hub journey → screens | [`requirements.md`](requirements.md) §4.1 |
+| **UI-H** | §12–§13 Demo + AC-UI | Yes | **UI-G** | Grader checklist | [`requirements.md`](requirements.md) §8.7 |
+
+---
+
 ## 1. Problem and context
 
 The assessment requires a **web UI** for everyday support-ticket work **and** a way for agents to ask **natural-language questions** over ticket history. Answers must appear **grounded** in real tickets (with **ticket ID** citations) or **honestly** state that nothing relevant was found (**PDF**).
@@ -89,7 +138,7 @@ No separate “admin” or “AI trainer” persona is required by the **PDF**.
 
 ---
 
-## 4. Information architecture
+## 4. Information architecture · unit **UI-A**
 
 ### 4.1 Primary navigation (logical)
 
@@ -139,7 +188,7 @@ Ask may alternatively be a **persistent panel** on list and detail (drawer or sp
 
 ---
 
-## 5. Application structure (logical)
+## 5. Application structure (logical) · unit **UI-A**
 
 Aligns with [`architecture.md`](architecture.md) §12.2 and `rules/frontend.md`.
 
@@ -165,7 +214,7 @@ frontend/src/
 
 ---
 
-## 6. Global UI behaviour
+## 6. Global UI behaviour · unit **UI-B**
 
 ### 6.1 API integration rules
 
@@ -216,7 +265,7 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 
 ---
 
-## 7. Screen catalog
+## 7. Screen catalog · unit **UI-C**
 
 ### 7.1 Ticket list (read many)
 
@@ -313,7 +362,7 @@ Every data-fetching screen (**list**, **detail**, **ask**) should handle:
 
 ---
 
-## 8. CRUD and ticket operations (by capability)
+## 8. CRUD and ticket operations (by capability) · unit **UI-D**
 
 Summary matrix for implementers and `commands/review-frontend.md`:
 
@@ -358,7 +407,7 @@ Summary matrix for implementers and `commands/review-frontend.md`:
 
 ---
 
-## 9. Status transitions (UI)
+## 9. Status transitions (UI) · unit **UI-E**
 
 **Authority:** [`state-machine.md`](state-machine.md) §5.1 (T1–T5), §5.2 (X1–X3). **Interim API:** `PATCH` with `status` only (**DEC-06**).
 
@@ -407,7 +456,7 @@ sequenceDiagram
 
 ---
 
-## 10. RAG and AI Q&A surfaces
+## 10. RAG and AI Q&A surfaces · unit **UI-F**
 
 ### 10.1 What the user sees vs backend pipeline
 
@@ -520,7 +569,7 @@ Same after transition to **CLOSED** per **DEC-01** / **FEAT-14** (close triggers
 
 ---
 
-## 11. End-to-end flows A–E (UI mapping)
+## 11. End-to-end flows A–E (UI mapping) · unit **UI-G**
 
 Hub definitions: [`requirements.md`](requirements.md) §4.1. This table maps **agent-visible** steps to screens.
 
@@ -534,7 +583,7 @@ Hub definitions: [`requirements.md`](requirements.md) §4.1. This table maps **a
 
 ---
 
-## 12. Demo and grading UI checklist
+## 12. Demo and grading UI checklist · unit **UI-H**
 
 Aligned with [`requirements.md`](requirements.md) §8.7 (steps 1–10 are UI-heavy). Use **Example** labels; adjust to implemented navigation.
 
@@ -557,7 +606,7 @@ Steps 11–18 are primarily docs, config, tests, or process artefacts — see §
 
 ---
 
-## 13. Acceptance criteria (**AC-UI-**)
+## 13. Acceptance criteria (**AC-UI-**) · unit **UI-H**
 
 Testable UI criteria for spec review (`commands/review-spec.md`) and frontend review. Backend-heavy items remain **AC-CORE-*** / **AC-API-***; these focus on **agent-visible** behaviour.
 
@@ -598,3 +647,6 @@ Do not close **Open** items in implementation without updating [`requirements.md
 | 2026-10-04 | Initial UI model: screen catalog, CRUD flows, status UX, ask/RAG surfaces, flows A–E mapping, **AC-UI-01…12**. |
 | 2026-10-04 | Cross-linked from `requirements.md`, `architecture.md` §12, `rules/frontend.md`, commands, `documentation.md`. |
 | 2026-10-04 | `improve-from-assessment-pdf`: PDF `ui-flow.md` alias documented; traceability to p.3–4 UI + p.5–6 ask capabilities. |
+| 2026-10-04 | §0 document guide: PDF ui-flow capability map; business/functional/implementation triad. |
+| 2026-10-04 | §0.3 **UI-*** independent reading units (screens → flows → demo). |
+| 2026-10-04 | Major `##` headings tagged with **UI-*** unit ids. |

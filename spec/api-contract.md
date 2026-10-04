@@ -4,6 +4,60 @@
 > **Primary source:** `docs/Assessments.docx` (capabilities restated in [`requirements.md`](requirements.md)).  
 > **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask / RAG HTTP semantics (**PDF** `rag-api-contract.md`) → [`rag-api-contract.md`](rag-api-contract.md) (authoritative); summary retained **§6.2–§6.5** (**DEC-11** open). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
 
+**Label legend:** **PDF** | **Convention** | **Agreed** | **Example** | **Open**
+
+---
+
+## 0. Document guide
+
+### 0.1 PDF REST capabilities → endpoints
+
+| **PDF** (p.3–4, p.5) | This spec |
+|----------------------|-----------|
+| Create / list / view / update ticket fields | §4 |
+| Add comments | §5 |
+| Search by keyword, filter by status | §4 list `GET` query params |
+| Backend validation, meaningful errors | §2 envelopes + §4 negatives |
+| `POST /api/ai/ask` `{ "question" }` | §6 summary → [`rag-api-contract.md`](rag-api-contract.md) |
+| Status machine via API | §4.4 PATCH `status` + **409** |
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements** — expose ticket operations and ask over **REST** with predictable JSON so UI and tests share one contract.
+
+**Functional requirements**
+
+| ID | Requirement | Section |
+|----|-------------|---------|
+| FR-API-01 | Versioned ticket paths under `/api/v1/tickets` | §2.1, §4 |
+| FR-API-02 | Success `data` / error `error` envelopes | §2.3–§2.4 |
+| FR-API-03 | List pagination, sort, `q`, `status` filter | §4.2 |
+| FR-API-04 | Illegal transition → **409** `ILLEGAL_TRANSITION` | §4.4 |
+
+**Implementation requirements**
+
+| ID | Requirement |
+|----|-------------|
+| IR-API-01 | Controllers delegate to services; map domain exceptions per `rules/api-standards.md` |
+| IR-API-02 | OpenAPI optional; this markdown spec is authoritative until generated |
+| IR-API-03 | Ask handler delegates to RAG service; response DTO per [`rag-api-contract.md`](rag-api-contract.md) |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **API-A** | §2 Cross-cutting | Yes | — | Envelopes, `/api/v1`, list params | `rules/api-standards.md` |
+| **API-B** | §3 Resource models | Yes | **API-A** | Ticket/comment JSON shapes | [`data-model.md`](data-model.md) §10 |
+| **API-C** | §4.1–§4.3 CRUD/list/detail | Yes | **API-B** | Create, list, get, field PATCH | [`ui-model.md`](ui-model.md) §8 |
+| **API-D** | §4.4 Status PATCH | Yes | **API-B**, **API-C** | T1–T5 + **409** scenarios | [`state-machine.md`](state-machine.md) §6 |
+| **API-E** | §4 search/filter | Yes | **API-C** | `q`, `status` query (**DEC-08**) | [`data-model.md`](data-model.md) §15 |
+| **API-F** | §5 Comments | Yes | **API-B** | Comment create/list on ticket | FEAT-05 |
+| **API-G** | §6 Ask summary | Yes | **API-A** | Boundary pointer to ask detail | [`rag-api-contract.md`](rag-api-contract.md) **ASK-*** units |
+| **API-H** | §7 Demo URIs | Yes | **API-C…F** | End-to-end URI sequence | [`requirements.md`](requirements.md) §8.7 |
+| **API-I** | §9 AC-API | Yes | **API-C…G** | HTTP acceptance IDs | [`test-strategy.md`](test-strategy.md) §9 |
+
+**PDF note:** Ticket capabilities (p.3–4) map to **API-C…F**; ask path (p.5) → **API-G** + [`rag-api-contract.md`](rag-api-contract.md).
+
 ---
 
 ## 1. Problem and context
@@ -20,7 +74,7 @@ Field types, enums, DB columns, and Bean Validation limits → [`data-model.md`]
 
 ---
 
-## 2. Cross-cutting conventions
+## 2. Cross-cutting conventions · unit **API-A**
 
 ### 2.1 Transport
 
@@ -358,7 +412,7 @@ All paths are relative to **base URL** (§2.8). **Write** requests use flat JSON
 
 ---
 
-## 3. Resource models (JSON schemas)
+## 3. Resource models (JSON schemas) · unit **API-B**
 
 ### 3.1 `TicketSummary` (list items)
 
@@ -441,7 +495,7 @@ Returned inside the success envelope on **200** for §6.1. Field names and no-ma
 
 ---
 
-## 4. Endpoints — tickets
+## 4. Endpoints — tickets · units **API-C**, **API-D**, **API-E**
 
 Per-endpoint detail below. Summary catalog: §2.11.
 
@@ -954,7 +1008,7 @@ Rules: [`state-machine.md`](state-machine.md) §5.1, §5.5. Assume ticket `TKT-1
 
 ---
 
-## 5. Endpoints — comments
+## 5. Endpoints — comments · unit **API-F**
 
 ### 5.1 `POST /api/v1/tickets/{id}/comments` — add comment
 
@@ -1027,7 +1081,7 @@ After success, `GET /api/v1/tickets/{id}` includes the new comment in `comments`
 
 ---
 
-## 6. Endpoint — ask (boundary)
+## 6. Endpoint — ask (boundary) · unit **API-G**
 
 **Capability (**PDF**):** natural-language questions over ticket knowledge; grounded answer with citations or honest no-match; **no** side effects.
 
@@ -1216,7 +1270,7 @@ Maps to **AC-CORE-16…18**, **AC-API-06/07**, and grounding review command.
 
 ---
 
-## 7. End-to-end example (demo script URIs)
+## 7. End-to-end example (demo script URIs) · unit **API-H**
 
 Sequence aligned with [`requirements.md`](requirements.md) §8.7 / Flow A + B. Replace host as needed.
 
@@ -1250,7 +1304,7 @@ Sequence aligned with [`requirements.md`](requirements.md) §8.7 / Flow A + B. R
 
 ---
 
-## 9. Acceptance criteria (API contract)
+## 9. Acceptance criteria (API contract) · unit **API-I**
 
 | ID | Criterion |
 |----|-----------|
@@ -1290,3 +1344,6 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | 2026-10-04 | Related-spec UI pointer → architecture §12.3–§12.6. |
 | 2026-10-04 | Related-spec UI pointer → [`ui-model.md`](ui-model.md). |
 | 2026-10-04 | Ask detail → [`rag-api-contract.md`](rag-api-contract.md); §6 remains combined-catalog summary. |
+| 2026-10-04 | §0 document guide: PDF→endpoint map; business/functional/implementation triad; label legend. |
+| 2026-10-04 | §0.3 **API-*** independent reading units (envelopes → CRUD → ask boundary). |
+| 2026-10-04 | Major `##` headings tagged with **API-*** unit ids. |

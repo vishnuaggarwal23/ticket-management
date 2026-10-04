@@ -19,7 +19,7 @@ Mark checklist items **Pass** / **Fail** / **N/A**. Failures are blocking for im
 
 Default **Ready for implementation?** → **no** until draft specs needed for the slice are complete and open **DEC-*** are resolved or explicitly accepted as interim. **`data-model.md` is agreed**; all other PDF-listed `spec/` files are **draft** — ticket HTTP, ingest, ask, UI, and eval may proceed per those specs + `rules/*` unless a **DEC-*** blocks (e.g. **DEC-09** embedding model, **DEC-11** no-match wording).
 
-You may still review **`requirements.md`** / **`architecture.md`** for PDF alignment (requirements **§0.4**, [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**). List **blocking open decisions** explicitly — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
+You may still review **`requirements.md`** / **`architecture.md`** for PDF alignment (requirements **§0.4**, **§0.5**, [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**). List **blocking open decisions** explicitly — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
 
 ---
 
@@ -29,9 +29,9 @@ Before judging content, **name every file** you used and its role. If a file is 
 
 | Role | Typical path | Use in this review |
 |------|----------------|-------------------|
-| Requirements | [`spec/requirements.md`](../spec/requirements.md) | PDF scope; **AC-CORE** / **FEAT**; **OQ** / **DEC** (§10); handoff map (§10.3); §8.7 demo script |
-| Architecture | [`spec/architecture.md`](../spec/architecture.md) | Business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) |
-| Data model | [`spec/data-model.md`](../spec/data-model.md) | entities, enums, DTOs §10, **indexes §14.5**, Liquibase order §14, **AC-DM-*** |
+| Requirements | [`spec/requirements.md`](../spec/requirements.md) | PDF scope; **AC-CORE** / **FEAT**; **OQ** / **DEC** (§10); **§0.4–§0.5**; handoff map (§10.3); §8.7 demo script |
+| Architecture | [`spec/architecture.md`](../spec/architecture.md) | **§0** PDF/RAG ladder; business vs functional modules (§4, §8); ticket aggregate (§5); tech/deployment (§6–7); communication (§10); API map (§11); vector DB (§14); RAG pipeline (§15); chunking/embedding **justification** (§16, AC-CORE-19). Numeric locks → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) |
+| Data model | [`spec/data-model.md`](../spec/data-model.md) | **§0** persistence map; entities, enums, DTOs §10, **indexes §14.5**, Liquibase order §14, **AC-DM-*** |
 | API contract | [`spec/api-contract.md`](../spec/api-contract.md) | payloads, scenarios, ask boundary (envelopes in `rules/api-standards.md`) |
 | State machine | [`spec/state-machine.md`](../spec/state-machine.md) | §5 legal/illegal matrix; **DEC-02** default (A) |
 | RAG ingestion | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | chunking §6–§9, ingest §10–§11, **AC-RAG-ING-*** |
@@ -61,6 +61,9 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] Project conventions (Boot 3, `/api/v1`, PgVector, JUnit, envelopes, PATCH) are **labeled** as conventions, **not** as PDF mandates
 - [ ] Open items remain in **Open questions** (or equivalent), not smuggled into requirements as decided facts
 - [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): **§0.4** coverage map — every PDF theme row has a capture path or explicit gap (**DEC-*** / demo evidence only)
+- [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): **§0.5** verbatim anchor table — no assignment bullet left unmapped to a spec home
+- [ ] Child specs in scope include **§0** (PDF map for that file; BRF/FRI/IRI where present) per [`rules/documentation.md`](../rules/documentation.md) writing bar
+- [ ] Major **`##` sections** in child specs suffix **unit ids** from that file’s §0.3 table (`· unit **ID**` / `· units **A**…**B**`; hub [`requirements.md`](../spec/requirements.md) **§0.8**)
 - [ ] **§6.8** hygiene map — each PDF-listed rule/command exists under `rules/` and `commands/` (and `skills/documentation/SKILL.md`)
 - [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
 - [ ] Child specs that resolve an **OQ-*** cite the matching **DEC-*** decision (or remain draft until user confirms)
@@ -282,3 +285,5 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Eight-file spec set: ask → `api-contract` §6.2–§6.5; UI → `architecture` §12.3–§12.6. |
 | 2026-10-04 | Nine-file set: UI detail → [`ui-model.md`](../spec/ui-model.md); **AC-UI-*** review section. |
 | 2026-10-04 | Ten-file set: ask detail → [`rag-api-contract.md`](../spec/rag-api-contract.md). |
+| 2026-10-04 | Checklist: requirements **§0.5**; child spec **§0** guides; file map **§0** columns. |
+| 2026-10-04 | Checklist: **`##` heading unit suffix** aligned with §0.3 independent reading units. |

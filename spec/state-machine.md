@@ -4,6 +4,78 @@
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** [`data-model.md`](data-model.md) §5.1 (`TicketStatus`), §10 PATCH; [`architecture.md`](architecture.md) §17 (domain placement); `rules/api-standards.md` (409 envelope); `rules/java-springboot.md` (layering).
 
+**Label legend:** **PDF** | **Convention** | **Agreed** | **Open**
+
+---
+
+## Table of contents
+
+0. [Document guide](#0-document-guide)  
+1. [Problem and context](#1-problem-and-context)  
+2. [Scope and non-goals](#2-scope-and-non-goals)  
+3. [States · **SM-A**](#3-states--unit-sm-a)  
+4. [State machine diagram · **SM-A**](#4-state-machine-diagram--unit-sm-a)  
+5. [Transitions · **SM-B**…**SM-E**](#5-transitions--units-sm-b-sm-e)  
+6. [API and persistence · **SM-F**](#6-api-and-persistence-behaviour--unit-sm-f)  
+7. [RAG side effects · **SM-G**](#7-rag-and-side-effects--unit-sm-g)  
+8. [Implementation placement · **SM-H**](#8-implementation-placement--unit-sm-h)  
+9. [Acceptance criteria · **SM-H**](#9-acceptance-criteria-testable--unit-sm-h)  
+10. [Open questions](#10-open-questions-and-decisions)  
+11. [Revision history](#11-revision-history)  
+
+---
+
+## 0. Document guide
+
+### 0.1 PDF coverage map
+
+| **PDF** (p.4) | Section |
+|---------------|---------|
+| Backend-enforced machine: `OPEN→IN_PROGRESS→RESOLVED→CLOSED`; cancel from `OPEN` / `IN_PROGRESS` | §4, §5.1 T1–T5 |
+| Invalid transitions rejected; examples `CLOSED→OPEN`, `RESOLVED→OPEN`, `CANCELLED→OPEN` | §5.2 X1–X3, §5.6 |
+| Integration tests for legal + illegal paths | §9 → [`test-strategy.md`](test-strategy.md) §5 |
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements**
+
+- Ticket lifecycle reflects real support work: open → in progress → resolved → closed, or cancellation without completion.
+- Reopening closed/cancelled tickets is **out of scope** unless a future **DEC** adds edges (**PDF** examples forbid reopen).
+
+**Functional requirements**
+
+| ID | Requirement | AC |
+|----|-------------|-----|
+| FR-SM-01 | Only T1–T5 succeed when `current ≠ target` | **AC-SM-01** |
+| FR-SM-02 | All other pairs fail (incl. self-transition) | **AC-SM-03**, **AC-SM-06**, **AC-SM-07** |
+| FR-SM-03 | X1–X3 explicitly fail | **AC-SM-02** |
+| FR-SM-04 | New tickets start `OPEN` without client-supplied status | **AC-SM-04** (**DEC-07**) |
+| FR-SM-05 | UI shows readable error; backend is source of truth | AC-FEAT-11-04 |
+
+**Implementation requirements**
+
+| ID | Requirement | Owner |
+|----|-------------|-------|
+| IR-SM-01 | `TicketStatusMachine` in **domain** package — no rules in repository | §8 |
+| IR-SM-02 | Illegal transition → `IllegalTicketTransitionException` → HTTP **409** `ILLEGAL_TRANSITION` | §6.3 |
+| IR-SM-03 | PATCH `/api/v1/tickets/{id}` with body field `status` (**DEC-06** interim) | §6.1 |
+| IR-SM-04 | On **409**, DB row unchanged (integration test) | §6.3 |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **SM-A** | §3 States | Yes | — | Enum + terminal + **DEC-07** initial `OPEN` | [`data-model.md`](data-model.md) §5.1 |
+| **SM-B** | §5.1 T1–T5 | Yes | **SM-A** | Five legal edges (**PDF** p.4) | [`requirements.md`](requirements.md) FEAT-11 |
+| **SM-C** | §5.2 X1–X3 | Yes | **SM-A** | Three forbidden reopen examples (**PDF**) | §6.5 JSON |
+| **SM-D** | §5.3–§5.4 | Yes | **SM-B**, **SM-C** | Skipped hops (**DEC-02** A); full matrix | §5.6 register |
+| **SM-E** | §5.6 illegal register | Yes | **SM-D** | Twenty illegal pairs for tests | [`test-strategy.md`](test-strategy.md) §5.4 |
+| **SM-F** | §6 API behaviour | Yes | **SM-B** | PATCH `status`, **409**, examples §6.5 | [`api-contract.md`](api-contract.md) §4.4 |
+| **SM-G** | §7 RAG side effects | Yes | **SM-A** | Re-ingest on close (**DEC-01**) | [`rag-ingestion.md`](rag-ingestion.md) §10 |
+| **SM-H** | §8–§9 | Yes | **SM-E**, **SM-F** | Layering + **AC-SM-*** | `rules/java-springboot.md` |
+
+**PDF verbatim (p.4):** “The following state machine must be enforced by the backend: OPEN → IN_PROGRESS → RESOLVED → CLOSED; OPEN → CANCELLED; IN_PROGRESS → CANCELLED. Invalid transitions must be rejected.”
+
 ---
 
 ## 1. Problem and context
@@ -25,7 +97,7 @@ This spec is the **authoritative transition matrix** for implementation and test
 
 ---
 
-## 3. States
+## 3. States · unit **SM-A**
 
 Canonical enum (**PDF**): `OPEN` | `IN_PROGRESS` | `RESOLVED` | `CLOSED` | `CANCELLED`.
 
@@ -43,7 +115,7 @@ Canonical enum (**PDF**): `OPEN` | `IN_PROGRESS` | `RESOLVED` | `CLOSED` | `CANC
 
 ---
 
-## 4. State machine (diagram)
+## 4. State machine (diagram) · unit **SM-A**
 
 **PDF** happy path and cancel branches:
 
@@ -77,7 +149,7 @@ There are **no** backward edges to `OPEN` from terminal or late lifecycle states
 
 ---
 
-## 5. Transitions
+## 5. Transitions · units **SM-B**…**SM-E**
 
 ### 5.1 Valid transitions (**PDF** — must succeed)
 
@@ -255,7 +327,7 @@ Implementation MUST centralize §5.1–§5.6 in domain code (§8), e.g.:
 
 ---
 
-## 6. API and persistence behaviour
+## 6. API and persistence behaviour · unit **SM-F**
 
 ### 6.1 Request shape (**DEC-06** interim — [`api-contract.md`](api-contract.md) §4.4)
 
@@ -296,9 +368,51 @@ On **409**, the ticket row’s `status` **must not** change (integration tests).
 - PATCH may update title, description, priority, assignee, category, `resolutionNotes` together with `status` only when each field is valid on its own ([`data-model.md`](data-model.md) §16).
 - Illegal `status` **fails the whole operation** — do not partially apply other fields in the same transaction unless a future spec defines split semantics (**Open**).
 
+### 6.5 REST examples (**Example** — envelope per `rules/api-standards.md`)
+
+**Legal transition T1 (`OPEN` → `IN_PROGRESS`):**
+
+```http
+PATCH /api/v1/tickets/TKT-1001 HTTP/1.1
+Content-Type: application/json
+
+{ "status": "IN_PROGRESS" }
+```
+
+```json
+{
+  "data": {
+    "id": "TKT-1001",
+    "status": "IN_PROGRESS",
+    "title": "Payment declined",
+    "updatedAt": "2026-01-03T09:00:00Z"
+  }
+}
+```
+
+**Illegal reopen X1 (`CLOSED` → `OPEN`):**
+
+```http
+PATCH /api/v1/tickets/TKT-1001 HTTP/1.1
+Content-Type: application/json
+
+{ "status": "OPEN" }
+```
+
+```json
+{
+  "error": {
+    "code": "ILLEGAL_TRANSITION",
+    "message": "Cannot transition from CLOSED to OPEN"
+  }
+}
+```
+
+HTTP status **409**; persisted `status` remains `CLOSED`.
+
 ---
 
-## 7. RAG and side effects
+## 7. RAG and side effects · unit **SM-G**
 
 - Chunk **metadata** includes `status` at ingest time ([`data-model.md`](data-model.md) §9).
 - Transition to `CLOSED` may trigger re-ingestion per **DEC-01** ([`requirements.md`](requirements.md) §11.1); timing detail → `rag-ingestion.md` when present.
@@ -306,7 +420,7 @@ On **409**, the ticket row’s `status` **must not** change (integration tests).
 
 ---
 
-## 8. Implementation placement
+## 8. Implementation placement · unit **SM-H**
 
 | Layer | Responsibility |
 |-------|----------------|
@@ -319,7 +433,7 @@ Repositories must not encode transition rules ([`architecture.md`](architecture.
 
 ---
 
-## 9. Acceptance criteria (testable)
+## 9. Acceptance criteria (testable) · unit **SM-H**
 
 | ID | Criterion |
 |----|-----------|
@@ -356,3 +470,6 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | 2026-10-04 | **DEC-02:** user confirmed interim **(A)** — only T1–T5; decision remains Open in requirements §10.2. |
 | 2026-10-04 | §6.1 aligned with [`api-contract.md`](api-contract.md) PATCH body (not request `data` wrapper). |
 | 2026-10-04 | §5.5–5.7 valid ops + 20-row invalid register; §6.1.1 PATCH `status` presence rules; AC-SM-06–08. |
+| 2026-10-04 | §0 guide (PDF map, BRF/FRI/IRI); §6.5 REST JSON examples for T1 and X1. |
+| 2026-10-04 | §0.3 **SM-*** independent reading units + PDF verbatim state machine quote. |
+| 2026-10-04 | Major `##` headings tagged `· unit **SM-***` / `· units **SM-B**…**SM-E**`; TOC jump links. |

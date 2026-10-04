@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/api-standards.mdc`](../.cursor/rules/api-standards.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§6, §10, §16). **HTTP paths, request/response payloads, and per-endpoint scenarios** are in [`spec/api-contract.md`](../spec/api-contract.md) (draft). **Ask** `data` semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** no-match wording). Capability map: [`spec/architecture.md`](../spec/architecture.md) §11. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
+JSON REST APIs for tickets and grounded Q&A. **Ticket field catalogs, enums, ids, and validation** are agreed in [`spec/data-model.md`](../spec/data-model.md) (§0, §6, §10, §16). **HTTP paths, request/response payloads, and per-endpoint scenarios** are in [`spec/api-contract.md`](../spec/api-contract.md) (draft, **§0** REST map). **Ask** `data` semantics: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**§0**, **DEC-11** no-match wording). Capability map: [`spec/architecture.md`](../spec/architecture.md) §11. All resource specs MUST use the envelopes, query parameters, status codes, and URI versioning defined here — they must not invent a second public JSON shape.
 
 Backend implementation: `rules/java-springboot.md`. Tests: `rules/testing.md`. System API map and client communication: [`spec/architecture.md`](../spec/architecture.md) §10–11.
 
@@ -377,3 +377,4 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Ticket HTTP payloads/scenarios defer to draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | Ask `data` pointers → `api-contract` §6.2–§6.5 (consolidated PDF `rag-api-contract` themes). |
 | 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md) (authoritative). |
+| 2026-10-04 | Cross-refs to spec **§0** guides (`api-contract`, `rag-api-contract`, `data-model`). |

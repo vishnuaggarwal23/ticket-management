@@ -40,7 +40,58 @@
 
 ---
 
-## 1. Problem and context
+## 0. Document guide
+
+### 0.1 PDF coverage map (ask API only)
+
+| **PDF** (p.3–6) | Section |
+|-----------------|---------|
+| NL Q&A grounded in ticket data | §1, §9 |
+| Cite ticket id(s) used | §7, §9 |
+| Explicit no relevant tickets | §10 |
+| `POST /api/ai/ask` + example question JSON | §5–§6 |
+| Single retrieve → generate; not an agent | §11 |
+| Five illustrative questions | §12 |
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements** — one HTTP operation turns a support question into an answer **traceable** to ticket ids or an honest empty result.
+
+**Functional requirements**
+
+| ID | Requirement | AC |
+|----|-------------|-----|
+| FR-RAG-API-01 | Accept non-blank `question` | **AC-RAG-API-01** |
+| FR-RAG-API-02 | Success `data.answer` + `data.citedTicketIds` when grounded | **AC-RAG-API-02…03** |
+| FR-RAG-API-03 | No-match still **200** with agreed copy inside `data` | **AC-RAG-API-04** (**DEC-11**) |
+| FR-RAG-API-04 | No side effects on tickets/comments | **AC-RAG-API-05** |
+
+**Implementation requirements**
+
+| ID | Requirement |
+|----|-------------|
+| IR-RAG-API-01 | Controller → `AskService` → retrieval + Spring AI chat |
+| IR-RAG-API-02 | Versioned alias `/api/v1/ai/ask` same handler as **PDF** path |
+| IR-RAG-API-03 | Do not return raw chunks or prompts in JSON |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **ASK-A** | §1 + §5 | Yes | — | **PDF** path `POST /api/ai/ask` | `rules/api-standards.md` envelopes |
+| **ASK-B** | §6 Request | Yes | **ASK-A** | `AskRequest`, validation **400** | §6.3 error table |
+| **ASK-C** | §7 Grounded **200** | Yes | **ASK-B** | `answer` + `citedTicketIds` examples | [`data-model.md`](data-model.md) DEC-04 |
+| **ASK-D** | §10 No-match **200** | Yes | **ASK-B** | Honest empty retrieval (**DEC-11**) | [`requirements.md`](requirements.md) AC-CORE-18 |
+| **ASK-E** | §9 Citations | Yes | **ASK-C** | Citation integrity rules | `commands/review-rag-output.md` |
+| **ASK-F** | §11 Guardrails | Yes | — | Non-agentic (**PDF** p.5–6) | [`requirements.md`](requirements.md) FEAT-18 |
+| **ASK-G** | §12 PDF questions | Yes | **ASK-C**, **ASK-D** | Five illustrative prompts | [`evaluation-strategy.md`](evaluation-strategy.md) §5 |
+| **ASK-H** | §17 AC-RAG-API | Yes | **ASK-B…F** | Contract acceptance IDs | [`test-strategy.md`](test-strategy.md) §6.2 |
+
+**PDF verbatim (p.5 API):** `POST /api/ai/ask` with `{ "question": "What caused previous payment failures?" }`.
+
+---
+
+## 1. Problem and context · unit **ASK-A**
 
 The assessment requires a **natural-language question-answering** capability over **ticket history**, with answers **grounded strictly in real ticket data**, **citations** to ticket ids used, and **honest** handling when nothing relevant exists (**PDF** p.3–6).
 
@@ -153,7 +204,7 @@ sequenceDiagram
 
 ---
 
-## 5. Endpoints
+## 5. Endpoints · unit **ASK-A**
 
 ### 5.1 Catalog
 
@@ -177,7 +228,7 @@ sequenceDiagram
 
 ---
 
-## 6. Request contract
+## 6. Request contract · unit **ASK-B**
 
 ### 6.1 `AskRequest` (**PDF**)
 
@@ -215,7 +266,7 @@ Flat JSON at the request root (not wrapped in `data`).
 
 ---
 
-## 7. Success response contract
+## 7. Success response contract · unit **ASK-C**
 
 ### 7.1 Envelope (**Convention**)
 
@@ -296,7 +347,7 @@ Wording is **interim** (**DEC-11**). Meaning must be honest: nothing relevant in
 
 ---
 
-## 9. Grounding and citations
+## 9. Grounding and citations · unit **ASK-E**
 
 ### 9.1 Grounding rules (**PDF** p.5–6)
 
@@ -324,7 +375,7 @@ Retrieval quality (right tickets in top-K): [`evaluation-strategy.md`](evaluatio
 
 ---
 
-## 10. No-match and out-of-scope
+## 10. No-match and out-of-scope · unit **ASK-D**
 
 **PDF** p.6: when no tickets are relevant, respond with an honest **“no relevant tickets found”** (or equivalent) — **not** a fabricated plausible answer.
 
@@ -339,7 +390,7 @@ Retrieval quality (right tickets in top-K): [`evaluation-strategy.md`](evaluatio
 
 ---
 
-## 11. Guardrails — non-agentic assistant
+## 11. Guardrails — non-agentic assistant · unit **ASK-F**
 
 **PDF** p.5–6: deliberately **not** an autonomous agent.
 
@@ -354,7 +405,7 @@ The API must remain **read-only** with respect to ticket SoR.
 
 ---
 
-## 12. PDF illustrative questions
+## 12. PDF illustrative questions · unit **ASK-G**
 
 **PDF** lists questions the assistant should be able to answer when the corpus supports them (**Example** ids and corpus — not mandated seed data). See also [`requirements.md`](requirements.md) §4.2 FEAT-17 and [`evaluation-strategy.md`](evaluation-strategy.md) §5.
 
@@ -417,7 +468,7 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 
 ---
 
-## 17. Acceptance criteria (**AC-RAG-API-***)
+## 17. Acceptance criteria (**AC-RAG-API-***) · unit **ASK-H**
 
 | ID | Criterion |
 |----|-----------|
@@ -447,3 +498,6 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 |------|------|
 | 2026-10-04 | Initial **PDF** `rag-api-contract.md`: endpoints, AskRequest/AskResponseData, grounding, no-match, guardrails, AC-RAG-API-01…05. |
 | 2026-10-04 | Cross-linked across `spec/`, `rules/`, `commands/`, `docs/` as authoritative ask contract. |
+| 2026-10-04 | §0 document guide: PDF ask themes; business/functional/implementation triad. |
+| 2026-10-04 | §0.3 **ASK-*** independent reading units + PDF `/api/ai/ask` quote. |
+| 2026-10-04 | Major `##` headings tagged with **ASK-*** unit ids. |

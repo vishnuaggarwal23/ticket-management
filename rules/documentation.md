@@ -101,7 +101,7 @@ Use this map when running `commands/review-spec.md` or tracing tests — do not 
 
 | Section | Use |
 |---------|-----|
-| §0 | How to read the file; audience; **§0.4 PDF coverage map** |
+| §0 | How to read the file; audience; **§0.4 PDF coverage map**; **§0.5 PDF verbatim anchors** (completeness checklist) |
 | §2.4–2.7 | Precedence, deterministic vs probabilistic, status enum, anti-patterns |
 | §4.1–4.3 | Flows A–E; per-feature AC; **Example** demo corpus (not mandated seed data) |
 | §8, §8.7 | **AC-CORE-*** sign-off; demo / grading script |
@@ -119,6 +119,7 @@ Use when running `commands/review-spec.md` or tracing implementation to layers �
 | Section | Use |
 |---------|-----|
 | §3 | Architectural principles (monolith, grounded AI, spec-driven) |
+| **§0** | PDF theme map; verbatim RAG ladder; architecture-level BRF/FRI/IRI |
 | §4 | **Business** modules, actors, capability map → FEAT ids |
 | §5 | **Ticket** aggregate (conceptual); RAG text sources; not field catalogs |
 | §6–7 | System context, stack, deployment topology |
@@ -137,6 +138,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 
 | Section | Use |
 |---------|-----|
+| **§0** | PDF persistence map; business/functional/implementation triad |
 | §4–7 | Domain overview, enums, relational entities, associations |
 | §8–9 | Vector/`ticket_vector_chunk`, logical RAG pipeline types |
 | §10–12 | API DTOs, `RagChunkMetadata`, embeddables |
@@ -148,6 +150,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 
 | Section | Use |
 |---------|-----|
+| **§0** | PDF state-machine map; BRF/FRI/IRI; REST examples §6.5 |
 | §3–4 | States, terminal behaviour, diagrams |
 | §5.1–5.2 | **PDF** valid T1–T5 and forbidden X1–X3 |
 | §5.3–5.7 | **DEC-02** default (A); full valid/invalid matrix; §5.6 illegal register; PATCH `status` rules §6.1.1 |
@@ -159,6 +162,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 
 | Section | Use |
 |---------|-----|
+| **§0** | PDF REST capabilities → endpoints; BRF/FRI/IRI |
 | §2 | Envelopes; **§2.8** URI catalog; **§2.11** endpoint catalog; **§2.9** headers; **§2.10** error examples |
 | §3 | JSON resource models (ticket, comment, writes) |
 | §4–5 | Endpoints with full HTTP + cURL + scenario tables |
@@ -171,6 +175,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 
 | Section | Use |
 |---------|-----|
+| **§0** | PDF ask themes; BRF/FRI/IRI |
 | §4–§6 | Endpoints, envelopes, pipeline boundary |
 | §7 | `AskRequest` / `AskResponseData` inside success `data` |
 | §8–§9 | Grounding, citations, no-match (**DEC-11**) |
@@ -183,6 +188,7 @@ Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-con
 
 | Section | Use |
 |---------|-----|
+| **§0** | Ingest PDF map; BRF/FRI/IRI; examples (`assembledText`, `application.yml`) |
 | §4–§5 | Ingest sources (description, comments, resolution); what is **not** text (transition history) |
 | §6–§8 | Paragraph vs fixed-size comparison |
 | §9 | **Hybrid** recommendation; **proposed** `max-chars` / `min-chars` / `overlap` (confirm to agree) |
@@ -194,6 +200,7 @@ Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-con
 
 | Section | Use |
 |---------|-----|
+| **§0** | Probabilistic-testing PDF map; eval BRF/FRI/IRI |
 | §3–§4 | Grounding vs **retrieval quality**; what/how/why; deterministic vs probabilistic proof |
 | §5 | **Example** eval corpus + five **PDF** questions → expected ticket ids (aligns with [`requirements.md`](../spec/requirements.md) §4.3) |
 | §5.3 | Worked retrieval verdict examples |
@@ -209,6 +216,7 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 
 | Section | Use |
 |---------|-----|
+| **§0** | PDF `ui-flow` capability map; UI BRF/FRI/IRI |
 | §4–§5 | Information architecture, app structure |
 | §7–§8 | Screen catalog; CRUD flows |
 | §9 | Status transition UX (**DEC-06** interim) |
@@ -221,6 +229,7 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 
 | Section | Use |
 |---------|-----|
+| **§0** | PDF proof map (SM integration, ask bands, no UI tests) |
 | §5 | **State machine deterministic logic** — T1–T5, X1–X3, 20 illegal pairs, layers, FEAT-21 / AC-CORE-12…14 |
 | §6 | **Retrieval quality + AI output** — Bands A (JUnit) / B (grounding) / C (probabilistic eval); AC-CORE-16…18 |
 | §7 | **AC-CORE** → test layers (summary) |
@@ -232,6 +241,7 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 ## Writing bar
 
 - Specs are detailed enough to implement without guessing: problem, scope/non-goals, requirements, acceptance criteria, contracts, open questions, revision history.
+- **§0 document guide (standard):** each `spec/*.md` (except where hub-only extras apply) should include **§0** with at least a **PDF coverage map** for that file’s themes and, where useful, **business / functional / implementation** requirement tables (BRF/FRI/IRI ids). Hub completeness index: [`requirements.md`](../spec/requirements.md) **§0.5**. **Independent reading units** table (unit ids e.g. **HUB-***, **SM-***, **ING-***, **ASK-***, **API-***, **DM-***, **ARCH-***, **UI-***, **TS-***, **EVAL-***) — small sections readable alone; prerequisites column lists **this file** only. **Major `##` headings** suffix the unit id(s): ` · unit **SM-A**` or ` · units **SM-B**…**SM-E**` (see hub [`requirements.md`](../spec/requirements.md) **§0.8**). Rules and commands **point** to spec §0 — they do not duplicate spec bodies.
 - **`rules/*.md` and `commands/*.md`** — keep a short **Revision history** table at the end when content changes (same `Date | Note` format as `spec/`).
 - Prefer checklists; link acceptance criteria to backend tests or `commands/review-frontend.md` for UI.
 - Map backend tests via [`spec/test-strategy.md`](../spec/test-strategy.md) and **`AC-CORE-*`** / **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md) (§8–§9).
@@ -295,3 +305,6 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Ten-file `spec/` set; [`rag-api-contract.md`](../spec/rag-api-contract.md) reviewer map; **AC-RAG-API-*** owner. |
 | 2026-10-04 | Added `commands/improve-from-assessment-pdf.md` (edit-only assessment sync pass). |
 | 2026-10-04 | Authoritative assignment path: `docs/Assessments.docx`. |
+| 2026-10-04 | Reviewer maps: **§0** on all ten specs; writing bar §0 pattern; requirements **§0.5** pointer. |
+| 2026-10-04 | Writing bar: independent reading unit ids (**HUB-***, **SM-***, …) for chunked spec reading. |
+| 2026-10-04 | Writing bar: **`##` heading unit suffix** convention (`· unit **ID**`); hub §0.8. |

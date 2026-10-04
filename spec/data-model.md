@@ -40,6 +40,60 @@
 
 ---
 
+## 0. Document guide
+
+### 0.1 PDF coverage map (data + RAG persistence)
+
+| **PDF** capability | Section |
+|--------------------|---------|
+| Persist tickets; survive restart | §6 `ticket`, §13 flows |
+| Comments | §6 `ticket_comment` |
+| Keyword search (title/description — **DEC-08**) | §15 |
+| Filter by status | §15 |
+| Resolution notes for RAG (**DEC-05**) | §6, §11 |
+| Embeddings + metadata in vector store | §8 `ticket_vector_chunk` |
+| Backend validation | §16 |
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements** — single source of truth for ticket shape so CRUD, search, state machine, and RAG ingest do not drift.
+
+**Functional requirements (selected)**
+
+| ID | Requirement | DEC / AC |
+|----|-------------|----------|
+| FR-DM-01 | Public id `TKT-{n}` from sequence starting 1001 | **DEC-04** |
+| FR-DM-02 | Create defaults: `OPEN`, `MEDIUM` priority | **DEC-07**, **DEC-13** |
+| FR-DM-03 | Optional `category` enum on create/update | **DEC-03** |
+| FR-DM-04 | Chunk metadata JSON includes PDF keys | §11 |
+| FR-DM-05 | `q` search excludes comment bodies | **DEC-08**, **AC-DM-05** |
+
+**Implementation requirements**
+
+| ID | Requirement |
+|----|-------------|
+| IR-DM-01 | Liquibase changelogs; PostgreSQL + PgVector extension |
+| IR-DM-02 | JPA entities + DTOs per §10; Bean Validation per §16 |
+| IR-DM-03 | HNSW index on embedding column (§14.5) |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **DM-A** | §5 Enums | Yes | — | `TicketStatus`, priority, category | [`state-machine.md`](state-machine.md) |
+| **DM-B** | §6 Relational entities | Yes | **DM-A** | `ticket`, `ticket_comment` tables | §14 Liquibase |
+| **DM-C** | §8 Vector table | Yes | **DM-B** | `ticket_vector_chunk`, metadata JSON | [`rag-ingestion.md`](rag-ingestion.md) §4.3 |
+| **DM-D** | §9 Pipeline types | Yes | **DM-B** | `KnowledgeDocument`, assembly template §9.1 | [`rag-ingestion.md`](rag-ingestion.md) §5.1 |
+| **DM-E** | §10 DTOs | Yes | **DM-A**, **DM-B** | API JSON field catalog (**Agreed**) | [`api-contract.md`](api-contract.md) §3 |
+| **DM-F** | §11 RAG metadata keys | Yes | **DM-C** | PDF metadata keys on chunks | **DEC-05** resolution |
+| **DM-G** | §14–§14.5 DDL + indexes | Yes | **DM-B**, **DM-C** | Liquibase order; trgm + HNSW | **AC-DM-08** |
+| **DM-H** | §15–§16 Search + validation | Yes | **DM-E** | `q` scope **DEC-08**; Bean Validation | [`test-strategy.md`](test-strategy.md) §10 |
+| **DM-I** | §18 AC-DM | Yes | **DM-B…H** | Data acceptance checks | — |
+
+**Agreed DEC in this file:** **DEC-03, 04, 05, 07, 08, 13** — do not contradict in other specs without user confirmation.
+
+---
+
 ## 1. Problem and context
 
 The assessment requires **database-backed** tickets that survive restart (**PDF**), with **comments**, **keyword search**, **status filter**, and a **RAG pipeline** that ingests ticket narrative and stores **embeddings with metadata** in a vector store (**PDF**).
@@ -151,7 +205,7 @@ erDiagram
 
 ---
 
-## 5. Enumerations and value objects
+## 5. Enumerations and value objects · unit **DM-A**
 
 ### 5.1 `TicketStatus` (**PDF**)
 
@@ -212,7 +266,7 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 
 ---
 
-## 6. Persistent entities (relational)
+## 6. Persistent entities (relational) · unit **DM-B**
 
 ### 6.1 `Ticket` (`ticket` table)
 
@@ -319,7 +373,7 @@ Vector chunks may be managed by Spring AI `PgVectorStore` rather than a bidirect
 
 ---
 
-## 8. RAG and vector persistence
+## 8. RAG and vector persistence · unit **DM-C**
 
 ### 8.1 Purpose (**PDF**)
 
@@ -356,7 +410,7 @@ Versioned history of embeddings is **out of scope** unless `rag-ingestion.md` ch
 
 ---
 
-## 9. Logical and pipeline models (non-persisted)
+## 9. Logical and pipeline models (non-persisted) · unit **DM-D**
 
 These types exist in the **`rag`** package during ingestion/ask; they are **not** JPA entities.
 
@@ -418,7 +472,7 @@ Title is for human context in chunks; **PDF** ingest sources are description, co
 
 ---
 
-## 10. API data transfer models (DTOs)
+## 10. API data transfer models (DTOs) · unit **DM-E**
 
 DTOs are **Java records** in `api` with Bean Validation on **requests**. Responses use the success envelope `{ "data": ... }` ([`rules/api-standards.md`](../rules/api-standards.md)).
 
@@ -507,7 +561,7 @@ This file does **not** fix ask `data` property names beyond noting citations mus
 
 ---
 
-## 11. Ticket metadata for RAG
+## 11. Ticket metadata for RAG · unit **DM-F**
 
 ### 11.1 `RagChunkMetadata` (record / JSON object)
 
@@ -626,7 +680,7 @@ flowchart LR
 
 ---
 
-## 14. Liquibase and physical schema
+## 14. Liquibase and physical schema · unit **DM-G**
 
 **Convention:** `src/main/resources/db/changelog/`
 
@@ -789,7 +843,7 @@ CREATE INDEX idx_ticket_vector_chunk_embedding_hnsw
 
 ---
 
-## 15. Query and search persistence
+## 15. Query and search persistence · unit **DM-H**
 
 ### 15.1 List + filter (**PDF**)
 
@@ -820,7 +874,7 @@ Maps to columns: `created_at`, `updated_at`, `priority`, `status` — priority s
 
 ---
 
-## 16. Validation and constraints
+## 16. Validation and constraints · unit **DM-H**
 
 ### 16.1 Create ticket (**Agreed DEC-13**)
 
@@ -878,7 +932,7 @@ Remaining **Open** in other specs:
 
 ---
 
-## 18. Acceptance criteria
+## 18. Acceptance criteria · unit **DM-I**
 
 Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements).
 
@@ -904,5 +958,8 @@ Testable checks for this spec (map to **AC-FEAT** / **AC-CORE** in requirements)
 | 2026-10-04 | §14.5–14.6 index catalog: BTREE, `pg_trgm` GIN for `q`, vector HNSW; Liquibase changelog order; AC-DM-08. |
 | 2026-10-04 | Terminology pass: **Agreed** / **Convention** replace stale **Proposed** on DEC-03/04/05/07/08/13 rows. |
 | 2026-10-04 | Cross-ref only: transition matrix in draft [`state-machine.md`](state-machine.md). |
+| 2026-10-04 | §0 document guide: PDF coverage map; business/functional/implementation requirement triad. |
 | 2026-10-04 | HTTP contract cross-ref [`api-contract.md`](api-contract.md). |
 | 2026-10-04 | Ask `data` pointers → [`api-contract.md`](api-contract.md) §6 (consolidated rag-api themes). |
+| 2026-10-04 | §0.3 **DM-*** independent reading units (enums → DDL → AC). |
+| 2026-10-04 | Major `##` headings tagged with **DM-*** unit ids. |

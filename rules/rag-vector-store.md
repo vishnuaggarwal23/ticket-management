@@ -6,12 +6,12 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 
 | Read first | Purpose |
 |------------|---------|
-| [`spec/architecture.md`](../spec/architecture.md) | RAG pipeline (§15), vector DB (§14), knowledge/chunking/embedding **justification** (§16); business RAG modules (§4, §8) |
+| [`spec/architecture.md`](../spec/architecture.md) | **§0** PDF/RAG map; pipeline (§15), vector DB (§14), chunking/embedding **justification** (§16); business RAG modules (§4, §8) |
 | `rules/api-standards.md` | Ask HTTP path, envelopes, 200 no-match vs 400 validation |
 | `rules/java-springboot.md` | `rag/` package, `@ConfigurationProperties`, no magic numbers in Java |
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
 | `commands/review-rag-output.md` | Manual grounding review of ask answers |
-| [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | Chunking strategy, ingest triggers, property keys; **proposed** numeric defaults §9.3 (**DEC-09** model/dimension still open) |
+| [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | **§0** ingest map; chunking §6–§9, yaml ex §9.3, triggers §10; **proposed** defaults (**DEC-09** open) |
 | [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Ask `data`, grounding, no-match (**DEC-11**) |
 | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | Probabilistic retrieval quality (draft) |
 | [`spec/requirements.md`](../spec/requirements.md) | §2.5 deterministic vs probabilistic; FEAT-22; §4.3 eval corpus; **DEC-01**, **DEC-09**, **DEC-11** §10 |
@@ -196,3 +196,4 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 | 2026-10-04 | Eval pointers: [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §3–§9. |
 | 2026-10-04 | Ask `data` → [`api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (not separate `rag-api-contract` file). |
 | 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md). |
+| 2026-10-04 | Spec **§0** cross-refs; requirements **§0.5** completeness index. |

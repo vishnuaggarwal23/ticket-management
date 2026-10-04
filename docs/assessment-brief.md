@@ -83,20 +83,20 @@ spec/                          # PDF lists ten names; ten files on disk (ui-flow
 
 Ten standalone files under `spec/`. PDF filename alias: `ui-flow.md` → [`ui-model.md`](../spec/ui-model.md) only.
 
-| Spec | Status | Role |
-|------|--------|------|
-| [`requirements.md`](../spec/requirements.md) | draft hub | PDF coverage §0.4, FEAT-01…23, flows A–E, AC-CORE-01…23, demo §8.7 (steps 1–18), OQ/DEC |
-| [`architecture.md`](../spec/architecture.md) | draft | System design §16; frontend architecture **§12** (summary) |
-| [`ui-model.md`](../spec/ui-model.md) | draft | PDF `ui-flow`: screens, CRUD, ask UX, flows A–E, **AC-UI-*** |
-| [`data-model.md`](../spec/data-model.md) | **agreed** | Entities, enums, Liquibase §14.5, DTOs, search scope (**DEC-08**), ticket id (**DEC-04**) |
-| [`state-machine.md`](../spec/state-machine.md) | draft | T1–T5 / X1–X3; full §5.6 illegal matrix; **AC-SM-***; interim PATCH `status` |
-| [`api-contract.md`](../spec/api-contract.md) | draft | Tickets/comments HTTP; combined catalog incl. ask §6 summary |
-| [`rag-api-contract.md`](../spec/rag-api-contract.md) | draft | Grounded ask, citations, no-match (**AC-RAG-API-***) |
-| [`rag-ingestion.md`](../spec/rag-ingestion.md) | draft | Hybrid chunking; ingest; re-ingest (**DEC-01** interim); **AC-RAG-ING-*** |
-| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | draft | FEAT-22 / **AC-EVAL-***; corpus §5; failures **F-01…F-10** §8 |
-| [`test-strategy.md`](../spec/test-strategy.md) | draft | **§5** state machine determinism; **§6** ask Bands A–C; AC layer maps |
+| Spec | Status | Role | §0 guide |
+|------|--------|------|----------|
+| [`requirements.md`](../spec/requirements.md) | draft hub | PDF **§0.4** + **§0.5** anchors; FEAT-01…23; flows A–E; AC-CORE-01…23; demo §8.7; OQ/DEC | §0.1–0.5 |
+| [`architecture.md`](../spec/architecture.md) | draft | System design §16; RAG §15; frontend **§12**; verbatim PDF RAG ladder | §0 |
+| [`ui-model.md`](../spec/ui-model.md) | draft | PDF `ui-flow`: screens, CRUD, ask UX, flows A–E, **AC-UI-*** | §0 |
+| [`data-model.md`](../spec/data-model.md) | **agreed** | Entities, Liquibase §14.5, DTOs, **DEC-08** search, **DEC-04** id | §0 |
+| [`state-machine.md`](../spec/state-machine.md) | draft | T1–T5 / X1–X3; §5.6 matrix; PATCH + JSON ex §6.5; **AC-SM-*** | §0 |
+| [`api-contract.md`](../spec/api-contract.md) | draft | Tickets/comments HTTP; ask §6 summary | §0 |
+| [`rag-api-contract.md`](../spec/rag-api-contract.md) | draft | Grounded ask, citations, no-match (**AC-RAG-API-***) | §0 |
+| [`rag-ingestion.md`](../spec/rag-ingestion.md) | draft | Hybrid chunking; `application.yml` ex; re-ingest (**DEC-01**) | §0 |
+| [`evaluation-strategy.md`](../spec/evaluation-strategy.md) | draft | FEAT-22 / **AC-EVAL-***; corpus §5; **F-01…F-10** | §0 |
+| [`test-strategy.md`](../spec/test-strategy.md) | draft | **§5** SM; **§6** ask bands; AC maps | §0 |
 
-**PDF coverage:** theme → artefact map in [`requirements.md`](../spec/requirements.md) **§0.4**; summary table in **§13** below (open items = **DEC-*** in requirements §10.2).
+**PDF coverage:** theme → artefact map in [`requirements.md`](../spec/requirements.md) **§0.4**; **§0.5** completeness checklist; page summary **§13** below. Each spec **§0.3** lists **independent reading units**; major sections are titled `· unit **ID**` for in-file search/jump (hub **§0.8**). Steering (`rules/`, `commands/`, this skill) **indexes** specs — see [`rules/documentation.md`](../rules/documentation.md) reviewer maps.
 
 [`architecture.md`](../spec/architecture.md) holds **system design** (modules, APIs, RAG narrative). Entity tables and indexes: [`data-model.md`](../spec/data-model.md). Chunking mechanics and **proposed** defaults: [`rag-ingestion.md`](../spec/rag-ingestion.md) §6–§9.3. Embedding model id, vector dimension, and top-K **values** remain **Open** (**DEC-09**, FEAT-19) until confirmed.
 
@@ -346,7 +346,7 @@ Do not add without a new agreed spec: authentication, multi-tenancy, attachments
 
 ## 13. PDF → repo traceability
 
-Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. At a glance:
+Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. **Completeness checklist (every assignment bullet):** **§0.5**. Each child spec adds a **§0** PDF map for its slice (see [`rules/documentation.md`](../rules/documentation.md) reviewer maps). At a glance:
 
 | PDF pages | Captured in |
 |-----------|-------------|
@@ -378,6 +378,9 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. At 
 | Retrieval quality eval | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) |
 | UI screens and flows | [`spec/ui-model.md`](../spec/ui-model.md) |
 | PDF theme map (detailed) | [`spec/requirements.md`](../spec/requirements.md) **§0.4** |
+| PDF verbatim completeness checklist | [`spec/requirements.md`](../spec/requirements.md) **§0.5** |
+| Per-spec PDF maps + BRF/FRI/IRI | Each `spec/*.md` **§0** |
+| Jump to a reading chunk | Search `· unit **` in spec files, or hub [`requirements.md`](../spec/requirements.md) **§0.6–§0.8** |
 | Modules, RAG placement, chunking narrative | [`spec/architecture.md`](../spec/architecture.md) |
 | Artefact index and review workflow | [`rules/documentation.md`](../rules/documentation.md) |
 | Spec writing skill | [`skills/documentation/SKILL.md`](../skills/documentation/SKILL.md) |
@@ -408,3 +411,5 @@ Full page-level map: [`requirements.md`](../spec/requirements.md) **§0.4**. At 
 | 2026-10-04 | `commands/improve-from-assessment-pdf.md` — edit-only PDF alignment for `spec/` + steering docs. |
 | 2026-10-04 | §3 hygiene table: `update-prompt-history`, `improve-from-assessment-pdf` (parity with requirements §6.8). |
 | 2026-10-04 | Primary source: `docs/Assessments.docx`. |
+| 2026-10-04 | §4 spec table + §13: requirements §0.5 and per-spec §0 maps; steering sync with `rules/` / `commands/` / `skills/`. |
+| 2026-10-04 | §14: hub §0.8 heading unit suffix; in-spec search `· unit **` for chunk jump. |

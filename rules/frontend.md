@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-model.md`](../spec/ui-model.md) (PDF `ui-flow` themes; **AC-UI-***; confirm **DEC-06** / **DEC-15** before calling agreed). UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-model.md`](../spec/ui-model.md) (**§0** PDF ui-flow map; **AC-UI-***; confirm **DEC-06** / **DEC-15** before calling agreed). UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E, **§0.5**, and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
 
 **This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
 
@@ -178,3 +178,4 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 | 2026-10-04 | UI flows: requirements §4.1 / §8.7 + architecture §12.3–§12.6 (consolidated PDF `ui-flow` themes). |
 | 2026-10-04 | Product UI detail → [`spec/ui-model.md`](../spec/ui-model.md); architecture §12 summary. |
 | 2026-10-04 | `improve-from-assessment-pdf`: PDF `ui-flow.md` → `ui-model.md` (not `spec/ui-flow.md`). |
+| 2026-10-04 | Pointers to [`ui-model.md`](../spec/ui-model.md) **§0** and requirements **§0.5**. |

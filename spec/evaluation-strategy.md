@@ -8,6 +8,74 @@
 
 ---
 
+## Table of contents
+
+0. [Document guide](#0-document-guide)  
+1. [Problem and context](#1-problem-and-context)  
+2. [Scope and non-goals](#2-scope-and-non-goals)  
+3. [Two questions every ask review must answer](#3-two-questions-every-ask-review-must-answer)  
+4. [Retrieval quality](#4-retrieval-quality--what-why-how)  
+5. [Example eval corpus](#5-example-eval-corpus-requirements-43)  
+6. [Evaluation procedure](#6-evaluation-procedure-step-by-step)  
+7. [Obtaining the retrieved set](#7-obtaining-the-retrieved-set-evidence)  
+8. [Failures and detection](#8-failures-and-detection)  
+9. [Recording results](#9-recording-results-eval-log)  
+10. [Acceptance criteria](#10-acceptance-criteria-ac-eval)  
+11. [Requirements traceability](#11-requirements-traceability)  
+12. [Open questions](#12-open-questions-and-decisions)  
+13. [Revision history](#13-revision-history)  
+
+---
+
+## 0. Document guide
+
+### 0.1 PDF coverage map
+
+| **PDF** | Section |
+|---------|---------|
+| Learning goal: test/debug **probabilistic** retrieval (p.2) | §1, §4 |
+| Five illustrative questions (p.4) | §5 |
+| Retrieve → generate; grounded answers; citations; no fabrication (p.4–6) | §3, cross-ref [`rag-api-contract.md`](rag-api-contract.md) |
+| Chunking/embedding **documentation** lives in `architecture.md` — eval measures **retrieval**, not prose golden strings | §4.3–§4.4 |
+
+### 0.2 Business, functional, and implementation requirements
+
+**Business requirements**
+
+- Demonstrate engineering discipline on AI features: separate **retrieval quality** from **grounding**, document failures, iterate on chunk/K/threshold without fooling reviewers with fluent hallucinations.
+
+**Functional requirements**
+
+| ID | Requirement | AC |
+|----|-------------|-----|
+| FR-EVAL-01 | For each **PDF** example question, record whether expected ticket ids appear in retrieved set | **AC-EVAL-01…05** |
+| FR-EVAL-02 | Classify failures (ingest, chunk, threshold, generation, citation) | §8 **F-01…F-10** |
+| FR-EVAL-03 | Align with `commands/review-rag-output.md` verdict vocabulary | §4.3 step 6 |
+
+**Implementation requirements**
+
+| ID | Requirement |
+|----|-------------|
+| IR-EVAL-01 | Dev-only logging or test hook to capture retrieved ticket ids (not required on public API) | §7 |
+| IR-EVAL-02 | Optional markdown eval log under `docs/` (**Convention**) — not mandated filename |
+| IR-EVAL-03 | No JUnit assertion on full LLM answer text | §4.4, [`test-strategy.md`](test-strategy.md) §6.2 |
+
+### 0.3 Independent reading units
+
+| Unit | Section | Standalone? | Read first (this file) | Delivers | See also |
+|------|---------|-------------|------------------------|----------|----------|
+| **EVAL-A** | §3 | Yes | — | Grounding vs retrieval (**PDF** learning goal) | [`rag-api-contract.md`](rag-api-contract.md) |
+| **EVAL-B** | §4.1–§4.2 | Yes | **EVAL-A** | Definitions + why retrieval matters | — |
+| **EVAL-C** | §4.3–§4.4 | Yes | **EVAL-B** | Manual procedure; what JUnit must **not** do | [`test-strategy.md`](test-strategy.md) §6 |
+| **EVAL-D** | §5 Corpus | Yes | — | **Example** tickets + five **PDF** questions | [`requirements.md`](requirements.md) §4.3 |
+| **EVAL-E** | §6 Procedure | Yes | **EVAL-D** | Step-by-step eval run | §7 evidence |
+| **EVAL-F** | §8 Failures F-01…F-10 | Yes | **EVAL-A** | Taxonomy + detection | `commands/review-rag-output.md` |
+| **EVAL-G** | §9–§10 | Yes | **EVAL-E** | Log fields + **AC-EVAL-*** | — |
+
+**PDF verbatim (p.4 questions):** payment failures; resolution for TKT-1001; shipment causes; similar resolved; high-priority payment-related.
+
+---
+
 ## 1. Problem and context
 
 The assessment is not only “does CRUD work?” — it expects you to **design, test, and debug** an AI assistant where some behaviour is **exact** (ticket state machine) and some is **probabilistic** (which tickets similarity search returns, how the model phrases an answer). **PDF** learning goals (p.2) call out retrieval quality explicitly.
@@ -31,7 +99,7 @@ Without a written evaluation approach, teams either (a) skip retrieval and only 
 
 ---
 
-## 3. Two questions every ask review must answer
+## 3. Two questions every ask review must answer · unit **EVAL-A**
 
 Ask quality splits into two independent checks. Both are **PDF**-relevant; conflating them hides bugs.
 
@@ -56,7 +124,7 @@ flowchart LR
 
 ---
 
-## 4. Retrieval quality — what, why, how
+## 4. Retrieval quality — what, why, how · units **EVAL-B**, **EVAL-C**
 
 ### 4.1 What “retrieval quality” means (**PDF** learning goal)
 
@@ -112,7 +180,9 @@ Stubbed retrieval in tests proves **orchestration** given a fixed retrieved set;
 
 ---
 
-## 5. Example eval corpus ([`requirements.md`](requirements.md) §4.3)
+## 5. Example eval corpus ([`requirements.md`](requirements.md) §4.3) · unit **EVAL-D**
+
+> **Chunk EVAL-D** — Prerequisites: none. **Example** data only. Pair with **EVAL-E** for a full eval run.
 
 The **PDF** does **not** mandate seed data. The table below is **Example** only (same as requirements §4.3). Use it for demos, manual eval, and optional local fixtures.
 
@@ -129,6 +199,8 @@ The **PDF** does **not** mandate seed data. The table below is **Example** only 
 Populate relational rows and comments per [`data-model.md`](data-model.md); ingest per [`rag-ingestion.md`](rag-ingestion.md).
 
 ### 5.2 PDF illustrative questions → expected retrieval (**Example**)
+
+> **Chunk EVAL-D (continued)** — Maps **PDF** p.4 questions to expected ticket ids for §5.1 corpus.
 
 These five questions are from the **PDF** (also listed in `rules/rag-vector-store.md`). **Expected ids** describe what retrieval should surface for the §5.1 corpus — not exact answer text.
 
@@ -180,7 +252,7 @@ Assume seeded §5.1, ingest complete, dev logs show retrieved ids.
 
 ---
 
-## 6. Evaluation procedure (step-by-step)
+## 6. Evaluation procedure (step-by-step) · unit **EVAL-E**
 
 ### 6.1 Prerequisites
 
@@ -214,7 +286,7 @@ Use `commands/review-rag-output.md` **Retrieval quality** checklist; expanded he
 
 ---
 
-## 7. Obtaining the retrieved set (evidence)
+## 7. Obtaining the retrieved set (evidence) · unit **EVAL-E**
 
 The public ask API does **not** expose chunk text by default (`rules/rag-vector-store.md`). Evaluators need **one or more** of:
 
@@ -229,7 +301,7 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 
 ---
 
-## 8. Failures and detection
+## 8. Failures and detection · unit **EVAL-F**
 
 ### 8.1 Failure mode taxonomy
 
@@ -267,7 +339,7 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 
 ---
 
-## 9. Recording results (eval log)
+## 9. Recording results (eval log) · unit **EVAL-G**
 
 **Convention:** keep a lightweight log assessors can read — markdown table in PR description, `docs/` note, or SpecStory session. No required file path for v1.
 
@@ -285,7 +357,7 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 
 ---
 
-## 10. Acceptance criteria (**AC-EVAL-***)
+## 10. Acceptance criteria (**AC-EVAL-***) · unit **EVAL-G**
 
 | ID | Criterion | Proof |
 |----|-----------|-------|
@@ -336,3 +408,6 @@ Confirming numeric K/threshold defaults: [`rag-ingestion.md`](rag-ingestion.md) 
 | 2026-10-04 | Cross-links: `rules/documentation.md` reviewer map; `review-spec` / `review-rag-output` / `test-strategy` §4.1; `architecture` §15.7. |
 | 2026-10-04 | Test proof bands: [`test-strategy.md`](test-strategy.md) **§6** (A/B/C); §5 state machine. |
 | 2026-10-04 | Demo step 17 ([`requirements.md`](requirements.md) §8.7); ask contract §6 cross-ref. |
+| 2026-10-04 | §0 guide: TOC, PDF map, business/functional/implementation requirement triad. |
+| 2026-10-04 | §0.3 **EVAL-*** units; §5 chunk callouts for corpus + PDF question map. |
+| 2026-10-04 | Major `##` headings tagged with **EVAL-*** unit ids. |
