@@ -331,7 +331,7 @@ Without a runnable Boot app, Maven Wrapper, and a Postgres-backed schema, later 
 
 ## 7. Phase B — Ticket CRUD (no status transitions yet)
 
-**Status:** in progress (B1–B2 complete)  
+**Status:** complete (B1–B5)  
 **Depends on:** Phase A complete; **C-01…C-03, C-05** agreed (this document §3)  
 **Implements:** FEAT-01…10 (except SM), AC-CORE-01…11 (API), AC-API create/list/get/patch-fields/comments, AC-DM-01/02/05
 
@@ -427,8 +427,8 @@ Implement **B1 → B5 in order**. Do **not** PATCH `status` until Phase C (you m
 
 **Done B3**
 
-- [ ] Service unit tests green.
-- [ ] Public APIs do not return `null` (use Optional / exceptions / empty lists).
+- [x] Service unit tests green.
+- [x] Public APIs do not return `null` (use Optional / exceptions / empty lists).
 
 ### 7.4 Phase B4 — Controllers, query validation, error handling
 
@@ -478,8 +478,8 @@ Include `timestamp` UTC, `path`, `status` matching HTTP. **No** stack traces, SQ
 
 **Done B4**
 
-- [ ] Slice + integration tests green for endpoints 1–5 **except status PATCH**.
-- [ ] [`commands/review-code.md`](commands/review-code.md) on the diff — fix Failures before Phase C.
+- [x] Slice + integration tests green for endpoints 1–5 **except status PATCH**.
+- [x] [`commands/review-code.md`](commands/review-code.md) on the diff — fix Failures before Phase C.
 
 ### 7.5 Phase B5 — Persistence across “restart”
 
@@ -490,8 +490,8 @@ Include `timestamp` UTC, `path`, `status` matching HTTP. **No** stack traces, SQ
 
 **Done B5 / Phase B**
 
-- [ ] Restart test green.
-- [ ] CRUD capabilities FEAT-01…10 (minus SM) proven at API integration.
+- [x] Restart test green.
+- [x] CRUD capabilities FEAT-01…10 (minus SM) proven at API integration.
 
 ---
 
@@ -738,7 +738,7 @@ Thin `AiAskController` in `api`.
 - [ ] Dual ask paths; envelopes; no-match 200; 400 validation.
 - [ ] Band A tests green without live LLM.
 - [ ] Review-code RAG ask checklist Pass.
-- [ ] Optional: one documented grounding review; AI mistake log if a hallucination is caught (`docs/ai-mistakes.md` — confirm before writing).
+- [ ] Optional: one documented grounding review; AI mistake log if a hallucination is caught ([`docs/ai-error.md`](docs/ai-error.md) via **`/update-ai-error`**).
 
 ---
 
@@ -779,7 +779,7 @@ After each phase:
 2. [`commands/review-code.md`](commands/review-code.md) — Pass/Fail; **fix Failures** before the next phase.
 3. Do not run [`commands/review-frontend.md`](commands/review-frontend.md) for this plan.
 4. Do not treat [`commands/review-spec.md`](commands/review-spec.md) as a substitute for code review (specs already agreed).
-5. If AI generates illegal transitions or entity JSON: correct code; consider `docs/ai-mistakes.md` **after user confirm**.
+5. If AI generates illegal transitions or entity JSON: correct code; log [`docs/ai-error.md`](docs/ai-error.md) with **`/update-ai-error`**.
 6. `graphify update .` after Java file changes.
 
 ---
@@ -824,9 +824,9 @@ After each phase:
 | A Setup | complete | smoke green | | Boot 3.5.16; Liquibase 001–003; pg_trgm only |
 | B1 Enums | complete | unit green | | C-02: `CRITICAL`; JSON `URGENT`→`CRITICAL` |
 | B2 Persistence | complete | IT green | | entities + search/filter; no HTTP |
-| B3 Service CRUD | not started | | | |
-| B4 HTTP CRUD | not started | | | |
-| B5 Restart | not started | | | |
+| B3 Service CRUD | complete | unit green | | no status PATCH |
+| B4 HTTP CRUD | complete | slice+IT green | self-review | no status PATCH |
+| B5 Restart | complete | IT green | | DirtiesContext + same Testcontainers DB |
 | **C State machine** | **not started** | | | **RAG blocked until `complete` + chat confirm** |
 | D Ingest / vectors | blocked | | | |
 | E Ingest hooks | blocked | | | |
@@ -843,3 +843,6 @@ After each phase:
 | 2026-10-04 | Phase **A** implemented: `backend/` Spring Boot **3.5.16**, Maven Wrapper, Compose `pgvector/pgvector:pg16`, Liquibase ticket tables + relational indexes, Testcontainers smoke. |
 | 2026-10-04 | Phase **B1** implemented: domain enums/constants/sort parser; API Jackson maps `URGENT`→`CRITICAL`. |
 | 2026-10-04 | Phase **B2** implemented: JPA ticket/comment entities, sequence ids, parameterized search, Testcontainers repository tests. |
+| 2026-10-04 | Phase **B3–B4** implemented: ticket CRUD service/DTOs, REST `/api/v1/tickets`, envelopes, MockMvc slice + API integration tests (no status PATCH). |
+| 2026-10-04 | Phase **B5** implemented: create ticket+comment, fresh Spring context, same Postgres container, GET still returns data. |
+| 2026-10-04 | AI error log [`docs/ai-error.md`](docs/ai-error.md); `/update-ai-error`. |

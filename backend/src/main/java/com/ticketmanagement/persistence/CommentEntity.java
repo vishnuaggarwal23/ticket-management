@@ -44,6 +44,10 @@ public class CommentEntity {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public TicketEntity getTicket() {
         return ticket;
     }
