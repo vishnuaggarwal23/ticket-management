@@ -331,7 +331,7 @@ Without a runnable Boot app, Maven Wrapper, and a Postgres-backed schema, later 
 
 ## 7. Phase B — Ticket CRUD (no status transitions yet)
 
-**Status:** in progress (B1 complete)  
+**Status:** in progress (B1–B2 complete)  
 **Depends on:** Phase A complete; **C-01…C-03, C-05** agreed (this document §3)  
 **Implements:** FEAT-01…10 (except SM), AC-CORE-01…11 (API), AC-API create/list/get/patch-fields/comments, AC-DM-01/02/05
 
@@ -388,8 +388,8 @@ Implement **B1 → B5 in order**. Do **not** PATCH `status` until Phase C (you m
 
 **Done B2**
 
-- [ ] Entities match changelog.
-- [ ] Repository tests green without HTTP.
+- [x] Entities match changelog.
+- [x] Repository tests green without HTTP.
 
 ### 7.3 Phase B3 — DTOs, mapping, validation, application service (CRUD only)
 
@@ -823,7 +823,7 @@ After each phase:
 |-------|--------|-------|-------------|-------|
 | A Setup | complete | smoke green | | Boot 3.5.16; Liquibase 001–003; pg_trgm only |
 | B1 Enums | complete | unit green | | C-02: `CRITICAL`; JSON `URGENT`→`CRITICAL` |
-| B2 Persistence | not started | | | |
+| B2 Persistence | complete | IT green | | entities + search/filter; no HTTP |
 | B3 Service CRUD | not started | | | |
 | B4 HTTP CRUD | not started | | | |
 | B5 Restart | not started | | | |
@@ -842,3 +842,4 @@ After each phase:
 | 2026-10-04 | Confirmed **C-01** `com.ticketmanagement`; **C-02** `CRITICAL` + inbound `URGENT` mapped; **C-03** latest Boot 3 GA; **C-05** assignee `@Size(max=320)` only. **C-04** chat model still deferred. |
 | 2026-10-04 | Phase **A** implemented: `backend/` Spring Boot **3.5.16**, Maven Wrapper, Compose `pgvector/pgvector:pg16`, Liquibase ticket tables + relational indexes, Testcontainers smoke. |
 | 2026-10-04 | Phase **B1** implemented: domain enums/constants/sort parser; API Jackson maps `URGENT`→`CRITICAL`. |
+| 2026-10-04 | Phase **B2** implemented: JPA ticket/comment entities, sequence ids, parameterized search, Testcontainers repository tests. |
