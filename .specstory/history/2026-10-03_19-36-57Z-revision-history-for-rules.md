@@ -768,12 +768,81 @@ commit and push
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Proceeding to commit and push.
+
+Checking git status, diff, and log first. Then drafting the commit message and pushing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -5 --oneline</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -5 --oneline
 ```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .specstory/history/2026-10-03_19-36-57Z-revision-history-for-rules.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   commands/generate-tests.md
+	modified:   commands/review-code.md
+	modified:   commands/review-frontend.md
+	modified:   commands/review-rag-output.md
+	modified:   commands/review-spec.md
+	modified:   rules/api-standards.md
+	modified:   rules/documentation.md
+	modified:   rules/frontend.md
+	modified:   rules/java-springboot.md
+	modified:   rules/rag-vector-store.md
+	modified:   rules/testing.md
+
+diff --git a/commands/generate-tests.md b/commands/generate-tests.md
+index f5dcf43..d41622f 100644
+--- a/commands/generate-tests.md
++++ b/commands/generate-tests.md
+@@ -109,3 +109,15 @@ If production code is missing, prefer **failing tests** that encode P0 criteria
+ - Do not skip negative paths on a P0 flow you did test positively
+ - Do not generate frontend tests
+ - Do not implement product code unless the user asked
++
++---
++
++## Revision history
++
++| Date | Note |
++|------|------|
++| 2026-09-24 | Initial backend test-generation workflow and `rules/testing.md` checklist. |
++| 2026-10-03 | Aligned with stack and spec-driven acceptance mapping. |
++| 2026-10-04 | Expanded AC traceability and negative-path requirements for P0 flows. |
++| 2026-10-04 | Synced with expanded `spec/requirements.md` and governance pass. |
++| 2026-10-04 | Added revision history section. |
+diff --git a/commands/review-code.md b/commands/review-code.md
+index 1f04786..48920e8 100644
+--- a/commands/review-code.md
++++ b/commands/review-code.md
+@@ -126,3 +126,14 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and
+ - **Spec gaps** — code without spec, or spec without code
+ - **Open questi
+… (output truncated)
+```
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Staging the rules and commands files and committing with a clear message.
+
+Also including the staged specstory file. Committing with the message "docs: add revision history to rules and commands" and pushing.
+</details></think>
 
 _**Agent (auto-smart)**_
 
@@ -792,4 +861,36 @@ Backfill Date | Note tables for steering artefacts and document the convention i
 EOF
 )" && git status && git push
 ```
+
+```
+[main cc63f23] docs: add revision history to rules and commands
+ 12 files changed, 312 insertions(+)
+ create mode 100644 .specstory/history/2026-10-03_19-36-57Z-revision-history-for-rules.md
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+To github-personal:vishnuaggarwal23/ticket-management.git
+   8a6fead..cc63f23  main -> main
+
+```
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The commit and push completed successfully.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Committed and pushed to `origin/main`.
+
+**Commit:** `cc63f23` — `docs: add revision history to rules and commands`
+
+**Included (12 files):**
+- All 6 `rules/*.md` and 6 `commands/*.md` revision-history sections
+- `.specstory/history/2026-10-03_19-36-57Z-revision-history-for-rules.md` (was already staged)
+
+Working tree is clean; `main` is in sync with remote.

@@ -3059,16 +3059,143 @@ commit and push
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Proceeding to commit and push.
+
+Running git status, diff, and log in parallel. Creating a commit with a heredoc message. Pushing now.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -3 --oneline</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -3 --oneline
 ```
+
+```
+-- [ ] When reviewing `spec/requirements.md`: unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
++- [ ] When reviewing [`spec/requirements.md`](../spec/requirements.md): unresolved **DEC-*** rows (§10.2) are still **Open** — no child spec or code treats them as decided
+ - [ ] Child specs that resolve an **OQ-*** cite the matching **DEC-*** decision (or remain draft until user confirms)
+-- [ ] New material in feature specs aligns with **`spec/requirements.md` §10.3** handoff (each OQ has a primary owning spec)
++- [ ] New material in feature specs aligns with **[`spec/requirements.md`](../spec/requirements.md) §10.3** handoff (each OQ has a primary owning spec)
+ - [ ] Assessment acceptance mappable to **`AC-CORE-*`** (§8); feature detail mappable to **`AC-FEAT-*`** (§4.2) where applicable
+ - [ ] No invented product features (auth, agents from ask, attachments, bulk ops, rerankers) unless explicitly in scope
+ 
+@@ -83,7 +83,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
+ - [ ] `architecture.md` ↔ `rag-ingestion.md` / `rag-api-contract.md` — no conflicting pipeline or API story
+ - [ ] `ui-flow.md` ↔ API/RAG contracts — UI does not require impossible API shapes
+ 
+-### When `spec/architecture.md` is in scope (expanded checklist)
++### When [`spec/architecture.md`](../spec/architecture.md) is in scope (expanded checklist)
+ 
+ Use `rules/documentation.md` section map for headings. Mark **N/A** for sections not yet written.
+ 
+@@ -99,6 +99,14 @@ Use `rules/documentation.md` section map for headings. Mark **N/A** for sections
+ - [ ] **Embedding** (§16): local vs cloud tradeoffs documented; same model at ingest/query; model id not invented without `rag-ingestion.md`
+ - [ ] **Open questions** (§21) align with `requirements.md` §10 OQ/DEC — no decisions closed only in architecture
+ 
++### When [`spec/data-model.md`](../spec/data-model.md) is in scope
++
++- [ ] **Status** is **agreed** (or draft dec
+… (output truncated)
+```
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Reading the large output to check status and staged files.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/agent-tools/5691df9a-77ca-4673-a9d0-53339fd2cafa.txt</summary>
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Staging the data model and rules/commands updates for commit.
+
+Including spec/data-model.md, requirements.md, architecture.md, rules, commands, docs/assessment-brief.md, and specstory history files. Unrelated specstory changes will be excluded.
+
+Committing the staged changes now. Then pushing to remote.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add spec/data-model.md spec/requirements.md spec/architecture.md rules/ commands/ docs/assessment-brief.md .specstory/history/2026-10-03_19-43-17Z-data-model-specification.md .specstory/history/2026-10-03_19-36-57Z-revision-history-for-rules.md &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Add agreed data-model spec and sync steering docs.
+
+Introduces spec/data-model.md (entities, RAG storage, indexes, DTOs) with DEC-03/04/05/07/08/13 recorded in requirements; updates rules and commands for field catalogs, Liquibase indexes, and linked spec references.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add spec/data-model.md spec/requirements.md spec/architecture.md rules/ commands/ docs/assessment-brief.md .specstory/history/2026-10-03_19-43-17Z-data-model-specification.md .specstory/history/2026-10-03_19-36-57Z-revision-history-for-rules.md && git commit -m "$(cat <<'EOF'
+Add agreed data-model spec and sync steering docs.
+
+Introduces spec/data-model.md (entities, RAG storage, indexes, DTOs) with DEC-03/04/05/07/08/13 recorded in requirements; updates rules and commands for field catalogs, Liquibase indexes, and linked spec references.
+EOF
+)" && git status
+```
+
+```
+[main 9ef6c2a] Add agreed data-model spec and sync steering docs.
+ 17 files changed, 4797 insertions(+), 145 deletions(-)
+ create mode 100644 .specstory/history/2026-10-03_19-43-17Z-data-model-specification.md
+ create mode 100644 spec/data-model.md
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Pushing now with user approval.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git push -u origin HEAD</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git push -u origin HEAD
+```
+
+```
+To github-personal:vishnuaggarwal23/ticket-management.git
+   cc63f23..9ef6c2a  HEAD -> main
+branch 'main' set up to track 'origin/main'.
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The commit and push are complete.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+**Commit:** `9ef6c2a` on `main`
+
+**Message:** Add agreed data-model spec and sync steering docs.
+
+**Included (17 files):**
+- New [`spec/data-model.md`](spec/data-model.md)
+- Updates to [`spec/requirements.md`](spec/requirements.md), [`spec/architecture.md`](spec/architecture.md)
+- All touched `rules/` and `commands/` files
+- [`docs/assessment-brief.md`](docs/assessment-brief.md)
+- SpecStory history for the data-model session
+
+**Push:** `main` → `origin/main` (`cc63f23..9ef6c2a`)

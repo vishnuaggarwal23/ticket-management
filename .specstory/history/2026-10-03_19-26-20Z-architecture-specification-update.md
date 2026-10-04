@@ -1501,9 +1501,154 @@ commit all the files and push
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Committing all files and pushing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -5 --oneline</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -5 --oneline
 ```
+
+````
++  ASK --> GR
++  ASK --> NM
++  SM --> VAL
++  C --> VAL
++  VAL --> ERR
++```
++
++### 4.3 Business modules (logical)
++
++Business modules are **cohesive responsibility areas** for planning and traceability. They may map to one or more technical components (§9).
++
++| Business module | Purpose | Key behaviours | Features |
++|-----------------|---------|----------------|----------|
++| **Ticket registry** | Authoritative record of support work | Create, read, update fields, list | FEAT-01…04, 08 |
++| **Collaboration timeline** | Threaded agent notes on a ticket | Add and view comments | FEAT-05 |
++| **Work discovery** | Find tickets in a queue | Keyword search, status filter | FEAT-06…07 |
++| **Lifecycle governance** | Legal status progression | Allow T1–T5; reject X1–X3 | FEAT-11 |
++| **Knowledge indexing** | Make ticket text searchable for AI | Build docs, chunk, embed, metadata | FEAT-12…13 |
++| **Index freshness** | Avoid stale answers | Re-ingest on update/close (**PDF** p.5; **DEC-01** for close-only) | FEAT-14 |
++| **Assisted research** | Q&A over history | Ask API, retrieval, generation, citations | FEAT-15…18 |
++| **Operational quality** | Trust and assessability | Validation, errors, configurable retrieval, docs | FEAT-09…10, 19…23 |
++
++**Business rule integrity** (from `requirements.md` §3.2):
++
++- Status changes follow the published lifecycle; illegal moves are **refused** by the backend.
++- The assistant does **not** invent ticket facts when retrieval does not support an answer.
++- Operational knowledge in the vector index must **not go stale** when tickets change (**PDF**); execution timing is **Open** → `rag-ingestion.md`.
+ 
+ ---
+ 
+-## 4. System context
++## 5. Ticket structure (conceptual)
++
++Field catalogs, enums, and Liquibase tables belong in **`data-model.md`**. This section defines the **architectural shape** of a ticket for design discussions.
++
++### 5.1 Ticket aggregate (logical)
++
++A **ticket** is the primary aggregate root for support work (**PDF**). 
+… (output truncated)
+````
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Reading the large output to check file status and commit summary.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/agent-tools/725cb7b8-582b-4d57-8713-4b2ec5c203d5.txt</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Staging all relevant files and committing.
+
+Pushing the commit now.
+
+Adding all modified and untracked files, including the specstory history file. Committing changes to architecture documentation and aligned project rules. Pushing four commits to main.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add .cursor/rules/ai-project-instructions.mdc .cursor/rules/java-tech-lead-sdd.mdc .specify/memory/constitution.md .specstory/history/ commands/ docs/assessment-brief.md rules/ skills/documentation/SKILL.md spec/architecture.md spec/requirements.md &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Expand architecture spec and align rules, commands, and governance.
+
+Document full system design in spec/architecture.md and wire reviewers, constitution, and engineering rules to the new section map without duplicating contracts in rules/.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add .cursor/rules/ai-project-instructions.mdc .cursor/rules/java-tech-lead-sdd.mdc .specify/memory/constitution.md .specstory/history/ commands/ docs/assessment-brief.md rules/ skills/documentation/SKILL.md spec/architecture.md spec/requirements.md && git commit -m "$(cat <<'EOF'
+Expand architecture spec and align rules, commands, and governance.
+
+Document full system design in spec/architecture.md and wire reviewers, constitution, and engineering rules to the new section map without duplicating contracts in rules/.
+EOF
+)" && git status
+```
+
+```
+[main 8a6fead] Expand architecture spec and align rules, commands, and governance.
+ 20 files changed, 2637 insertions(+), 268 deletions(-)
+ create mode 100644 .specstory/history/2026-10-03_19-26-20Z-architecture-specification-update.md
+On branch main
+Your branch is ahead of 'origin/main' by 4 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Proceeding to commit and push the changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git push origin main</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git push origin main
+```
+
+```
+To github-personal:vishnuaggarwal23/ticket-management.git
+   41975bd..8a6fead  main -> main
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+All files were committed and pushed successfully.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Committed and pushed to `origin/main`.
+
+**Commit:** `8a6fead` — *Expand architecture spec and align rules, commands, and governance.*
+
+**20 files**, including:
+- `spec/architecture.md`, `spec/requirements.md`
+- `rules/*`, `commands/*`, `skills/documentation/SKILL.md`
+- `.cursor/rules` (java-tech-lead-sdd, ai-project-instructions)
+- `.specify/memory/constitution.md` (v1.1.1)
+- `docs/assessment-brief.md`
+- SpecStory history entries
+
+**Push:** `main` → `github-personal:vishnuaggarwal23/ticket-management.git` (`41975bd..8a6fead`, 4 commits total on that range). Working tree is clean.

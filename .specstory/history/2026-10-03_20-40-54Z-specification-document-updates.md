@@ -6690,19 +6690,59 @@ commit all and push
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Committing all changes and pushing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -5 --oneline</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -5 --oneline
 ```
+
+```
+-| Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 (until `spec/evaluation-strategy.md` exists) |
++| Judging retrieval quality (right tickets in top-K?) | `commands/review-rag-output.md` → **Retrieval quality** + [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft); hub [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 |
+ | Caught wrong AI code or ungrounded answer | Note in `docs/ai-mistakes.md` (see below) |
++| SpecStory saved new session(s); index stale | `commands/update-prompt-history.md` |
+ 
+ Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks → Implementation → **generate-tests** / write tests → **review-code** / **review-frontend** → Fix.
+ 
+@@ -50,11 +51,11 @@ Workflow (PDF): Requirement → Specification → **review-spec** → Plan/Tasks
+ 
+ Maintain detailed specs as work proceeds:
+ 
+-[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), `rag-ingestion.md`, `rag-api-contract.md`, `evaluation-strategy.md`, `ui-flow.md`, `test-strategy.md` (latter paths under `spec/` when added).
++All PDF-listed files under `spec/` (paths relative to repo root):
+ 
+-### Spec files in repo today (2026-10-04)
++[`requirements.md`](../spec/requirements.md), [`architecture.md`](../spec/architecture.md), [`data-model.md`](../spec/data-model.md), [`state-machine.md`](../spec/state-machine.md), [`api-contract.md`](../spec/api-contract.md), [`rag-ingestion.md`](../spec/rag-ingestion.md), [`rag-api-contract.md`](../spec/rag-api-contract.md), [`evaluation-strategy.md`](../spec/evaluation-strategy.md), [`ui-flow.md`](../spec/ui-flow.md), [`test-strategy.md`](../spec/test-strategy.md).
+ 
+-Only these exist under `spec/` (as of 2026-10-04) — *
+… (output truncated)
+```
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+The output is large. I'll check the status and the start of the diff.
+</details></think>
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/agent-tools/76d4da4f-7eab-4239-afdc-a864001c3461.txt</summary>
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Checking for untracked files before committing and pushing.
+</details></think>
 
 _**Agent (auto-smart)**_
 
@@ -6711,15 +6751,102 @@ _**Agent (auto-smart)**_
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status -u --short
 ```
+
+```
+A  .cursor/commands/update-prompt-history.md
+ M .cursor/rules/ai-project-instructions.mdc
+A  .specstory/history/2026-10-03_20-28-56Z-assessment-brief-update.md
+AM .specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md
+ M commands/generate-tests.md
+ M commands/review-code.md
+ M commands/review-frontend.md
+ M commands/review-rag-output.md
+ M commands/review-spec.md
+AM commands/update-prompt-history.md
+ M docs/assessment-brief.md
+ M docs/prompt-history.md
+ M rules/api-standards.md
+ M rules/documentation.md
+ M rules/frontend.md
+ M rules/java-springboot.md
+ M rules/rag-vector-store.md
+ M rules/testing.md
+ M skills/documentation/SKILL.md
+ M spec/api-contract.md
+ M spec/architecture.md
+ M spec/data-model.md
+A  spec/rag-ingestion.md
+ M spec/requirements.md
+ M spec/state-machine.md
+AM spec/test-strategy.md
+
+```
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/.cursor/projects/Users-vishnuaggarwal-Documents-projects-practice-ticket-management/agent-tools/76d4da4f-7eab-4239-afdc-a864001c3461.txt",
+  "pattern": "^commit "
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "pattern": "^commit ",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-03_16-32-55Z-spec-kit-constitution.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".specstory/history/2026-09-24_17-21-45Z-assessment-requirements-review.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-03_20-00-04Z-assessment-spec-completeness-review.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".specstory/history/2026-10-03_20-10-18Z-state-machine-specification.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-03_19-36-57Z-revision-history-for-rules.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".specstory/history/2026-09-24_05-40-01Z-project-directory-creation.md"
+    }
+  ],
+  "totalFiles": 7,
+  "totalMatches": 13
+}
+```
+Status: **completed**
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Checking whether rag-api-contract, evaluation-strategy, and ui-flow exist but remain untracked.
+</details></think>
 
 _**Agent (auto-smart)**_
 
@@ -6728,4 +6855,143 @@ _**Agent (auto-smart)**_
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git log -3 --format='%s' && ls spec/*.md | wc -l && git check-ignore -v spec/rag-api-contract.md 2>/dev/null; ls spec/rag-api-contract.md spec/evaluation-strategy.md spec/ui-flow.md 2>&1
 ```
+
+```
+Update SpecStory history for spec review and state-machine sessions.
+Add HTTP API contract spec with URIs, examples, and governance sync.
+Add state-machine spec and align rules/commands with transition matrix.
+       7
+ls: spec/evaluation-strategy.md: No such file or directory
+ls: spec/rag-api-contract.md: No such file or directory
+ls: spec/ui-flow.md: No such file or directory
+
+```
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Only seven spec files remain. Three may have been removed or never committed.
+
+Adding all relevant files and committing with a descriptive message. Pushing next. The commit covers rag-ingestion and test-strategy specs, state-machine and API contract updates, prompt-history changes, PDF coverage, and specstory history.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add -A &amp;&amp; git status -s</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add -A && git status -s
+```
+
+```
+A  .cursor/commands/update-prompt-history.md
+M  .cursor/rules/ai-project-instructions.mdc
+A  .specstory/history/2026-10-03_20-28-56Z-assessment-brief-update.md
+A  .specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md
+M  commands/generate-tests.md
+M  commands/review-code.md
+M  commands/review-frontend.md
+M  commands/review-rag-output.md
+M  commands/review-spec.md
+A  commands/update-prompt-history.md
+M  docs/assessment-brief.md
+M  docs/prompt-history.md
+M  rules/api-standards.md
+M  rules/documentation.md
+M  rules/frontend.md
+M  rules/java-springboot.md
+M  rules/rag-vector-store.md
+M  rules/testing.md
+M  skills/documentation/SKILL.md
+M  spec/api-contract.md
+M  spec/architecture.md
+M  spec/data-model.md
+A  spec/rag-ingestion.md
+M  spec/requirements.md
+M  spec/state-machine.md
+A  spec/test-strategy.md
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Proceeding to commit and push all changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Expand RAG ingest and test specs; sync docs, rules, and prompt index.
+
+Add rag-ingestion and test-strategy specs, deepen API/state-machine coverage, align assessment traceability across rules and commands, and add update-prompt-history with a SpecStory chronological index.
+EOF
+)&#34; &amp;&amp; git push -u origin HEAD</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git commit -m "$(cat <<'EOF'
+Expand RAG ingest and test specs; sync docs, rules, and prompt index.
+
+Add rag-ingestion and test-strategy specs, deepen API/state-machine coverage, align assessment traceability across rules and commands, and add update-prompt-history with a SpecStory chronological index.
+EOF
+)" && git push -u origin HEAD
+```
+
+```
+[main d30e7dd] Expand RAG ingest and test specs; sync docs, rules, and prompt index.
+ 26 files changed, 9208 insertions(+), 231 deletions(-)
+ create mode 100644 .cursor/commands/update-prompt-history.md
+ create mode 100644 .specstory/history/2026-10-03_20-28-56Z-assessment-brief-update.md
+ create mode 100644 .specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md
+ create mode 100644 commands/update-prompt-history.md
+ create mode 100644 spec/rag-ingestion.md
+ create mode 100644 spec/test-strategy.md
+To github-personal:vishnuaggarwal23/ticket-management.git
+   5b326ba..d30e7dd  HEAD -> main
+branch 'main' set up to track 'origin/main'.
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Verifying git status is clean before committing and pushing.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status
+```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+All changes committed and pushed.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+**Committed and pushed** to `origin/main` as `d30e7dd`.
+
+**Commit message:** Expand RAG ingest and test specs; sync docs, rules, and prompt index.
+
+**26 files** changed, including:
+- New: `spec/rag-ingestion.md`, `spec/test-strategy.md`, `commands/update-prompt-history.md`, Cursor command stub, two SpecStory history files
+- Updates: `requirements`, `api-contract`, `state-machine`, `assessment-brief`, `prompt-history`, rules, commands, skills, and related governance
+
+Working tree is clean; branch matches `origin/main`.

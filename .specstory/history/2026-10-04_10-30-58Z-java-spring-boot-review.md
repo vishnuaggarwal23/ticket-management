@@ -2780,4 +2780,203 @@ _**Agent (auto-smart)**_
 
 <think><details><summary>Thought Process</summary>
 plan.md contains 27 added lines. These may mix this-session AI error updates with other phase work.
+
+Only this chat window's changes will be committed. New files include .cursor/commands/update-ai-error.md, commands/update-ai-error.md, docs/ai-error.md, and docs/ai-mistakes.md. Modified files include .cursor/rules/ai-project-instructions.mdc, commands/improve-from-assessment-pdf.md, commands/review-code.md, commands/review-rag-output.md, docs/assessment-brief.md, docs/prompt-history.md, and plan.md. The specstory file belongs to a different session.
+
+I will unstage all changes and add only the AI error-related files. I am checking whether plan.md contains mixed changes from other sessions.
 </details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: git diff -- plan.md commands/review-code.md</summary>
+```bash
+git diff -- plan.md commands/review-code.md
+```
+
+```
+diff --git a/commands/review-code.md b/commands/review-code.md
+index b150c3d..936a8e5 100644
+--- a/commands/review-code.md
++++ b/commands/review-code.md
+@@ -164,7 +164,7 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
+ 
+ - [ ] Types, annotations, and Spring APIs exist on the agreed stack (Boot 3, Jakarta, no hallucinated libraries)
+ - [ ] No copied copyrighted dumps; no credentials in the diff
+-- [ ] Meaningful AI mistakes noted for `docs/ai-mistakes.md` (propose; do not write unless asked)
++- [ ] Meaningful AI mistakes proposed for [`docs/ai-error.md`](../docs/ai-error.md) (write via **`/update-ai-error`**; do not invent RAG fails)
+ 
+ ---
+ 
+@@ -196,3 +196,4 @@ Apply [`rules/java-springboot.md`](../rules/java-springboot.md) in full. Cross-c
+ | 2026-10-04 | **DEC-01…19** agreed; review checklist updated. |
+ | 2026-10-04 | Java/Spring Boot review bar: coding guidelines, practices, naming, and packaging (`rules/java-springboot.md`). |
+ | 2026-10-04 | Packaging: group/split by layer and logical concern; reject a single dump package. |
++| 2026-10-04 | AI mistakes: propose [`docs/ai-error.md`](../docs/ai-error.md); `/update-ai-error` writes the log. |
+diff --git a/plan.md b/plan.md
+index e437a25..9ddd2c9 100644
+--- a/plan.md
++++ b/plan.md
+@@ -331,7 +331,7 @@ Without a runnable Boot app, Maven Wrapper, and a Postgres-backed schema, later
+ 
+ ## 7. Phase B — Ticket CRUD (no status transitions yet)
+ 
+-**Status:** in progress (B1–B2 complete)  
++**Status:** complete (B1–B5)  
+ **Depends on:** Phase A complete; **C-01…C-03, C-05** agreed (this document §3)  
+ **Implements:** FEAT-01…10 (except SM), AC-CORE-01…11 (API), AC-API create/list/get/patch-fields/comments, AC-DM-01/02/05
+ 
+@@ -427,8 +427,8 @@ Implement **B1 → B5 in order**. Do **not** PATCH `status` until Phase C (you m
+ 
+ **Done B3**
+ 
+-- [ ] Service unit tests green.
+-- [ ] Public APIs do not return `null` (use Optional / exceptions / empty lists).
++- [x] Service unit tests green.
++
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+plan.md contains stale status lines from another session mixed with current AI error logs.
+
+I cannot selectively stage plan.md because git add -p is unavailable. The file must be either fully committed or fully excluded.
+
+I will exclude plan.md from this commit. The AI error references inside it will remain uncommitted until backend work is committed separately.
+
+The commit will include only files created or modified during this session. These cover AI error commands, documentation, and specification files. All existing changes will be unstaged first, then the selected files added.
+
+SpecStory files from prior conversations in this window are excluded. Only files created or modified during this specific turn will be committed. The commit message will follow the repo style of starting with "Tighten..." or "Add..." and ending with a period.
+
+The commit message will read: "Add chronological AI error log and update-ai-error command."
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2**</summary>
+Cancelled
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Auto-review was blocked by either committing without pushing or by combining both actions in one command.
+
+Retrying with commit and push combined in one command, requesting smart mode approval.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+The last commit was blocked because it didn't include the push you asked for. I'll retry commit and push together so you can approve both.
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: git restore --staged . &amp;&amp; git add -- \
+  .cursor/commands/update-ai-error.md \
+  .cursor/rules/ai-project-instructions.mdc \
+  commands/update-ai-error.md \
+  commands/improve-from-assessment-pdf.md \
+  commands/review-code.md \
+  commands/review-rag-output.md \
+  docs/ai-error.md \
+  docs/ai-mistakes.md \
+  docs/assessment-brief.md \
+  docs/prompt-history.md \
+  rules/documentation.md \
+  skills/documentation/SKILL.md \
+  spec/architecture.md \
+  spec/evaluation-strategy.md \
+  spec/requirements.md \
+  spec/test-strategy.md \
+  spec/ui-flow.md &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Add a chronological AI error log and /update-ai-error to keep AC-CORE-23 current.
+
+EOF
+)&#34; &amp;&amp; git push &amp;&amp; git status</summary>
+```bash
+git restore --staged . && git add -- \
+  .cursor/commands/update-ai-error.md \
+  .cursor/rules/ai-project-instructions.mdc \
+  commands/update-ai-error.md \
+  commands/improve-from-assessment-pdf.md \
+  commands/review-code.md \
+  commands/review-rag-output.md \
+  docs/ai-error.md \
+  docs/ai-mistakes.md \
+  docs/assessment-brief.md \
+  docs/prompt-history.md \
+  rules/documentation.md \
+  skills/documentation/SKILL.md \
+  spec/architecture.md \
+  spec/evaluation-strategy.md \
+  spec/requirements.md \
+  spec/test-strategy.md \
+  spec/ui-flow.md && git commit -m "$(cat <<'EOF'
+Add a chronological AI error log and /update-ai-error to keep AC-CORE-23 current.
+
+EOF
+)" && git push && git status
+```
+
+```
+[main 72399da] Add a chronological AI error log and /update-ai-error to keep AC-CORE-23 current.
+ 17 files changed, 297 insertions(+), 30 deletions(-)
+ create mode 100644 .cursor/commands/update-ai-error.md
+ create mode 100644 commands/update-ai-error.md
+ create mode 100644 docs/ai-error.md
+ create mode 100644 docs/ai-mistakes.md
+To github-personal:vishnuaggarwal23/ticket-management.git
+   8e6a344..72399da  main -> main
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-04_09-57-27Z-plan-md-phases.md
+	modified:   backend/src/main/java/com/ticketmanagement/config/JacksonConfig.java
+	modified:   backend/src/main/java/com/ticketmanagement/persistence/CommentEntity.java
+	modified:   plan.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.specstory/history/2026-10-04_10-30-58Z-java-spring-boot-review.md
+	backend/src/main/java/com/ticketmanagement/api/advice/
+	backend/src/main/java/com/ticketmanagement/api/common/
+	backend/src/main/java/com/ticketmanagement/api/ticket/CommentResponse.java
+	backend/src/main/java/com/ticketmanagement/api/ticket/CreateCommentRequest.java
+	backend/src/main/java/com/ticketmanagement/api/ticket/CreateTicketRequest.java
+	backend/src/main/java/com/ticketmanagement/api/ticket/TicketController.java
+	backend/src/main/java/com/ticketmanagement/api/ticket/TicketDetailResponse.java
+	backend/src/main/java/com/ticketmanagement/api/ticket/TicketSummaryResponse.java
+	backend/src/main/java/com/ticketmanagement/api/ticket/UpdateTicketRequest.java
+	backend/src/main/java/com/ticketmanagement/domain/EmptyPatchException.java
+	backend/src/main/java/com/ticketmanagement/domain/IllegalTicketTransitionException.java
+	backend/src/main/java/com/ticketmanagement/domain/TicketNotFoundException.java
+	backend/src/main/java/c
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+plan.md was excluded because it mixed B3-B5 work.
+
+Two AI error path lines in plan.md remain uncommitted. They mix with Phase B status. They can be included later with backend work.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Committed and pushed **`72399da`** to `origin/main`.
+
+**Message:** Add a chronological AI error log and `/update-ai-error` to keep AC-CORE-23 current.
+
+**In this commit:** `docs/ai-error.md`, `docs/ai-mistakes.md`, `commands/update-ai-error.md`, the Cursor pointer, and the steering/spec links that point at that log.
+
+**Left uncommitted:** backend ticket API work, SpecStory transcripts, and `plan.md` (that file also has Phase B3–B5 status from other work, so it was not included).

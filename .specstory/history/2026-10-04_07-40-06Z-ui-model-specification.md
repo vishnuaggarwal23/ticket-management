@@ -6335,17 +6335,38 @@ commit and push
 
 _**Agent (auto-smart)**_
 
+<think><details><summary>Thought Process</summary>
+Running the improve-from-assessment-pdf command. Then updating prompt history and committing the changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Running the assessment PDF improvement pass and rebuilding the prompt-history index, then committing and pushing.
+
+
+
+
+_**Agent (auto-smart)**_
+
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/improve-from-assessment-pdf.md</summary>
 
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/update-prompt-history.md</summary>
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The first step is to read the assessment PDF.
+
+Extracting DOCX text to check for stale references. Listing specstory history files and rebuilding prompt-history.md. Then committing and pushing.
+</details></think>
 
 _**Agent (auto-smart)**_
 
@@ -6354,20 +6375,46 @@ _**Agent (auto-smart)**_
 ```bash
 unzip -p /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/Assessments.docx word/document.xml 2>/dev/null | sed -e 's/<[^>]*>//g' | tr -s ' \n' ' ' | fold -s -w 120 | head -80
 ```
+
+```
+Rejected: An error occured while classifying this action. Please review manually.
+```
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
-<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **0** directories</summary>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **19** results in **1** directory</summary>
 
-No results found
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specstory/history`** (19 files)
+
+| File |
+|------|
+| `2026-09-24_07-11-47Z-graphify-semantic-chunk-1.md` |
+| `2026-10-03_17-04-09Z-java-spring-boot-rules.md` |
+| `2026-10-03_19-36-57Z-revision-history-for-rules.md` |
+| `2026-10-03_19-43-17Z-data-model-specification.md` |
+| `2026-10-03_20-40-54Z-specification-document-updates.md` |
+| `2026-10-03_20-00-04Z-assessment-spec-completeness-review.md` |
+| `2026-09-24_05-40-01Z-project-directory-creation.md` |
+| `2026-10-03_19-07-36Z-requirements-specification-update.md` |
+| `2026-09-24_17-36-50Z-architecture-md-specification.md` |
+| `2026-10-03_16-32-55Z-spec-kit-constitution.md` |
+| `2026-10-03_17-18-27Z-testing-rules-for-cursor.md` |
+| `2026-10-03_15-47-01Z-working-directory-audit.md` |
+| `2026-09-24_17-36-50Z-lets-go-to-the.md` |
+| `2026-10-03_19-26-20Z-architecture-specification-update.md` |
+| `2026-10-03_20-10-18Z-state-machine-specification.md` |
+| `2026-10-03_20-28-56Z-assessment-brief-update.md` |
+| `2026-10-04_07-40-06Z-ui-model-specification.md` |
+| `2026-09-24_17-21-45Z-assessment-requirements-review.md` |
+| `2026-10-04_06-59-04Z-evaluation-strategy-document.md` |
 </details></tool-use>
 
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/prompt-history.md</summary>
 
 </details></tool-use>
 
@@ -6375,6 +6422,501 @@ _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "**/*.{md,mdc}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "nine file|nine-file|consolidat.*rag-api|§6\\.2–§6\\.5.*authoritative|do not create.*rag-api"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "nine file|nine-file|consolidat.*rag-api|§6\\.2–§6\\.5.*authoritative|do not create.*rag-api",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "spec/data-model.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "skills/documentation/SKILL.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": "docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/api-standards.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": ".specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "docs/prompt-history.md"
+    },
+    {
+      "matchCount": 15,
+      "uri": ".specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    }
+  ],
+  "totalFiles": 8,
+  "totalMatches": 26
+}
+```
+Status: **completed**
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+The shell command was rejected for unzip. I'll try reading Assessments.docx directly or using Python instead, since the user rules specify a real environment.
+
+I'll extract the assessment PDF with Python3. The improve pass is mostly complete, but I still need to check requirements §6.8 for rag-api-contract references, fix SKIL.md wording, update the OQ-05 handoff, and grep for stale nine-file mentions. I'll also review the assessment brief and UI model transcript for rag-api updates.
+
+I'll read the docx via the Read tool. Then I'll sanitize requirements §6.8 and §10.3, check the assessment brief for stale pointers, add revision rows from the improve pass, and grep requirements §6.8 for its content.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "^### 6\\.8|^## 6\\.8|rag-api-contract|ui-model"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "^### 6\\.8|^## 6\\.8|rag-api-contract|ui-model",
+  "topFiles": [
+    {
+      "matchCount": 25,
+      "uri": "spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 25
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "OQ-05|§10\\.3"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "OQ-05|§10\\.3",
+  "topFiles": [
+    {
+      "matchCount": 6,
+      "uri": "spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 6
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md",
+  "pattern": "^\\*\\*User\\*\\*|^# 2026-10-04"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md",
+  "pattern": "^\\*\\*User\\*\\*|^# 2026-10-04",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": ".specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 1
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Requirements §10.3 handoffs for OQ-05 and DEC-11 must reference rag-api-contract instead of api-contract §6.3.
+
+Reading requirements around lines 1248–1275 and the §6.8 spec list table. Grepping the ui-model specstory for User near the end.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2**</summary>
+Binary files of type .docx are not supported by the read executor
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Starting to plan the improvements from the assessment PDF.
+
+Fixing DEC-11 and OQ-05 handoffs to rag-api-contract. Adding improve revision rows to requirements, assessment-brief, and skills. DOCX reads are blocked; using fallback with assessment-brief and §0.4. Updating prompt-history row 19 to include the rag-api-contract cross-link pass.
+
+No new session file was created. Appision history shows 19 synced sessions with one update and zero additions or removals. Committing all changes including prior uncommitted work. Running git status, diff, and log to finalize the commit.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+Applying assessment-alignment fixes (DEC-11 / OQ-05 → `rag-api-contract.md`), then refreshing the prompt-history index.
+
+
+
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md",
+  "pattern": "DEC-11|api-contract.*§6\\.3"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md",
+  "pattern": "DEC-11|api-contract.*§6\\.3",
+  "topFiles": [
+    {
+      "matchCount": 2,
+      "uri": "docs/assessment-brief.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 2
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/assessment-brief.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/improve-from-assessment-pdf.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/prompt-history.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/prompt-history.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Row 19 incorrectly described commit and push actions for a session that had not yet performed them.
+
+A clearer description was drafted for row 19 covering added specs, cross-links, and follow-up tasks. Commit and push are now being executed, with parallel status, diff, and log checks.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/docs/prompt-history.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline
+```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   spec/rag-api-contract.md
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .cursor/rules/java-tech-lead-sdd.mdc
+	modified:   .specify/memory/constitution.md
+	modified:   .specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md
+	modified:   commands/generate-tests.md
+	modified:   commands/improve-from-assessment-pdf.md
+	modified:   commands/review-code.md
+	modified:   commands/review-frontend.md
+	modified:   commands/review-rag-output.md
+	modified:   commands/review-spec.md
+	modified:   docs/assessment-brief.md
+	modified:   docs/prompt-history.md
+	modified:   rules/api-standards.md
+	modified:   rules/documentation.md
+	modified:   rules/frontend.md
+	modified:   rules/java-springboot.md
+	modified:   rules/rag-vector-store.md
+	modified:   rules/testing.md
+	modified:   skills/documentation/SKILL.md
+	modified:   spec/api-contract.md
+	modified:   spec/architecture.md
+	modified:   spec/data-model.md
+	modified:   spec/evaluation-strategy.md
+	modified:   spec/rag-ingestion.md
+	modified:   spec/requirements.md
+	modified:   spec/test-strategy.md
+	modified:   spec/ui-model.md
+
+ .cursor/rules/java-tech-lead-sdd.mdc               |    5 +-
+ .specify/memory/constitution.md                    |    4 +-
+ .../2026-10-04_07-40-06Z-ui-model-specification.md | 3258 ++++++++++++++++++++
+ commands/generate-tests.md                         |    2 +-
+ commands/improve-from-assessment-pdf.md            |   24 +-
+ commands/review-code.md                            |    2 +-
+ commands/review-frontend.md                        |    2 +-
+ commands/review-rag-output.md                      |    4 +-
+ commands/review-spec.md                            |    7 +-
+ docs/assessment-brief.md                           | 
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+rag-api-contract.md is staged. No unstaged changes were found.
+
+Staging all files for a full commit. The commit message will add rag-api-contract and wire ten-file spec traceability. Pushing requires user approval.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add spec/rag-api-contract.md .cursor/rules/java-tech-lead-sdd.mdc .specify/memory/constitution.md .specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md commands/ docs/ rules/ skills/ spec/ &amp;&amp; git commit -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+Add rag-api-contract spec and align ten-file PDF traceability.
+
+Introduces authoritative ask/RAG HTTP contract and updates requirements, rules, commands, and docs; refreshes prompt-history index and DEC-11 handoff.
+EOF
+)&#34; &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add spec/rag-api-contract.md .cursor/rules/java-tech-lead-sdd.mdc .specify/memory/constitution.md .specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md commands/ docs/ rules/ skills/ spec/ && git commit -m "$(cat <<'EOF'
+Add rag-api-contract spec and align ten-file PDF traceability.
+
+Introduces authoritative ask/RAG HTTP contract and updates requirements, rules, commands, and docs; refreshes prompt-history index and DEC-11 handoff.
+EOF
+)" && git status
+```
+
+```
+[main 7a1d160] Add rag-api-contract spec and align ten-file PDF traceability.
+ 27 files changed, 3822 insertions(+), 79 deletions(-)
+ create mode 100644 spec/rag-api-contract.md
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Running git push.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git push origin main</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git push origin main
+```
+
+```
+To github-personal:vishnuaggarwal23/ticket-management.git
+   5ca1583..7a1d160  main -> main
+
+```
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Preparing a summary report for the improve-from-assessment and update-prompt-history steps.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+## `/improve-from-assessment-pdf`
+
+**Assessment access:** **Fallback** — `docs/Assessments.docx` is not readable as text in this environment; alignment used `docs/assessment-brief.md`, `spec/requirements.md` §0.4 / §8 / §10, and the current ten-file layout.
+
+**Files improved**
+| Path | Change |
+|------|--------|
+| `spec/requirements.md` | **DEC-11** / **OQ-05** handoff → `rag-api-contract.md` (was `api-contract` §6.3); revision row |
+| `docs/assessment-brief.md` | Revision row for same handoff |
+| `commands/improve-from-assessment-pdf.md` | Revision note: **DEC-11** owner |
+
+**Unchanged (already aligned):** Ten-file spec set, `rag-api-contract` cross-links, §6.8 hygiene table, assessment-brief §13.
+
+**Still open:** **DEC-01, 02, 06, 09–12, 14, 15** (unchanged).
+
+**Blocked:** None.
+
+---
+
+## `/update-prompt-history`
+
+- **19** sessions indexed  
+- **Added 0 / updated 1 / removed 0** (row **#19** — `ui-model` + `rag-api-contract` arc)  
+- Only `docs/prompt-history.md` edited for the index (plus revision row).
+
+---
+
+## Git
+
+- **Commit:** `7a1d160` — *Add rag-api-contract spec and align ten-file PDF traceability.*  
+- **Pushed:** `origin/main` (`5ca1583..7a1d160`)

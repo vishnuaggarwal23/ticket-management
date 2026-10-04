@@ -1573,6 +1573,477 @@ _**Agent (auto-smart)**_
 _**Agent (auto-smart)**_
 
 <tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
-<summary>Tool use: **read_file_v2** • Read file: </summary>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specify/.gitignore</summary>
 
 </details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "glob": "*.{md,mdc,json}",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "specs/|spec/"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management",
+  "pattern": "specs/|spec/",
+  "topFiles": [
+    {
+      "matchCount": 1,
+      "uri": "spec/architecture.md"
+    },
+    {
+      "matchCount": 4,
+      "uri": "docs/assessment-brief.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".cursor/rules/ai-project-instructions.mdc"
+    },
+    {
+      "matchCount": 1,
+      "uri": "spec/requirements.md"
+    },
+    {
+      "matchCount": 2,
+      "uri": ".cursor/commands/review-rag-output.md"
+    },
+    {
+      "matchCount": 10,
+      "uri": ".specify/memory/constitution.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".cursor/commands/review-spec.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "rules/rag-vector-store.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": ".cursor/rules/documentation.mdc"
+    },
+    {
+      "matchCount": 3,
+      "uri": ".cursor/rules/rag-vector-store.mdc"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".cursor/rules/testing.mdc"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/testing.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/review-spec.md"
+    },
+    {
+      "matchCount": 3,
+      "uri": "rules/frontend.md"
+    },
+    {
+      "matchCount": 12,
+      "uri": ".cursor/rules/java-tech-lead-sdd.mdc"
+    },
+    {
+      "matchCount": 1,
+      "uri": "rules/java-springboot.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": "commands/review-code.md"
+    },
+    {
+      "matchCount": 37,
+      "uri": ".specstory/history/2026-09-24_17-36-50Z-architecture-md-specification.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".specify/templates/tasks-template.md"
+    },
+    {
+      "matchCount": 1,
+      "uri": ".cursor/rules/java-springboot.mdc"
+    }
+  ],
+  "totalFiles": 34,
+  "totalMatches": 294
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing the remaining Spec Kit workflow scripts to understand their current path assumptions.
+
+A filename collision exists between Spec Kit's `data-model.md` and the assessment's `spec/data-model.md`. The assessment expects `requirements.md`, `architecture.md`, and `rag-ingestion.md` under `spec/`, while Spec Kit expects `plan.md`, `tasks.md`, and `checklists/` at the root. The `create-new-feature` script behavior also needs review.
+
+Option 1 is rejected because dumping Spec Kit artifacts into `spec/` would duplicate product specifications and collide filenames. Option 3 is preferred: keep Spec Kit for planning and task tracking only, while placing all product specifications directly under `spec/`. Option 2 is considered too risky, since dual trees could contradict each other unless strictly mapped.
+
+Option 3 is refined with a thin adapter. Product specifications remain under `spec/` as the single source of truth. Spec Kit artifacts such as `plan.md` and `tasks.md` would live inside `specs/###-feature/` directories. The `speckit-specify` command must be prevented from generating a competing `spec.md` inside each feature folder; it should instead emit a lightweight stub that points back to `spec/`.
+
+Next steps include inspecting the plan skill to see how it writes `data-model.md` into feature directories, and verifying whether the `specify` command invokes `create-new-feature.sh` or handles directory creation directly. The `.cursor/init-options` file shows sequential feature numbering and `here: true`.
+
+The `specs/` directory does not exist yet. I am checking the current filesystem layout to confirm the existing structure before proposing any changes.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **0** results in **1** directory</summary>
+
+Directory: **``** (0 files)
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specify/templates/plan-template.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-plan/SKILL.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-tasks/SKILL.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-implement/SKILL.md</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-plan",
+  "pattern": "spec\\.md|data-model|specs/|FEATURE_DIR|check-prerequisites|create-new-feature"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-plan",
+  "pattern": "spec\\.md|data-model|specs/|FEATURE_DIR|check-prerequisites|create-new-feature",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-analyze",
+  "pattern": "spec\\.md|data-model|specs/"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-analyze",
+  "pattern": "spec\\.md|data-model|specs/",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-converge",
+  "pattern": "spec\\.md|data-model|specs/"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-converge",
+  "pattern": "spec\\.md|data-model|specs/",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-clarify",
+  "pattern": "spec\\.md|data-model|specs/"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/skills/speckit-clarify",
+  "pattern": "spec\\.md|data-model|specs/",
+  "topFiles": [],
+  "totalFiles": 0,
+  "totalMatches": 0
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.specify/scripts/bash/create-new-feature.sh</summary>
+
+</details></tool-use>
+
+_**Agent (auto-smart)**_
+
+<think><details><summary>Thought Process</summary>
+A grep search on the skills directory returned no matches, likely due to an incorrect path. The relevant content was already retrieved via Read.
+
+The analysis shows that generating `data-model.md` inside a feature directory would duplicate the product specification under `spec/`. The recommended structure keeps `spec/` as the source of truth. Feature directories should contain only process artifacts such as plans, tasks, and checklists. The `speckit-plan` script must be prevented from writing a second product specification file.
+
+A hybrid approach is preferable to Option 1. Each feature directory would hold a thin `spec.md` index pointing to `spec/*.md`. Process artifacts like `plan.md` and `tasks.md` would live there. The `speckit-plan` command must be instructed not to emit product specifications into feature directories. Option 1 is rejected because it collides filenames and violates assessment expectations.
+
+Specifying `spec/` as the feature directory would still pollute the assessment root. The scripts hardcode `spec.md` inside the feature folder, yet the assessment expects `api-contract.md` and `rag-api-contract.md` directly under `spec/`. Plans and tasks would also generate extra files like `research.md` and `quickstart.md` there. This makes the directory messy for the assessor.
+
+The recommended structure is Option 3 with a small Option 2 mapping file. Spec Kit will remain compatible by creating one feature directory under `specs/` for process artifacts. Skills must be adapted so `speckit-plan` and `speckit-specify` read `spec/` as the product specification source. A thin `spec.md` stub inside each feature directory will point to `spec/` so existing scripts continue to locate the specification without duplicating it.
+
+The mapping file should serve only as a pointer, not as a second requirements document. The plan command must update `spec/data-model.md` directly instead of emitting a duplicate inside the feature directory. If the feature directory remains `specs/###`, most scripts may need no changes because the thin `spec.md` stub preserves existing paths. The `create-new-feature.sh` script should also keep its `SPECS_DIR` unchanged.
+
+Specific patches are needed across several skills and templates. `speckit-specify` must load `spec/requirements.md` and write a thin `spec.md` index rather than replacing product specifications. `speckit-plan` should update `spec/data-model.md` and `spec/api-contract.md` directly, while keeping `research.md` in the feature directory. `speckit-tasks` needs to load user stories from `spec/` and adjust `AVAILABLE_DOCS`. The remaining skills—`implement`, `analyze`, `converge`, `clarify`, and `checklist`—must also be updated. Template files such as `plan-template.md`, `tasks-template.md`, and `spec-template.md` require corresponding changes.
+
+The constitution will be amended later to formalize the directory decision. The `.gitignore` already excludes `feature.json`. Speckit skills reside under `.cursor/skills/speckit-*`, while templates and commands live in the source tree. Refreshing Spec Kit could overwrite `.specify/scripts`, templates, and `.cursor/skills`. Overlay documentation should be kept separate for later implementation.
+
+Existing `requirements.md` and `architecture.md` are drafted with documentation skill sections rather than Spec Kit template user stories. Naive use of `speckit-specify` would generate an incompatible structure.
+
+`init-options.json` contains no `specs_dir` override. The workflow YAML does not reference custom path configuration keys.
+
+The audit is complete. The proposed recommendations will be presented as a final report for review before any implementation begins.
+</details></think>
+
+_**Agent (auto-smart)**_
+
+**Recommendation: Option 3** — keep assessment product specs in `spec/`; use Spec Kit only for process artifacts (`plan.md`, `tasks.md`, checklists, optional research). Do not treat `specs/<feature>/spec.md` as a second product spec. A thin index file there is only a compatibility stub.
+
+No files were changed, staged, or committed.
+
+---
+
+## 1. Current Spec Kit directory behavior
+
+**Confirmed**
+
+| Fact | Evidence |
+|------|----------|
+| Spec Kit **1.0.13**, Cursor integration, sequential feature numbering | `.specify/init-options.json`, `.specify/integration.json` |
+| Default feature root is **`specs/`** (plural), not `spec/` | `create-new-feature.sh`: `SPECS_DIR="$REPO_ROOT/specs"` |
+| Feature dir is `specs/<NNN-short-name>/` (or timestamp if configured) | `create-new-feature.sh`, `speckit-specify` skill |
+| Required filenames **inside** that dir: `spec.md`, `plan.md`, `tasks.md` | `common.sh` `get_feature_paths()`; `check-prerequisites.sh`; `setup-tasks.sh` |
+| Optional inside that dir: `research.md`, `data-model.md`, `quickstart.md`, `contracts/`, `checklists/` | `common.sh`, `check-prerequisites.sh`, plan template |
+| Feature context is `.specify/feature.json` (`feature_directory`) or `SPECIFY_FEATURE_DIRECTORY` | `common.sh`; `feature.json` is gitignored |
+| `/speckit-specify` **creates** `SPECIFY_FEATURE_DIRECTORY/spec.md` from `spec-template` | specify skill + `create-new-feature.sh` |
+| `/speckit-plan` writes **into FEATURE_DIR**: `plan.md`, `research.md`, **`data-model.md`**, `contracts/`, `quickstart.md` | plan skill + `plan-template.md` |
+| `/speckit-tasks` **requires** `FEATURE_DIR/spec.md` and `plan.md` | tasks skill |
+| Workflow is specify → review gate → plan → review gate → tasks → implement | `.specify/workflows/speckit/workflow.yml` |
+| **No** `specs/` tree exists yet | glob over `specs/**` |
+| Product specs already live under **`spec/`** | `spec/requirements.md`, `spec/architecture.md` |
+| Constitution forbids a competing product SOT | `.specify/memory/constitution.md` |
+| Repo rules, review commands, and `skills/documentation` all point at **`spec/`** named files | `.cursor/rules/*`, `commands/review-spec.md`, `skills/documentation/SKILL.md` |
+| No Spec Kit slash files under `.cursor/commands/`; commands are **skills** | `.cursor/skills/speckit-*` |
+| No `.specify/extensions.yml`; no `specs_dir` override in init-options | inspected |
+
+**Assumptions (not proven by a live `/speckit-specify` run)**
+
+- The agent may create the feature dir itself instead of calling `create-new-feature.sh`; both paths still default to `specs/`.
+- Spec Kit upgrades can overwrite `.specify/scripts`, `.specify/templates`, and installed skills.
+- `SPECIFY_FEATURE_DIRECTORY=spec` would make `FEATURE_SPEC` = `spec/spec.md` and would dump plan/tasks/`data-model.md` **into** `spec/` — that layout is not in the assessment file list.
+
+**Name clash if trees are merged:** Spec Kit’s `data-model.md` and `spec.md` vs assessment `spec/data-model.md` and `spec/requirements.md`. Spec Kit `contracts/` vs `spec/api-contract.md` and `spec/rag-api-contract.md`.
+
+---
+
+## 2. Option comparison
+
+| | **1. Retarget Spec Kit onto `spec/`** | **2. Dual tree + mapping** | **3. Spec Kit = plan/tasks; product = `spec/`** |
+|--|--|--|--|
+| Assessment compliance | Weak: extra `spec.md`/`plan.md`/`tasks.md`/`contracts/` in the assessor folder | OK if `spec/` stays canonical | **Strongest:** `spec/` stays the named set |
+| Duplicate / contradictory specs | High: plan would write another `data-model.md` next to the assessment file | High unless mapping is one-way and strictly enforced | **Low** if `specs/.../spec.md` is an index only |
+| Installed command compatibility | Breaks or needs heavy script + skill rewrites | Scripts keep working; skills must still prefer `spec/` | Scripts keep working with a stub `spec.md`; skills need **guardrails** |
+| Maintenance | High; fights every Spec Kit refresh | Medium: two trees forever | **Lowest** that still uses Spec Kit |
+| Multi-doc spec set (`requirements`, `architecture`, RAG, UI, tests) | Poor fit: Spec Kit is one `spec.md` + plan-phase design files | Mapping table is large and easy to drift | **Best fit:** each assessment file stays a first-class doc |
+
+Option 1 conflicts with the constitution if it turns `spec/` into a Spec Kit feature dump. Option 2 as “two product specs” is what the constitution already rejected.
+
+---
+
+## 3. Recommended structure
+
+```text
+spec/                              # PRODUCT source of truth (assessment)
+  requirements.md                  # exists (draft)
+  architecture.md                  # exists (draft)
+  data-model.md
+  api-contract.md
+  state-machine.md
+  rag-ingestion.md
+  rag-api-contract.md
+  evaluation-strategy.md
+  ui-flow.md
+  test-strategy.md
+
+specs/001-support-tickets/         # PROCESS only (Spec Kit)
+  spec.md                          # INDEX: links to spec/*; not a second requirements doc
+  plan.md
+  tasks.md
+  research.md                      # optional; must not invent product requirements
+  checklists/                      # Spec Kit quality checklists
+
+.specify/memory/constitution.md    # governance (already ratified)
+.specify/feature.json              # local pointer (gitignored)
+```
+
+**Roles**
+
+- **Requirements / specifications:** only `spec/*.md`.
+- **Plans / tasks:** only `specs/<feature>/plan.md` and `tasks.md`.
+- **`specs/.../spec.md`:** pointer + story index derived **from** `spec/`, never an independent product contract.
+
+`/speckit-plan` MUST NOT write a competing `specs/.../data-model.md` or `contracts/` as product design. Those belong in `spec/data-model.md`, `spec/api-contract.md`, `spec/rag-api-contract.md`.
+
+---
+
+## 4. Files that would need changes (recommended approach)
+
+**Must change (agent behavior — otherwise the next `/speckit-specify` creates a competing product spec)**
+
+- `.cursor/skills/speckit-specify/SKILL.md` — create index `spec.md`; read existing `spec/`; do not regenerate `spec/requirements.md` as Spec Kit user-story format unless explicitly asked.
+- `.cursor/skills/speckit-plan/SKILL.md` — consume `spec/*`; write plan under `specs/`; do not emit FEATURE_DIR `data-model.md` / `contracts/` as product SOT.
+- `.cursor/skills/speckit-tasks/SKILL.md` — stories/acceptance from `spec/`, not only FEATURE_DIR `spec.md`.
+- `.cursor/skills/speckit-clarify/SKILL.md`, `speckit-analyze/SKILL.md`, `speckit-converge/SKILL.md`, `speckit-implement/SKILL.md`, `speckit-checklist/SKILL.md` — same SOT rule.
+
+**Should change (so templates do not instruct the old tree)**
+
+- `.specify/templates/plan-template.md` — documentation tree + “Input” path.
+- `.specify/templates/tasks-template.md` — prerequisites: `spec/` files, not FEATURE_DIR `data-model.md` / `contracts/`.
+- `.specify/templates/spec-template.md` — only if used as an **index** template, not a replacement for `spec/requirements.md`.
+- `.specify/templates/checklist-template.md` — link to `spec/` as well as `spec.md`.
+
+**Optional / later (scripts still work if stub `spec.md` exists)**
+
+- `.specify/scripts/bash/create-new-feature.sh` — only if you refuse a `specs/` directory at all.
+- `.specify/scripts/bash/common.sh` — only if you change `FEATURE_SPEC` / `DATA_MODEL` path contracts.
+- `.specify/scripts/bash/check-prerequisites.sh`, `setup-plan.sh`, `setup-tasks.sh` — only if AVAILABLE_DOCS should list `spec/` files.
+
+**Do not need path changes for Option 3**
+
+- `constitution-template.md`, workflow.yml, init-options, integration manifests.
+
+**Follow-up (separate review, not this audit)**
+
+- Record the split in the constitution (amendment).
+- A short `docs/` note so upgrades do not reintroduce dual SOTs.
+- `commands/review-spec.md` already targets `spec/`; keep it that way.
+
+---
+
+## 5. Compatibility concerns
+
+- **Stock `/speckit-specify` is unsafe until skills are guarded.** It will create `specs/00N-.../spec.md` from the generic template (user stories, technology-agnostic success criteria) that **does not match** existing `spec/requirements.md`.
+- **Stock `/speckit-plan` will try to author `data-model.md` and `contracts/` under FEATURE_DIR**, colliding with assessment `spec/data-model.md` and API contracts.
+- **`speckit-tasks` currently requires user stories in `spec.md`.** Assessment specs use FR/NFR tables and documentation-skill sections, not Spec Kit P1/P2 stories. Tasks generation needs an explicit mapping (FR-xx → tasks), not a rewrite of `requirements.md` into Spec Kit format unless you later choose that.
+- **Skill edits will be overwritten** on Spec Kit upgrade; keep a documented overlay or re-apply checklist.
+- **`check-prerequisites.sh` does not know about `spec/`.** Implement will not fail if `spec/state-machine.md` is missing unless skills check it.
+- Draft `spec/requirements.md` / `architecture.md` are **not yet approved**; constitution still blocks implementation until they are.
+
+---
+
+## 6. Proposed follow-up (small reviewable steps)
+
+1. **Decision record** — amend constitution (or a one-page integration note) with: `spec/` = product SOT; `specs/<feature>/` = plan/tasks only.
+2. **Stub feature dir** — one `specs/001-support-tickets/spec.md` that only links the ten assessment files; persist `.specify/feature.json` locally. Do not copy requirements into that file.
+3. **Guardrail skill patches** — specify / plan / tasks first: “never write product requirements outside `spec/`.”
+4. **Template overlays** — plan + tasks templates: documentation tree as in §3.
+5. **Dry-run specify** — after guards, run specify in a way that **updates the index only** and leaves `spec/requirements.md` untouched; human review of the diff.
+6. **Plan command** — produce `plan.md` (+ optional `research.md`) from approved `spec/` docs; no FEATURE_DIR `data-model.md`.
+7. **Tasks command** — `tasks.md` tied to FR/NFR IDs in `spec/requirements.md`.
+8. **Upgrade note** — after any Spec Kit refresh, re-check skills/templates for regressions.
+
+Stop here. Nothing was implemented. If you approve Option 3, the first implementation step is the constitution/integration note plus the index stub, not running `/speckit-specify` against a blank feature description.
