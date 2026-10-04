@@ -106,4 +106,16 @@ class AskApiIT extends AbstractPostgresIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.answer").exists());
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/api/ai/ask", "/api/v1/ai/ask"})
+    void questionOver2000Is400ValidationError(String path) throws Exception {
+        String tooLong = "a".repeat(2001);
+        mockMvc.perform(post(path)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"question\":\"" + tooLong + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+    }
 }
