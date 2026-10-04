@@ -85,6 +85,17 @@ class TicketRepositoryIT extends AbstractPostgresIntegrationTest {
     }
 
     @Test
+    void keywordMatchIsCaseInsensitive() {
+        persistTicket("CaseMixWidgetTitle", "body", TicketStatus.OPEN, TicketPriority.MEDIUM);
+
+        Page<TicketEntity> page = tickets.search(
+                null, "casemixwidget", PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "createdAt")));
+
+        assertThat(page.getContent()).extracting(TicketEntity::getTitle)
+                .contains("CaseMixWidgetTitle");
+    }
+
+    @Test
     void keywordMatchesDescription() {
         persistTicket("plain title", "unique-desc-gadget-search", TicketStatus.OPEN, TicketPriority.MEDIUM);
 

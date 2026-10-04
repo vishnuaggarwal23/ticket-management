@@ -11,6 +11,8 @@ import com.ticketmanagement.domain.TicketNotFoundException;
 import com.ticketmanagement.domain.TicketValidationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -26,6 +28,8 @@ import java.util.List;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
@@ -123,12 +127,29 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception ex, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        log.error("Unexpected error path={} ticketId={}", path, ticketIdFrom(path), ex);
         return error(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "INTERNAL_ERROR",
                 "An unexpected error occurred.",
                 List.of(),
                 request);
+    }
+
+    static String ticketIdFrom(String path) {
+        if (path == null) {
+            return null;
+        }
+        int start = path.indexOf("TKT-");
+        if (start < 0) {
+            return null;
+        }
+        int end = start + 4;
+        while (end < path.length() && Character.isDigit(path.charAt(end))) {
+            end++;
+        }
+        return end > start + 4 ? path.substring(start, end) : null;
     }
 
     private ErrorDetail toDetail(FieldError fieldError) {

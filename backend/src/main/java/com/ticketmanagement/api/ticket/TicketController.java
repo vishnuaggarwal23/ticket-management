@@ -2,6 +2,7 @@ package com.ticketmanagement.api.ticket;
 
 import com.ticketmanagement.api.common.DataResponse;
 import com.ticketmanagement.api.common.PageResponse;
+import com.ticketmanagement.config.ApiProperties;
 import com.ticketmanagement.domain.TicketStatus;
 import com.ticketmanagement.service.TicketService;
 import jakarta.validation.Valid;
@@ -26,9 +27,11 @@ import java.net.URI;
 public class TicketController {
 
     private final TicketService tickets;
+    private final ApiProperties apiProperties;
 
-    public TicketController(TicketService tickets) {
+    public TicketController(TicketService tickets, ApiProperties apiProperties) {
         this.tickets = tickets;
+        this.apiProperties = apiProperties;
     }
 
     @PostMapping
@@ -41,12 +44,13 @@ public class TicketController {
     @GetMapping
     public PageResponse<TicketSummaryResponse> list(
             @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size,
+            @RequestParam(required = false) @Min(1) @Max(100) Integer size,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String q,
             @RequestParam(required = false) TicketStatus status
     ) {
-        return tickets.list(page, size, sort, q, status);
+        int pageSize = size == null ? apiProperties.pageSizeDefault() : size;
+        return tickets.list(page, pageSize, sort, q, status);
     }
 
     @GetMapping("/{id}")

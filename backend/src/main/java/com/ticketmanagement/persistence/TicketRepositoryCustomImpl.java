@@ -3,7 +3,6 @@ package com.ticketmanagement.persistence;
 import com.ticketmanagement.domain.InvalidSortException;
 import com.ticketmanagement.domain.TicketStatus;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.data.domain.Page;
@@ -17,8 +16,11 @@ import java.util.List;
 @Repository
 public class TicketRepositoryCustomImpl implements TicketRepositoryCustom {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    public TicketRepositoryCustomImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Page<TicketEntity> search(TicketStatus status, String q, Pageable pageable) {

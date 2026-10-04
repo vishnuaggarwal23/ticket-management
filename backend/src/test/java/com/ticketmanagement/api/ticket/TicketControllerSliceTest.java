@@ -3,7 +3,9 @@ package com.ticketmanagement.api.ticket;
 import com.ticketmanagement.api.advice.RestExceptionHandler;
 import com.ticketmanagement.api.common.PageMeta;
 import com.ticketmanagement.api.common.PageResponse;
+import com.ticketmanagement.config.ApiProperties;
 import com.ticketmanagement.config.JacksonConfig;
+import com.ticketmanagement.domain.TicketConstraints;
 import com.ticketmanagement.domain.TicketNotFoundException;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
@@ -11,30 +13,41 @@ import com.ticketmanagement.service.TicketService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TicketController.class)
 @Import({RestExceptionHandler.class, JacksonConfig.class})
+@EnableConfigurationProperties(ApiProperties.class)
+@TestPropertySource(properties = {
+        "app.api.page-size-default=20",
+        "app.api.page-size-max=100"
+})
 class TicketControllerSliceTest {
 
     @Autowired
@@ -53,7 +66,49 @@ class TicketControllerSliceTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/api/v1/tickets/TKT-1001"))
                 .andExpect(jsonPath("$.data.id").value("TKT-1001"))
-                .andExpect(jsonPath("$.data.status").value("OPEN"));
+                .andExpect(jsonPath("$.data.status").value("OPEN"))
+                .andExpect(jsonPath("$.error").doesNotExist());
+    }
+
+    @Test
+    void createTitleAtMaxLengthIs201() throws Exception {
+        when(tickets.create(any())).thenReturn(detail("TKT-1001", TicketPriority.MEDIUM));
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"" + "a".repeat(TicketConstraints.TITLE_MAX) + "\"}"))
+                .andExpect(status().isCreated());
+        verify(tickets).create(any());
+    }
+
+    @Test
+    void createTitleOverMaxLengthIs400() throws Exception {
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"" + "a".repeat(TicketConstraints.TITLE_MAX + 1) + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).create(any());
+    }
+
+    @Test
+    void createMissingTitleIs400() throws Exception {
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"description\":\"only desc\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).create(any());
+    }
+
+    @Test
+    void createDescriptionOverMaxLengthIs400() throws Exception {
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Help\",\"description\":\""
+                                + "d".repeat(TicketConstraints.DESCRIPTION_MAX + 1) + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).create(any());
     }
 
     @Test
@@ -83,6 +138,27 @@ class TicketControllerSliceTest {
     }
 
     @Test
+    void patchTitleOverMaxLengthIs400() throws Exception {
+        mockMvc.perform(patch("/api/v1/tickets/TKT-1001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"" + "a".repeat(TicketConstraints.TITLE_MAX + 1) + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).updateFields(any(), any());
+    }
+
+    @Test
+    void patchResolutionNotesOverMaxLengthIs400() throws Exception {
+        mockMvc.perform(patch("/api/v1/tickets/TKT-1001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"resolutionNotes\":\""
+                                + "n".repeat(TicketConstraints.RESOLUTION_NOTES_MAX + 1) + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).updateFields(any(), any());
+    }
+
+    @Test
     void getUnknownReturns404Envelope() throws Exception {
         when(tickets.getById("TKT-404")).thenThrow(new TicketNotFoundException("TKT-404"));
 
@@ -105,6 +181,18 @@ class TicketControllerSliceTest {
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.meta.page").value(0))
                 .andExpect(jsonPath("$.meta.size").value(20));
+        verify(tickets).list(0, 20, null, null, null);
+    }
+
+    @Test
+    void unexpectedExceptionIs500WithoutLeak() throws Exception {
+        when(tickets.getById("TKT-1001")).thenThrow(new IllegalStateException("SQL boom secret"));
+
+        mockMvc.perform(get("/api/v1/tickets/TKT-1001"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error.code").value("INTERNAL_ERROR"))
+                .andExpect(jsonPath("$.error.message").value("An unexpected error occurred."))
+                .andExpect(content().string(not(containsString("SQL boom secret"))));
     }
 
     @Test
@@ -119,6 +207,27 @@ class TicketControllerSliceTest {
         mockMvc.perform(get("/api/v1/tickets").param("size", "101"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+    }
+
+    @Test
+    void negativePageIs400() throws Exception {
+        mockMvc.perform(get("/api/v1/tickets").param("page", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).list(anyInt(), anyInt(), any(), any(), any());
+    }
+
+    @Test
+    void sizeOneAndOneHundredAreAccepted() throws Exception {
+        when(tickets.list(0, 1, null, null, null)).thenReturn(new PageResponse<>(
+                List.of(), new PageMeta(0, 1, 0, 0, "createdAt,desc")));
+        when(tickets.list(0, 100, null, null, null)).thenReturn(new PageResponse<>(
+                List.of(), new PageMeta(0, 100, 0, 0, "createdAt,desc")));
+
+        mockMvc.perform(get("/api/v1/tickets").param("size", "1")).andExpect(status().isOk());
+        mockMvc.perform(get("/api/v1/tickets").param("size", "100")).andExpect(status().isOk());
+        verify(tickets).list(0, 1, null, null, null);
+        verify(tickets).list(0, 100, null, null, null);
     }
 
     @Test
@@ -139,7 +248,7 @@ class TicketControllerSliceTest {
 
     @Test
     void assigneeLongerThan320Is400() throws Exception {
-        String tooLong = "a".repeat(321);
+        String tooLong = "a".repeat(TicketConstraints.ASSIGNEE_MAX + 1);
         mockMvc.perform(post("/api/v1/tickets")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\":\"Help\",\"assignee\":\"" + tooLong + "\"}"))
@@ -177,6 +286,27 @@ class TicketControllerSliceTest {
         mockMvc.perform(get("/api/v1/tickets/TKT-1001"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value("TKT-1001"));
+    }
+
+    @Test
+    void blankCommentBodyIs400() throws Exception {
+        mockMvc.perform(post("/api/v1/tickets/TKT-1001/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"body\":\"\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.error.details[0].field").value("body"));
+        verify(tickets, never()).addComment(any(), any());
+    }
+
+    @Test
+    void commentBodyOverMaxLengthIs400() throws Exception {
+        mockMvc.perform(post("/api/v1/tickets/TKT-1001/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"body\":\"" + "c".repeat(TicketConstraints.COMMENT_BODY_MAX + 1) + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).addComment(any(), any());
     }
 
     private static TicketDetailResponse detail(String id, TicketPriority priority) {

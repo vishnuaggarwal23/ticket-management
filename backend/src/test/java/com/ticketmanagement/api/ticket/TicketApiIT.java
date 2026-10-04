@@ -162,6 +162,61 @@ class TicketApiIT extends AbstractPostgresIntegrationTest {
     }
 
     @Test
+    void createWithStatusPropertyIsRejectedAndWritesNoRow() throws Exception {
+        Integer before = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ticket", Integer.class);
+
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"should-not-persist\",\"status\":\"OPEN\"}"))
+                .andExpect(status().isBadRequest());
+
+        Integer after = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ticket", Integer.class);
+        assertThat(after).isEqualTo(before);
+    }
+
+    @Test
+    void patchUnknownIdIs404() throws Exception {
+        mockMvc.perform(patch("/api/v1/tickets/TKT-999998")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"nope\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("NOT_FOUND"));
+    }
+
+    @Test
+    void commentOnMissingTicketIs404() throws Exception {
+        mockMvc.perform(post("/api/v1/tickets/TKT-999997/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"body\":\"orphan comment\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("NOT_FOUND"));
+    }
+
+    @Test
+    void lastPageOfList() throws Exception {
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"last-page-aaa\"}"))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"last-page-bbb\"}"))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/v1/tickets")
+                        .param("q", "last-page-")
+                        .param("page", "1")
+                        .param("size", "1")
+                        .param("sort", "createdAt,asc"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data[0].title").value("last-page-bbb"))
+                .andExpect(jsonPath("$.meta.page").value(1))
+                .andExpect(jsonPath("$.meta.totalElements").value(2))
+                .andExpect(jsonPath("$.meta.totalPages").value(2));
+    }
+
+    @Test
     void createUrgentPersistsCritical() throws Exception {
         mockMvc.perform(post("/api/v1/tickets")
                         .contentType(MediaType.APPLICATION_JSON)

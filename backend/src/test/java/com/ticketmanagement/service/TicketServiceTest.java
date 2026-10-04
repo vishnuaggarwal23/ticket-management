@@ -32,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -137,6 +136,15 @@ class TicketServiceTest {
         assertThat(page.meta().totalElements()).isEqualTo(1);
         assertThat(page.meta().sort()).isEqualTo("createdAt,desc");
         verify(tickets).search(eq(TicketStatus.OPEN), eq("pay"), any(Pageable.class));
+    }
+
+    @Test
+    void addCommentUnknownTicketDoesNotSave() {
+        when(tickets.findById("TKT-missing")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.addComment("TKT-missing", new CreateCommentRequest("hello")))
+                .isInstanceOf(TicketNotFoundException.class);
+        verify(tickets, never()).saveAndFlush(any());
     }
 
     private static TicketEntity existing(String id, String title) {
