@@ -94,7 +94,6 @@ _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
 <summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
-Status: **loading**
 
 </details></tool-use>
 
@@ -102,6 +101,109 @@ _**Agent (composer-2.5)**_
 
 <tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
 <summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
-Status: **loading**
 
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/.cursor/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+State management was relocated from section 2 to section 4 for better organization. The final file is being reviewed for coherence and Output section references.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Fixed the cursor stub description in the review-frontend.md file. The requested update is complete.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Updated [`commands/review-frontend.md`](commands/review-frontend.md) so reviews explicitly cover the standards you listed.
+
+**Intro** — Reviews must satisfy **§2–§4** (structure, UX, code conventions), not only **§1** (capabilities/API).
+
+**§2 Structure and file organization** — Folder layout (`app/` vs `src/api`, `components`, `lib`), thin routes, naming (PascalCase components, env/config names). State checklist items moved to **§4**.
+
+**§4 Code quality and stack conventions** — Checklists for:
+- **JavaScript** — modules, `const`/`let`, async/error paths, naming, self-explanatory code
+- **React** — hooks, effects, keys, no duplicate fetches
+- **Next.js** — App Router, `"use client"`, env, `Link`/`useRouter`
+- **Vite** — shared `src/`, proxy/`VITE_*`, no duplicate SPA entry
+- **Functions / DRY / cleanliness** — small functions, shared helpers, clean structure
+- **API error handling** — central HTTP module, `ApiError`, user-safe messages, loading cleanup
+- **React state management** — screen-local state, fetch lifecycle, form vs server data, ask isolation, single source of truth
+
+Also aligned [`.cursor/commands/review-frontend.md`](.cursor/commands/review-frontend.md) stub description with **React/Next.js/Vite/JavaScript** (it still said TypeScript).
+
+---
+
+_**User**_
+
+push all the files changed in this window
+
+---
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline &amp;&amp; git branch -vv</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline && git branch -vv
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff commands/review-frontend.md .cursor/commands/review-frontend.md</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff commands/review-frontend.md .cursor/commands/review-frontend.md
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git add commands/review-frontend.md .cursor/commands/review-frontend.md .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md &amp;&amp; git commit --trailer &#34;Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt;&#34; -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+docs: expand review-frontend with stack and code-quality checks
+
+Add §4 for JS/React/Next/Vite conventions, DRY, API errors, and state; align Cursor command stub with JavaScript stack.
+EOF
+)&#34; &amp;&amp; git push origin main &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git add commands/review-frontend.md .cursor/commands/review-frontend.md .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md && git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "$(cat <<'EOF'
+docs: expand review-frontend with stack and code-quality checks
+
+Add §4 for JS/React/Next/Vite conventions, DRY, API errors, and state; align Cursor command stub with JavaScript stack.
+EOF
+)" && git push origin main && git status
+```
 </details></tool-use>
