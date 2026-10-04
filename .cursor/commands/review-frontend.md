@@ -1,5 +1,5 @@
 ---
-description: Review React/Vite/TypeScript UI against frontend and API rules (no UI tests)
+description: Review React/Next.js/Vite/JavaScript UI against frontend and API rules (no UI tests)
 ---
 
 # Review frontend
