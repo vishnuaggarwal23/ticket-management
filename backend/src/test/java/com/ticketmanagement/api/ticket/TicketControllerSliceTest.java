@@ -7,6 +7,7 @@ import com.ticketmanagement.config.ApiProperties;
 import com.ticketmanagement.config.JacksonConfig;
 import com.ticketmanagement.domain.TicketConstraints;
 import com.ticketmanagement.domain.TicketNotFoundException;
+import com.ticketmanagement.domain.IllegalTicketTransitionException;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
 import com.ticketmanagement.service.TicketService;
@@ -307,6 +308,30 @@ class TicketControllerSliceTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
         verify(tickets, never()).addComment(any(), any());
+    }
+
+    @Test
+    void illegalTransitionIs409() throws Exception {
+        when(tickets.updateFields(eq("TKT-1001"), any()))
+                .thenThrow(new IllegalTicketTransitionException(TicketStatus.CLOSED, TicketStatus.OPEN));
+
+        mockMvc.perform(patch("/api/v1/tickets/TKT-1001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"OPEN\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error.code").value("ILLEGAL_TRANSITION"))
+                .andExpect(jsonPath("$.error.status").value(409))
+                .andExpect(jsonPath("$.error.message").value("Cannot transition from CLOSED to OPEN"));
+    }
+
+    @Test
+    void unknownPatchStatusIs400() throws Exception {
+        mockMvc.perform(patch("/api/v1/tickets/TKT-1001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"NOPE\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        verify(tickets, never()).updateFields(any(), any());
     }
 
     private static TicketDetailResponse detail(String id, TicketPriority priority) {

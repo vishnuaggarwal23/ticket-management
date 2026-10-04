@@ -16,10 +16,12 @@ import com.ticketmanagement.domain.TicketNotFoundException;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketSort;
 import com.ticketmanagement.domain.TicketStatus;
+import com.ticketmanagement.domain.TicketStatusMachine;
 import com.ticketmanagement.domain.TicketValidationException;
 import com.ticketmanagement.persistence.CommentEntity;
 import com.ticketmanagement.persistence.TicketEntity;
 import com.ticketmanagement.persistence.TicketRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -32,11 +34,23 @@ public class TicketService {
     private final TicketRepository tickets;
     private final TicketMapper mapper;
     private final ApiProperties apiProperties;
+    private final TicketStatusMachine statusMachine;
 
+    @Autowired
     public TicketService(TicketRepository tickets, TicketMapper mapper, ApiProperties apiProperties) {
+        this(tickets, mapper, apiProperties, new TicketStatusMachine());
+    }
+
+    TicketService(
+            TicketRepository tickets,
+            TicketMapper mapper,
+            ApiProperties apiProperties,
+            TicketStatusMachine statusMachine
+    ) {
         this.tickets = tickets;
         this.mapper = mapper;
         this.apiProperties = apiProperties;
+        this.statusMachine = statusMachine;
     }
 
     @Transactional
@@ -89,6 +103,9 @@ public class TicketService {
         }
         TicketEntity ticket = tickets.findWithCommentsById(id)
                 .orElseThrow(() -> new TicketNotFoundException(id));
+        if (request.status() != null) {
+            statusMachine.assertTransitionAllowed(ticket.getStatus(), request.status());
+        }
         if (request.title() != null) {
             ticket.setTitle(request.title());
         }
@@ -106,6 +123,9 @@ public class TicketService {
         }
         if (request.resolutionNotes() != null) {
             ticket.setResolutionNotes(request.resolutionNotes());
+        }
+        if (request.status() != null) {
+            ticket.setStatus(request.status());
         }
         return mapper.toDetail(tickets.save(ticket));
     }

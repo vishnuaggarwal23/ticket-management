@@ -4,7 +4,7 @@
 > **Not** a Spec Kit feature tree under `specs/[###-feature]/`. Product source of truth remains `spec/`, `rules/`, `commands/`.  
 > **Code root:** `backend/` under the repository working directory. **Do not** put Java sources at repo root or under a second application.  
 > **Frontend:** out of this plan. **RAG (whole):** documented below, **blocked** until Phase C is marked complete **and** you explicitly confirm to start RAG.  
-> **Status of this plan:** Phase **A–B complete** (CRUD in `backend/`, generate-tests **P0–P2 for ticket CRUD**, review-code **Pass** after minor fixes). Phase **C** and RAG start still require your sign-off in chat.  
+> **Status of this plan:** Phase **A–C complete**. RAG remains **blocked** until you explicitly confirm to start Phase D.  
 > **Date:** 2026-10-04.
 
 ---
@@ -499,7 +499,7 @@ Include `timestamp` UTC, `path`, `status` matching HTTP. **No** stack traces, SQ
 
 ## 8. Phase C — State machine and transitions
 
-**Status:** not started  
+**Status:** complete  
 **Depends on:** Phase B complete  
 **Implements:** FEAT-11, AC-CORE-12…14, AC-SM-01…08, AC-API-04/08/09, [`spec/state-machine.md`](spec/state-machine.md)
 
@@ -570,15 +570,15 @@ The assessment grades a **backend-enforced** machine. UI hiding buttons is not e
 
 ### 8.6 Phase C done criteria (G6 / G7)
 
-- [ ] Domain parameterized tests: T1–T5 + 20 illegal pairs + X1–X3 + self-transition.
-- [ ] Service: illegal does not persist; legal persists.
-- [ ] API: 200 T1–T5; 409 + unchanged row for illegal (including PDF reopens).
-- [ ] PATCH without `status` still updates fields.
-- [ ] `./mvnw test` green.
-- [ ] Code review Failures for SM fixed.
-- [ ] **Phase C status set to complete** (this document).
+- [x] Domain parameterized tests: T1–T5 + 20 illegal pairs + X1–X3 + self-transition.
+- [x] Service: illegal does not persist; legal persists.
+- [x] API: 200 T1–T5; 409 + unchanged row for illegal (including PDF reopens).
+- [x] PATCH without `status` still updates fields.
+- [x] `./mvnw test` green.
+- [x] SM placement review vs [`commands/review-code.md`](commands/review-code.md): machine in `domain` (no Spring/JPA); service invokes before persist; no `/transition`; no Fail found.
+- [x] **Phase C status set to complete** (this document).
 
-**Phase C status:** not started — **change to `complete` only after the checklist above is true in the repo.**
+**Phase C status:** complete — RAG still requires explicit confirmation (G8).
 
 ---
 
@@ -761,9 +761,9 @@ Follow [`commands/generate-tests.md`](commands/generate-tests.md). Map names to 
 | Comment | 201; appears on GET | blank body 400; 404 ticket | API-int | **done** (body max length on slice) |
 | Restart | GET after new context | — | API-int | **done** (`TicketRestartIT`) |
 | Envelopes / 500 | `error` shape | unexpected exception does not leak cause | slice + unit | **done** (`unexpectedExceptionIs500WithoutLeak`, `RestExceptionHandlerTest`) |
-| T1–T5 | 200 persisted | — | domain + service + API-int | **not started** (Phase C) |
-| Illegal 20 / X1–X3 / self | 409, row unchanged | — | domain + service + API-int | **not started** (Phase C) |
-| PATCH no status | fields change | — | service + API-int | **not started** as SM gate (field PATCH already in B; AC-SM-08 with Phase C) |
+| T1–T5 | 200 persisted | — | domain + service + API-int | **done** |
+| Illegal 20 / X1–X3 / self | 409, row unchanged | — | domain + service + API-int | **done** (full 20 at domain + API) |
+| PATCH no status | fields change | — | service + API-int | **done** (AC-SM-08) |
 
 ### 13.2 Phase D–F (after confirmation)
 
@@ -813,8 +813,8 @@ After each phase:
 6. Phase **B4** — controllers, advice, slice + API integration.
 7. Phase **B5** — restart persistence test.
 8. **Phase B closeout** — generate-tests P0–P2 (CRUD) + review-code; **done 2026-10-04**.
-9. Phase **C** — `TicketStatusMachine`, PATCH `status`, full SM tests, review, **mark complete**.
-10. **Stop.** User confirmation.
+9. Phase **C** — `TicketStatusMachine`, PATCH `status`, full SM tests; **complete 2026-10-04**.
+10. **Stop.** User confirmation for RAG.
 11. Phase **D** — vector schema, chunker, embed port, ingest service.
 12. Phase **E** — after-commit hooks from ticket service.
 13. Phase **F** — ask API both paths, Band A tests, grounding review.
@@ -831,8 +831,8 @@ After each phase:
 | B3 Service CRUD | complete | unit green | Pass (with B) | no status PATCH |
 | B4 HTTP CRUD | complete | slice+IT green; generate-tests P0–P2 CRUD | **Pass** | list `size` default from `ApiProperties`; 500 logged, body generic; no status PATCH |
 | B5 Restart | complete | IT green | Pass (with B) | DirtiesContext + same Testcontainers DB |
-| B generate-tests | complete for CRUD | `./mvnw test` green | — | P0 SM/ask/ingest **deferred**; P1 ingest-hook **N/A** until Phase E |
-| **C State machine** | **not started** | none | not run | **RAG blocked until `complete` + chat confirm** |
+| B generate-tests | complete for CRUD | `./mvnw test` green | — | P0 SM now Phase C; ask/ingest still deferred |
+| **C State machine** | **complete** | domain + service + slice + API 20 illegal / T1–T5 green | SM placement Pass | PATCH `status`; 409 unchanged row; **RAG still needs chat confirm** |
 | D Ingest / vectors | blocked | | | |
 | E Ingest hooks | blocked | | | |
 | F Ask API | blocked | | | |
@@ -852,3 +852,4 @@ After each phase:
 | 2026-10-04 | Phase **B5** implemented: create ticket+comment, fresh Spring context, same Postgres container, GET still returns data. |
 | 2026-10-04 | AI error log [`docs/ai-error.md`](docs/ai-error.md); `/update-ai-error`. |
 | 2026-10-04 | Phase **B** closeout: generate-tests **P0–P2** for ticket CRUD (SM/ask/RAG skipped). Review-code **Pass** after fixing list page-size default, `EntityManager` constructor injection, and unexpected-500 logging. Phase **C** still not started. |
+| 2026-10-04 | Phase **C** implemented: `TicketStatusMachine` T1–T5 and 20 illegal pairs; PATCH `status` 200/409; `./mvnw test` green. RAG not started. |

@@ -6,10 +6,12 @@ import com.ticketmanagement.api.ticket.TicketDetailResponse;
 import com.ticketmanagement.api.ticket.UpdateTicketRequest;
 import com.ticketmanagement.config.ApiProperties;
 import com.ticketmanagement.domain.EmptyPatchException;
+import com.ticketmanagement.domain.IllegalTicketTransitionException;
 import com.ticketmanagement.domain.TicketCategory;
 import com.ticketmanagement.domain.TicketNotFoundException;
 import com.ticketmanagement.domain.TicketPriority;
 import com.ticketmanagement.domain.TicketStatus;
+import com.ticketmanagement.domain.TicketStatusMachine;
 import com.ticketmanagement.domain.TicketValidationException;
 import com.ticketmanagement.persistence.TicketEntity;
 import com.ticketmanagement.persistence.TicketRepository;
@@ -33,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,11 +45,13 @@ class TicketServiceTest {
     @Mock
     private TicketRepository tickets;
 
+    private TicketStatusMachine statusMachine;
     private TicketService service;
 
     @BeforeEach
     void setUp() {
-        service = new TicketService(tickets, new TicketMapper(), new ApiProperties(20, 100));
+        statusMachine = spy(new TicketStatusMachine());
+        service = new TicketService(tickets, new TicketMapper(), new ApiProperties(20, 100), statusMachine);
     }
 
     @Test
@@ -92,7 +97,7 @@ class TicketServiceTest {
 
         TicketDetailResponse updated = service.updateFields(
                 "TKT-1002",
-                new UpdateTicketRequest("New title", null, null, null, null, null));
+                new UpdateTicketRequest("New title", null, null, null, null, null, null));
 
         assertThat(updated.title()).isEqualTo("New title");
         assertThat(entity.getDescription()).isEqualTo("desc");
@@ -103,7 +108,7 @@ class TicketServiceTest {
     void emptyPatchDoesNotSave() {
         assertThatThrownBy(() -> service.updateFields(
                 "TKT-1002",
-                new UpdateTicketRequest(null, null, null, null, null, null)))
+                new UpdateTicketRequest(null, null, null, null, null, null, null)))
                 .isInstanceOf(EmptyPatchException.class);
         verify(tickets, never()).save(any());
     }
@@ -145,6 +150,64 @@ class TicketServiceTest {
         assertThatThrownBy(() -> service.addComment("TKT-missing", new CreateCommentRequest("hello")))
                 .isInstanceOf(TicketNotFoundException.class);
         verify(tickets, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void legalT1PersistsNewStatus() {
+        TicketEntity entity = existing("TKT-1002", "Old");
+        when(tickets.findWithCommentsById("TKT-1002")).thenReturn(Optional.of(entity));
+        when(tickets.save(entity)).thenReturn(entity);
+
+        TicketDetailResponse updated = service.updateFields(
+                "TKT-1002",
+                new UpdateTicketRequest(null, null, null, null, null, null, TicketStatus.IN_PROGRESS));
+
+        assertThat(updated.status()).isEqualTo(TicketStatus.IN_PROGRESS);
+        assertThat(entity.getStatus()).isEqualTo(TicketStatus.IN_PROGRESS);
+        verify(tickets).save(entity);
+        verify(statusMachine).assertTransitionAllowed(TicketStatus.OPEN, TicketStatus.IN_PROGRESS);
+    }
+
+    @Test
+    void illegalTransitionDoesNotSaveOrApplyOtherFields() {
+        TicketEntity entity = existing("TKT-1002", "Old");
+        when(tickets.findWithCommentsById("TKT-1002")).thenReturn(Optional.of(entity));
+
+        assertThatThrownBy(() -> service.updateFields(
+                "TKT-1002",
+                new UpdateTicketRequest("should-not-apply", null, null, null, null, null, TicketStatus.RESOLVED)))
+                .isInstanceOf(IllegalTicketTransitionException.class)
+                .hasMessage("Cannot transition from OPEN to RESOLVED");
+
+        assertThat(entity.getTitle()).isEqualTo("Old");
+        assertThat(entity.getStatus()).isEqualTo(TicketStatus.OPEN);
+        verify(tickets, never()).save(any());
+    }
+
+    @Test
+    void fieldOnlyPatchDoesNotInvokeMachine() {
+        TicketEntity entity = existing("TKT-1002", "Old");
+        when(tickets.findWithCommentsById("TKT-1002")).thenReturn(Optional.of(entity));
+        when(tickets.save(entity)).thenReturn(entity);
+
+        service.updateFields(
+                "TKT-1002",
+                new UpdateTicketRequest("New title", null, null, null, null, null, null));
+
+        verify(statusMachine, never()).assertTransitionAllowed(any(), any());
+        assertThat(entity.getStatus()).isEqualTo(TicketStatus.OPEN);
+    }
+
+    @Test
+    void statusPatchOnMissingTicketDoesNotInvokeMachine() {
+        when(tickets.findWithCommentsById("TKT-missing")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.updateFields(
+                "TKT-missing",
+                new UpdateTicketRequest(null, null, null, null, null, null, TicketStatus.IN_PROGRESS)))
+                .isInstanceOf(TicketNotFoundException.class);
+        verify(statusMachine, never()).assertTransitionAllowed(any(), any());
+        verify(tickets, never()).save(any());
     }
 
     private static TicketEntity existing(String id, String title) {

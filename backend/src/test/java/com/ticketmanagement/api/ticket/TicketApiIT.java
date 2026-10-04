@@ -1,13 +1,23 @@
 package com.ticketmanagement.api.ticket;
 
+import com.ticketmanagement.domain.TicketStatus;
+import com.ticketmanagement.domain.TicketStatusMachine;
 import com.ticketmanagement.support.AbstractPostgresIntegrationTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -223,6 +233,135 @@ class TicketApiIT extends AbstractPostgresIntegrationTest {
                         .content("{\"title\":\"urgent-one\",\"priority\":\"URGENT\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.priority").value("CRITICAL"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "OPEN, IN_PROGRESS",
+            "IN_PROGRESS, RESOLVED",
+            "RESOLVED, CLOSED",
+            "OPEN, CANCELLED",
+            "IN_PROGRESS, CANCELLED"
+    })
+    void legalTransitionPersists(TicketStatus from, TicketStatus to) throws Exception {
+        String id = ticketIn(from);
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"" + to.name() + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value(to.name()));
+        assertThat(dbStatus(id)).isEqualTo(to.name());
+    }
+
+    @ParameterizedTest
+    @MethodSource("illegalPairs")
+    void illegalTransitionIs409AndRowUnchanged(TicketStatus from, TicketStatus to) throws Exception {
+        String id = ticketIn(from);
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"" + to.name() + "\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error.code").value("ILLEGAL_TRANSITION"))
+                .andExpect(jsonPath("$.error.message").value("Cannot transition from " + from + " to " + to));
+        assertThat(dbStatus(id)).isEqualTo(from.name());
+    }
+
+    @Test
+    void illegalTransitionDoesNotApplyOtherFields() throws Exception {
+        String id = createOpen("sm-no-partial");
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"RESOLVED\",\"title\":\"should-not-apply\"}"))
+                .andExpect(status().isConflict());
+        mockMvc.perform(get("/api/v1/tickets/" + id))
+                .andExpect(jsonPath("$.data.status").value("OPEN"))
+                .andExpect(jsonPath("$.data.title").value("sm-no-partial"));
+    }
+
+    @Test
+    void t2MayIncludeResolutionNotes() throws Exception {
+        String id = ticketIn(TicketStatus.IN_PROGRESS);
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"RESOLVED\",\"resolutionNotes\":\"fixed in prod\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("RESOLVED"))
+                .andExpect(jsonPath("$.data.resolutionNotes").value("fixed in prod"));
+    }
+
+    @Test
+    void patchWithoutStatusLeavesStatusUnchanged() throws Exception {
+        String id = createOpen("sm-fields-only");
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"still-open\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.title").value("still-open"))
+                .andExpect(jsonPath("$.data.status").value("OPEN"));
+    }
+
+    @Test
+    void unknownPatchStatusIs400() throws Exception {
+        String id = createOpen("sm-bad-enum");
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"NOPE\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"));
+        assertThat(dbStatus(id)).isEqualTo("OPEN");
+    }
+
+    static Stream<Arguments> illegalPairs() {
+        TicketStatusMachine machine = new TicketStatusMachine();
+        List<Arguments> pairs = new ArrayList<>();
+        for (TicketStatus from : TicketStatus.values()) {
+            for (TicketStatus to : TicketStatus.values()) {
+                if (!machine.isTransitionAllowed(from, to)) {
+                    pairs.add(Arguments.of(from, to));
+                }
+            }
+        }
+        return pairs.stream();
+    }
+
+    private String ticketIn(TicketStatus from) throws Exception {
+        String id = createOpen("sm-" + from + "-" + System.nanoTime());
+        switch (from) {
+            case OPEN -> {
+            }
+            case IN_PROGRESS -> patchStatus(id, TicketStatus.IN_PROGRESS);
+            case RESOLVED -> {
+                patchStatus(id, TicketStatus.IN_PROGRESS);
+                patchStatus(id, TicketStatus.RESOLVED);
+            }
+            case CLOSED -> {
+                patchStatus(id, TicketStatus.IN_PROGRESS);
+                patchStatus(id, TicketStatus.RESOLVED);
+                patchStatus(id, TicketStatus.CLOSED);
+            }
+            case CANCELLED -> patchStatus(id, TicketStatus.CANCELLED);
+        }
+        return id;
+    }
+
+    private void patchStatus(String id, TicketStatus to) throws Exception {
+        mockMvc.perform(patch("/api/v1/tickets/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"" + to.name() + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value(to.name()));
+    }
+
+    private String createOpen(String title) throws Exception {
+        return json(mockMvc.perform(post("/api/v1/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"" + title + "\"}"))
+                .andExpect(status().isCreated())
+                .andReturn(), "$.data.id");
+    }
+
+    private String dbStatus(String id) {
+        return jdbcTemplate.queryForObject("SELECT status FROM ticket WHERE id = ?", String.class, id);
     }
 
     private static String json(MvcResult result, String path) throws Exception {

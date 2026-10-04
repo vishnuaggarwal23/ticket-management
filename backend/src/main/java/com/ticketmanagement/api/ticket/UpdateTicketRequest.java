@@ -3,6 +3,7 @@ package com.ticketmanagement.api.ticket;
 import com.ticketmanagement.domain.TicketCategory;
 import com.ticketmanagement.domain.TicketConstraints;
 import com.ticketmanagement.domain.TicketPriority;
+import com.ticketmanagement.domain.TicketStatus;
 import jakarta.validation.constraints.Size;
 
 public record UpdateTicketRequest(
@@ -11,7 +12,8 @@ public record UpdateTicketRequest(
         TicketPriority priority,
         @Size(max = TicketConstraints.ASSIGNEE_MAX) String assignee,
         TicketCategory category,
-        @Size(max = TicketConstraints.RESOLUTION_NOTES_MAX) String resolutionNotes
+        @Size(max = TicketConstraints.RESOLUTION_NOTES_MAX) String resolutionNotes,
+        TicketStatus status
 ) {
 
     public boolean hasUpdates() {
@@ -20,6 +22,7 @@ public record UpdateTicketRequest(
                 || priority != null
                 || assignee != null
                 || category != null
-                || resolutionNotes != null;
+                || resolutionNotes != null
+                || status != null;
     }
 }
