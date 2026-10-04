@@ -75,9 +75,11 @@ All PDF-listed files under `spec/` (paths relative to repo root):
 
 PDF theme → spec traceability: [`requirements.md`](../spec/requirements.md) **§0.4** and [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**.
 
-**Agreed DEC (do not contradict):** **DEC-03, 04, 05, 07, 08, 13** — register in requirements §10.2; detail in [`data-model.md`](../spec/data-model.md).
+**Agreed DEC (do not contradict):** **DEC-01, 02, 03, 04, 05, 07, 08, 11, 12, 13, 15** — register in [`requirements.md`](../spec/requirements.md) §10.2; data-model fields **DEC-03…08, 13** in [`data-model.md`](../spec/data-model.md).
 
-**Still Open (stop and confirm):** **DEC-01, 02, 06, 09, 10, 11, 12, 14, 15** — requirements §10.2.
+**Still Open / interim (stop and confirm before contradicting):** **DEC-06** (interim PATCH), **DEC-09**, **DEC-10**; **DEC-14** interim agreed — requirements §10.2.
+
+**Reference only (do not implement):** Topics listed in [`requirements.md`](../spec/requirements.md) **§2.3** — may appear in child specs for clarity; **exclude** from plans, tasks, and acceptance unless the assignment PDF changes.
 
 | Spec | What it must nail down (so rules do not guess) |
 |------|-----------------------------------------------|
@@ -156,7 +158,7 @@ Field-level tickets, Liquibase, and ask `data` JSON stay in child specs (§22 ta
 | §5.3–5.7 | **DEC-02** default (A); full valid/invalid matrix; §5.6 illegal register; PATCH `status` rules §6.1.1 |
 | §6 | PATCH + **409** `ILLEGAL_TRANSITION` (**DEC-06** interim) |
 | §8–9 | Domain placement; **AC-SM-*** tests |
-| §10 | Open **DEC-02**, **DEC-06**; agreed **DEC-07** pointer |
+| §10 | **DEC-06** interim; agreed **DEC-02**, **DEC-07** |
 
 ### [`spec/api-contract.md`](../spec/api-contract.md) structure (for reviewers)
 
@@ -192,7 +194,7 @@ Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-con
 | §4–§5 | Ingest sources (description, comments, resolution); what is **not** text (transition history) |
 | §6–§8 | Paragraph vs fixed-size comparison |
 | §9 | **Hybrid** recommendation; **proposed** `max-chars` / `min-chars` / `overlap` (confirm to agree) |
-| §10–§11 | Re-ingest triggers (**DEC-01** interim); delete-and-replace storage |
+| §10–§11 | Re-ingest triggers (**DEC-01** agreed); delete-and-replace storage |
 | §12 | Embedding / PgVector (**DEC-09** open) |
 | §14 | **AC-RAG-ING-*** tests |
 
@@ -208,7 +210,7 @@ Combined ticket + ask URI catalog remains in [`api-contract.md`](../spec/api-con
 | §8 | Failure taxonomy **F-01…F-10** and detection |
 | §9 | Eval log fields |
 | §10 | **AC-EVAL-01…05** |
-| §12 | Open **DEC-09**, metadata-filter **OQ** |
+| §12 | **DEC-09** open; **Reference** rows (do not implement) |
 
 Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** — defers detail here).
 
@@ -223,7 +225,7 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 | §10 | Ask / RAG user-visible surfaces |
 | §11–§12 | Flows A–E UI mapping; demo §8.7 checklist |
 | §13 | **AC-UI-01…12** |
-| §14 | Open **DEC-06**, **11**, **15** |
+| §14 | **DEC-06** interim; **DEC-11**, **DEC-15** agreed (layout choice remains implementer) |
 
 ### [`spec/test-strategy.md`](../spec/test-strategy.md) structure (for reviewers)
 
@@ -245,8 +247,8 @@ Procedure in the field: `commands/review-rag-output.md` (**Retrieval quality** �
 - **`rules/*.md` and `commands/*.md`** — keep a short **Revision history** table at the end when content changes (same `Date | Note` format as `spec/`).
 - Prefer checklists; link acceptance criteria to backend tests or `commands/review-frontend.md` for UI.
 - Map backend tests via [`spec/test-strategy.md`](../spec/test-strategy.md) and **`AC-CORE-*`** / **`AC-FEAT-*`** in [`spec/requirements.md`](../spec/requirements.md) (§8–§9).
-- Distinguish **PDF requirement** vs **project convention** (see any `rules/*.md` “Assessment vs conventions” section).
-- Do not invent features the PDF does not support.
+- Distinguish **PDF requirement** vs **project convention** vs **Open** (in-scope, needs **DEC-***) vs **Reference** (out of PDF — [`requirements.md`](../spec/requirements.md) **§2.3**; document only, no plan/tasks/implementation).
+- Do not invent features the PDF does not support; do not implement **Reference** items.
 
 ## AI mistake log (PDF delivery artefact)
 
@@ -308,3 +310,4 @@ When writing or revising specs or `docs/`, follow `skills/documentation/SKILL.md
 | 2026-10-04 | Reviewer maps: **§0** on all ten specs; writing bar §0 pattern; requirements **§0.5** pointer. |
 | 2026-10-04 | Writing bar: independent reading unit ids (**HUB-***, **SM-***, …) for chunked spec reading. |
 | 2026-10-04 | Writing bar: **`##` heading unit suffix** convention (`· unit **ID**`); hub §0.8. |
+| 2026-10-04 | **Reference** §2.3 steering; DEC register + reviewer map sync. |

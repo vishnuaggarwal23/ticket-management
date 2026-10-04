@@ -1,6 +1,6 @@
 # RAG ingestion — knowledge build, chunking, embed, refresh
 
-> **Status:** draft (2026-10-04) — chunking **recommendation** and **proposed** numeric defaults for implementation; **DEC-01** (re-ingest on close) and **DEC-09** (embedding product/model id) remain **Open** with interim stance below.  
+> **Status:** draft (2026-10-04) — chunking **recommendation** and **proposed** numeric defaults for implementation; **DEC-01** agreed (update or close); **DEC-09** (embedding product/model id) **Open**.  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md) FEAT-12…14, §11.1; [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** Justification narrative → [`architecture.md`](architecture.md) §15–§16; persistence → [`data-model.md`](data-model.md) §8–§11; grounding rules → `rules/rag-vector-store.md`; ask HTTP + response semantics → [`rag-api-contract.md`](rag-api-contract.md).
 
@@ -328,7 +328,7 @@ Tickets are **semi-structured narratives**: a stable **description**, an **appen
 
 Tune after eval; do not hardcode in Java — use `@ConfigurationProperties` (**PDF** intent for retrieval params; same pattern for chunking).
 
-**Example `application.yml` fragment (**Convention** — values **Proposed** until agreed):**
+**Example `application.yml` fragment (**Example only** — chunk keys **Proposed**; `retrieval.top-k` / `similarity-threshold` / model id **Open** per PDF “configurable, not hardcoded” and **DEC-09**):**
 
 ```yaml
 rag:
@@ -360,7 +360,7 @@ Bind with `@ConfigurationProperties(prefix = "rag")` per `rules/java-springboot.
 | Status transition only (no text change) | **Yes** (**Proposed**) | Metadata snapshot must reflect new `status` (e.g. `CLOSED`) even if `assembledText` unchanged |
 | Ticket **closed** (`status` → `CLOSED`) | **Yes** | **PDF** p.5 “updated **or** closed”; satisfies **AC-FEAT-14-03** |
 
-**DEC-01 interim stance:** implement **(B) update or close** per ingestion p.5 — treat **close** as a re-ingest trigger (status-only change included). Document in demo script if graders use p.6 narrow reading.
+**Agreed DEC-01 (B):** Re-ingest on **update or close** per ingestion p.5 — treat **close** as a re-ingest trigger (status-only change included). Primary demo proof for p.6 “updated” checklist: edit ticket then ask ([`requirements.md`](requirements.md) §11.1).
 
 **Execution (**Proposed**): synchronous ingest hook from ticket **service** after successful commit ([`architecture.md`](architecture.md) §15.4); async queue is **out of scope** unless latency requires it later.
 
@@ -442,10 +442,10 @@ Unit tests mock `TicketIngestionPort`; integration tests assert `ticket_vector_c
 
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
-| **DEC-01** | Close-only re-ingest vs p.6 wording | **Open** — interim **(B)** §10 | User confirm for sign-off |
+| **DEC-01** | Re-ingest on close vs p.6 wording | **Agreed 2026-10-04** — **(B)** §10 | Hub §11.1 |
 | **DEC-09** | Model id + dimension | **Open** | Blocks Liquibase `vector(n)` final value |
 | Chunk numeric defaults §9.3 | `max-chars` / `min-chars` / `overlap` | **Proposed** | Confirm to mark **Agreed** |
-| Async ingest | Latency | **Open** | Default sync §10 |
+| Async ingest queue | Latency | **Reference** | Default sync §10 for assessment; do not build job queue unless scope changes |
 
 ---
 

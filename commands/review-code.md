@@ -30,8 +30,8 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 
 ### Spec and scope
 
-- [ ] Implements only **agreed** specs; no extra product features (auth, agents, attachments, bulk ops, rerankers) unless a spec agrees
-- [ ] No silent answers to open questions — check [`spec/requirements.md`](../spec/requirements.md) **§10.2 (DEC-*)**; still-open: **DEC-01, 02, 09–12, 11, 15**, embedding model/dimension, top-K/threshold **values**. **Interim:** **DEC-06**/**DEC-14** via [`spec/api-contract.md`](../spec/api-contract.md); chunking per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §9 (**proposed** §9.3 until confirmed). **Agreed via [`spec/data-model.md`](../spec/data-model.md):** id `TKT-{n}`, category, resolution notes, create validation, `q` scope, initial `OPEN`
+- [ ] Implements only **agreed** specs; no **Reference** features ([`spec/requirements.md`](../spec/requirements.md) **§2.3** — auth, delete API, agents, confidence on ask, rerankers, etc.)
+- [ ] No silent answers to open questions — check **§10.2 (DEC-*)**; still-**Open:** **DEC-09**, **DEC-10** (model/dimension, DB roles). **Interim:** **DEC-06**/**DEC-14**. Chunking per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §9 (**proposed** §9.3 until confirmed). **Agreed DEC** + data model: see [`rules/documentation.md`](../rules/documentation.md)
 - [ ] Domain status machine matches [`spec/state-machine.md`](../spec/state-machine.md) §5 (T1–T5, X1–X3, full invalid matrix)
 - [ ] Illegal transitions rejected in **domain**, not only by hiding UI actions
 - [ ] Assessment-invalid reopens rejected (`CLOSED`/`RESOLVED`/`CANCELLED` → `OPEN`)
@@ -63,7 +63,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 
 - [ ] Knowledge text only from description, comments, resolution notes
 - [ ] Metadata per [`spec/data-model.md`](../spec/data-model.md) §11 (`ticketId`, `status`, `priority`, `assignee`, `category`; technical keys only as specified)
-- [ ] Re-ingest per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10 (**DEC-01** interim); hybrid chunker §6–§9
+- [ ] Re-ingest per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10 (**DEC-01** agreed); hybrid chunker §6–§9
 - [ ] Retrieve-then-generate once; no tools, ticket create, or notify from ask
 - [ ] Empty/below-threshold retrieval does not call the LLM to invent an answer
 - [ ] Citations are ticket IDs from **retrieval**, not model-guessed ids
@@ -147,3 +147,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures need file references and 
 | 2026-10-04 | RAG ingest checks use draft [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); tests map [`spec/test-strategy.md`](../spec/test-strategy.md). |
 | 2026-10-04 | Spec inputs: requirements **§0.5**; per-file **§0** via `rules/documentation.md`. |
 | 2026-10-04 | Ask: no golden retrieval tests; eval [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §5–§8. |
+| 2026-10-04 | **Reference** §2.3 scope gate; **DEC** register sync (**DEC-09**/**DEC-10** open). |

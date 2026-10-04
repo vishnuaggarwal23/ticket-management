@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/commands/review-rag-output.md`](../.cursor/commands/review-rag-output.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
 
-Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) **§0**, §15–16; ingest/chunking [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) **§0**. Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data`: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**§0**, **DEC-11** open). **Retrieval quality** (right tickets in top-K): [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) **§0**, §3–§9; [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 / §4.3 / **§0.5**.
+Verify the **assistant answer** from `POST /api/ai/ask` (and the same handler at `POST /api/v1/ai/ask`). HTTP envelope rules: `rules/api-standards.md`. Grounding rules: `rules/rag-vector-store.md`. Pipeline context: [`spec/architecture.md`](../spec/architecture.md) **§0**, §15–16; ingest/chunking [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) **§0**. Cited ids must be real **`ticket.id`** values (`TKT-{n}` per [`spec/data-model.md`](../spec/data-model.md) DEC-04). Ask JSON **inside** `data`: [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**§0**, **DEC-11** agreed). Do not require **Reference** fields (confidence, `reason` codes) per [`spec/requirements.md`](../spec/requirements.md) **§2.3**. **Retrieval quality** (right tickets in top-K): [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) **§0**, §3–§9; [`spec/requirements.md`](../spec/requirements.md) §2.5 / FEAT-22 / §4.3 / **§0.5**.
 
 **Pass only if all three hold:**
 
@@ -191,3 +191,4 @@ Same triggers as [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md)
 | 2026-10-04 | Eval interim: requirements §2.5 / §4.3 when `evaluation-strategy.md` absent. |
 | 2026-10-04 | Retrieval quality section defers to [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) §3–§9; AC-EVAL / F-* taxonomy. |
 | 2026-10-04 | Cross-refs to spec **§0** guides and requirements **§0.5**. |
+| 2026-10-04 | **DEC-11** agreed; ignore **Reference** ask fields §2.3. |

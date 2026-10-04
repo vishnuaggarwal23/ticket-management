@@ -12,9 +12,9 @@ Applies when implementing ticket knowledge ingestion and `POST /api/ai/ask`.
 | `rules/testing.md` | Contract tests + doubles; not retrieval-quality golden strings |
 | `commands/review-rag-output.md` | Manual grounding review of ask answers |
 | [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) | **§0** ingest map; chunking §6–§9, yaml ex §9.3, triggers §10; **proposed** defaults (**DEC-09** open) |
-| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Ask `data`, grounding, no-match (**DEC-11**) |
+| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Ask `data`, grounding, no-match (**DEC-11** agreed) |
 | [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) | Probabilistic retrieval quality (draft) |
-| [`spec/requirements.md`](../spec/requirements.md) | §2.5 deterministic vs probabilistic; FEAT-22; §4.3 eval corpus; **DEC-01**, **DEC-09**, **DEC-11** §10 |
+| [`spec/requirements.md`](../spec/requirements.md) | §2.3 **Reference** (do not implement); §2.5 probabilistic proof; FEAT-22; **DEC-01**, **DEC-09** §10 |
 
 The PDF requires this **guidelines file** to cover chunking **convention**, embedding **model choice**, and retrieval-tuning **defaults**. **Justification** (non-numeric) lives in [`spec/architecture.md`](../spec/architecture.md) §16 (**AC-CORE-19**). **Numeric** chunk sizes, K, threshold, and model ids are defined in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) — load via `@ConfigurationProperties`; do not hardcode in Java. Treat **proposed** §9.3 values as defaults only after user confirmation.
 
@@ -26,7 +26,7 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 - Cite the **ticket ID(s)** actually used; if nothing relevant is retrieved, say so explicitly (**no relevant tickets found**) — do not fabricate tickets, facts, or citations.
 - Ingest **description, comments, and resolution notes** into searchable knowledge.
 - Attach metadata: `ticketId`, `status`, `priority`, `assignee`, `category` — shapes in [`spec/data-model.md`](../spec/data-model.md) §11 (`RagChunkMetadata` / JSONB on `ticket_vector_chunk`).
-- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale. PDF p.6 acceptance wording emphasises **updated** only — resolve **DEC-01** in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10 with [`spec/requirements.md`](../spec/requirements.md) **§11.1** before treating close-only triggers as out of scope.
+- **Re-ingest / refresh** derived embeddings when a ticket is **updated or closed** so knowledge does not go stale (**Agreed DEC-01 (B)**; demo emphasis on **updated** — [`spec/requirements.md`](../spec/requirements.md) **§11.1**).
 - **top-K** and **similarity threshold** must be **configurable**, not hardcoded. The PDF does **not** give numeric values.
 - Document chunking strategy and embedding-model tradeoffs in architecture / RAG ingestion **specs** (justification is required; a specific algorithm is **not** named by the PDF).
 - **Single retrieve → generate** — not an agent: no tool chaining, ticket creation, or notifications from the ask path.
@@ -42,17 +42,13 @@ The PDF requires this **guidelines file** to cover chunking **convention**, embe
 
 **Agreed relational / metadata shape — [`spec/data-model.md`](../spec/data-model.md):** tables `ticket`, `ticket_comment`, `ticket_vector_chunk`; resolution text column `resolution_notes`; ingest includes description, comments, resolution notes; chunk row metadata keys §11.1; re-ingest deletes/replaces rows per ticket (§8.4).
 
-**Still open — do not invent in Java without spec agreement.** Chunking **algorithm** and ingest mechanics → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) (draft). Ask `data` / no-match wording → [`spec/api-contract.md`](../spec/api-contract.md) §6.3 (**DEC-11**). Retrieval **quality** scoring → [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md) (draft). Remaining open items:
+**Still open (in PDF scope) — do not invent in Java without spec agreement.** Chunking mechanics → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md). Ask `data` → [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §7 (**DEC-11** agreed). Retrieval **quality** procedure → [`spec/evaluation-strategy.md`](../spec/evaluation-strategy.md). Remaining **Open** items:
 
-- Embedding **model** (name/id), vector **dimension**, generation **model**
-- Whether ingest and query always share one embedding model (they **must** stay compatible once a choice is agreed)
-- Chunking **algorithm**, chunk **size**, **overlap**, one document vs many per ticket
-- Numeric **top-K**, similarity **threshold values**, distance **metric**, vector **index** type
-- Default values and config **property names** for retrieval (keys must exist once the ingestion spec agrees them; **values are not set here**)
-- Metadata columns **beyond** the assessment list / approved data model
-- Synchronous vs asynchronous ingestion; delete-and-replace vs versioned historical embeddings
-- Prompt text / template
-- Exact ask JSON **inside** `data` (answer, citations, no-match representation). HTTP envelope is `rules/api-standards.md`; no confidence field unless a spec adds it
+- Embedding **model** (name/id), vector **dimension**, generation **model** (**DEC-09**)
+- Numeric **top-K**, similarity **threshold values** (configurable per PDF; property keys §12.1 — **values** open until agreed)
+- **Proposed** chunk **size** / **overlap** in `rag-ingestion.md` §9.3 — confirm before treating as agreed defaults
+
+**Reference only — do not build** ([`spec/requirements.md`](../spec/requirements.md) **§2.3**): async ingest queues, versioned embedding history, ask **confidence** / extra `reason` fields, metadata-only ask filters, semantic chunking v1, agents/rerankers, vector admin APIs.
 - Numerical RAG quality scores, golden-answer sets
 
 Do not assume **versions** of Spring AI, PostgreSQL, PgVector, Ollama, or models until those are agreed.
@@ -132,7 +128,7 @@ Implement split logic per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §
 - Build knowledge text only from **description, comments, and resolution notes**. Do not invent extra source types.
 - Store assessment metadata on chunks/documents: `ticketId`, `status`, `priority`, `assignee`, `category`. Do not add metadata fields beyond the assessment and the **agreed** data model.
 - Persist derived embeddings in **PgVector**. Ticket rows remain the system of record. Vectors must be rebuildable from tickets.
-- On **update** or **close**, refresh that ticket’s derived data so stale vectors are not the only index. **How** → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10–§11 (**DEC-01** interim).
+- On **update** or **close**, refresh that ticket’s derived data so stale vectors are not the only index. **How** → [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §10–§11 (**DEC-01** agreed).
 - Use Spring AI for embed / store / search; keep the provider (Ollama first) in **configuration**.
 - Liquibase owns extensions (`vector`, `pg_trgm` for ticket search per data-model), `ticket_vector_chunk`, and indexes ([`spec/data-model.md`](../spec/data-model.md) §14.5–14.6). Vector **dimension** and HNSW **opclass** must match [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12 once **DEC-09** is agreed — do not invent a dimension here.
 
@@ -177,7 +173,7 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 - Do not implement chunking or pick an embedding model from these rules alone — implement per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md).
 - Do not implement agents, tool calling, or side effects from `/api/ai/ask`.
 - Do not prescribe a prompt template or a second package layout (use `rules/java-springboot.md`).
-- Do not invent product features (auth on ask, rerankers, extra metadata) not in the assessment or an agreed spec.
+- Do not implement **Reference** items in [`spec/requirements.md`](../spec/requirements.md) **§2.3** (auth, confidence on ask, rerankers, agents, extra public metadata APIs).
 
 ---
 
@@ -197,3 +193,4 @@ Follow `rules/testing.md` (including API tests for ask). In this domain:
 | 2026-10-04 | Ask `data` → [`api-contract.md`](../spec/api-contract.md) §6.2–§6.5 (not separate `rag-api-contract` file). |
 | 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md). |
 | 2026-10-04 | Spec **§0** cross-refs; requirements **§0.5** completeness index. |
+| 2026-10-04 | **Reference** §2.3; **DEC-01**/**DEC-11** agreed; narrow Open list to **DEC-09** + numeric tuning. |

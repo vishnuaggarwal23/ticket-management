@@ -14,10 +14,10 @@ Review the current **UI** change set (or specified paths) against `rules/fronten
 - `rules/frontend.md`
 - `rules/api-standards.md` (paths, envelopes, PATCH, pagination, 409)
 - [`spec/requirements.md`](../spec/requirements.md) — **AC-CORE-01…11** for UI-facing acceptance; **§4.1** flows and **§8.7** demo; **§10** for open UI/API shape (**OQ/DEC**)
-- [`spec/ui-model.md`](../spec/ui-model.md) — **§0** PDF ui-flow map; screens, flows, **AC-UI-01…12**; open **DEC-06**, **DEC-15** §14
+- [`spec/ui-model.md`](../spec/ui-model.md) — **§0** PDF ui-flow map; screens, flows, **AC-UI-01…12**; **DEC-06** interim, **DEC-15** agreed §14
 - [`spec/architecture.md`](../spec/architecture.md) §12 when reviewing module/API wiring at architecture level
 - [`spec/data-model.md`](../spec/data-model.md) (agreed id, category, resolutionNotes, create requiredness)
-- Draft [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) — open **DEC-11** per [`spec/requirements.md`](../spec/requirements.md) §10.2
+- [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) — **DEC-11** agreed; no **Reference** UI ([`spec/requirements.md`](../spec/requirements.md) **§2.3**)
 - Assessment PDF only as background for **capabilities** (not stack)
 
 Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** / **minor** with file references.
@@ -29,7 +29,7 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 ### Spec and scope
 
 - [ ] Only agreed [`ui-model.md`](../spec/ui-model.md) screens/flows (or user-confirmed deltas). Use requirements **§4.1** / **§8.7** as hub — no invented auth, agent-from-ask, extra ticket resources, delete-ticket UI
-- [ ] Open items not silently decided — **DEC-06, 15**, layout/router still open; **do not** invent id format or category (use [`spec/data-model.md`](../spec/data-model.md): `TKT-{n}`, category enum, `resolutionNotes`, title required on create)
+- [ ] **DEC-06** interim PATCH UX; **DEC-15** stack agreed (layout/router is implementer choice); **do not** build **Reference** UI (§2.3); **do not** invent id/category (use [`spec/data-model.md`](../spec/data-model.md))
 - [ ] PDF capabilities present or explicitly deferred; when implemented, mappable to **`AC-CORE-01…11`** (§8) and **`AC-UI-01…12`** ([`ui-model.md`](../spec/ui-model.md) §13): create, list, detail, update title/description/priority/assignee, comments, keyword search, status filter, status display, valid transitions, meaningful errors, ask with citations or no-match
 
 ### Stack (`rules/frontend.md`)
@@ -99,3 +99,4 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major** 
 | 2026-10-04 | UI flows: architecture §12.3–§12.6 + requirements §4.1 / §8.7. |
 | 2026-10-04 | Primary UI spec: [`ui-model.md`](../spec/ui-model.md); **AC-UI-*** checklist. |
 | 2026-10-04 | Inputs reference [`ui-model.md`](../spec/ui-model.md) **§0** PDF map. |
+| 2026-10-04 | **Reference** §2.3; **DEC-11**/**DEC-15** agreed. |

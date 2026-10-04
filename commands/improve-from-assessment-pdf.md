@@ -22,7 +22,7 @@ Read via IDE, or extract text with `unzip -p docs/Assessments.docx word/document
    - `skills/**` (e.g. `skills/documentation/SKILL.md`)
    - `docs/*.md` **except** [`docs/prompt-history.md`](../docs/prompt-history.md) (generated index — use `commands/update-prompt-history.md` instead)
 3. **Do not edit** `.cursor/**`, application source, `graphify-out/`, `.specstory/**`, or `docs/Assessments.docx` in this command (except you may *read* SpecStory for context).
-4. **Do not invent product features** not supported by the assignment. Elaboration and **Convention** choices must stay labeled; unresolved gaps stay **Open** or **DEC-*** — confirm with the user before locking a decision.
+4. **Do not invent product features** not supported by the assignment. Elaboration and **Convention** choices must stay labeled; in-scope gaps stay **Open** or **DEC-*** — confirm with the user before locking. Out-of-PDF topics → **Reference** in [`spec/requirements.md`](../spec/requirements.md) **§2.3** (document only; do not expand scope).
 5. **Do not rewrite entire files** unless the user asked for a full rewrite. Prefer targeted edits: missing AC rows, broken links, §0.4 gaps, revision-history rows, reviewer maps.
 6. **Confirm with the user** before resolving an **Open** / **DEC-*** item or changing **agreed** [`spec/data-model.md`](../spec/data-model.md) substance.
 
@@ -98,3 +98,4 @@ Do not start backend or frontend implementation in this command.
 | 2026-10-04 | Steering pass: `rules/`, `commands/`, `skills/`, `assessment-brief.md` index spec **§0** + requirements **§0.5**. |
 | 2026-10-04 | Per-file checklist: **`##` heading unit suffix** per hub §0.8. |
 | 2026-10-04 | Pass note: hub **DEC-11** / **OQ-05** owner is `rag-api-contract.md` (not `api-contract` §6.3). |
+| 2026-10-04 | **Reference** §2.3: out-of-PDF topics document-only in steering pass. |

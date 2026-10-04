@@ -2,7 +2,7 @@
 
 > **Status:** draft (2026-10-04) — ticket REST paths and payloads align with **Convention** in [`rules/api-standards.md`](../rules/api-standards.md) and agreed [`data-model.md`](data-model.md). Resolves **OQ-04** for ticket/comment HTTP; **DEC-14** interim alignment recorded §10.  
 > **Primary source:** `docs/Assessments.docx` (capabilities restated in [`requirements.md`](requirements.md)).  
-> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask / RAG HTTP semantics (**PDF** `rag-api-contract.md`) → [`rag-api-contract.md`](rag-api-contract.md) (authoritative); summary retained **§6.2–§6.5** (**DEC-11** open). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
+> **Related:** Envelopes, status codes, pagination query params → `rules/api-standards.md`. Status transitions → [`state-machine.md`](state-machine.md). Ask / RAG HTTP semantics (**PDF** `rag-api-contract.md`) → [`rag-api-contract.md`](rag-api-contract.md) (authoritative); summary retained **§6.2–§6.5** (**DEC-11** agreed). UI screens and flows → [`ui-model.md`](ui-model.md). System map → [`architecture.md`](architecture.md) §11.
 
 **Label legend:** **PDF** | **Convention** | **Agreed** | **Example** | **Open**
 
@@ -486,7 +486,7 @@ Only properties **present** in JSON are applied (**partial PATCH**). Omitted pro
 
 ### 3.5 `AskResponseData` (success `data` for ask)
 
-Returned inside the success envelope on **200** for §6.1. Field names and no-match phrasing are **interim** until **DEC-11** is agreed (§6.3).
+Returned inside the success envelope on **200** for §6.1. No-match phrasing **Agreed** per **DEC-11** (§6.3).
 
 | Property | Type | Required in response | Notes |
 |----------|------|----------------------|-------|
@@ -854,6 +854,8 @@ curl -sS 'http://localhost:8080/api/v1/tickets/TKT-1001' -H 'Accept: application
 
 **Capabilities (**PDF**):** update title, description, priority, assignee; backend-enforced status transitions.
 
+**Non-status edits on any `status`:** Field PATCH and `POST …/comments` are allowed for **any** persisted ticket, including terminal `CLOSED` and `CANCELLED` (**PDF** does not restrict updates or comments by status). Only **`status`** changes are state-machine-gated.
+
 **Status changes:** send `status` with the **target** value. Rules → [`state-machine.md`](state-machine.md). **DEC-06 interim:** status on PATCH body (this contract); no `/transition` sub-resource.
 
 **Request examples**
@@ -1152,7 +1154,7 @@ curl -sS -X POST 'http://localhost:8080/api/v1/ai/ask' \
 
 Always success envelope on **200**. Grounded answer and no-match are both **200** (not `error`).
 
-**Interim `data` shape** (see also §6.2–§6.5; **DEC-11** open):
+**Ask `data` shape** (see also §6.2–§6.5; **DEC-11** agreed):
 
 | Property | Type | Rules |
 |----------|------|-------|
@@ -1231,11 +1233,11 @@ Content-Type: application/json
 
 Review procedure: `commands/review-rag-output.md`. Retrieval quality (separate): [`evaluation-strategy.md`](evaluation-strategy.md).
 
-### 6.3 No-match and out-of-scope (**DEC-11** open)
+### 6.3 No-match and out-of-scope (**DEC-11** agreed)
 
 **PDF** p.6 bundles honest handling when nothing relevant is retrieved **or** the question is not answerable from ticket history.
 
-| Situation | HTTP | `citedTicketIds` | `answer` (interim until **DEC-11**) |
+| Situation | HTTP | `citedTicketIds` | `answer` (**DEC-11**) |
 |-----------|------|------------------|-------------------------------------|
 | Empty retrieval / below threshold | **200** | `[]` | e.g. `"No relevant tickets found."` |
 | Out-of-scope support question (no ticket evidence) | **200** | `[]` | Same honesty — MUST NOT answer from world knowledge (Flow E2 in [`requirements.md`](requirements.md)) |
@@ -1243,7 +1245,7 @@ Review procedure: `commands/review-rag-output.md`. Retrieval quality (separate):
 
 **Not** no-match: blank `question` → **400** `VALIDATION_ERROR` (client error, not RAG).
 
-**Open (**DEC-11**):** distinct machine-readable code for out-of-scope vs empty retrieval; optional `reason` field — do not add without user confirmation.
+**DEC-11 (Agreed):** same honest `answer` theme for out-of-scope and empty retrieval (e.g. “No relevant tickets found.”); no `reason` field in v1.
 
 ### 6.4 Errors vs success (ask)
 
@@ -1327,9 +1329,9 @@ Maps to **AC-CORE-*** and **AC-FEAT-*** in [`requirements.md`](requirements.md).
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
 | **DEC-06** | Transition API shape | **Interim closed in this contract** | PATCH `status` on ticket resource §4.4 |
-| **DEC-11** | Ask no-match wording | Open | §6.3 interim phrases |
+| **DEC-11** | Ask no-match wording | Agreed 2026-10-04 | §6.3; [`rag-api-contract.md`](rag-api-contract.md) §7.4 |
 | **DEC-14** | Ticket REST surface | **Interim agreed** | Paths/methods match `rules/api-standards.md` §4.4 |
-| **DEC-02** | Skipped hops | Open (implement A) | [`state-machine.md`](state-machine.md) |
+| **DEC-02** | Skipped hops | Agreed 2026-10-04 | [`state-machine.md`](state-machine.md) **(A)** |
 
 ---
 

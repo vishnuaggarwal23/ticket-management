@@ -11,12 +11,12 @@ Do **not** invent endpoints, fields, transitions, or RAG shapes. If a criterion 
 | Missing artefact | Action |
 |------------------|--------|
 | [`spec/data-model.md`](../spec/data-model.md) missing | Stop — do not invent ticket fields |
-| Ask `data` shape unclear vs [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Align with `answer` + `citedTicketIds`; flag **DEC-11** no-match wording gaps |
+| Ask `data` shape unclear vs [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Align with `answer` + `citedTicketIds` (**DEC-11** agreed) |
 
 ## Inputs
 
 - Specs: all ten PDF-listed files under `spec/` (see [`rules/documentation.md`](../rules/documentation.md)); each child spec **§0** for domain scope; hub **§0.4–§0.8**; use **`##` heading unit tags** (`· unit **TS-B**`) to locate test targets quickly; only [`data-model.md`](../spec/data-model.md) is **agreed**; others **draft**
-- **[`spec/test-strategy.md`](../spec/test-strategy.md)** — primary map for **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-CORE-*** layers. **[`spec/requirements.md`](../spec/requirements.md)** — **`AC-FEAT-*`** (§4.2) and FR traceability (§9). Do not invent coverage for **Open** **DEC-*** items.
+- **[`spec/test-strategy.md`](../spec/test-strategy.md)** — primary map for **AC-SM-***, **AC-API-***, **AC-DM-***, **AC-CORE-*** layers. **[`spec/requirements.md`](../spec/requirements.md)** — **`AC-FEAT-*`** (§4.2) and FR traceability (§9). Do not invent tests for **Open** **DEC-09**/**DEC-10** or **Reference** §2.3 features.
 - Contracts already locked in `rules/api-standards.md` (envelopes, `/api/v1`, pagination, 409)
 - Testing standards: `rules/testing.md`
 - Code under test (if present) — generate against **implemented** behaviour first
@@ -129,3 +129,4 @@ If production code is missing, prefer **failing tests** that encode P0 criteria 
 | 2026-10-04 | RAG retrieval quality → [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §5.2–§8; **AC-TS-05**. |
 | 2026-10-04 | P0 maps to [`test-strategy.md`](../spec/test-strategy.md) **§5** (SM) and **§6** (ask bands). |
 | 2026-10-04 | Inputs: hub **§0.4–§0.8**; child spec **§0**; heading unit tags for test targeting. |
+| 2026-10-04 | No tests for **Reference** §2.3; **DEC-11** agreed ask shape. |

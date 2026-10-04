@@ -1,6 +1,6 @@
 # Ticket status state machine
 
-> **Status:** draft (2026-10-04) — **PDF** allowed edges (T1–T5) and forbidden reopen examples (X1–X3) are locked from [`requirements.md`](requirements.md) FEAT-11 / §2.6. **Agreed:** initial status on create (**DEC-07**). **Open:** skipped hops (**DEC-02**), transition UX/API shape (**DEC-06**).  
+> **Status:** draft (2026-10-04) — **PDF** allowed edges (T1–T5) and forbidden reopen examples (X1–X3) are locked from [`requirements.md`](requirements.md) FEAT-11 / §2.6. **Agreed:** initial status on create (**DEC-07**); skipped hops **DEC-02 (A)**. **Interim:** transition UX/API shape (**DEC-06**).  
 > **Primary source:** `docs/Assessments.docx` (restated in [`requirements.md`](requirements.md), [`docs/assessment-brief.md`](../docs/assessment-brief.md)).  
 > **Related:** [`data-model.md`](data-model.md) §5.1 (`TicketStatus`), §10 PATCH; [`architecture.md`](architecture.md) §17 (domain placement); `rules/api-standards.md` (409 envelope); `rules/java-springboot.md` (layering).
 
@@ -153,7 +153,7 @@ There are **no** backward edges to `OPEN` from terminal or late lifecycle states
 
 ### 5.1 Valid transitions (**PDF** — must succeed)
 
-These are the **only** legal status changes under the default rule in §5.3 (pending **DEC-02**).
+These are the **only** legal status changes under **DEC-02 (A)** (§5.3).
 
 | ID | From | To | Meaning |
 |----|------|-----|---------|
@@ -182,11 +182,11 @@ Explicit assessment examples for illegal “reopen”:
 
 **Example (Flow C):** Ticket in `CLOSED`. Client PATCHes `status: "OPEN"`. Backend rejects; UI shows a readable message (exact copy **Open** — e.g. “Cannot transition from CLOSED to OPEN”).
 
-### 5.3 Default rule for all other pairs (**Convention** pending **DEC-02**)
+### 5.3 Default rule for all other pairs (**Agreed DEC-02 (A)**)
 
-| Decision | Options | This spec’s default until **DEC-02** is agreed |
-|----------|---------|-----------------------------------------------|
-| **DEC-02** | (A) Only T1–T5 edges (B) Additional edges with explicit list | **(A)** — any pair not listed in §5.1 is **illegal** |
+| Decision | Options | **Agreed** decision |
+|----------|---------|---------------------|
+| **DEC-02** | (A) Only T1–T5 edges (B) Additional edges with explicit list | **(A)** — any pair not listed in §5.1 is **illegal** (PDF state machine + invalid-transition rule) |
 
 Implications:
 
@@ -454,7 +454,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 
 | ID | Topic | Status | Owner spec |
 |----|-------|--------|------------|
-| **DEC-02** | Skipped hops / extra edges | **Open** — implement **option (A)** only (confirmed 2026-10-04; may revisit later) | This file |
+| **DEC-02** | Skipped hops / extra edges | **Agreed 2026-10-04** — **(A)** only T1–T5 | This file |
 | **DEC-06** | Dedicated transition API vs PATCH | **Interim** — PATCH `status` per [`api-contract.md`](api-contract.md) §4.4 | [`ui-model.md`](ui-model.md) §9 for UX |
 | **DEC-07** | Initial `OPEN` on create | **Agreed** | [`data-model.md`](data-model.md) §5.1 |
 
@@ -468,6 +468,7 @@ Maps to **AC-CORE-12**, **AC-CORE-13**, **AC-FEAT-11-*** in [`requirements.md`](
 | 2026-10-04 | Transition UX pointer → [`architecture.md`](architecture.md) §12.4 (PDF ui-flow themes). |
 | 2026-10-04 | Transition UX pointer → [`ui-model.md`](ui-model.md) §9 (**DEC-06**). |
 | 2026-10-04 | **DEC-02:** user confirmed interim **(A)** — only T1–T5; decision remains Open in requirements §10.2. |
+| 2026-10-04 | **DEC-02** agreed in hub §10.2 (PDF-backed). |
 | 2026-10-04 | §6.1 aligned with [`api-contract.md`](api-contract.md) PATCH body (not request `data` wrapper). |
 | 2026-10-04 | §5.5–5.7 valid ops + 20-row invalid register; §6.1.1 PATCH `status` presence rules; AC-SM-06–08. |
 | 2026-10-04 | §0 guide (PDF map, BRF/FRI/IRI); §6.5 REST JSON examples for T1 and X1. |

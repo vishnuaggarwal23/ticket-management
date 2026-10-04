@@ -16,6 +16,8 @@ Tests prove **acceptance criteria** from `spec/` (start each file’s **§0** fo
 
 **Assessment PDF** requires tests that prove the ticket **state machine** (legal and illegal transitions), **backend validation**, **persistence that survives restart**, and honest RAG **no-match / citation** behaviour. It does **not** mandate JUnit, Mockito, Testcontainers, H2, coverage percentages, CI, or a frontend test stack.
 
+**Reference (do not add tests for):** features listed in [`spec/requirements.md`](../spec/requirements.md) **§2.3** (auth, delete API, ask confidence, CI recall@K automation, etc.). **Open:** **DEC-10** (H2 vs Postgres roles) — follow agreed choice in specs before locking test DB story.
+
 **This project’s approved conventions** (use these when implementing; do not describe them as PDF requirements):
 
 - **JUnit 5** as the test runner and assertion baseline
@@ -347,3 +349,4 @@ See [`spec/test-strategy.md`](../spec/test-strategy.md) §9.
 | 2026-10-04 | Retrieval eval: [`evaluation-strategy.md`](../spec/evaluation-strategy.md) §5.2 / §8 **F-***; test-strategy §4.1. |
 | 2026-10-04 | State machine + ask bands: [`test-strategy.md`](../spec/test-strategy.md) §5–§6. |
 | 2026-10-04 | Pointers to spec **§0** and requirements **§0.5**; aligned with `rules/documentation.md`. |
+| 2026-10-04 | **Reference** §2.3 — no tests for out-of-PDF features; **DEC-10** note. |

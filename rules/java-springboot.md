@@ -143,7 +143,7 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 - Request and response types are **records** in `api` (or `api.dto`). They are the HTTP contract, not JPA entities.
 - Put Bean Validation on **request** records to match [`spec/data-model.md`](../spec/data-model.md) §16 (e.g. `@NotBlank` on create `title`, `@Size` limits). Do not add required fields beyond that spec.
 - Map explicitly in the service or a dedicated mapper type in `api`/`service`. No bidirectional JPA graphs in JSON.
-- Ask response must represent grounded answer + cited ticket ids **or** honest no-match per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11**). Do not add a confidence field unless that spec does.
+- Ask response must represent grounded answer + cited ticket ids **or** honest no-match per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** agreed). Do not add **confidence** or other **Reference** ask fields ([`spec/requirements.md`](../spec/requirements.md) **§2.3**).
 - Do not return persistence entities from controllers. Do not put Jackson annotations on entities to “make the API work.”
 
 ## Services
@@ -156,7 +156,7 @@ Public envelopes, pagination/sort/search query params, HTTP status mapping, PATC
 
 ## Domain (state machine)
 
-Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machine.md)** — legal edges **T1–T5**, forbidden reopen **X1–X3**, and full invalid matrix under default **DEC-02 (A)**. Do not allow skipped hops (e.g. `OPEN` → `RESOLVED`) unless **DEC-02** is agreed to option (B) and the spec is updated.
+Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machine.md)** — legal edges **T1–T5**, forbidden reopen **X1–X3**, and full invalid matrix under **DEC-02 (A)** (agreed). Do not allow skipped hops (e.g. `OPEN` → `RESOLVED`).
 
 - `TicketStatus` is an enum. Transition rules live in a dedicated type (e.g. `TicketStatusMachine`) with **no** Spring imports.
 - Invalid transitions throw a domain exception; service must not persist the illegal status.
@@ -228,3 +228,4 @@ Authoritative transition table: **[`spec/state-machine.md`](../spec/state-machin
 | 2026-10-04 | Domain SM defers to draft [`spec/state-machine.md`](../spec/state-machine.md); removed duplicate edge table. |
 | 2026-10-04 | HTTP payloads: draft [`spec/api-contract.md`](../spec/api-contract.md). |
 | 2026-10-04 | Pointers to child spec **§0** maps (SM, RAG, architecture); steering sync with `rules/documentation.md`. |
+| 2026-10-04 | **DEC-02** agreed; **Reference** ask fields per requirements §2.3. |

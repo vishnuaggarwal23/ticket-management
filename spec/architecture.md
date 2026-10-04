@@ -146,7 +146,7 @@ The assistant is **retrieve-then-generate** only (**PDF**): grounded answers wit
 ### 2.2 Non-goals
 
 - **Autonomous agent** from the ask endpoint: no ticket creation, notifications, or tool chaining (**PDF** §2.2).
-- **Authentication / authorization** — not in the PDF (**Open** → OQ-06, DEC-12).
+- **Authentication / authorization** — not in the PDF (**Agreed DEC-12**: no auth in assessment scope).
 - Multi-tenancy, attachments, email/Slack, workflow beyond the defined status machine — unless added to agreed requirements later.
 
 ---
@@ -232,7 +232,7 @@ Business modules are **cohesive responsibility areas** for planning and traceabi
 | **Work discovery** | Find tickets in a queue | Keyword search, status filter | FEAT-06…07 |
 | **Lifecycle governance** | Legal status progression | Allow T1–T5; reject X1–X3 | FEAT-11 |
 | **Knowledge indexing** | Make ticket text searchable for AI | Build docs, chunk, embed, metadata | FEAT-12…13 |
-| **Index freshness** | Avoid stale answers | Re-ingest on update/close (**PDF** p.5; **DEC-01** for close-only) | FEAT-14 |
+| **Index freshness** | Avoid stale answers | Re-ingest on update/close (**PDF** p.5; **Agreed DEC-01 (B)**) | FEAT-14 |
 | **Assisted research** | Q&A over history | Ask API, retrieval, generation, citations | FEAT-15…18 |
 | **Operational quality** | Trust and assessability | Validation, errors, configurable retrieval, docs | FEAT-09…10, 19…23 |
 
@@ -591,7 +591,7 @@ Detailed paths, bodies, and field catalogs → [`api-contract.md`](api-contract.
 - Invalid/missing question → **400** `VALIDATION_ERROR` (**Convention**).
 - **No** side effects (create ticket, notify) (**PDF**).
 
-Response field names inside `data` → interim in [`api-contract.md`](api-contract.md) §3.5 / §6 (**DEC-11** no-match wording open).
+Response field names inside `data` → [`rag-api-contract.md`](rag-api-contract.md) / [`api-contract.md`](api-contract.md) §6 (**DEC-11** agreed no-match phrase).
 
 ### 11.4 Versioning
 
@@ -723,7 +723,7 @@ Each **indexed unit** is a **chunk** of ticket knowledge with:
 | Operation | When |
 |-----------|------|
 | **Insert / upsert** | After ingestion pipeline for a ticket |
-| **Delete / replace** | On re-ingest: remove stale chunks for that ticket (**Open** strategy: delete-all-for-ticket vs versioned) |
+| **Delete / replace** | On re-ingest: delete-all chunks for ticket then insert — [`rag-ingestion.md`](rag-ingestion.md) §11 (**Convention**) |
 | **Similarity search** | On each ask: query embedding nearest neighbours with top-K |
 | **Rebuild** | Optional admin/repair: re-run ingestion for all tickets from PostgreSQL |
 
@@ -783,7 +783,7 @@ flowchart LR
 |------|--------|
 | Ingest description, comments, resolution notes | **PDF** |
 | Metadata on chunks | **PDF** |
-| Re-ingest on update/close | **PDF** p.5; confirm close-only (**DEC-01**) |
+| Re-ingest on update/close | **PDF** p.5; **Agreed DEC-01 (B)** ([`requirements.md`](requirements.md) §11.1) |
 | Configurable top-K and threshold | **PDF** |
 | No LLM call when no chunk passes threshold | **Convention** + grounding |
 | No tools / side effects on ask | **PDF** |
@@ -807,7 +807,7 @@ flowchart LR
 | Ticket created | Yes (**PDF** implied by pipeline) | Initial index |
 | Field update | Yes (**PDF** updated) | |
 | Comment added | Yes (ticket updated) | |
-| Status → closed | Yes per p.5 (**DEC-01** vs p.6 wording) | Metadata must show `CLOSED` |
+| Status → closed | Yes per p.5 (**Agreed DEC-01 (B)**) | Metadata must show `CLOSED` |
 
 Hook placement: ticket **service** after successful commit; exact mechanism → `rag-ingestion.md`.
 
@@ -819,7 +819,7 @@ Hook placement: ticket **service** after successful commit; exact mechanism → 
 4. If none remain → return **no relevant tickets** without LLM (**PDF** grounding).
 5. Else pass chunks + ticket ids into prompt.
 
-**Optional** metadata pre-filter (e.g. high-priority only) is **not** PDF-required; needed for some illustrative questions (**Example** in requirements §4.3) — **Open** for product phase 2.
+**Optional** metadata pre-filter (e.g. high-priority only) is **not** PDF-required — **Reference** only ([`requirements.md`](requirements.md) §2.3); satisfy illustrative questions via retrieval over text/metadata in chunks, not a new ask filter API.
 
 ### 15.6 Generation
 
@@ -920,7 +920,7 @@ States and transitions: [`state-machine.md`](state-machine.md) + `requirements.m
 - Repositories do not expose unguarded status updates.
 - Illegal transition → domain error → **409** `ILLEGAL_TRANSITION` (**Convention**).
 
-**Open:** skipped hops (**DEC-02**); transition API (**DEC-06**). **Agreed:** initial status `OPEN` on create (**DEC-07** — [`data-model.md`](data-model.md) §5.1).
+**Agreed:** skipped hops **DEC-02 (A)**; initial status `OPEN` on create (**DEC-07** — [`data-model.md`](data-model.md) §5.1). **Interim:** transition API (**DEC-06**).
 
 ---
 
@@ -958,7 +958,7 @@ Align with `rules/api-standards.md` (**Convention**).
 
 ## 20. Security and deployment
 
-- **Auth:** not required by PDF — architecture neither mandates nor forbids Spring Security (**Open** DEC-12).
+- **Auth:** **Agreed DEC-12** — no authentication for assessment scope (PDF silent).
 - **Secrets:** DB and model credentials via environment only (**PDF**).
 - **Deployment:** one JVM + PostgreSQL; optional Ollama on dev host; static SPA or Vite dev server.
 

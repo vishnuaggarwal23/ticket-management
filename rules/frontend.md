@@ -2,7 +2,7 @@
 
 Cursor attaches this file via [`.cursor/rules/frontend.mdc`](../.cursor/rules/frontend.mdc) (pointer only). Edit **this** file; do not copy the body into the `.mdc`.
 
-React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-model.md`](../spec/ui-model.md) (**§0** PDF ui-flow map; **AC-UI-***; confirm **DEC-06** / **DEC-15** before calling agreed). UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E, **§0.5**, and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
+React UI for tickets and grounded Q&A. Product screens and click-by-click flows: [`spec/ui-model.md`](../spec/ui-model.md) (**§0** PDF ui-flow map; **AC-UI-***). Stack **agreed** **DEC-15** (React+Vite+TS); transition API **interim** **DEC-06**. Out-of-PDF UI (**Reference** — do not build): [`spec/requirements.md`](../spec/requirements.md) **§2.3**. UI architecture summary: [`spec/architecture.md`](../spec/architecture.md) **§12**. Hub journeys: [`spec/requirements.md`](../spec/requirements.md) Flows A–E, **§0.5**, and demo **§8.7**. HTTP envelopes and paths: `rules/api-standards.md`. Ask grounding: `rules/rag-vector-store.md`. These rules do **not** replace those specs.
 
 **This milestone: do not write frontend test cases** (no Vitest, Testing Library, Playwright, Cypress, or other UI test suite). Backend tests remain in `rules/testing.md`. UI review: `commands/review-frontend.md`.
 
@@ -14,7 +14,7 @@ React UI for tickets and grounded Q&A. Product screens and click-by-click flows:
 | [`spec/api-contract.md`](../spec/api-contract.md) | Ticket/comment JSON shapes and error cases for API client types |
 | [`spec/ui-model.md`](../spec/ui-model.md) | Screens, CRUD flows, ask/RAG UX, **AC-UI-*** |
 | [`spec/architecture.md`](../spec/architecture.md) §12 | Frontend architecture summary |
-| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Citation / no-match fields inside ask `data` (**DEC-11**) |
+| [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) | Citation / no-match fields inside ask `data` (**DEC-11** agreed) |
 
 ## Assessment vs project conventions vs open decisions
 
@@ -44,11 +44,11 @@ The PDF names React/Next.js **or equivalent**. It does **not** mandate Vite, Typ
 - Optional **category** enum; optional **resolutionNotes** on detail/edit (DEC-03, DEC-05)
 - Create: **title** required; priority/assignee/category optional; no status on create form (DEC-07, DEC-13)
 
-**Open — resolve via [`spec/ui-model.md`](../spec/ui-model.md) §14 / contracts before inventing UI layout (do not assume):**
+**Implementer choice (in scope — not blocking DEC):** screen layout, navigation, transition control widget, ask page vs panel, CSS kit, router, client global store — must satisfy demo [`spec/requirements.md`](../spec/requirements.md) **§8.7** / Flow B.
 
-- Screen layout, navigation, how a transition is chosen, how ask is laid out
-- CSS framework, component library, router, client global store
-- Exact ask `data` field names beyond [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) (**DEC-11** no-match wording)
+**Reference — do not build UI for:** auth screens, delete ticket, agent actions from ask, confidence badges, vector/chunk debug consoles ([`spec/requirements.md`](../spec/requirements.md) **§2.3**).
+
+**Ask display:** use `data.answer` + `data.citedTicketIds` per [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §7 (**DEC-11**).
 
 ## Stack
 
@@ -179,3 +179,4 @@ If proxy is used, `VITE_API_BASE_URL` can be empty and paths stay relative `/api
 | 2026-10-04 | Product UI detail → [`spec/ui-model.md`](../spec/ui-model.md); architecture §12 summary. |
 | 2026-10-04 | `improve-from-assessment-pdf`: PDF `ui-flow.md` → `ui-model.md` (not `spec/ui-flow.md`). |
 | 2026-10-04 | Pointers to [`ui-model.md`](../spec/ui-model.md) **§0** and requirements **§0.5**. |
+| 2026-10-04 | **DEC-15**/**DEC-11** agreed; **Reference** §2.3 — no UI for out-of-PDF features. |

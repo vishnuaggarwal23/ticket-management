@@ -392,9 +392,9 @@ If no retrieved set is available, set retrieval verdict to `not evaluated` and g
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
 | **DEC-09** | Embedding model / dimension | **Open** | Scores and recall depend on model; record in eval log when chosen |
-| **DEC-11** | No-match wording | **Open** | Does not change retrieval id checks |
-| **OQ** | Metadata pre-filter for Q5 (“high-priority payment”) | **Open** | [`architecture.md`](architecture.md) §15.5 — eval may accept text match without SQL filter until decided |
-| **OQ** | Automated recall@K in CI | **Open** | v1 is manual + optional integration with stubbed search only |
+| **DEC-11** | No-match wording | **Agreed 2026-10-04** | Does not change retrieval id checks |
+| **OQ** | Metadata pre-filter for Q5 (“high-priority payment”) | **Reference** | Not PDF-mandated; eval uses retrieval + corpus text — do not build metadata-only ask filter for assessment |
+| **OQ** | Automated recall@K in CI | **Reference** | PDF expects eval approach documented + reviewable results; do not add CI golden recall automation unless scope changes |
 
 Confirming numeric K/threshold defaults: [`rag-ingestion.md`](rag-ingestion.md) §9.3 / §12 — not in this file.
 

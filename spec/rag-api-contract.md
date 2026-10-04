@@ -282,7 +282,7 @@ No `meta` on ask responses.
 
 ### 7.2 `AskResponseData` (inside `data`)
 
-**Interim** until **DEC-11** is agreed.
+**Agreed** shape (**DEC-11**); no-match phrase per PDF p.6.
 
 | Property | Type | Required | Semantics |
 |----------|------|----------|-----------|
@@ -324,7 +324,7 @@ Content-Type: application/json;charset=UTF-8
 }
 ```
 
-Wording is **interim** (**DEC-11**). Meaning must be honest: nothing relevant in ticket corpus — not a generic error and not fabricated facts.
+**Agreed (**DEC-11**):** use this phrase (or equivalent honest wording). Meaning: nothing relevant in ticket corpus — not a generic error and not fabricated facts.
 
 ---
 
@@ -386,7 +386,7 @@ Retrieval quality (right tickets in top-K): [`evaluation-strategy.md`](evaluatio
 | “Capital of France?” with ticket-only policy | **200**, no-match — not “Paris” from model memory (**Example** Flow E2) |
 | User message implies “create a ticket” | **200** ask only — **no** row created (**AC-FEAT-18-04**) |
 
-**DEC-11 (Open):** machine-readable `reason` / distinct codes for empty retrieval vs out-of-scope vs grounded — do not add fields without user confirmation.
+**DEC-11 (Agreed):** no separate machine-readable `reason` / codes in v1 (PDF bundles out-of-scope with honest no-match). Optional fields require a future **DEC**.
 
 ---
 
@@ -486,9 +486,9 @@ Changing config may change which questions ground vs no-match; HTTP contract sha
 
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
-| **DEC-11** | No-match wording; optional `reason` / codes | **Open** | Interim phrase §7.4 |
+| **DEC-11** | No-match wording; optional `reason` / codes | **Agreed 2026-10-04** | Phrase §7.4; no `reason` field in v1 |
 | **DEC-09** | Embedding model affects retrieval only — not response fields | **Open** | [`rag-ingestion.md`](rag-ingestion.md) |
-| Extra properties on `AskResponseData` | e.g. `confidence` | **Open** | Not in **PDF** |
+| Extra properties on `AskResponseData` | e.g. `confidence` | **Reference** | Not in **PDF** — do not implement ([`requirements.md`](requirements.md) §2.3) |
 
 ---
 

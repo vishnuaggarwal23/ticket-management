@@ -17,7 +17,7 @@ Mark checklist items **Pass** / **Fail** / **N/A**. Failures are blocking for im
 
 ### When most of `spec/` does not exist yet
 
-Default **Ready for implementation?** → **no** until draft specs needed for the slice are complete and open **DEC-*** are resolved or explicitly accepted as interim. **`data-model.md` is agreed**; all other PDF-listed `spec/` files are **draft** — ticket HTTP, ingest, ask, UI, and eval may proceed per those specs + `rules/*` unless a **DEC-*** blocks (e.g. **DEC-09** embedding model, **DEC-11** no-match wording).
+Default **Ready for implementation?** → **no** until draft specs needed for the slice are complete and open **DEC-*** are resolved or explicitly accepted as interim. **`data-model.md` is agreed**; all other PDF-listed `spec/` files are **draft** — ticket HTTP, ingest, ask, UI, and eval may proceed per those specs + `rules/*` unless a **DEC-*** blocks (e.g. **DEC-09** embedding model). **Reference** items ([`spec/requirements.md`](../spec/requirements.md) **§2.3**) are **not** open work — flag if specs treat them as required delivery.
 
 You may still review **`requirements.md`** / **`architecture.md`** for PDF alignment (requirements **§0.4**, **§0.5**, [`docs/assessment-brief.md`](../docs/assessment-brief.md) **§13**). List **blocking open decisions** explicitly — do not silently implement from rules alone except where rules already lock behaviour (HTTP envelopes, stack choices).
 
@@ -70,6 +70,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] New material in feature specs aligns with **[`spec/requirements.md`](../spec/requirements.md) §10.3** handoff (each OQ has a primary owning spec)
 - [ ] Assessment acceptance mappable to **`AC-CORE-*`** (§8); feature detail mappable to **`AC-FEAT-*`** (§4.2) where applicable
 - [ ] No invented product features (auth, agents from ask, attachments, bulk ops, rerankers) unless explicitly in scope
+- [ ] **Reference** topics ([`spec/requirements.md`](../spec/requirements.md) **§2.3**) are labeled **Reference** — not **Open** DEC work and not required for **Ready for implementation?**
 
 ### Consistency with engineering rules
 
@@ -79,7 +80,7 @@ For each **material claim** in the primary spec(s), classify whether it is valid
 - [ ] State machine in domain/services, not UI or repository `UPDATE`
 - [ ] Test acceptance criteria can be implemented under `rules/testing.md`
 - [ ] RAG content does not contradict `rules/rag-vector-store.md` (chunking/ingest per [`spec/rag-ingestion.md`](../spec/rag-ingestion.md); no locked model/K/threshold unless **DEC-09** / §12 agreed)
-- [ ] UI spec does not require Next.js or frontend tests; layout remains open until [`ui-model.md`](../spec/ui-model.md) / **DEC-15** / **DEC-06** is agreed
+- [ ] UI spec does not require Next.js or frontend tests; **DEC-15** stack agreed; layout/ask placement is implementer choice; **DEC-06** interim PATCH
 
 ### Cross-spec validity (name both files when flagging)
 
@@ -103,7 +104,7 @@ Use `rules/documentation.md` section map for headings. Mark **N/A** for sections
 - [ ] **Communication** (§10): synchronous REST only unless an agreed spec adds async; ask no-match vs error envelope matches `rules/api-standards.md`
 - [ ] **API architecture** (§11) aligns with `rules/api-standards.md` (`POST /api/ai/ask`, PATCH tickets, envelopes)
 - [ ] **Vector DB** (§14): PgVector as **Convention**; relational DB remains SoR; rebuild-from-tickets story present
-- [ ] **RAG** (§15–16): ingest sources (description, comments, resolution notes); re-ingest on update/close per PDF with **DEC-01** noted if close-only is unresolved
+- [ ] **RAG** (§15–16): ingest sources (description, comments, resolution notes); re-ingest on update/close per PDF (**DEC-01** agreed (B))
 - [ ] **Chunking** (§16): strategy **justified** for ticket text; aligns with [`rag-ingestion.md`](../spec/rag-ingestion.md) §9; **proposed** numeric size/overlap §9.3 confirmed or still marked Proposed
 - [ ] **Embedding** (§16): local vs cloud tradeoffs documented; same model at ingest/query; model id not invented without [`rag-ingestion.md`](../spec/rag-ingestion.md) §12 (**DEC-09**)
 - [ ] **Open questions** (§21) align with `requirements.md` §10 OQ/DEC — no decisions closed only in architecture
@@ -138,7 +139,7 @@ Use `rules/documentation.md` ui-model reviewer map. Mark **N/A** only if the rev
 - [ ] **§10** — ask panel matches [`rag-api-contract.md`](../spec/rag-api-contract.md) (grounded **200**, no-match **200**, validation **400**); citations link to detail
 - [ ] **§11–§12** — flows A–E and demo §8.7 steps trace to [`requirements.md`](../spec/requirements.md)
 - [ ] **§13** — **AC-UI-01…12** trace to **AC-CORE-01…11** and **AC-CORE-16…18** without contradiction
-- [ ] **§14** — **DEC-06**, **11**, **15** still **Open** where not user-confirmed
+- [ ] **§14** — **DEC-06** interim; **DEC-11**, **DEC-15** agreed; no **Reference** UI requirements
 
 ---
 
@@ -211,7 +212,7 @@ Do not treat assumptions as decided requirements unless the user has agreed.
 
 Checklist:
 
-- [ ] No capabilities the PDF does not support (agent actions, auth, delete-all, confidence scores on ask, public vector dumps)
+- [ ] No capabilities the PDF does not support (agent actions, auth, delete-all, confidence scores on ask, public vector dumps) — if mentioned, must be **Reference** §2.3, not **Open** delivery
 - [ ] No HTTP paths or envelopes that contradict `rules/api-standards.md` without an explicit revision process
 - [ ] No state transitions not in `state-machine.md` / requirements
 - [ ] No metadata fields beyond assessment + agreed data model
@@ -287,3 +288,4 @@ Confirm with the user before applying spec edits.
 | 2026-10-04 | Ten-file set: ask detail → [`rag-api-contract.md`](../spec/rag-api-contract.md). |
 | 2026-10-04 | Checklist: requirements **§0.5**; child spec **§0** guides; file map **§0** columns. |
 | 2026-10-04 | Checklist: **`##` heading unit suffix** aligned with §0.3 independent reading units. |
+| 2026-10-04 | **Reference** §2.3 checklist; DEC register sync (agreed vs open vs interim). |

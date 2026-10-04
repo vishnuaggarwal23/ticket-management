@@ -64,7 +64,7 @@
 | FR-UI-02 | Ask shows answer + cited ticket links/ids | **AC-UI-09** |
 | FR-UI-03 | No-match copy visible (not blank) | **AC-UI-10** |
 
-**Implementation requirements (**Convention** — **DEC-15** Open)**
+**Implementation requirements (**Agreed** — **DEC-15**: React + Vite + TypeScript; layout/ask placement are implementer choice)**
 
 | ID | Requirement |
 |----|-------------|
@@ -122,7 +122,7 @@ This document is the **detailed UI model**: views/screens, navigation, field-lev
 | **Agentic actions** from ask | **PDF**: no create-ticket, notify, or tool chain from the question box |
 | **Confidence scores / retrieval debug UI** | Not in **PDF** unless a future spec adds them |
 | **Frontend test suite** | **Convention** — this milestone skips Vitest/Playwright (`rules/frontend.md`) |
-| **Visual design system** | No mandated theme, CSS framework, or component library (**Open** **DEC-15**) |
+| **Visual design system** | No mandated theme, CSS framework, or component library (implementer choice under **DEC-15**) |
 
 ---
 
@@ -165,7 +165,7 @@ flowchart LR
 | **Ticket list** | Read many tickets; search; filter; open detail or create | App home / “Tickets” nav |
 | **Create ticket** | Create one ticket | “New ticket” from list |
 | **Ticket detail** | Read one ticket; update fields; comments; status | Row click / link from list or citation |
-| **Ask / assistant** | Natural-language Q&A over ticket corpus | Global nav item, list toolbar, or detail tab (**Open** placement — **DEC-15**) |
+| **Ask / assistant** | Natural-language Q&A over ticket corpus | Global nav item, list toolbar, or detail tab (placement — **DEC-15**) |
 
 **Convention:** One SPA with client-side routes is sufficient; exact path strings are **Open** until agreed. **Example** routes:
 
@@ -176,7 +176,7 @@ flowchart LR
 | `/tickets/:id` | Ticket detail (`:id` = `TKT-{n}`) |
 | `/ask` | Ask panel (full page) |
 
-Ask may alternatively be a **persistent panel** on list and detail (drawer or split pane) instead of `/ask` — **Open** (**DEC-15**).
+Ask may alternatively be a **persistent panel** on list and detail (drawer or split pane) instead of `/ask` (**DEC-15**).
 
 ### 4.2 What is not a product screen
 
@@ -409,7 +409,7 @@ Summary matrix for implementers and `commands/review-frontend.md`:
 
 ## 9. Status transitions (UI) · unit **UI-E**
 
-**Authority:** [`state-machine.md`](state-machine.md) §5.1 (T1–T5), §5.2 (X1–X3). **Interim API:** `PATCH` with `status` only (**DEC-06**).
+**Authority:** [`state-machine.md`](state-machine.md) §5.1 (T1–T5), §5.2 (X1–X3). **Interim API (**DEC-06**):** `PATCH` with target `status`; may include other valid fields on the same request ([`api-contract.md`](api-contract.md) §4.4).
 
 ### 9.1 Legal targets by current state (guidance)
 
@@ -475,7 +475,7 @@ There is **no** requirement for a “vector index browser” or “retrieved chu
 
 **Purpose:** **FEAT-15…18** — single-question, single-response, **non-agentic** Q&A (**PDF**).
 
-**Placement (**Open** — **DEC-15**): dedicated `/ask` page **or** embedded panel on list/detail; must be reachable in demo **Flow B** step B3 without calling curl only.
+**Placement (implementer choice — **DEC-15**):** dedicated `/ask` page **or** embedded panel on list/detail; must be reachable in demo **Flow B** step B3 without calling curl only.
 
 #### 10.2.1 Layout (logical)
 
@@ -631,10 +631,10 @@ Testable UI criteria for spec review (`commands/review-spec.md`) and frontend re
 
 | ID | Topic | Status | Notes |
 |----|-------|--------|-------|
-| **DEC-06** | Transition API shape | **Open** (interim PATCH) | UI sends `PATCH { "status" }` per [`state-machine.md`](state-machine.md) §6 |
-| **DEC-11** | Ask no-match wording / extra fields | **Open** | UI displays `data.answer` as returned — interim phrase in [`rag-api-contract.md`](rag-api-contract.md) |
-| **DEC-15** | Layout, router, ask placement, CSS kit | **Open** | §4.1 **Example** routes; panel vs page |
-| **DEC-02** | Skipped status hops | **Open** | UI legal-target table follows §9.1 (option A default) |
+| **DEC-06** | Transition API shape | **Interim** | UI sends `PATCH` with `status` (± other fields) per [`state-machine.md`](state-machine.md) §6 |
+| **DEC-11** | Ask no-match wording / extra fields | **Agreed 2026-10-04** | UI displays `data.answer` as returned — e.g. [`rag-api-contract.md`](rag-api-contract.md) §7.4 |
+| **DEC-15** | Layout, router, ask placement, CSS kit | **Agreed** (stack); placement Open | React+Vite+TS; §4.1 **Example** routes; panel vs page |
+| **DEC-02** | Skipped status hops | **Agreed 2026-10-04** | UI legal-target table follows §9.1 (**DEC-02 (A)**) |
 
 Do not close **Open** items in implementation without updating [`requirements.md`](requirements.md) §10.2 and user confirmation.
 

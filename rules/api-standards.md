@@ -38,9 +38,11 @@ The PDF does **not** specify ticket URL paths, PUT vs PATCH, pagination, error J
 - **Keyword `q`:** case-insensitive match on **`title` and `description` only** (DEC-08); not comments
 - **Status transition:** PATCH `status` with **target** enum per [`spec/state-machine.md`](../spec/state-machine.md) §6.1 (**DEC-06** may add a dedicated sub-resource later); illegal → **409** `ILLEGAL_TRANSITION`
 
-**Open — resolve in RAG API spec when finalized (do not assume beyond interim contract):**
+**Open (in PDF scope) — resolve before treating as fixed:**
 
-- Ask **business** JSON inside `data` beyond [`spec/rag-api-contract.md`](../spec/rag-api-contract.md) §7 (**DEC-11**)
+- Embedding model / vector dimension (**DEC-09**); numeric top-K/threshold **values** (config keys in [`spec/rag-ingestion.md`](../spec/rag-ingestion.md) §12.1)
+
+**Reference (out of PDF scope — do not implement):** see [`spec/requirements.md`](../spec/requirements.md) **§2.3** (e.g. ask `confidence`, dedicated `/transition` routes, delete ticket API).
 - Dedicated transition sub-resource vs PATCH-only — **interim:** PATCH `status` per [`spec/api-contract.md`](../spec/api-contract.md) §4.4 and [`spec/state-machine.md`](../spec/state-machine.md) §6.1
 - Authentication / authorization / roles (not in the assessment)
 - Whether OpenAPI is produced (optional; if added it MUST match these rules and the specs)
@@ -354,8 +356,9 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 ## Do not
 
 - Do not treat `/api/v1`, PATCH, 409, or these envelopes as PDF requirements.
-- Do not silently answer open questions in [`spec/requirements.md`](../spec/requirements.md) — use **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement still-open **DEC-*** as fixed behaviour (**DEC-01, 02, 06, 09–12, 14, 15**, ask `data` fields, etc.). **DEC-03, 04, 05, 07, 08, 13** are agreed via [`spec/data-model.md`](../spec/data-model.md).
-- Do not prescribe Spring Security, API keys, or multi-tenancy.
+- Do not silently answer open questions in [`spec/requirements.md`](../spec/requirements.md) — use **§10.1 (OQ-*)** and **§10.2 (DEC-*)**; do not implement still-**Open** **DEC-09**, **DEC-10** as fixed behaviour. **Interim:** **DEC-06**, **DEC-14**. **Agreed DEC** list: [`rules/documentation.md`](documentation.md) (hub §10.2).
+- Do not implement **Reference** topics in requirements **§2.3** (auth, delete API, confidence on ask, etc.) — document only.
+- Do not prescribe Spring Security, API keys, or multi-tenancy for the assessment build (**DEC-12** agreed: no auth).
 - Do not return persistence entities or a second JSON error shape from one controller.
 - Do not use PUT, unversioned `/api/tickets`, or cursor pagination unless a spec revises this file.
 
@@ -378,3 +381,4 @@ Grounding rules: `rules/rag-vector-store.md`. Review: `commands/review-rag-outpu
 | 2026-10-04 | Ask `data` pointers → `api-contract` §6.2–§6.5 (consolidated PDF `rag-api-contract` themes). |
 | 2026-10-04 | Ask `data` → [`rag-api-contract.md`](../spec/rag-api-contract.md) (authoritative). |
 | 2026-10-04 | Cross-refs to spec **§0** guides (`api-contract`, `rag-api-contract`, `data-model`). |
+| 2026-10-04 | **Reference** §2.3: out-of-PDF items not API work; DEC register sync. |

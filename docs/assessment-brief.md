@@ -317,30 +317,31 @@ Demo walkthrough mapping: [`requirements.md`](../spec/requirements.md) §8.7.
 | **DEC-07** | Initial status | Server default `OPEN` on create; not in create body |
 | **DEC-08** | Keyword search | `q` matches `title` and `description` (case-insensitive); comments excluded |
 | **DEC-13** | Create validation | Non-blank `title` required; `priority` defaults `MEDIUM`; other fields per data model §16.1 |
+| **DEC-01** | Re-ingest trigger | **(B)** On ticket **update** or **close** (ingestion p.5); demo proof via edit path (p.6) — [`requirements.md`](../spec/requirements.md) §11.1 |
+| **DEC-02** | Skipped status hops | Only T1–T5 edges (**A**) |
+| **DEC-11** | Ask no-match | `data.answer` e.g. “No relevant tickets found.”; empty `citedTicketIds`; no `reason` field in v1 |
+| **DEC-12** | Authentication | None in assessment scope (PDF silent) |
+| **DEC-15** | Frontend stack | React + Vite + TypeScript (PDF “or equivalent”); layout/ask placement implementer choice |
 
 ### Interim (implementable draft; confirm before calling “agreed”)
 
 | DEC | Topic | Interim stance |
 |-----|--------|----------------|
-| **DEC-02** | Skipped status hops | Only T1–T5 (no `OPEN` → `RESOLVED`, etc.) |
 | **DEC-06** | Transition API | PATCH `status` on `PATCH /api/v1/tickets/{id}` |
 | **DEC-14** | Ticket REST surface | Paths/payloads in [`api-contract.md`](../spec/api-contract.md); envelopes in `rules/api-standards.md` |
-| **DEC-01** (interim) | Re-ingest on close | Implement update **or** close per [`rag-ingestion.md`](../spec/rag-ingestion.md) §10 pending user sign-off |
 
 ### Still open
 
 | DEC | Topic |
 |-----|--------|
-| **DEC-01** | Re-ingest on **close** vs p.6 wording (interim **(B)** in `rag-ingestion.md` — confirm for sign-off) |
 | **DEC-09** | Embedding model + vector store product |
 | **DEC-10** | H2 vs PostgreSQL per environment |
-| **DEC-11** | Ask response JSON; no-match vs out-of-scope messaging |
-| **DEC-12** | Authentication (not in PDF) |
-| **DEC-15** | Frontend stack confirmation (convention: React + Vite + TS) |
 
-### Explicitly not in the PDF
+### Explicitly not in the PDF (**Reference** — document only; do not work on)
 
-Do not add without a new agreed spec: authentication, multi-tenancy, attachments, notifications, delete-ticket API, agentic tool use, confidence scores on ask responses.
+These are **out of delivery scope** for the assessment. They may be mentioned in specs or reviews for clarity; **do not** implement, **do not** add to plan/tasks, and **do not** register as blocking **DEC-*** items. Full list: [`requirements.md`](../spec/requirements.md) **§2.3**.
+
+Includes: **authentication** (none per **DEC-12**), multi-tenancy, attachments, notifications, delete-ticket API, agentic tool use, ask confidence scores, and related items in that table.
 
 ---
 

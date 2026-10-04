@@ -223,7 +223,7 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 
 **Agreed (DEC-07):** On create, `status` defaults to `OPEN` and is **not** accepted from the create request body (server-assigned).
 
-### 5.2 `TicketPriority` (**PDF** requires priority field; values **Open** in requirements)
+### 5.2 `TicketPriority` (**PDF** requires priority field; values **Agreed DEC-13**)
 
 **Agreed (DEC-13):** Closed set:
 
@@ -236,7 +236,7 @@ Transition legality is **not** encoded in the enum; see [`state-machine.md`](sta
 
 **Agreed:** Create default `MEDIUM` if omitted.
 
-### 5.3 `TicketCategory` (**PDF** metadata key `category`; source **Open** OQ-03)
+### 5.3 `TicketCategory` (**PDF** metadata key `category`; **Agreed DEC-03**)
 
 **Agreed (DEC-03):** Optional user-selected taxonomy at create/update; stored on ticket and copied into RAG metadata.
 
@@ -693,7 +693,7 @@ flowchart LR
 5. `005-vector-indexes.yaml` — HNSW on `embedding` (§14.5)
 6. Future changesets — additive columns only with defaults
 
-### 14.1 Sequence for ticket ids (**Proposed DEC-04**)
+### 14.1 Sequence for ticket ids (**Agreed DEC-04**)
 
 ```sql
 CREATE SEQUENCE ticket_number_seq START WITH 1001 INCREMENT BY 1;
@@ -924,11 +924,9 @@ Remaining **Open** in other specs:
 
 | ID | Owner |
 |----|-------|
-| DEC-01 re-ingest on close | [`rag-ingestion.md`](rag-ingestion.md) §10 |
-| DEC-02 skipped transitions | `state-machine.md` |
-| DEC-06 transition API shape | [`api-contract.md`](api-contract.md) §4.4 (PATCH `status` interim) |
-| Embedding dimension, chunk sizes | [`rag-ingestion.md`](rag-ingestion.md) §9.3, §12 |
-| Ask `data` JSON | [`rag-api-contract.md`](rag-api-contract.md) |
+| **DEC-06** | Transition API shape — [`api-contract.md`](api-contract.md) §4.4 (PATCH `status` interim) |
+| **DEC-09** | Embedding model + vector dimension — [`rag-ingestion.md`](rag-ingestion.md) §12 |
+| **DEC-10** | DB roles (H2 vs PostgreSQL) — [`test-strategy.md`](test-strategy.md) §12 |
 
 ---
 

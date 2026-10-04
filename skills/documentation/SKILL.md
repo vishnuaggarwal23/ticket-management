@@ -8,7 +8,7 @@ Use this skill whenever creating or revising specs, architecture notes, API docs
 
 - Specs are the source of truth and must be **detailed enough to implement without guessing**.
 - Documentation explains **why** (trade-offs), not only what.
-- **PDF vs Convention vs Open** — label claims; open items stay in spec **Open questions** / requirements **§10.2 (DEC-*)** until the user confirms.
+- **PDF vs Convention vs Open vs Reference** — label claims. **Open** = in PDF scope, needs **DEC-*** / child spec before implementation. **Reference** = out of PDF ([`requirements.md`](../../spec/requirements.md) **§2.3**) — document only; **no** plan/tasks/code.
 - Prompt history remains in SpecStory (`.specstory/history/`); index at [`docs/prompt-history.md`](../../docs/prompt-history.md).
 - **Revision history** — every substantive edit to `spec/*.md`, `rules/*.md`, `commands/*.md`, `skills/**/*.md`, and `docs/assessment-brief.md` adds a dated row to that file’s revision table.
 
@@ -82,7 +82,7 @@ Implement from these; **draft** unless header says **agreed**. PDF themes: [`req
 0. **Document guide (§0)** — PDF coverage map for this file; optional business / functional / implementation requirement tables; TOC when long; **independent reading units** table; major **`##` headings** tagged `· unit **ID**` (hub [`requirements.md`](../../spec/requirements.md) **§0.8**)
 1. Title & status (draft / agreed / deprecated) + primary source (PDF → requirements)
 2. Problem / context
-3. Scope & non-goals
+3. Scope & non-goals (include **Reference** §2.3 pointer when listing out-of-PDF topics)
 4. Requirements (functional / non-functional) + traceability to FEAT / AC-CORE
 5. Acceptance criteria (testable IDs: **AC-*** family per domain)
 6. Contracts / data / flows (as relevant)
@@ -118,7 +118,8 @@ Map backend tests through [`test-strategy.md`](../../spec/test-strategy.md) firs
 - Chunking **justification** (§16); **mechanics and proposed numbers** → [`rag-ingestion.md`](../../spec/rag-ingestion.md)
 - Embedding model tradeoffs (§16.3); model id / dimension **Open** → **DEC-09**
 - Configurable top-K and threshold (property keys in `rag-ingestion.md`; values open until agreed)
-- Grounding and no-match ([`rag-api-contract.md`](../../spec/rag-api-contract.md); wording **DEC-11**)
+- Grounding and no-match ([`rag-api-contract.md`](../../spec/rag-api-contract.md); **DEC-11** agreed)
+- Do not spec or implement **Reference** RAG/UI features (§2.3): confidence scores, async ingest queues, metadata ask filters, etc.
 - Retrieval quality eval ([`evaluation-strategy.md`](../../spec/evaluation-strategy.md) §3–§9; **AC-EVAL-***; test bands — [`test-strategy.md`](../../spec/test-strategy.md) **§5–§6**)
 
 **Chunking default (draft):** hybrid paragraph/comment-boundary first, fixed-size overflow for long blocks — see `rag-ingestion.md` §9. Confirm **proposed** §9.3 numbers with the user before marking agreed.
@@ -147,3 +148,4 @@ When a meaningful AI mistake is caught (bad code or ungrounded answer), add an e
 | 2026-10-04 | `improve-from-assessment-pdf`: hygiene checklist ten names / nine files wording. |
 | 2026-10-04 | Spec §0 pattern, requirements §0.5, updated spec-set table; aligned with `rules/documentation.md` reviewer maps. |
 | 2026-10-04 | Spec template: **`##` heading unit suffix**; search `· unit **` to jump chunks. |
+| 2026-10-04 | **Reference** label + §2.3; rules/commands sync for out-of-PDF scope. |

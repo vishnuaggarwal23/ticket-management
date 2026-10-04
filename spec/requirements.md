@@ -4,7 +4,7 @@
 > **Secondary reference (human summary, same rule):** [`docs/assessment-brief.md`](../docs/assessment-brief.md).  
 > **Status:** draft — faithful to the PDF; elaboration and examples clarify PDF text; they do **not** add new product capabilities. Becomes **agreed** only after open decisions (§10.2) are confirmed and recorded.  
 > **Version:** 2026-10-04 (see §14 revision history).  
-> **Open decisions:** 9 (§10.2 — **DEC-01, 02, 06, 09–12, 14, 15** still open; **DEC-03, 04, 05, 07, 08, 13** agreed 2026-10-04 in [`data-model.md`](data-model.md)).  
+> **Open decisions:** 3 (§10.2 — **DEC-06** interim, **DEC-09**, **DEC-10** still open; **DEC-14** interim agreed; **DEC-01, 02, 11, 12, 15** and **DEC-03…08, 13** agreed 2026-10-04; PDF reconciliation in §11).  
 > **Rule:** Anything not stated in the PDF is an **open question** or belongs in a downstream spec (`api-contract.md`, `data-model.md`, etc.), not silently decided here.
 
 **Child spec completeness (implementability)**
@@ -15,9 +15,9 @@
 | [`architecture.md`](architecture.md) | Present (draft) | System design (modules, ticket shape, APIs, communication, RAG, vector DB); chunking + embedding justification (**PDF**, §16); reviewer map in [`rules/documentation.md`](../rules/documentation.md) |
 | [`data-model.md`](data-model.md) | Present (agreed) | Resolves OQ-01, OQ-02, OQ-03, OQ-10, OQ-13, OQ-14; **DEC-03, 04, 05, 07, 08, 13** recorded §10.2 |
 | [`api-contract.md`](api-contract.md) | Present (draft) | Ticket/comment REST; combined HTTP catalog incl. ask summary §6; **DEC-14** interim; **DEC-06** PATCH `status` |
-| [`rag-api-contract.md`](rag-api-contract.md) | Present (draft) | PDF `rag-api-contract` themes: grounded ask, citations, no-match, **AC-RAG-API-*** (**DEC-11**) |
-| [`state-machine.md`](state-machine.md) | Present (draft) | T1–T5 / X1–X3 matrix; **DEC-02** default (A); interim PATCH (**DEC-06** open); **DEC-07** cross-ref |
-| [`rag-ingestion.md`](rag-ingestion.md) | Present (draft) | Chunking (paragraph + fixed hybrid), ingest sources, re-ingest (**DEC-01** interim), **DEC-09** |
+| [`rag-api-contract.md`](rag-api-contract.md) | Present (draft) | PDF `rag-api-contract` themes: grounded ask, citations, no-match, **AC-RAG-API-*** (**DEC-11** agreed) |
+| [`state-machine.md`](state-machine.md) | Present (draft) | T1–T5 / X1–X3 matrix; **DEC-02** agreed (A); interim PATCH (**DEC-06**); **DEC-07** cross-ref |
+| [`rag-ingestion.md`](rag-ingestion.md) | Present (draft) | Chunking (paragraph + fixed hybrid), ingest sources, re-ingest (**DEC-01** agreed), **DEC-09** |
 | [`evaluation-strategy.md`](evaluation-strategy.md) | Present (draft) | Retrieval quality eval (**PDF** learning goal, FEAT-22) |
 | [`test-strategy.md`](test-strategy.md) | Present (draft) | **§5** state machine determinism; **§6** ask/retrieval bands; AC-CORE / AC-SM / AC-API maps |
 | [`ui-model.md`](ui-model.md) | Present (draft) | PDF `ui-flow` themes: screens, CRUD, ask/RAG UX, flows A–E, **AC-UI-*** |
@@ -32,7 +32,8 @@
 |-------|---------|
 | **PDF** | Explicitly required or named in `docs/Assessments.docx` (assignment document). |
 | **Example** | Illustrative only; not a locked design unless the PDF names it (e.g. sample question text). |
-| **Open** | Underspecified in the PDF; resolve in a later spec after confirmation. |
+| **Open** | In **PDF scope** but underspecified; resolve via **DEC-*** / child spec before implementation. |
+| **Reference** | **Not** in the PDF; may appear in specs for clarity or future ideas — **do not implement**, **do not** add plan/tasks or acceptance criteria; ignore for delivery unless the assignment changes. |
 | **Convention** | Project choice documented in `rules/*` or agreed specs; **not** a PDF mandate unless marked **PDF**. |
 
 ---
@@ -84,7 +85,7 @@ Use this table to confirm nothing from the assignment is “lost” between the 
 | Basic RAG pipeline diagram: tickets → knowledge → chunk → embed → store → ask → search → LLM → answer → sources (p.4) | §6.6, Flow D | [`architecture.md`](architecture.md) §15; `rules/rag-vector-store.md` pipeline |
 | Five illustrative assistant questions (p.4) | §4.3 **Example** table | Eval: [`evaluation-strategy.md`](evaluation-strategy.md) §5–§8; review: `commands/review-rag-output.md` |
 | RAG: ingest description/comments/resolution; metadata keys; re-ingest on update or closed (p.5) | FEAT-12…14, Flow D | Numeric chunk/model → `rag-ingestion.md`; **DEC-01** |
-| Ask flow: similarity search → LLM; grounded answer; citations; example questions (p.4–5) | FEAT-15…17, Flow B, §4.3 | [`rag-api-contract.md`](rag-api-contract.md) (**DEC-11** wording open) |
+| Ask flow: similarity search → LLM; grounded answer; citations; example questions (p.4–5) | FEAT-15…17, Flow B, §4.3 | [`rag-api-contract.md`](rag-api-contract.md) (**DEC-11** agreed) |
 | Grounding guardrails; no agent; no create/notify/tools (p.5–6) | §2.2, FEAT-18, Flow E | — |
 | Configurable top-K and similarity threshold (p.5) | FEAT-19, AC-CORE-21 | Property names/values → `rag-ingestion.md` |
 | Document chunking + embedding justification (p.5–6) | FEAT-20, AC-CORE-19 | Narrative in `architecture.md` §16; numbers in `rag-ingestion.md` |
@@ -120,7 +121,7 @@ Use this checklist during sign-off: every bullet below appears **verbatim or res
 | Grounding: answer **only** from retrieved context; no general LLM knowledge for support questions; no-match explicit; **single** retrieve→generate; **not** an agent (no create ticket, notify, tools) | §2.2, FEAT-18 | [`rag-api-contract.md`](rag-api-contract.md) §11 |
 | Core acceptance checklist (23 items on p.6 incl. SM integration tests, embeddings stored, ask grounded/cited/no-match, architecture docs, re-ingest on update, configurable retrieval, no secrets, AI mistake) | §8 **AC-CORE-01…23**, §8.7 | [`test-strategy.md`](test-strategy.md) §7 |
 
-**PDF tension (do not hide):** p.5 re-ingest on **updated or closed** vs p.6 “when ticket is **updated**” → **DEC-01** ([§11.1](#11-pdf-inconsistencies-and-requirement-reconciliation)).
+**PDF tension (documented):** p.5 re-ingest on **updated or closed** vs p.6 “when ticket is **updated**” — **Agreed DEC-01 (B)** per ingestion text; see [§11.1](#11-pdf-inconsistencies-and-requirement-reconciliation).
 
 ### 0.6 Independent reading units (hub chunks)
 
@@ -214,9 +215,27 @@ The ask flow is **one question → one grounded response**. The assistant must *
 
 **Example (behavioural):** A user asks “Create a ticket for my outage.” The system may answer from ticket history if relevant tickets exist; it must **not** create a ticket as a side effect of `/api/ai/ask`.
 
-### 2.3 Non-goals (not in PDF — do not assume)
+### 2.3 Out of scope — **Reference only** (not for delivery)
 
-Authentication, roles, multi-tenancy, attachments, email/Slack notifications, workflow beyond the stated status machine, and agentic tool use are **Open** unless added in a future agreed spec.
+Items **not** named or implied by `docs/Assessments.docx` may be mentioned elsewhere in this repo for **reference** (reviews, mistake logs, “what we did not build”). They are **not** open work: **do not implement**, **do not** add to implementation plans/tasks, and **do not** treat as blocking **DEC-*** rows.
+
+**Agreed in-scope boundary:** **DEC-12** — no authentication for the assessment build (PDF silent on auth).
+
+| Topic | Label | Action |
+|-------|--------|--------|
+| Authentication, roles, multi-tenancy | **Reference** | Do not build |
+| Ticket **delete** API or UI | **Reference** | Do not build |
+| Attachments, email/Slack (or other) notifications | **Reference** | Do not build |
+| Workflow / status edges **beyond** T1–T5 and PDF invalid examples | **Reference** | Do not build |
+| Agentic ask (create ticket, notify, tools, action JSON) | **Reference** | Do not build (**PDF** guardrails) |
+| Ask `confidence` scores, extra `reason` / machine codes beyond **DEC-11** | **Reference** | Do not build |
+| Dedicated `/transition` sub-resource or transition **wizard** (alternative to interim **DEC-06** PATCH) | **Reference** | Do not build unless **DEC-06** is revised in scope |
+| Status **history** / audit table as a product feature | **Reference** | Do not build |
+| Semantic / LLM-based chunking (v1) | **Reference** | Do not build (PDF asks document + justify strategy; hybrid in `rag-ingestion.md` is in scope) |
+| Async ingest **queue**, optimistic locking on tickets, recall@K **automation in CI** | **Reference** | Do not build for assessment; manual eval per `evaluation-strategy.md` is in scope |
+| Vector admin UI, public chunk dump API | **Reference** | Do not build |
+
+**Rule for AI and implementers:** If a spec section is labeled **Reference** or listed here, skip it in **Plan / Tasks / Implementation** unless the user explicitly amends the PDF scope.
 
 ### 2.4 Authority and precedence (**PDF** vs specs vs rules)
 
@@ -440,7 +459,7 @@ sequenceDiagram
 
 | Step | Actor | Action | System response (expected) |
 |------|-------|--------|----------------------------|
-| C1 | Agent | Opens ticket in terminal state (`CLOSED`, `RESOLVED`, or `CANCELLED`) | Detail visible (**PDF**) |
+| C1 | Agent | Opens ticket in a state where reopen to `OPEN` is illegal (**PDF** examples: `CLOSED`, `RESOLVED`, or `CANCELLED` → `OPEN`) | Detail visible (**PDF**) |
 | C2 | Agent | Attempts transition to `OPEN` | Backend **rejects** (**PDF** examples) |
 | C3 | Agent | Views UI | **Meaningful error** explaining rejection (**PDF**) |
 
@@ -710,7 +729,7 @@ Each feature lists **testable acceptance criteria** (`AC-FEAT-xx-yy`). Wording u
 - Cancel path: `OPEN` → `CANCELLED`.
 - Illegal: `RESOLVED` → `OPEN` (reopen) rejected.
 
-**Open:** Skipped hops (**DEC-02** — default (A) in [`state-machine.md`](state-machine.md) §5.3); transition API shape (**DEC-06** — interim PATCH in `state-machine.md` §6.1). Initial status → **agreed** **DEC-07** / `data-model.md` §5.1.
+**Agreed:** skipped hops **DEC-02 (A)** in [`state-machine.md`](state-machine.md) §5.3. **Open / interim:** transition API shape (**DEC-06** — interim PATCH in `state-machine.md` §6.1). Initial status → **agreed** **DEC-07** / `data-model.md` §5.1.
 
 ---
 
@@ -1276,7 +1295,7 @@ Repeatable path to demonstrate **AC-CORE-01…23** and **FEAT-22** (retrieval qu
 
 ## 10. Open questions, decisions, and spec handoff · unit **HUB-M**
 
-Resolve **Open** items in downstream specs **after confirmation**—do not assume answers in implementation alone (§10.3).
+Resolve **Open** items in downstream specs **after confirmation**—do not assume answers in implementation alone (§10.3). **Reference** items (§2.3) are **not** Open work; do not add them to §10.2 as blocking decisions.
 
 ### 10.1 Open question catalogue (OQ)
 
@@ -1286,17 +1305,17 @@ Resolve **Open** items in downstream specs **after confirmation**—do not assum
 | **OQ-02** | Full field catalog | **Resolved** — entity + DTO catalogs (DEC-13, `data-model.md` §6, §10, §16) |
 | **OQ-03** | `category` source | **Resolved** — optional user enum (DEC-03, `data-model.md` §5.3) |
 | **OQ-04** | REST map | Paths, methods, payloads for tickets/comments/transitions beyond `POST /api/ai/ask` request |
-| **OQ-05** | Ask response schema | Answer body, citations, no-match representation |
-| **OQ-06** | Authentication / authorization | Not stated in PDF |
+| **OQ-05** | Ask response schema | **Resolved** — `answer` + `citedTicketIds`; no-match phrase (**DEC-11**, [`rag-api-contract.md`](rag-api-contract.md) §7) |
+| **OQ-06** | Authentication / authorization | **Resolved** — no auth for assessment scope (**DEC-12**, PDF silent) |
 | **OQ-07** | Embedding model and vector store | Examples only (PGVector, Chroma, Ollama, cloud) |
 | **OQ-08** | H2 vs PostgreSQL | Dev, test, prod roles |
-| **OQ-09** | Frontend framework | React/Next vs equivalent (**Convention:** React + Vite + TS in rules) |
+| **OQ-09** | Frontend framework | **Resolved** — React + Vite + TypeScript as PDF “or equivalent” (**DEC-15**, `rules/frontend.md`) |
 | **OQ-10** | Resolution notes | **Resolved** — `resolution_notes` on `ticket` (DEC-05, `data-model.md` §6.1) |
 | **OQ-11** | Status transition UX/API | How users trigger transitions |
-| **OQ-12** | Skipped transitions | e.g. `OPEN` → `RESOLVED` allowed or not |
+| **OQ-12** | Skipped transitions | **Resolved** — only T1–T5 edges (**DEC-02 (A)**, [`state-machine.md`](state-machine.md)) |
 | **OQ-13** | Initial status on create | **Resolved** — default `OPEN`, server-assigned (DEC-07, `data-model.md` §5.1) |
 | **OQ-14** | Keyword search scope | **Resolved** — `title` + `description` (DEC-08, `data-model.md` §15.2) |
-| **OQ-15** | Re-ingest on close | Ingestion p.5 **updated or closed** vs acceptance p.6 **updated** only (§11.1) |
+| **OQ-15** | Re-ingest on close | **Resolved** — **(B)** update or close per ingestion p.5 (**DEC-01**; §11.1 notes p.6 checklist emphasis on **updated**) |
 
 ### 10.2 Pending decisions register (DEC)
 
@@ -1304,8 +1323,8 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 
 | DEC ID | Related OQ | Question | Neutral options | Owner spec | Blocks | Status | Decision |
 |--------|------------|----------|-----------------|------------|--------|--------|----------|
-| **DEC-01** | OQ-15 | Re-ingest trigger on **close**? | (A) Update only per p.6 acceptance (B) Update or close per p.5 ingestion (C) Close always implies update event | `rag-ingestion.md` | AC-CORE-20, FEAT-14 | Open | — |
-| **DEC-02** | OQ-12 | Allow skipped status hops? | (A) Only T1–T5 edges (B) Allow additional edges with spec list | `state-machine.md` | FEAT-11 tests | Open (implement **A** for now — confirmed 2026-10-04) | Interim: no skipped hops; full matrix §5.4 in `state-machine.md`. Revisit before adding edges. |
+| **DEC-01** | OQ-15 | Re-ingest trigger on **close**? | (A) Update only per p.6 acceptance (B) Update or close per p.5 ingestion (C) Close always implies update event | `rag-ingestion.md` | AC-CORE-20, FEAT-14 | Agreed 2026-10-04 | **(B)** Re-ingest on ticket **update** (fields, comments) **or** transition to **`CLOSED`** (including status-only metadata refresh). Demo proof for graders: edit-ticket path (p.6); close path satisfies p.5 ingestion (§11.1). |
+| **DEC-02** | OQ-12 | Allow skipped status hops? | (A) Only T1–T5 edges (B) Allow additional edges with spec list | `state-machine.md` | FEAT-11 tests | Agreed 2026-10-04 | **(A)** Only edges T1–T5; all other directed pairs illegal (§5.6 in `state-machine.md`). |
 | **DEC-03** | OQ-03 | How is `category` set? | User field / enum / derived rule | `data-model.md` | FEAT-13 metadata | Agreed 2026-10-04 | Optional user-selected `TicketCategory` enum on create/update (`data-model.md` §5.3). |
 | **DEC-04** | OQ-01 | Ticket id format | Opaque UUID / `TKT-*` / numeric | `data-model.md` | UI, citations | Agreed 2026-10-04 | Public id `TKT-{n}` from `ticket_number_seq` (start 1001); `ticket.id` `VARCHAR(16)` PK (`data-model.md` §5.5, §14.1). |
 | **DEC-05** | OQ-10 | Resolution notes shape | Dedicated field / comment template / resolve action text | `data-model.md`, `rag-ingestion.md` | FEAT-12 | Agreed 2026-10-04 | Nullable `resolution_notes` column on `ticket`; ingested for RAG (`data-model.md` §6.1). |
@@ -1314,11 +1333,11 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 | **DEC-08** | OQ-14 | Searchable fields | Title only / title+description / include comments | `api-contract.md`, `data-model.md` | FEAT-06 | Agreed 2026-10-04 | Keyword `q` matches `title` and `description` (case-insensitive); comments excluded (`data-model.md` §15.2). |
 | **DEC-09** | OQ-07 | Vector store + embedding product | PGVector vs Chroma; local vs cloud model | `architecture.md`, `rag-ingestion.md` | FEAT-13, IR-04 | Open | — |
 | **DEC-10** | OQ-08 | DB roles | Postgres runtime + H2 tests / all Postgres / other | `architecture.md`, `test-strategy.md` | FEAT-08 | Open | — |
-| **DEC-11** | OQ-05 | No-match vs out-of-scope messaging | Single message / distinct codes | [`rag-api-contract.md`](rag-api-contract.md) | AC-CORE-18 | Open | Interim no-match wording in `rag-api-contract.md` until user confirms |
-| **DEC-12** | OQ-06 | Auth | None for assessment / basic auth / other | `architecture.md` (if any) | **Open** scope | Open | — |
+| **DEC-11** | OQ-05 | No-match vs out-of-scope messaging | Single message / distinct codes | [`rag-api-contract.md`](rag-api-contract.md) | AC-CORE-18 | Agreed 2026-10-04 | Single honest phrase in `data.answer`, e.g. **“No relevant tickets found.”** (PDF p.6 acceptance). Out-of-scope uses same honesty theme; no separate `reason` / error code in v1 (not in PDF). |
+| **DEC-12** | OQ-06 | Auth | None for assessment / basic auth / other | `architecture.md` (if any) | **Open** scope | Agreed 2026-10-04 | **No authentication or authorization** in scope for the assessment build (PDF does not require it). |
 | **DEC-13** | OQ-02 | Required fields on create | Minimal set aligned to PDF | `data-model.md` | FEAT-01, 09 | Agreed 2026-10-04 | Create requires non-blank `title`; `description`, `assignee`, `category` optional; `priority` defaults `MEDIUM`; `description` defaults empty (`data-model.md` §16.1). |
 | **DEC-14** | OQ-04 | Ticket REST surface | Align with **Convention** in `rules/api-standards.md` | `api-contract.md` | All FEAT API | Interim agreed 2026-10-04 | Paths/methods/payloads in [`api-contract.md`](api-contract.md); envelopes in `rules/api-standards.md` |
-| **DEC-15** | OQ-09 | Frontend stack | React+Next vs React+Vite+TS (**Convention** in rules) | [`ui-model.md`](ui-model.md) §14, `rules/frontend.md` | FEAT UI | Open | Convention: React+Vite+TS |
+| **DEC-15** | OQ-09 | Frontend stack | React+Next vs React+Vite+TS (**Convention** in rules) | [`ui-model.md`](ui-model.md) §14, `rules/frontend.md` | FEAT UI | Agreed 2026-10-04 | **React + Vite + TypeScript** as PDF “React/Next.js or **equivalent**”. Layout, routing detail, ask page vs panel, and CSS kit are implementer choice if demo §8.7 / Flow B remain satisfiable. |
 
 ### 10.3 Spec handoff map (OQ → spec)
 
@@ -1347,11 +1366,11 @@ Record **agreed** answers here and in the owning spec. Until **Decision** is fil
 | RAG ingestion (p.5) | Re-ingest when ticket is **updated or closed** |
 | Core acceptance (p.6) | Re-ingestion when ticket is **updated** |
 
-**Current requirement stance:** **FR-14 / FEAT-14** follow ingestion text (**updated or closed**). Acceptance checklist item follows p.6 (**updated**). **Confirm** before implementation whether **close** alone must trigger re-ingest to satisfy graders interpreting p.6 narrowly.
+**Agreed stance (**DEC-01**):** Implement re-ingest on **update or close** per ingestion p.5. Acceptance checklist p.6 stresses **updated** — use **edit ticket + ask** as primary demo proof (**AC-CORE-20**); **close-only** re-ingest still runs per **DEC-01 (B)** for metadata (`CLOSED`) and p.5 ingestion text.
 
 ### 11.2 Out-of-scope vs empty retrieval
 
-Acceptance bundles **out-of-scope** and **no-match** into one honest response theme (**PDF** p.6). Implementation should treat both as **no fabricated answer**; exact messaging may differ (**Open** → **DEC-11**, [`api-contract.md`](api-contract.md) §6.3).
+Acceptance bundles **out-of-scope** and **no-match** into one honest response theme (**PDF** p.6). **Agreed (**DEC-11**):** same user-visible honesty — e.g. **“No relevant tickets found.”** in `data.answer` with empty `citedTicketIds`; no fabricated support narrative ([`rag-api-contract.md`](rag-api-contract.md) §7.4).
 
 ---
 
@@ -1365,12 +1384,12 @@ Acceptance bundles **out-of-scope** and **no-match** into one honest response th
 | **Embedding** | Vector representation of a chunk stored in the vector store (**PDF**). |
 | **Vector store** | Database or extension holding embeddings (e.g. PGVector, Chroma—**PDF** examples). |
 | **Ingestion** | Pipeline from ticket text → knowledge docs → chunk → embed → store (**PDF**). |
-| **Re-ingest / refresh** | Re-run ingestion so indexes match current ticket content (**PDF**); trigger **Open** → DEC-01. |
+| **Re-ingest / refresh** | Re-run ingestion so indexes match current ticket content (**PDF**); trigger **Agreed** → **DEC-01 (B)**. |
 | **Retrieval** | Similarity search over embeddings using question embedding, top-K, threshold (**PDF**). |
 | **Grounded answer** | LLM output constrained to retrieved ticket context (**PDF** grounding). |
 | **Citation** | Reference to **ticket ID(s)** used to produce the answer (**PDF**); response shape **Open** → OQ-05. |
 | **No-match** | No relevant tickets retrieved; must be stated explicitly (**PDF**). |
-| **Out-of-scope (ask)** | Question that ticket corpus cannot answer; acceptance requires same honesty as no-match (**PDF** p.6); messaging **Open** → DEC-11. |
+| **Out-of-scope (ask)** | Question that ticket corpus cannot answer; acceptance requires same honesty as no-match (**PDF** p.6); messaging **Agreed** → **DEC-11**. |
 | **Support-specific question** | Question expecting answer from ticket history, not general world knowledge (**PDF** grounding). **Example:** “Have we seen payment failures before?” **Counter-example:** “What is the capital of France?” when treated as ticket-grounded ask. |
 | **Retrieve-then-generate** | Single path: search → LLM with context → response; not an agent (**PDF**). |
 | **State machine** | Backend rules for legal status transitions (**PDF** §2.6, FEAT-11). |
@@ -1378,7 +1397,7 @@ Acceptance bundles **out-of-scope** and **no-match** into one honest response th
 | **AC-FEAT-*** | Feature-level Given/When/Then criteria (§4.2). |
 | **OQ-*** | Open question from PDF gaps (§10.1). |
 | **DEC-*** | Pending or agreed decision (§10.2). |
-| **PDF** / **Example** / **Convention** / **Open** | See label legend at top. |
+| **PDF** / **Example** / **Convention** / **Open** / **Reference** | See label legend at top; **Reference** = out of PDF scope, do not implement (§2.3). |
 
 ---
 
@@ -1428,6 +1447,8 @@ If detail appears in both this file and a child spec, **child spec wins** for im
 | 2026-10-04 | `improve-from-assessment-pdf`: §6.8 PDF ten-name spec list row; hub aligned to nine-file consolidation. |
 | 2026-10-04 | Added [`rag-api-contract.md`](rag-api-contract.md); ten-file spec set; hub pointers updated. |
 | 2026-10-04 | `improve-from-assessment-pdf`: §10.2/§10.3 **DEC-11** / **OQ-05** handoff → `rag-api-contract.md`. |
+| 2026-10-04 | PDF pass: **DEC-01, 02, 11, 12, 15** agreed; Flow C wording; §11.1–§11.2 reconciliation. |
+| 2026-10-04 | §2.3 **Reference** catalogue: out-of-PDF topics documented only; not plan/task work. |
 | 2026-10-04 | `improve-from-assessment-pdf` in §6.8; §0.4 row for PDF ten-name spec list; IR-06 consolidation note. |
 | 2026-10-04 | Primary source header: `docs/Assessments.docx`. |
 | 2026-10-04 | All `Assessments.pdf` path references → `docs/Assessments.docx` across steering artefacts. |
