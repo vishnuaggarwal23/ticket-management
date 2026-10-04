@@ -41,6 +41,10 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 17 | 2026-10-03 20:40:54 | State-machine/api-contract depth; `rag-ingestion.md` and test-strategy; rules/commands link fixes; assessment-brief/skills sync; PDF coverage and `prompt-history.md` index (edit-only passes). | [`.specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md`](../.specstory/history/2026-10-03_20-40-54Z-specification-document-updates.md) |
 | 18 | 2026-10-04 06:59:04 | Added `spec/evaluation-strategy.md` (retrieval quality, failure taxonomy F-01–F10, AC-EVAL, PDF example questions); synced cross-links in `spec/`, `rules/`, and `commands/`. | [`.specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md`](../.specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md) |
 | 19 | 2026-10-04 07:40:06 | Added the UI spec (now `spec/ui-flow.md`) and `spec/rag-api-contract.md`; cross-linked ten-file spec set; assessment alignment and prompt-history index updates in the same session. | [`.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md`](../.specstory/history/2026-10-04_07-40-06Z-ui-model-specification.md) |
+| 20 | 2026-10-04 08:01:06 | Deepened all `spec/` files from `docs/Assessments.docx` (BRF/FRI/IRI, examples, coverage); then synced `rules/`, `commands/`, `skills/`, and `docs/assessment-brief.md`. | [`.specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md`](../.specstory/history/2026-10-04_08-01-06Z-spec-file-enhancement-from.md) |
+| 21 | 2026-10-04 08:30:53 | `/review-spec` for gaps and edge cases; closed PDF-backed DECs; labelled out-of-PDF items **Reference**; synced `rules/`, `commands/`, `skills/`; committed and pushed. | [`.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md`](../.specstory/history/2026-10-04_08-30-53Z-spec-review-gaps.md) |
+| 22 | 2026-10-04 08:51:55 | Adopted DEC-09…19 (`nomic-embed-text`/768, no H2, sync ingest, ask limits); re-review and doc-sync; promoted specs to agreed; renamed `ui-model.md` to `ui-flow.md`; committed and pushed. | [`.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md`](../.specstory/history/2026-10-04_08-51-55Z-spec-review-gaps.md) |
+| 23 | 2026-10-04 09:35:31 | Wrote backend-only `plan.md` (CRUD and state machine first; RAG gated); locked C-01–C-03 and C-05 (`CRITICAL` with inbound `URGENT` alias); committed and pushed. | [`.specstory/history/2026-10-04_09-35-31Z-backend-ticket-management-plan.md`](../.specstory/history/2026-10-04_09-35-31Z-backend-ticket-management-plan.md) |
 
 ## Related
 
@@ -61,3 +65,4 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 2026-10-04 | Index sync: command updates existing rows when `.specstory/history/` transcripts change. |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (19 sessions; added 2, updated 2, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (19 sessions; added 0, updated 1, removed 0). |
+| 2026-10-04 | Synced chronological index from `.specstory/history/` (23 sessions; added 4, updated 0, removed 0). |
