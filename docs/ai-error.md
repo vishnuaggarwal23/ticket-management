@@ -36,6 +36,8 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | [AE-013](#ae-013) | 2026-10-04 15:51 | process | Created `frontend/` scaffold without user authorization |
 | [AE-014](#ae-014) | 2026-10-04 16:00 | spec / docs | Stale draft / SPA / interim labels after agreed specs and **DEC-20** |
 | [AE-015](#ae-015) | 2026-10-04 17:33 | code | Ask via Next rewrites hit ~30s proxy timeout (opaque 500 on :3000) |
+| [AE-016](#ae-016) | 2026-10-04 18:11 | RAG | `TicketChunker` omitted id/status header from embedded chunks |
+| [AE-017](#ae-017) | 2026-10-04 18:22 | process | Reverted **DEC-21** code when user asked only to update specs |
 
 ---
 
@@ -159,6 +161,22 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 - **How detected:** User Ask failure and `curl` through port **3000** during the Ollama model-name investigation ([`.specstory/history/2026-10-04_17-33-12Z-model-not-found-error.md`](../.specstory/history/2026-10-04_17-33-12Z-model-not-found-error.md)).
 - **How resolved:** Recommended direct `:8080` in `frontend/.env.example` and README; clearer timeout hint in `AskPanel.jsx`; local `.env.local` with `NEXT_PUBLIC_API_BASE_URL=http://localhost:8080`. Commit `c0fdc69`.
 
+## AE-016
+
+- **When:** 2026-10-04 18:11 UTC
+- **Kind:** RAG
+- **What was wrong:** [`TicketChunker`](../backend/src/main/java/com/ticketmanagement/rag/TicketChunker.java) embedded only Description / Comments / Resolution. [`KnowledgeDocumentBuilder`](../backend/src/main/java/com/ticketmanagement/rag/KnowledgeDocumentBuilder.java) already put ticket id, status, title, and priority in the document header, but that block was never chunked. Questions like *“What is the status of TKT-1006?”* scored ~0.42–0.62 vs **`rag.retrieval.similarity-threshold: 0.72`**, so `AskService` returned honest no-match despite the ticket existing in PostgreSQL.
+- **How detected:** User `curl` / UI ask on `POST /api/v1/ai/ask` ([`.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md`](../.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md)); verified with Ollama embeddings and `ticket_vector_chunk` similarity queries.
+- **How resolved:** **DEC-21**: `TicketChunker.headerBlocks()`; hybrid merge via `AskQuestionTicketIds` + `AskService.mergeRetrieval()` for explicit `TKT-{n}`; tests (`TicketChunkerTest`, `AskServiceTest`, `AskApiIT`); specs and README updated. Commit `934569c` (code in prior commit on branch). Re-ingest guidance for tickets indexed before the header chunk.
+
+## AE-017
+
+- **When:** 2026-10-04 18:22 UTC
+- **Kind:** process
+- **What was wrong:** After **DEC-21** was implemented, the user asked to **update markdown** so specs reflected the fixes. The assistant **reverted** backend RAG code and marked the fix “specified, not implemented” instead of syncing docs to the working implementation.
+- **How detected:** User correction in the same session ([`.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md`](../.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md)).
+- **How resolved:** Restored `AskQuestionTicketIds`, chunker header logic, merge retrieval, and tests; updated `spec/rag-ingestion.md`, `spec/rag-api-contract.md`, `spec/architecture.md`, `spec/requirements.md`, `spec/test-strategy.md`, `rules/rag-vector-store.md`, `plan.md`, and `backend/README.md` as **implemented**. Commit `934569c`.
+
 ---
 
 ## Revision history
@@ -171,3 +189,4 @@ Entries are **oldest first**. Stable ids (`AE-NNN`) are never reused. Sort by **
 | 2026-10-04 | Added AE-012 (1 new); extended AE-011 resolution; skipped 0 duplicates; total 12 entries. |
 | 2026-10-04 | Added AE-013…014 (2 new); skipped 0 duplicates; total 14 entries. |
 | 2026-10-04 | Added AE-015 (1 new); skipped 0 duplicates; total 15 entries. |
+| 2026-10-04 | Added AE-016…017 (2 new); skipped 0 duplicates; total 17 entries. |

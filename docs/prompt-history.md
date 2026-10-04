@@ -58,6 +58,9 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 34 | 2026-10-04 17:42:24 | Clarified whether the Next.js app needs a proxy vs calling the Spring API directly, grounded in `rules/frontend.md`, `client.js`, and rewrite/CORS trade-offs. | [`.specstory/history/2026-10-04_17-42-24Z-next-js-backend-api.md`](../.specstory/history/2026-10-04_17-42-24Z-next-js-backend-api.md) |
 | 35 | 2026-10-04 17:48:39 | Ran `/update-ai-error` and `/update-prompt-history`; committed and pushed docs hygiene (`docs/ai-error.md`, `docs/prompt-history.md`) and SpecStory transcript updates. | [`.specstory/history/2026-10-04_17-48-39Z-ai-update-and-commit.md`](../.specstory/history/2026-10-04_17-48-39Z-ai-update-and-commit.md) |
 | 36 | 2026-10-04 17:51:38 | Added root `README.md` with project overview, repository layout, stack conventions, SDD workflow, and pointers to module run guides. | [`.specstory/history/2026-10-04_17-51-38Z-project-directory-readme.md`](../.specstory/history/2026-10-04_17-51-38Z-project-directory-readme.md) |
+| 37 | 2026-10-04 17:55:41 | Invoked `/review-code` on the backend; the SpecStory export stops after loading the command and a graphify orientation pass (no completed review write-up in the transcript). | [`.specstory/history/2026-10-04_17-55-41Z-code-review-discussion.md`](../.specstory/history/2026-10-04_17-55-41Z-code-review-discussion.md) |
+| 38 | 2026-10-04 18:11:25 | Diagnosed ask no-match for TKT-1006 (header not embedded, similarity below 0.72); implemented **DEC-21** (header chunks, hybrid `TKT-{n}` retrieval), tests, and doc sync; corrected a mistaken code revert when the user wanted specs updated only; committed `934569c`. | [`.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md`](../.specstory/history/2026-10-04_18-11-25Z-ticket-status-response-issue.md) |
+| 39 | 2026-10-04 18:27:38 | Ran `/update-ai-error` and `/update-prompt-history`, then committed and pushed docs hygiene (`docs/ai-error.md`, `docs/prompt-history.md`) and SpecStory updates. | [`.specstory/history/2026-10-04_18-27-38Z-ai-update-and-commit.md`](../.specstory/history/2026-10-04_18-27-38Z-ai-update-and-commit.md) |
 
 ## Related
 
@@ -86,3 +89,4 @@ SpecStory export files, oldest first. Full transcripts (user + agent) are in the
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (29 sessions; added 1, updated 0, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (34 sessions; added 5, updated 0, removed 0). |
 | 2026-10-04 | Synced chronological index from `.specstory/history/` (36 sessions; added 2, updated 1, removed 0). |
+| 2026-10-04 | Synced chronological index from `.specstory/history/` (39 sessions; added 3, updated 0, removed 0). |
