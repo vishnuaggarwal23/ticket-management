@@ -38,7 +38,15 @@ export default function AskPanel() {
       setResult(data);
     } catch (error) {
       if (error instanceof ApiError) {
-        setRequestError(error.message);
+        const isProxyTimeout =
+          error.status === 500 &&
+          (error.code === 'BAD_RESPONSE' || error.code === 'UNKNOWN') &&
+          /internal server error/i.test(error.message);
+        setRequestError(
+          isProxyTimeout
+            ? 'The assistant took too long (Next.js API proxy timeout). Set NEXT_PUBLIC_API_BASE_URL=http://localhost:8080 in frontend/.env.local and restart npm run dev, or use a faster Ollama chat model.'
+            : error.message,
+        );
         const fields = mapFieldErrors(error.details);
         if (fields.question) {
           setQuestionError(fields.question);

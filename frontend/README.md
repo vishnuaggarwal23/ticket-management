@@ -11,7 +11,7 @@ React + Next.js (App Router) + Vite (shared `src/` dev). JavaScript only.
 
 ```bash
 cd frontend
-cp .env.example .env.local   # optional; adjust API base URLs
+cp .env.example .env.local   # recommended — direct :8080 API; needed for slow local Ask/Ollama
 npm install
 ```
 
@@ -21,7 +21,7 @@ npm install
 npm run dev
 ```
 
-Opens **http://localhost:3000** by default. Next.js proxies `/api/*` to the backend via `next.config.js` rewrites (`BACKEND_REWRITE_URL`).
+Opens **http://localhost:3000** by default. With `NEXT_PUBLIC_API_BASE_URL` set (see `.env.example`), the browser calls the backend on **8080** directly. If that variable is empty, Next.js proxies `/api/*` via rewrites (`BACKEND_REWRITE_URL`); that proxy times out around **30 seconds**, which breaks **Ask** when local Ollama generation is slow.
 
 For Vite-only HMR on `src/` modules (port **5173**):
 
