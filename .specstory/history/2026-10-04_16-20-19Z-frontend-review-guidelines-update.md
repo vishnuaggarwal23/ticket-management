@@ -173,12 +173,62 @@ push all the files changed in this window
 
 _**Agent (composer-2.5)**_
 
+<think><details><summary>Thought Process</summary>
+The user explicitly approved pushing all changed files in this window.
+
+Checking git status first. Uncommitted changes will be committed before pushing.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Checking git state, then committing and pushing changes from this session.
+
+
+
+
+_**Agent (composer-2.5)**_
+
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
 <summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff --stat &amp;&amp; git log -3 --oneline &amp;&amp; git branch -vv</summary>
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff --stat && git log -3 --oneline && git branch -vv
 ```
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .cursor/commands/review-frontend.md
+	modified:   commands/review-frontend.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+ .cursor/commands/review-frontend.md |  2 +-
+ commands/review-frontend.md         | 70 ++++++++++++++++++++++++++++++++++---
+ 2 files changed, 67 insertions(+), 5 deletions(-)
+371d600 docs: DEC-15/DEC-20 frontend steering, hygiene, AE-013/014, prompt index
+6a09c3c docs: log AE-012, sync prompt history, track stack-upgrade session
+f37984c fix(rag): wire Ollama ports after Spring AI autoconfig
+* main 371d600 [origin/main] docs: DEC-15/DEC-20 frontend steering, hygiene, AE-013/014, prompt index
+
+```
 </details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Two review-frontend.md files were changed. An untracked specstory file was also created.
+
+Committing the two review-frontend files. Considering whether to include the untracked specstory file.
+
+The untracked specstory file will be included as well. Next step is to review the diff, stage the changes, commit, and push.
+</details></think>
 
 _**Agent (composer-2.5)**_
 
@@ -187,7 +237,53 @@ _**Agent (composer-2.5)**_
 ```bash
 cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff commands/review-frontend.md .cursor/commands/review-frontend.md
 ```
+
+```
+diff --git a/.cursor/commands/review-frontend.md b/.cursor/commands/review-frontend.md
+index df6db70..1a63569 100644
+--- a/.cursor/commands/review-frontend.md
++++ b/.cursor/commands/review-frontend.md
+@@ -1,5 +1,5 @@
+ ---
+-description: Review React/Vite/TypeScript UI against frontend and API rules (no UI tests)
++description: Review React/Next.js/Vite/JavaScript UI against frontend and API rules (no UI tests)
+ ---
+ 
+ # Review frontend
+diff --git a/commands/review-frontend.md b/commands/review-frontend.md
+index e2a8125..5a22374 100644
+--- a/commands/review-frontend.md
++++ b/commands/review-frontend.md
+@@ -2,7 +2,7 @@
+ 
+ Cursor attaches this file via [`.cursor/commands/review-frontend.md`](../.cursor/commands/review-frontend.md) (pointer only). Edit **this** file; do not copy the body into `.cursor/commands/`.
+ 
+-Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, [`spec/ui-flow.md`](../spec/ui-flow.md) (**§0**, **AC-UI-***), [`spec/architecture.md`](../spec/architecture.md) §12 (summary), and API / RAG contracts.
++Review the current **UI** change set (or specified paths) against `rules/frontend.md`, `rules/api-standards.md`, `rules/rag-vector-store.md`, [`spec/ui-flow.md`](../spec/ui-flow.md) (**§0**, **AC-UI-***), [`spec/architecture.md`](../spec/architecture.md) §12 (summary), and API / RAG contracts. Written code must meet **§2–§4** (structure, UX quality, and stack/code conventions) in addition to capability and API checks in **§1**.
+ 
+ **Do not generate or require frontend tests.** Do not apply fixes unless the user asks.
+ 
+@@ -54,13 +54,15 @@ Mark each item **Pass** / **Fail** / **N/A**. Failures: **blocker** / **major**
+ 
+ ---
+ 
+-## 2. Structure
++## 2. Structure and file organization
+ 
+ - [ ] Presentation vs HTTP client vs view logic not all in one mega-file when that hurts maintenance
+-- [ ] Single HTTP module (or equivalent), not fetch in every component
++- [ ] Single HT
+… (output truncated)
+```
 </details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Committing the two modified review-frontend files. The specstory file is untracked and will also be included.
+
+The commit message will be "docs: expand review-frontend with code qualitynd stack checklists". Then pushing to origin main.
+</details></think>
 
 _**Agent (composer-2.5)**_
 
@@ -206,4 +302,888 @@ Add §4 for JS/React/Next/Vite conventions, DRY, API errors, and state; align Cu
 EOF
 )" && git push origin main && git status
 ```
+
+```
+[main 8f8ad97] docs: expand review-frontend with stack and code-quality checks
+ 3 files changed, 174 insertions(+), 5 deletions(-)
+ create mode 100644 .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md
+To github-personal:vishnuaggarwal23/ticket-management.git
+   371d600..8f8ad97  main -> main
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Push succeeded. A specstory file was modified after commit, likely by SpecStory or an auto-update.
+
+Committing the follow-up specstory change now.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+SpecStory history updated after the commit; pushing that update as well.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git diff --stat .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md | head -5 &amp;&amp; git add .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md &amp;&amp; git commit --trailer &#34;Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt;&#34; -m &#34;$(cat &lt;&lt;&#39;EOF&#39;
+docs: sync SpecStory history for frontend review command update
+EOF
+)&#34; &amp;&amp; git push origin main &amp;&amp; git status</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git diff --stat .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md | head -5 && git add .specstory/history/2026-10-04_16-20-19Z-frontend-review-guidelines-update.md && git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "$(cat <<'EOF'
+docs: sync SpecStory history for frontend review command update
+EOF
+)" && git push origin main && git status
+```
+
+```
+ ..._16-20-19Z-frontend-review-guidelines-update.md | 106 ++++++++++++++++++++-
+ 1 file changed, 104 insertions(+), 2 deletions(-)
+[main fe56776] docs: sync SpecStory history for frontend review command update
+ 1 file changed, 104 insertions(+), 2 deletions(-)
+To github-personal:vishnuaggarwal23/ticket-management.git
+   8f8ad97..fe56776  main -> main
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+All changed files have been pushed successfully.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Pushed to `origin/main` in two commits:
+
+1. **`8f8ad97`** — `commands/review-frontend.md`, `.cursor/commands/review-frontend.md`, and initial SpecStory history for this session  
+2. **`fe56776`** — SpecStory history sync after the first commit  
+
+Working tree is clean and `main` matches `origin/main`. Remote: `github-personal:vishnuaggarwal23/ticket-management.git`.
+
+---
+
+_**User**_
+
+also make sure while reviewing frontend, the @spec/ details are followed and not missed - if similar to it is already not added in the @commands/review-frontend.md 
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+I will read the current review-frontend.md file. Then I will add instructions ensuring frontend reviews explicitly check against spec/ details and do not miss them.
+
+I'll explore the spec/ directory for frontend-relevant files like ui-flow, requirements, and data-model. I'll compare these against the current review-frontend.md to find gaps. I'll add missing spec coverage without duplication. First I'll run graphify per workspace rules.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Comparing `commands/review-frontend.md` with frontend-relevant specs to add any missing coverage.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; graphify query &#34;frontend UI spec acceptance criteria ui-flow requirements&#34;</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && graphify query "frontend UI spec acceptance criteria ui-flow requirements"
+```
+
+```
+Graph: graphify-out/graph.json (2367 nodes) | Traversal: BFS depth=2 | Start: ['Spec', 'Requirements Spec', 'Test strategy — acceptance mapping and layers', 'CriteriaQuery', 'Flows (§4.1)', 'Frontend guidelines'] | 214 nodes found
+
+[!] TRUNCATED: showing 58 of 214 nodes (~2000-token budget). The answer may be among the 156 cut nodes — raise the token budget (CLI: --budget) or narrow the query (e.g. context_filter=['call'], or get_node for a specific symbol).
+
+NODE Spec [src=.specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md loc=L1346 community=2026-10-04 06:59:04Z]
+NODE Requirements Spec [src=spec/requirements.md loc=None community=Prompt History Index]
+NODE Test strategy — acceptance mapping and layers [src=spec/test-strategy.md loc=L1 community=Test strategy — acceptance mapping and layers]
+NODE CriteriaQuery [src= loc= community=TicketSpecifications.java]
+NODE Flows (§4.1) [src=.specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md loc=L639 community=2026-10-03 19:07:36Z]
+NODE Frontend guidelines [src=rules/frontend.md loc=L1 community=Frontend guidelines]
+NODE .status() [src=backend/src/test/java/com/ticketmanagement/rag/TicketIngestionHookIT.java loc=L169 community=.status]
+NODE Prompt History Index [src=docs/prompt-history.md loc=None community=Prompt History Index]
+NODE 2026-10-03 19:07:36Z [src=.specstory/history/2026-10-03_19-07-36Z-requirements-specification-update.md loc=L3 community=2026-10-03 19:07:36Z]
+NODE ai-error.md [src=docs/ai-error.md loc=L1 community=Prompt History Index]
+NODE Documentation Skill [src=skills/documentation/SKILL.md loc=None community=Prompt History Index]
+NODE 2026-10-04 06:59:04Z [src=.specstory/history/2026-10-04_06-59-04Z-evaluation-strategy-document.md loc=L3 community=2026-10-04 06:59:04Z]
+NODE architecture.md [src=spec/architecture.md loc=L1 community=Prompt History Index]
+NODE data-model.md [src=spec/data-model.md loc=L1 community=Prompt History Index]
+NODE rag-api-contract.md [sr
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="search" data-tool-name="glob_file_search"><details>
+<summary>Tool use: **glob_file_search** • Searched codebase "" • **10** results in **1** directory</summary>
+
+Directory: **`/Users/vishnuaggarwal/Documents/projects/practice/ticket-management`** (10 files)
+
+| File |
+|------|
+| `spec/test-strategy.md` |
+| `spec/data-model.md` |
+| `spec/ui-flow.md` |
+| `spec/evaluation-strategy.md` |
+| `spec/api-contract.md` |
+| `spec/rag-ingestion.md` |
+| `spec/rag-api-contract.md` |
+| `spec/requirements.md` |
+| `spec/state-machine.md` |
+| `spec/architecture.md` |
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Reviewing ui-flow.md, api-contract.md, state-machine.md, requirements.md, and architecture docs for frontend spec coverage. Will check review-spec and documentation.md for gaps.
+
+Grepping ui-flow.md and requirements.md for AC-UI and frontend.low API contract sections.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md",
+  "pattern": "^## |AC-UI-|AC-CORE-|DEC-"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md",
+  "pattern": "^## |AC-UI-|AC-CORE-|DEC-",
+  "topFiles": [
+    {
+      "matchCount": 100,
+      "uri": "spec/ui-flow.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 100
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "AC-CORE-|§8\\.|§4\\.1"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/requirements.md",
+  "pattern": "AC-CORE-|§8\\.|§4\\.1",
+  "topFiles": [
+    {
+      "matchCount": 40,
+      "uri": "spec/requirements.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 100
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md",
+  "pattern": "^## |§12"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md",
+  "pattern": "^## |§12",
+  "topFiles": [
+    {
+      "matchCount": 40,
+      "uri": "spec/architecture.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 40
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "^## "
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/api-contract.md",
+  "pattern": "^## ",
+  "topFiles": [
+    {
+      "matchCount": 12,
+      "uri": "spec/api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 12
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md",
+  "pattern": "^## |AC-SM|transition"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md",
+  "pattern": "^## |AC-SM|transition",
+  "topFiles": [
+    {
+      "matchCount": 40,
+      "uri": "spec/state-machine.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 61
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "^## |§7|citedTicket"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
+  "pattern": "^## |§7|citedTicket",
+  "topFiles": [
+    {
+      "matchCount": 39,
+      "uri": "spec/rag-api-contract.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 39
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+I will read data-model.md, the UI flow routes table, and API contract sections for list parameters and ticket JSON. Then I will check what is missing from the frontend review guide.
+
+The frontend review guide omits several explicit inputs and checklists. These include spec/api-contract.md and spec/state-machine.md. The state machine lacks legal target tables, status-on-create, and separate save versus status buttons. UI flow details are also missing: routes, list apply and enter, pagination metadata, create form fields, TKT-{n} numbering, optional resolution notes, and flow A-E mappings.
+
+rag-api-contract §7 fields, §13 client obligations, and cited ID linking are missing. Architecture §12.3–12.6 may also be absent. The AC-UI-01 through AC-UI-12 checklist is only summarized. evaluation-strategy and rag-ingestion are mostly backend, though the UI may need a DEC-18 note about no ingest admin UI.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/architecture.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md",
+  "pattern": "^## |category|priority|DEC-"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/data-model.md",
+  "pattern": "^## |category|priority|DEC-",
+  "topFiles": [
+    {
+      "matchCount": 35,
+      "uri": "spec/data-model.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 100
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+A new section on spec traceability will be added to the frontend review guide. It will ensure `@spec/` details are not missed.
+
+The Inputs section will be expanded to mandate reading the full spec/ index before marking Pass. Section 5 will detail spec compliance checks across ui-flow, api-contract, state-machine, data-model, rag-api-contract, architecture, and requirements documents.
+
+Section 5 will explicitly prohibit reimplementing state machine matrices in the UI. It will also exclude ingest admin UI and list query parameters from ui-flow §6.1. The introduction and Output sections will be updated to reference §5 and list all AC-UI items. Existing review guides will be checked for consistent formatting patterns.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-spec.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/ui-flow.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+A new §5 "Spec compliance (`spec/`)" section will be added to the frontend review guide. Inputs will be enhanced, and the introduction updated to reference this section.
+
+Step 0 will require listing all spec files read during the review. AC-UI-01 through AC-UI-12 will appear as checkboxes. Coverage will span ui-flow routes, screen catalog highlights, CRUD operations, status handling, RAG flows, demo steps, API contract models and endpoints, state machine UX, data model enums and creation rules, RAG API obligations and response fields, architecture sections 12.1–12.5, and requirements flows A–E with demo checklist cross-references. The review will explicitly check spec/state-machine.md and spec/test-strategy.md, noting that test strategy is N/A for UI tests but state machine UX remains relevant.
+
+The section order is finalized as 1–5. The introduction will state that written code must meet §2–§5. §5 will use subsections to avoid duplicating content from §1. It will require reading and cross-walking relevant spec sections before passing UI features. A compact spec file index table and a full AC-UI checklist will be included. The evaluation-strategy spec confirms the UI hides the eval harness per ui-flow §4.2. The rag-ingestion spec confirms there is no ingest admin UI.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Adding a spec traceability section with an AC-UI checklist and cross-references to `spec/` details missing from the current command.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The update is complete. No commit or push was requested.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Updated [`commands/review-frontend.md`](commands/review-frontend.md) so frontend reviews explicitly follow **`spec/`** and don’t skip agreed product detail.
+
+**Intro**
+- Spec-first hierarchy: `ui-flow.md` over architecture §12 on behaviour; pointers to api-contract, data-model, state-machine, rag-api-contract.
+- Reviews must cover **§2–§5** (added **§5**).
+
+**Inputs**
+- Replaced the short bullet list with a **full `spec/` table** (all ten spec files + what to read for UI).
+- Failures must cite **`spec/` section ids**, not only file paths.
+
+**New §5 — Spec compliance**
+- **5.0** — Procedure (list specs read; no rules-only behaviour; respect **DEC-***).
+- **5.1** — `ui-flow.md` §4 routes, §7 screens, §8–§12 flows/demo/ask (DEC-20 list UX, save vs status buttons, etc.).
+- **5.2** — All **AC-UI-01…12** as individual checkboxes (was only summarized in §1).
+- **5.3** — `api-contract.md` + `data-model.md` field/enum alignment.
+- **5.4** — `state-machine.md` + architecture §12.4 transition UX.
+- **5.5** — `rag-api-contract.md` §7 + §13 client obligations.
+- **5.6** — `requirements.md` flows A–E, §2.3 Reference exclusions, AC-CORE traceability.
+
+**Output**
+- Requires **Spec files read** and **`spec/` citations** on each finding.
+
+§1 still covers high-level validity/API/RAG; §5 is the detailed spec cross-walk so reviewers don’t stop at the summary checklist. Say if you want this committed and pushed.
+
+---
+
+_**User**_
+
+i didn't meant to exclude @rules/ @commands/ @skills/ @docs/ 
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The user clarified that rules/, commands/, skills/, and docs/ were not intended to be excluded from the review process.
+
+I will re-read review-frontend.md to find wording that may have excluded rules/, commands/, skills/, and docs/. Then I will revise the Inputs and intro/§5 sections to explicitly include those directories alongside spec/.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Parameters:
+
+```json
+{
+  "caseInsensitive": false,
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md",
+  "pattern": "review-frontend|artefact"
+}
+```
+Additional data:
+
+```json
+{
+  "isPruned": true,
+  "outputMode": "content",
+  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md",
+  "pattern": "review-frontend|artefact",
+  "topFiles": [
+    {
+      "matchCount": 6,
+      "uri": "rules/documentation.md"
+    }
+  ],
+  "totalFiles": 1,
+  "totalMatches": 6
+}
+```
+Status: **completed**
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+I need to review documentation.md to find the artefact index entries for rules, commands, skills, and docs.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/rules/documentation.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The introduction needs revision to treat spec/, rules/, commands/, skills/, and docs/ as an integrated whole rather than spec-only.
+
+Inputs will expand to include tables for rules/, commands/, skills/, and docs/. §5.0 will be revised to require all artefact classes and resolve conflicts by hierarchy. A new compliance section will cover rules, docs, commands, and skills. Outputs and failure citations will list all reviewed paths, not just spec. Related frontend review files are also noted.
+
+Frontend review inputs now include specific rules, commands, skills, and docs. Rules cover frontend standards and API conventions. Commands handle RAG output cross-references. Skills cover documentation alignment. Docs cover assessment briefs and error guidance.
+
+A unified "Steering artefacts" section will group Rules, Commands, Skills, Docs, and Spec under Inputs. The line 18 warning will be replaced with a cross-check instruction that treats spec, rules, commands, docs, and skills as equal sources. Checklist items will be added.
+
+Specific artefact references are being mapped to checklist items. Rules/rag-vector-store.md governs ask display grounding themes. Rules/documentation.md enforces artefact indexes without contradicting the agreed DEC. Commands/review-rag-output.md handles optional ticket ID traceability for ask UI. Docs/assessment-brief.md and docs/ai-error.md define reference boundaries outside the UI. Skills/documentation/SKILL.md applies when reviewing frontend markdown. The current §5.0 procedure item about rules-only procedures is being reviewed.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Updating the command to require `rules/`, `commands/`, `skills/`, and `docs/` alongside `spec/`, not instead of them.
+
+
+
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2"><details>
+<summary>Tool use: **edit_file_v2** • Edit file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Renumbering section 5.3 subsections. The bullets under 5.3 still reference the old content.
+
+Verifying file structure consistency by reading section §5.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: /Users/vishnuaggarwal/Documents/projects/practice/ticket-management/commands/review-frontend.md</summary>
+
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+The section title should include commands/. That directory is already listed under Inputs and Output.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+Updated [`commands/review-frontend.md`](commands/review-frontend.md) so frontend review uses **integrated steering**, not spec-only.
+
+**Intro** — Reviews must cover **`spec/`**, **`rules/`**, **`commands/`**, **`skills/`**, and **`docs/`**, with a short note on how they relate (product vs conventions vs assignment boundaries).
+
+**Inputs** — Split into five tables:
+- **`rules/`** — `frontend.md`, `api-standards.md`, `rag-vector-store.md`, `documentation.md`
+- **`commands/`** — this command, `review-rag-output`, `review-spec`, `update-ai-error` (when relevant)
+- **`skills/`** — `documentation/SKILL.md` for UI-facing docs (e.g. `frontend/README.md`)
+- **`docs/`** — `assessment-brief`, `ai-error`, `prompt-history`, `ai-mistakes` pointer
+- **`spec/`** — unchanged ten-file table
+
+Removed “do not rely on rules alone.” Failures now cite any **steering** path (`spec/`, `rules/`, or `docs/`).
+
+**§5** — Renamed to **Spec and steering compliance**; added **§5.1** (`rules/`) and **§5.2** (`docs/`); renumbered spec subsections **§5.3–§5.8**; **§5.7** ties ask UI to `commands/review-rag-output.md`.
+
+**Output** — **Steering artefacts read** (all folders), spec vs rules conflicts, and when to run related commands.
+
+---
+
+_**User**_
+
+commit the changes 
+
+---
+
+_**Agent (composer-2.5)**_
+
+<think><details><summary>Thought Process</summary>
+Preparing to commit the review-frontend.md changes. Running git status, diff, and log in parallel to verify the modifications before committing.
+
+No push was requested.
+</details></think>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2"><details>
+<summary>Tool use: **run_terminal_command_v2** • Run command: cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management &amp;&amp; git status &amp;&amp; git diff &amp;&amp; git log -3 --oneline</summary>
+```bash
+cd /Users/vishnuaggarwal/Documents/projects/practice/ticket-management && git status && git diff && git log -3 --oneline
+```
+
+````
++
++```json
++{
++  "caseInsensitive": false,
++  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md",
++  "pattern": "^## |AC-SM|transition"
++}
++```
++Additional data:
++
++```json
++{
++  "isPruned": true,
++  "outputMode": "content",
++  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/state-machine.md",
++  "pattern": "^## |AC-SM|transition",
++  "topFiles": [
++    {
++      "matchCount": 40,
++      "uri": "spec/state-machine.md"
++    }
++  ],
++  "totalFiles": 1,
++  "totalMatches": 61
++}
++```
++Status: **completed**
++
++</details></tool-use>
++
++_**Agent (composer-2.5)**_
++
++<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search"><details>
++<summary>Tool use: **ripgrep_raw_search**</summary>
++
++Parameters:
++
++```json
++{
++  "caseInsensitive": false,
++  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
++  "pattern": "^## |§7|citedTicket"
++}
++```
++Additional data:
++
++```json
++{
++  "isPruned": true,
++  "outputMode": "content",
++  "path": "/Users/vishnuaggarwal/Documents/projects/practice/ticket-management/spec/rag-api-contract.md",
++  "pattern": "^## |§7|citedTicket",
++  "topFiles": [
++    {
++      "matchCount": 39,
++      "uri": "spec/rag-api-contract.md"
++    }
++  ],
++  "totalFiles": 1,
++  "totalMatches": 39
++}
++```
++Status: **completed**
++
++</details></tool-use>
++
++_**Agent (composer-2.5)**_
++
++<think><details><summary>Thought Process</summary>
++I will read data-model.md, the UI flow routes table, and API contract sections for list parameters and ticket JSON. Then I will check what is missing from the frontend review guide.
++
++The frontend review guide omits several explicit inputs and checklists. These include spec/api-contract.md and spec/state-machine.md. The state machine lacks legal target tables, status-on-create, and separate save versus status buttons. UI flow details are also missing: routes, list apply and enter, pagination 
+… (output truncated)
+````
+</details></tool-use>
+
+_**Agent (composer-2.5)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2"><details>
+<summary>Tool use: **read_file_v2** • Read file: </summary>
+
 </details></tool-use>
